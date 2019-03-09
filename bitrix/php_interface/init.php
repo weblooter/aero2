@@ -1,0 +1,1 @@
+<?CModule::IncludeModule("weblooter.langfile");?>

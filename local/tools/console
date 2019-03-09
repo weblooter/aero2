@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Основной скрипт-контроллер всех консольных команд.
+ * Главным преимущесвтом использования модуля symfony/console является то, что многие рутинные задачи в ней уже решены
+ * и имеется возможность увидеть весь список доступных консольных команд. Для этого необходимо в папке скрипта выполнить команду:
+ *
+ * <code>
+ * php console list
+ * </code>
+ *
+ * Вызов конкретной команды осуществляется следующим образом:
+ *
+ * <code>
+ * php -d mbstring.func_overload=2 console <command> [options] [arguments]
+ *
+ * ex: php console kd:demo 'Albert'
+ * </code>
+ */
+
+if (PHP_SAPI !== 'cli') {
+    die('Доступ к скрипту возможен только из консоли');
+}
+
+$_SERVER["DOCUMENT_ROOT"] = realpath(__DIR__ . "/../..");
+$DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
+
+define("NO_KEEP_STATISTIC", true);
+define("NOT_CHECK_PERMISSIONS", true);
+define("BX_CRONTAB", true);
+define('BX_WITH_ON_AFTER_EPILOG', true);
+define('BX_NO_ACCELERATOR_RESET', true);
+define('LANG', 's1');
+define("BX_UTF", true);
+
+
+use Local\Core\Console\Command\Runner;
+use Local\Core\Console\Command\Worker;
+use Symfony\Component\Console\Application;
+use Local\Core\Console\Command\DemoConsole;
+use Local\Core\Console\Command\StepCounter;
+
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
+
+
+$application = new Application('Консоль feed.weblooter.ru');
+
+// Регистрация всех доступных команд
+$application->add(new DemoConsole(true));
+$application->add(new StepCounter);
+$application->add(new Runner('runner'));
+$application->add(new Worker('worker'));
+
+
+
+try {
+    $application->run();
+} catch (\Throwable $t) {
+    \Bitrix\Main\Application::getInstance()->getExceptionHandler()->handleException($t);
+}
+
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/epilog_after.php");
