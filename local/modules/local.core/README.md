@@ -24,6 +24,7 @@
 + Агенты а так же воркеры должны иметь только 1 точку входа. В ней они должны вызывать другой метод, который отвечает за инициализацию логики кода, а не описывать ее в себе.
 + Мы работаем по psr0-prs4 с незначительным отклонением
 + Для построения страниц в админпанели использовать готовый внутренний класс **\Local\Core\AdminHelper**
++ Все классы и namespace пишутся в единственном лице, т.е. **\Local\Core\Inner\Client** а не **\Local\Core\Inner\Clients**
 
 ---
 ## API и информация
@@ -168,4 +169,65 @@ class Example extends \Local\Core\Inner\JobQueue\Abstracts\Worker implements Inn
 
 ---
 
+### \Local\Core\Inner\Client\Dadata
+DaData используется для получения информации по:
++ адресам
++ юр.лицам и индивидуальным предпринимателям
 
+Пример вызова:
+##### Для адресов:
+```php
+$query = new \Local\Core\Inner\Client\Dadata\Query;
+$query
+  ->set('query', 'г Химки, ул Германа Титова, дом 1 кв 1')
+  ->set('count', 10);
+$addressClient = new
+\Local\Core\Inner\Client\Dadata\AddressClient();
+$res = $addressClient->suggest($query);
+```
+##### Для юр.лиц
+```php
+$query = new \Local\Core\Inner\Client\Dadata\Query;
+$query->set('query', 'Бринэкс');
+$query->set('count', 10);
+$legalClient = new \Local\Core\Inner\Client\Dadata\LegalClient();
+$res = $legalClient->suggest($query);
+
+$query = new \Local\Core\Inner\Client\Dadata\Query;
+$query->set('query', '1650134050');
+$query->set('type', 'LEGAL');
+$query->set('branch_type', 'MAIN');
+$query->set('count', 10);
+$legalPartyClient = new \Local\Core\Inner\Client\Dadata\LegalPartyClient();
+$res = $legalPartyClient->suggest($query);
+```
+
+---
+### \Local\Core\Inner\Route
+Класс рассчитан на создание путей по единому шаблону. Для корректной работы в корне сайта требуется создать файл **localroutes.php** и объявить внутри массив **$arLocalRoutes**. 
+##### Структура массива и пример его реализации: 
+```php
+$arLocalRoutes = [
+  'company' => [
+    'list' => '/personal/company/',
+    'add' => '/personal/company/add/',
+    'edit' => '/personal/company/#COMPANY_ID#/edit/',
+    'delete' => '/personal/company/#COMPANY_ID#/delete/',
+  ],
+];
+```
+Говоря проще заполняется он следующим образом:
+```php
+$arLocalRoutes = [
+  'Ключи какого либо роута. Как правило равен началу ветки урла' => [
+    'Действие, примеру список list' => 'URI, к примеру /example/list/',
+    'Действие, к примеру редактирование' => 'URI с плейсхолдером, к примеру /example/#ID#/edit/',
+  ],
+];
+```
+##### Вызов
+Пример вызова с заменой плейсхолдеров из структуры выше:
+```php
+\Local\Core\Inner\Route::getRouteTo('company','edit', ['#COMPANY_ID#' => 12]);
+// Вернет строку /personal/company/12/edit/
+```

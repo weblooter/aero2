@@ -3,6 +3,7 @@
 .idea/deployment.xml
 !/bitrix/
 /bitrix/*
+!/bitrix/.settings_extra.php
 !/bitrix/components/
 /bitrix/components/bitrix/
 /bitrix/components/.access.php

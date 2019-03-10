@@ -21,8 +21,8 @@ class Base
     {
         $eventManager = EventManager::getInstance();
 
-        /** @see \Local\Core\EventHandlers\Main\OnBeforeProlog::initializeRegionHost() */
-//        $eventManager->addEventHandler('main', 'OnBeforeProlog', [Main\OnBeforeProlog::class, 'initializeRegionHost']);
+        /** @see \Local\Core\EventHandlers\Main\OnBuildGlobalMenu::addGlobalMenu(); */
+        $eventManager->addEventHandler('main', 'OnBuildGlobalMenu', [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']);
 
     }
 }
