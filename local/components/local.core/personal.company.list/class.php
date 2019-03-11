@@ -1,5 +1,5 @@
 <?
-class CompanyPersonalListComponent extends \CBitrixComponent
+class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public function executeComponent()
     {

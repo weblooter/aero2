@@ -1,4 +1,16 @@
-<?/** @var array $arResult */?>
+<?
+/**
+ * @global CMain $APPLICATION
+ * @var array $arParams
+ * @var array $arResult
+ * @var \PersonalCompanyListComponent $component
+ * @var CBitrixComponentTemplate $this
+ * @var string $templateName
+ * @var string $componentPath
+ * @var string $templateFolder
+ */
+?>
+
 <?if( $arResult['ITEMS'] > 0 ):?>
     <?foreach ( $arResult['ITEMS'] as $arItem):?>
 

@@ -18,6 +18,12 @@ $arComponentParameters = array(
 			'SIZE' => 10,
 			'MULTIPLE' => 'Y',
 			'VALUES' => $arAllowFieldsListValues
+		],
+		'COMPANY_ID' => [
+			'PARENT' => 'BASE',
+			'NAME' => 'ID компании',
+			'TYPE' => 'STRING',
+			'DEFAULT_VALUE' => 0
 		]
 	)
 );

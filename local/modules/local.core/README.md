@@ -17,6 +17,7 @@
   + $boolResult - > boolean
   + $funCalc() - > function
   + $classCalc() - > class
+  + $mixData - > mixed
 + При обращении к **любым** классам писать его namespace. Пример: **\CFile::GetPath($intFileId)**
 + Не использовать конструкцию **use \\...\Class as OtherClass** если это не имеет жесткого обоснования
 + Если путь до класса по какой то причине хранится в база денных (к примеру агенты), поменять его пустым интерфейсом **\Local\Core\Inner\Interfaces\UseInDb**

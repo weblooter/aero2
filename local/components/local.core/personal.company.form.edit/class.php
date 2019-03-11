@@ -1,5 +1,5 @@
 <?
-class CompanyFormEditComponent extends \CBitrixComponent
+class PersonalCompanyFormEditComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     const ACCESS_MY_COMPANY = 0x001;
     const ACCESS_COMPANY_NOT_FOUND = 0x002;
@@ -7,6 +7,7 @@ class CompanyFormEditComponent extends \CBitrixComponent
 
     public function executeComponent()
     {
+        $this->_checkCompanyAccess($this->arParams['COMPANY_ID'], $GLOBALS['USER']->GetID());
 
         if( !empty( \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD') ) && check_bitrix_sessid() )
             $this->__tryUpdate();
@@ -25,86 +26,65 @@ class CompanyFormEditComponent extends \CBitrixComponent
         else
             $arParams['ALLOW_FIELDS_LIST'] = [];
 
+        if( $arParams['COMPANY_ID'] < 1 )
+            $this->_show404Page();
+
         return $arParams;
     }
 
     private function __getAndSetOrmFields()
     {
 
-        switch ( \Local\Core\Inner\Company\Access::checkCompanyAccess(\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID'), $GLOBALS['USER']->GetID() ) )
+        $rs = \Local\Core\Model\Data\CompanyTable::getList([
+            'filter' => [
+                'ID' => $this->arParams['COMPANY_ID'],
+                'USER_OWN_ID' => $GLOBALS['USER']->GetID()
+            ]
+        ]);
+        $arCompanyFields = $rs->fetch();
+
+        /** @var \Bitrix\Main\ORM\Fields\ScalarField $obField */
+        foreach (\Local\Core\Model\Data\CompanyTable::getMap() as $obField)
         {
-            case \Local\Core\Inner\Company\Access::ACCESS_COMPANY_NOT_FOUND:
-            case \Local\Core\Inner\Company\Access::ACCESS_COMPANY_NOT_MINE:
+            if( !in_array($obField->getColumnName(), $this->arParams['ALLOW_FIELDS_LIST']) )
+                continue;
 
-                if( \Bitrix\Main\Loader::includeModule('iblock') )
-                    \Bitrix\Iblock\Component\Tools::process404("", true, true, true, "");
-
-                break;
-
-            case \Local\Core\Inner\Company\Access::ACCESS_COMPANY_IS_MINE:
-                $this->arResult['RULE_STATUS'] = 'SUCCESS';
-                $arCompanyFields = [];
-                $rs = \Local\Core\Model\Data\CompanyTable::getList([
-                    'filter' => [
-                        'ID' => \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID'),
-                        'USER_OWN_ID' => $GLOBALS['USER']->GetID()
-                    ]
-                ]);
-                $arCompanyFields = $rs->fetch();
-
-                /** @var \Bitrix\Main\ORM\Fields\ScalarField $obField */
-                foreach (\Local\Core\Model\Data\CompanyTable::getMap() as $obField)
-                {
-                    if( !in_array($obField->getColumnName(), $this->arParams['ALLOW_FIELDS_LIST']) )
-                        continue;
-
-                    $this->arResult['FIELDS'][ $obField->getColumnName() ] = [
-                        'TITLE' => $obField->getTitle(),
-                        'CODE' => $obField->getColumnName(),
-                        'IS_REQUIRED' => $obField->isRequired(),
-                        'VALUE' => $arCompanyFields[ $obField->getColumnName() ] ?? ''
-                    ];
-                }
-
-                break;
+            $this->arResult['FIELDS'][ $obField->getColumnName() ] = [
+                'TITLE' => $obField->getTitle(),
+                'CODE' => $obField->getColumnName(),
+                'IS_REQUIRED' => $obField->isRequired(),
+                'VALUE' => $arCompanyFields[ $obField->getColumnName() ] ?? ''
+            ];
         }
 
     }
 
     private function __tryUpdate()
     {
-        $intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID');
+        $arCompanyFields = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD');
 
-        if(
-            $GLOBALS['USER']->IsAuthorized()
-            && \Local\Core\Inner\Company\Access::checkCompanyAccess($intCompanyId, $GLOBALS['USER']->GetID() ) == \Local\Core\Inner\Company\Access::ACCESS_COMPANY_IS_MINE
-        )
+        $arUpdateFields = [];
+        foreach ($arCompanyFields as $key=>$val)
         {
-            $arCompanyFields = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD');
-
-            $arUpdateFields = [];
-            foreach ($arCompanyFields as $key=>$val)
+            if( in_array($key, $this->arParams['ALLOW_FIELDS_LIST']) )
             {
-                if( in_array($key, $this->arParams['ALLOW_FIELDS_LIST']) )
-                {
-                    $val = trim( strip_tags( $val ) );
-                    $arUpdateFields[ $key ] = $val;
-                }
+                $val = trim( strip_tags( $val ) );
+                $arUpdateFields[ $key ] = $val;
             }
+        }
 
-            if( !empty( $arUpdateFields ) )
+        if( !empty( $arUpdateFields ) )
+        {
+            /** @var \Bitrix\Main\ORM\Data\UpdateResult $obUpdateResult */
+            $obUpdateResult = \Local\Core\Model\Data\CompanyTable::update($this->arParams['COMPANY_ID'], $arUpdateFields);
+            if( $obUpdateResult->isSuccess() )
             {
-                /** @var \Bitrix\Main\ORM\Data\UpdateResult $obUpdateResult */
-                $obUpdateResult = \Local\Core\Model\Data\CompanyTable::update($intCompanyId, $arUpdateFields);
-                if( $obUpdateResult->isSuccess() )
-                {
-                    $this->arResult['UPDATE_STATUS'] = 'SUCCESS';
-                }
-                else
-                {
-                    $this->arResult['UPDATE_STATUS'] = 'ERROR';
-                    $this->arResult['UPDATE_ERRORS'] = $obUpdateResult->getErrorMessages();
-                }
+                $this->arResult['UPDATE_STATUS'] = 'SUCCESS';
+            }
+            else
+            {
+                $this->arResult['UPDATE_STATUS'] = 'ERROR';
+                $this->arResult['UPDATE_ERRORS'] = $obUpdateResult->getErrorMessages();
             }
         }
     }

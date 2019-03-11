@@ -5,7 +5,7 @@ $APPLICATION->AddChainItem('Рабочий стол');
 ?>
 <div class="col-12">
 
-    <a href="/personal/company/add/" class="btn btn-warning">+ Добавить компанию</a>
+    <a href="<?=\Local\Core\Inner\Route::getRouteTo('company', 'add')?>" class="btn btn-warning">+ Добавить компанию</a>
 
 </div>
 

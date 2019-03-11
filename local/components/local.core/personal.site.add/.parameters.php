@@ -8,7 +8,8 @@ $arComponentParameters = array(
 			'NAME' => 'ID компании',
 			'TYPE' => 'STRING',
 			'DEFAULT_VALUE' => 0
-		]
+		],
+		'AJAX_MODE' => []
 	)
 );
 ?>

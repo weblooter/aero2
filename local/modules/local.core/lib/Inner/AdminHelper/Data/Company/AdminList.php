@@ -134,14 +134,13 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "TYPE" => "TEXT",
             ],
             "DATE_CREATE" => [
-                "NAME" => self::$fields["DATE_INSERT"],
+                "NAME" => self::$fields["DATE_CREATE"],
                 "TYPE" => "DATE_PERIOD",
             ],
             "DATE_MODIFIED" => [
-                "NAME" => self::$fields["TIMESTAMP_X"],
+                "NAME" => self::$fields["DATE_MODIFIED"],
                 "TYPE" => "DATE_PERIOD",
             ],
-
             "VERIFIED" => [
                 "NAME" => self::$fields["VERIFIED"],
                 "TYPE" => "SELECT",
@@ -400,7 +399,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 $arFields = [
                     "ACTIVE" => $fields["ACTIVE"] ?? "N",
                     "USER_OWN_ID" => trim($fields['USER_OWN_ID']),
-                    "APPROVED" => $fields["VERIFIED"] ?? "N",
+                    "VERIFIED" => $fields["VERIFIED"] ?? "N",
                     "COMPANY_INN" => trim($fields['COMPANY_INN']),
                     "COMPANY_NAME_SHORT" => trim($fields['COMPANY_NAME_SHORT']),
                     "COMPANY_NAME_FULL" => trim($fields['COMPANY_NAME_FULL']),

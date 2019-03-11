@@ -1,8 +1,10 @@
 <?
-class CompanyPersonalDetailComponent extends \CBitrixComponent
+class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public function executeComponent()
     {
+        $this->_checkCompanyAccess($this->arParams['COMPANY_ID'], $GLOBALS['USER']->GetID());
+
         $this->arResult = $this->__getResult();
 
         $this->includeComponentTemplate();
@@ -13,6 +15,9 @@ class CompanyPersonalDetailComponent extends \CBitrixComponent
         if( $arParams['ELEM_COUNT'] < 1 )
             $arParams['ELEM_COUNT'] = 10;
 
+        if( $arParams['COMPANY_ID'] < 1 )
+            $this->_show404Page();
+
         return $arParams;
     }
 
@@ -21,55 +26,33 @@ class CompanyPersonalDetailComponent extends \CBitrixComponent
         $obCache = \Bitrix\Main\Application::getInstance()->getCache();
         $arResult = [];
 
-        $intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID');
-
         if( $obCache->startDataCache(
-                (3),
-                md5(__METHOD__.'_company_id='.$intCompanyId.'_user_id='.$GLOBALS['USER']->GetID() ),
-                \Local\Core\Assistant\Cache::getComponentCachePath('personal.company.detail', [ 'company_id='.$intCompanyId, 'user_id='.$GLOBALS['USER']->GetID() ] )
+                (60*60*24*7),
+                md5(__METHOD__.'_company_id='.$this->arParams['COMPANY_ID'].'_user_id='.$GLOBALS['USER']->GetID() ),
+                \Local\Core\Assistant\Cache::getComponentCachePath('personal.company.detail', [ 'company_id='.$this->arParams['COMPANY_ID'], 'user_id='.$GLOBALS['USER']->GetID() ] )
             )
         )
         {
+            $rsCompany = \Local\Core\Model\Data\CompanyTable::getList([
+                'filter' => [
+                    'ID' => $this->arParams['COMPANY_ID'],
+                    'USER_OWN_ID' => $GLOBALS['USER']->GetID()
+                ],
+                'order' => ['DATE_CREATE' => 'DESC'],
+                'select' => [
+                    'ID',
+                    'ACTIVE',
+                    'DATE_CREATE',
+                    'VERIFIED',
+                    'VERIFIED_NOTE',
+                    'COMPANY_INN',
+                    'COMPANY_NAME_SHORT',
+                ]
+            ]);
 
-            switch ( Local\Core\Inner\Company\Access::checkCompanyAccess( $intCompanyId, $GLOBALS['USER']->GetID() ) )
-            {
-                case \Local\Core\Inner\Company\Access::ACCESS_COMPANY_NOT_FOUND:
-                case \Local\Core\Inner\Company\Access::ACCESS_COMPANY_NOT_MINE:
+            $arResult['COMPANY'] = $rsCompany->fetch();
 
-                    $obCache->abortDataCache();
-
-                    if( \Bitrix\Main\Loader::includeModule('iblock') )
-                        \Bitrix\Iblock\Component\Tools::process404("", true, true, true, "");
-
-                    break;
-
-                case \Local\Core\Inner\Company\Access::ACCESS_COMPANY_IS_MINE:
-
-                    $arResult['RULE_STATUS'] = 'SUCCESS';
-
-                    $rsCompany = \Local\Core\Model\Data\CompanyTable::getList([
-                        'filter' => [
-                            'ID' => $intCompanyId,
-                            'USER_OWN_ID' => $GLOBALS['USER']->GetID()
-                        ],
-                        'order' => ['DATE_CREATE' => 'DESC'],
-                        'select' => [
-                            'ID',
-                            'ACTIVE',
-                            'DATE_CREATE',
-                            'VERIFIED',
-                            'VERIFIED_NOTE',
-                            'COMPANY_INN',
-                            'COMPANY_NAME_SHORT',
-                        ]
-                    ]);
-
-                    $arResult['COMPANY'] = $rsCompany->fetch();
-
-                    $obCache->endDataCache($arResult);
-
-                    break;
-            }
+            $obCache->endDataCache($arResult);
         }
         else
         {

@@ -39,7 +39,7 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
                 }
             ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                'title' => 'Дата создания компании',
+                'title' => 'Дата создания',
                 'required' => false,
                 'default_value' => function()
                 {
@@ -170,6 +170,14 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
         ];
     }
 
+    /**
+     * Обновим поле DATE_MODIFIED
+     *
+     * @param \Bitrix\Main\ORM\Event $event
+     *
+     * @return \Bitrix\Main\ORM\EventResult
+     * @throws \Bitrix\Main\ObjectException
+     */
     public static function onBeforeUpdate(\Bitrix\Main\ORM\Event $event)
     {
         $arModifiedFields = [];
@@ -192,6 +200,15 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
         return $result;
     }
 
+    /**
+     * Скинем кэши компонентов
+     *
+     * @param \Bitrix\Main\ORM\Event $event
+     *
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
     public static function OnAfterUpdate(\Bitrix\Main\ORM\Event $event)
     {
         /** @var \Bitrix\Main\ORM\Event $event */
@@ -203,6 +220,15 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
         }
     }
 
+    /**
+     * Скинем кэши компонентов
+     *
+     * @param \Bitrix\Main\ORM\Event $event
+     *
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
     public static function OnDelete(\Bitrix\Main\ORM\Event $event)
     {
         /** @var \Bitrix\Main\ORM\Event $event */

@@ -9,8 +9,8 @@ class OnBuildGlobalMenu
         if(!isset($arGlobalMenu['global_menu_local_core'])){
             $arGlobalMenu['global_menu_local_core'] = array(
                 'menu_id' => 'global_menu_local_core',
-                'text' => '\ssssssLocal\Core',
-                'title' => '\ssssssLocal\Core',
+                'text' => '\Local\Core',
+                'title' => '\Local\Core',
                 'sort' => 1000,
                 'items_id' => 'global_menu_local_core_items',
             );

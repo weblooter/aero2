@@ -1,5 +1,5 @@
 <?
-class CompanyFormAddComponent extends \CBitrixComponent
+class PersonalCompanyFormAddComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
 
     public function executeComponent()

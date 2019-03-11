@@ -1,4 +1,15 @@
-<?/** @var array $arResult */?>
+<?
+/**
+ * @global CMain $APPLICATION
+ * @var array $arParams
+ * @var array $arResult
+ * @var \PersonalCompanyDetailComponent $component
+ * @var CBitrixComponentTemplate $this
+ * @var string $templateName
+ * @var string $componentPath
+ * @var string $templateFolder
+ */
+?>
 
 <?
 $strAlertClass = '';
@@ -50,3 +61,10 @@ switch ($arResult['COMPANY']['VERIFIED'])
         }
         ?>
     </div>
+
+<div class="alert alert-warning" role="alert">
+    // TODO нотификации, типа новый инвойс или сайт прошел проверкуccc
+</div>
+
+<a href="<?=\Local\Core\Inner\Route::getRouteTo('bill', 'list', ['#COMPANY_ID#' => $arResult['COMPANY']['ID']])?>" class="btn btn-warning"><ion-icon name="wallet"></ion-icon> Счета компании</a>
+<a href="<?=\Local\Core\Inner\Route::getRouteTo('site', 'list', ['#COMPANY_ID#' => $arResult['COMPANY']['ID']])?>" class="btn btn-warning"><ion-icon name="reorder"></ion-icon> Сайты компании</a>

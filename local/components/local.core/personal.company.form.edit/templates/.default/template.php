@@ -1,4 +1,15 @@
-<?/** @var array $arResult */?>
+<?
+/**
+ * @global CMain $APPLICATION
+ * @var array $arParams
+ * @var array $arResult
+ * @var \PersonalCompanyFormEditComponent $component
+ * @var CBitrixComponentTemplate $this
+ * @var string $templateName
+ * @var string $componentPath
+ * @var string $templateFolder
+ */
+?>
 
 <form action="" method="post">
     <?=bitrix_sessid_post();?>
