@@ -1,13 +1,23 @@
 <?
-include_once __DIR__ . "/../local/php_interface/vendor/autoload.php";
+include_once __DIR__."/../local/php_interface/vendor/autoload.php";
 
 $conf = [
     'composer' => [
-        'value' => ['config_path' => realpath(__DIR__ . '/../local/php_interface/composer.json')]
+        'value' => ['config_path' => realpath( __DIR__.'/../local/php_interface/composer.json' )]
     ],
 
     /**
-     * Конфигурация Dadata.ru.
+     * Конфиг local.core
+     */
+
+    'local.core' => [
+        'value' => [
+        ],
+        'readonly' => true
+    ],
+
+    /**
+     * Конфиг Dadata.ru.
      * Ключ зареган на info@weblooter.ru
      */
     'dadata' => [
@@ -20,7 +30,7 @@ $conf = [
     ],
 
     /**
-     * Конфигурации для работы со счетами.
+     * Конфиг для работы со счетами.
      */
     'bill' => [
         'value' => [

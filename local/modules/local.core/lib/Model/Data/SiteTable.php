@@ -82,6 +82,20 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
             new Fields\StringField( 'FILE_LINK', [
                 'required' => false,
                 'title' => 'Ссылка на файл XML',
+                'validation' => function () {
+                    return [
+                        new Entity\Validator\RegExp( '/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/' )
+                    ];
+                },
+                'save_data_modification' => function () {
+                    return [
+                        function ( $value ) {
+                            preg_match( '/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/', $value,
+                                $arMatches );
+                            return $arMatches[ 1 ];
+                        }
+                    ];
+                }
             ] ),
             new Fields\EnumField( 'HTTP_AUTH', [
                 'required' => false,
@@ -109,6 +123,13 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
         ];
     }
 
+    /**
+     * Проверяет данные
+     *
+     * @param \Bitrix\Main\ORM\Event $event
+     *
+     * @return \Bitrix\Main\ORM\EventResult|void
+     */
     public static function onBeforeAdd( \Bitrix\Main\ORM\Event $event )
     {
         $result = new \Bitrix\Main\ORM\EventResult;
@@ -140,6 +161,8 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
                         }
                     }
 
+                    $arModifiedFields[ 'FILE_ID' ] = '';
+
                     break;
 
                 case 'FILE':
@@ -149,6 +172,11 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
                     {
                         throw new \Exception( 'Необходимо загрузить файл XML' );
                     }
+
+                    $arFields[ 'FILE_LINK' ] = '';
+                    $arFields[ 'HTTP_AUTH' ] = '';
+                    $arFields[ 'HTTP_AUTH_LOGIN' ] = '';
+                    $arFields[ 'HTTP_AUTH_PASS' ] = '';
 
                     break;
             }
@@ -248,6 +276,7 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
             if ( self::$__NeedDeleteFileID[ $arEventParams[ 'primary' ][ 'ID' ] ] > 0 )
             {
                 \CFile::Delete( self::$__NeedDeleteFileID[ $arEventParams[ 'primary' ][ 'ID' ] ] );
+                $arModifiedFields[ 'FILE_ID' ] = null;
             }
 
             $ar = self::getById( $arEventParams[ 'primary' ][ 'ID' ] )->fetchRaw();
@@ -312,7 +341,24 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
      */
     public static function clearComponentsCache( $arFields )
     {
-//        \Local\Core\Assistant\Cache::deleteComponentCache('personal.company.list', [ 'user_id='.$arFields['USER_OWN_ID'] ]);
-//        \Local\Core\Assistant\Cache::deleteComponentCache('personal.company.detail', [ 'company_id='.$arFields['ID'] ]);
+//        \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.list'], [ 'user_id='.$arFields['USER_OWN_ID'] ]);
+    }
+
+    /**
+     * Метод возвращает объект подготовленный \Bitrix\Main\ORM\Query\Result
+     *
+     * @return \Bitrix\Main\ORM\Query\Result
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getOrmFiles()
+    {
+        return self::getList([
+            'filter' => [
+                '!FILE_ID' => false,
+            ],
+            'select' => ['FILE_ID']
+        ]);
     }
 }

@@ -34,6 +34,16 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                 switch ( $arFields[ 'RESOURCE_TYPE' ] )
                 {
                     case 'LINK':
+
+                        $arAddFields[ 'FILE_LINK' ] = $arFields[ 'FILE_LINK' ];
+
+                        if ( $arFields[ 'HTTP_AUTH' ] == 'Y' )
+                        {
+                            $arAddFields[ 'HTTP_AUTH' ] = $arFields[ 'HTTP_AUTH' ];
+                            $arAddFields[ 'HTTP_AUTH_LOGIN' ] = $arFields[ 'HTTP_AUTH_LOGIN' ];
+                            $arAddFields[ 'HTTP_AUTH_PASS' ] = $arFields[ 'HTTP_AUTH_PASS' ];
+                        }
+
                         break;
 
                     case 'FILE': // Загрузить файл
@@ -49,7 +59,7 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                                 'FILE' )
                         );
 
-                        if ( preg_match( '/(\.xml)$/', $arFile[ 'name' ] ) !== 1 )
+                        if ( !\Local\Core\Inner\BxModified\CFile::checkExtension($arFile, '.xml') )
                         {
                             throw new \Exception( 'Файл должен быть XML' );
                         }
@@ -59,10 +69,9 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                             throw new \Exception( 'Максимальный размер файла - '.$this->intMaxUploadXMLFileSizeMb.'Мб' );
                         }
 
-                        $arFile[ 'MODULE_ID' ] = 'local.core';
-                        $intFileSave = \CFile::SaveFile(
+                        $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile(
                             $arFile,
-                            '/local.core/personal.site/xml/'
+                            '/personal.site/xml/'
                         );
                         if ( $intFileSave < 1 )
                         {

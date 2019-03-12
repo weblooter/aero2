@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Local\\Core\\Agent\\Base' => $baseDir . '/../modules/local.core/lib/Agent/Base.php',
+    'Local\\Core\\Agent\\Fileman\\ClearUnregisteredLocalCoreFiles' => $baseDir . '/../modules/local.core/lib/Agent/Fileman/ClearUnregisteredLocalCoreFiles.php',
     'Local\\Core\\Assistant\\Cache' => $baseDir . '/../modules/local.core/lib/Assistant/Cache.php',
     'Local\\Core\\Assistant\\HighLoadBlock\\HighLoadBlock' => $baseDir . '/../modules/local.core/lib/Assistant/HighLoadBlock/HighLoadBlock.php',
     'Local\\Core\\Assistant\\Iblock\\ElementProperty' => $baseDir . '/../modules/local.core/lib/Assistant/Iblock/ElementProperty.php',
@@ -50,6 +51,8 @@ return array(
     'Local\\Core\\Inner\\Admin\\Tabs\\Params' => $baseDir . '/../modules/local.core/lib/Inner/Admin/Tabs/Params.php',
     'Local\\Core\\Inner\\Bill\\Base' => $baseDir . '/../modules/local.core/lib/Inner/Bill/Base.php',
     'Local\\Core\\Inner\\BxModified\\CBitrixComponent' => $baseDir . '/../modules/local.core/lib/Inner/BxModified/CBitrixComponent.php',
+    'Local\\Core\\Inner\\BxModified\\CFile' => $baseDir . '/../modules/local.core/lib/Inner/BxModified/CFile.php',
+    'Local\\Core\\Inner\\Cache' => $baseDir . '/../modules/local.core/lib/Inner/Cache.php',
     'Local\\Core\\Inner\\Client\\Dadata\\Abstracts\\QueryAbstract' => $baseDir . '/../modules/local.core/lib/Inner/Client/Dadata/Abstracts/QueryAbstract.php',
     'Local\\Core\\Inner\\Client\\Dadata\\AddressClient' => $baseDir . '/../modules/local.core/lib/Inner/Client/Dadata/AddressClient.php',
     'Local\\Core\\Inner\\Client\\Dadata\\BaseClient' => $baseDir . '/../modules/local.core/lib/Inner/Client/Dadata/BaseClient.php',
@@ -68,6 +71,7 @@ return array(
     'Local\\Core\\Inner\\Fields' => $baseDir . '/../modules/local.core/lib/Inner/Fields.php',
     'Local\\Core\\Inner\\File' => $baseDir . '/../modules/local.core/lib/Inner/File.php',
     'Local\\Core\\Inner\\FileCollection' => $baseDir . '/../modules/local.core/lib/Inner/FileCollection.php',
+    'Local\\Core\\Inner\\Fileman\\Cleaner' => $baseDir . '/../modules/local.core/lib/Inner/Fileman/Cleaner.php',
     'Local\\Core\\Inner\\Iblock\\Element' => $baseDir . '/../modules/local.core/lib/Inner/Iblock/Element.php',
     'Local\\Core\\Inner\\Iblock\\ElementCollection' => $baseDir . '/../modules/local.core/lib/Inner/Iblock/ElementCollection.php',
     'Local\\Core\\Inner\\Iblock\\PropertyValue' => $baseDir . '/../modules/local.core/lib/Inner/Iblock/PropertyValue.php',

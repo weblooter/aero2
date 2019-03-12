@@ -2,6 +2,13 @@
 
 namespace Local\Core\Inner\BxModified;
 
+/**
+ * Модифицированный класс \CBitrixComponent
+ *
+ * @see \CBitrixComponent
+ * @inheritdoc
+ * @package Local\Core\Inner\BxModified
+ */
 class CBitrixComponent extends \CBitrixComponent
 {
 

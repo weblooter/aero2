@@ -166,6 +166,6 @@ class BillProductTable extends \Bitrix\Main\ORM\Data\DataManager
      */
     public static function clearComponentsCache( $arFields )
     {
-//        \Local\Core\Assistant\Cache::deleteComponentCache('personal.company.list', [ 'user_id='.$arFields['USER_OWN_ID'] ]);
+//        \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.list'], [ 'user_id='.$arFields['USER_OWN_ID'] ]);
     }
 }

@@ -29,12 +29,13 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
             ->setPageSize( $this->arParams[ 'ELEM_COUNT' ] )
             ->initFromUri();
 
-        if ( $obCache->startDataCache(
-            ( 60 * 60 * 24 * 7 ),
-            md5( __METHOD__.'_user_id='.$GLOBALS[ 'USER' ]->GetID().'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset() ),
-            \Local\Core\Assistant\Cache::getComponentCachePath( 'personal.company.list',
-                ['user_id='.$GLOBALS[ 'USER' ]->GetID(), 'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()]
-            ) ) )
+        if (
+            $obCache->startDataCache(
+                ( 60 * 60 * 24 * 7 ),
+                md5( __METHOD__.'_user_id='.$GLOBALS[ 'USER' ]->GetID().'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset() ),
+                \Local\Core\Inner\Cache::getComponentCachePath( ['personal.company.list'], ['user_id='.$GLOBALS[ 'USER' ]->GetID(), 'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()] )
+            )
+        )
         {
 
 

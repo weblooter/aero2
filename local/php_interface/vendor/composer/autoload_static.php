@@ -98,6 +98,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
 
     public static $classMap = array (
         'Local\\Core\\Agent\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/Base.php',
+        'Local\\Core\\Agent\\Fileman\\ClearUnregisteredLocalCoreFiles' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/Fileman/ClearUnregisteredLocalCoreFiles.php',
         'Local\\Core\\Assistant\\Cache' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/Cache.php',
         'Local\\Core\\Assistant\\HighLoadBlock\\HighLoadBlock' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/HighLoadBlock/HighLoadBlock.php',
         'Local\\Core\\Assistant\\Iblock\\ElementProperty' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/Iblock/ElementProperty.php',
@@ -141,6 +142,8 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\Admin\\Tabs\\Params' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Admin/Tabs/Params.php',
         'Local\\Core\\Inner\\Bill\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Bill/Base.php',
         'Local\\Core\\Inner\\BxModified\\CBitrixComponent' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/BxModified/CBitrixComponent.php',
+        'Local\\Core\\Inner\\BxModified\\CFile' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/BxModified/CFile.php',
+        'Local\\Core\\Inner\\Cache' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Cache.php',
         'Local\\Core\\Inner\\Client\\Dadata\\Abstracts\\QueryAbstract' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Client/Dadata/Abstracts/QueryAbstract.php',
         'Local\\Core\\Inner\\Client\\Dadata\\AddressClient' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Client/Dadata/AddressClient.php',
         'Local\\Core\\Inner\\Client\\Dadata\\BaseClient' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Client/Dadata/BaseClient.php',
@@ -159,6 +162,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\Fields' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Fields.php',
         'Local\\Core\\Inner\\File' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/File.php',
         'Local\\Core\\Inner\\FileCollection' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/FileCollection.php',
+        'Local\\Core\\Inner\\Fileman\\Cleaner' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Fileman/Cleaner.php',
         'Local\\Core\\Inner\\Iblock\\Element' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Iblock/Element.php',
         'Local\\Core\\Inner\\Iblock\\ElementCollection' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Iblock/ElementCollection.php',
         'Local\\Core\\Inner\\Iblock\\PropertyValue' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Iblock/PropertyValue.php',

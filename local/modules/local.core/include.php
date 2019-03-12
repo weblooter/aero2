@@ -46,4 +46,24 @@ class CLocalCore
         static::dropDBTable( $ormClassTable );
         static::initDBTable( $ormClassTable );
     }
+
+    /**
+     * Добавить класс агента
+     *
+     * @param string $strAgentClassName Класс агента
+     * @param int $intPeriod Период запуска в секундах
+     */
+    public static function addAgent($strAgentClassName, $intPeriod = 3600)
+    {
+        \CAgent::AddAgent(
+            $strAgentClassName.'::init()',
+            'local.core',
+            'N',
+            $intPeriod,
+            date('d.m.Y H:i:00' ),
+            'N',
+            null,
+            100
+        );
+    }
 }
