@@ -27,3 +27,5 @@
 /page.php
 *.tar.gz*
 *.psd
+!/local/php_interface/composer.json
+!/local/php_interface/composer_old.json

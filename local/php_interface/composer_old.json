@@ -1,0 +1,44 @@
+{
+    "name": "feed.weblooter.ru",
+    "description": "",
+    "keywords": ["bitrix"],
+    "homepage": "https://feed.weblooter.ru/",
+    "license": "",
+    "authors": [
+        {
+            "name": "Evgen Che",
+            "email": "drdeathpanda@yandex.ru"
+        }
+    ],
+    "require": {
+        "wikimedia/composer-merge-plugin": "dev-master",
+        "symfony/console": "4.1.*",
+        "symfony/var-dumper": "~4.1",
+        "symfony/webpack-encore-pack": "~1.0.3",
+        "symfony/dependency-injection": "~4.1.4",
+        "symfony/routing": "~4.1.6",
+        "symfony/http-foundation": "~4.1",
+        "monolog/monolog": "1.24.0",
+        "symfony/process": "v4.2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Local\\Core\\": "../modules/local.core/lib"
+        },
+        "files": [
+            "debug_helper.php"
+        ]
+    },
+    "config": {
+        "process-timeout" : 0,
+        "vendor-dir": "vendor",
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "merge-plugin": {
+            "require": [
+                "../../bitrix/composer-bx.json"
+            ]
+        }
+    }
+}

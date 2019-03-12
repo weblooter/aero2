@@ -656,11 +656,4 @@ return array(
     'Symfony\\Component\\VarDumper\\VarDumper' => $vendorDir . '/symfony/var-dumper/VarDumper.php',
     'Symfony\\Polyfill\\Mbstring\\Mbstring' => $vendorDir . '/symfony/polyfill-mbstring/Mbstring.php',
     'Symfony\\Polyfill\\Php72\\Php72' => $vendorDir . '/symfony/polyfill-php72/Php72.php',
-    'Wikimedia\\Composer\\Logger' => $vendorDir . '/wikimedia/composer-merge-plugin/src/Logger.php',
-    'Wikimedia\\Composer\\MergePlugin' => $vendorDir . '/wikimedia/composer-merge-plugin/src/MergePlugin.php',
-    'Wikimedia\\Composer\\Merge\\ExtraPackage' => $vendorDir . '/wikimedia/composer-merge-plugin/src/Merge/ExtraPackage.php',
-    'Wikimedia\\Composer\\Merge\\MissingFileException' => $vendorDir . '/wikimedia/composer-merge-plugin/src/Merge/MissingFileException.php',
-    'Wikimedia\\Composer\\Merge\\NestedArray' => $vendorDir . '/wikimedia/composer-merge-plugin/src/Merge/NestedArray.php',
-    'Wikimedia\\Composer\\Merge\\PluginState' => $vendorDir . '/wikimedia/composer-merge-plugin/src/Merge/PluginState.php',
-    'Wikimedia\\Composer\\Merge\\StabilityFlags' => $vendorDir . '/wikimedia/composer-merge-plugin/src/Merge/StabilityFlags.php',
 );
