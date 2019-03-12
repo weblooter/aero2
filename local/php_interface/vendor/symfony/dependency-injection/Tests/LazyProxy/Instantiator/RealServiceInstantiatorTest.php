@@ -26,11 +26,12 @@ class RealServiceInstantiatorTest extends TestCase
     {
         $instantiator = new RealServiceInstantiator();
         $instance = new \stdClass();
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $callback = function () use ($instance) {
+        $container = $this->getMockBuilder( 'Symfony\Component\DependencyInjection\ContainerInterface' )->getMock();
+        $callback = function () use ( $instance ) {
             return $instance;
         };
 
-        $this->assertSame($instance, $instantiator->instantiateProxy($container, new Definition(), 'foo', $callback));
+        $this->assertSame( $instance,
+            $instantiator->instantiateProxy( $container, new Definition(), 'foo', $callback ) );
     }
 }

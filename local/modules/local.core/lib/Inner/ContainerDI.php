@@ -17,14 +17,15 @@ class ContainerDI
 
     public static function getInstance()
     {
-        if (is_null(self::$container)) {
-            self::$container = new ContainerBuilder(self::$parameterBag);
+        if ( is_null( self::$container ) )
+        {
+            self::$container = new ContainerBuilder( self::$parameterBag );
         }
 
         return self::$container;
     }
 
-    public static function setParameterBag(ParameterBagInterface $parameterBag = null)
+    public static function setParameterBag( ParameterBagInterface $parameterBag = null )
     {
         self::$parameterBag = $parameterBag;
     }

@@ -34,12 +34,13 @@ class FleepHookHandlerTest extends TestCase
     {
         parent::setUp();
 
-        if (!extension_loaded('openssl')) {
-            $this->markTestSkipped('This test requires openssl extension to run');
+        if ( !extension_loaded( 'openssl' ) )
+        {
+            $this->markTestSkipped( 'This test requires openssl extension to run' );
         }
 
         // Create instances of the handler and logger for convenience
-        $this->handler = new FleepHookHandler(self::TOKEN);
+        $this->handler = new FleepHookHandler( self::TOKEN );
     }
 
     /**
@@ -47,8 +48,8 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConstructorSetsExpectedDefaults()
     {
-        $this->assertEquals(Logger::DEBUG, $this->handler->getLevel());
-        $this->assertEquals(true, $this->handler->getBubble());
+        $this->assertEquals( Logger::DEBUG, $this->handler->getLevel() );
+        $this->assertEquals( true, $this->handler->getBubble() );
     }
 
     /**
@@ -60,19 +61,19 @@ class FleepHookHandlerTest extends TestCase
             'message' => 'msg',
             'context' => array(),
             'level' => Logger::DEBUG,
-            'level_name' => Logger::getLevelName(Logger::DEBUG),
+            'level_name' => Logger::getLevelName( Logger::DEBUG ),
             'channel' => 'channel',
             'datetime' => new \DateTime(),
             'extra' => array(),
         );
 
-        $expectedFormatter = new LineFormatter(null, null, true, true);
-        $expected = $expectedFormatter->format($record);
+        $expectedFormatter = new LineFormatter( null, null, true, true );
+        $expected = $expectedFormatter->format( $record );
 
         $handlerFormatter = $this->handler->getFormatter();
-        $actual = $handlerFormatter->format($record);
+        $actual = $handlerFormatter->format( $record );
 
-        $this->assertEquals($expected, $actual, 'Empty context and extra arrays should not be rendered');
+        $this->assertEquals( $expected, $actual, 'Empty context and extra arrays should not be rendered' );
     }
 
     /**
@@ -80,6 +81,6 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConnectionStringisConstructedCorrectly()
     {
-        $this->assertEquals('ssl://' . FleepHookHandler::FLEEP_HOST . ':443', $this->handler->getConnectionString());
+        $this->assertEquals( 'ssl://'.FleepHookHandler::FLEEP_HOST.':443', $this->handler->getConnectionString() );
     }
 }

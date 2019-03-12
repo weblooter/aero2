@@ -28,7 +28,7 @@ class FrozenParameterBag extends ParameterBag
      *
      * @param array $parameters An array of parameters
      */
-    public function __construct(array $parameters = [])
+    public function __construct( array $parameters = [] )
     {
         $this->parameters = $parameters;
         $this->resolved = true;
@@ -39,30 +39,30 @@ class FrozenParameterBag extends ParameterBag
      */
     public function clear()
     {
-        throw new LogicException('Impossible to call clear() on a frozen ParameterBag.');
+        throw new LogicException( 'Impossible to call clear() on a frozen ParameterBag.' );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function add(array $parameters)
+    public function add( array $parameters )
     {
-        throw new LogicException('Impossible to call add() on a frozen ParameterBag.');
+        throw new LogicException( 'Impossible to call add() on a frozen ParameterBag.' );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($name, $value)
+    public function set( $name, $value )
     {
-        throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
+        throw new LogicException( 'Impossible to call set() on a frozen ParameterBag.' );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove($name)
+    public function remove( $name )
     {
-        throw new LogicException('Impossible to call remove() on a frozen ParameterBag.');
+        throw new LogicException( 'Impossible to call remove() on a frozen ParameterBag.' );
     }
 }

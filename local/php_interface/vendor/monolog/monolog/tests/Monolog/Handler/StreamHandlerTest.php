@@ -22,14 +22,14 @@ class StreamHandlerTest extends TestCase
      */
     public function testWrite()
     {
-        $handle = fopen('php://memory', 'a+');
-        $handler = new StreamHandler($handle);
-        $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test2'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test3'));
-        fseek($handle, 0);
-        $this->assertEquals('testtest2test3', fread($handle, 100));
+        $handle = fopen( 'php://memory', 'a+' );
+        $handler = new StreamHandler( $handle );
+        $handler->setFormatter( $this->getIdentityFormatter() );
+        $handler->handle( $this->getRecord( Logger::WARNING, 'test' ) );
+        $handler->handle( $this->getRecord( Logger::WARNING, 'test2' ) );
+        $handler->handle( $this->getRecord( Logger::WARNING, 'test3' ) );
+        fseek( $handle, 0 );
+        $this->assertEquals( 'testtest2test3', fread( $handle, 100 ) );
     }
 
     /**
@@ -37,11 +37,11 @@ class StreamHandlerTest extends TestCase
      */
     public function testCloseKeepsExternalHandlersOpen()
     {
-        $handle = fopen('php://memory', 'a+');
-        $handler = new StreamHandler($handle);
-        $this->assertTrue(is_resource($handle));
+        $handle = fopen( 'php://memory', 'a+' );
+        $handler = new StreamHandler( $handle );
+        $this->assertTrue( is_resource( $handle ) );
         $handler->close();
-        $this->assertTrue(is_resource($handle));
+        $this->assertTrue( is_resource( $handle ) );
     }
 
     /**
@@ -49,15 +49,15 @@ class StreamHandlerTest extends TestCase
      */
     public function testClose()
     {
-        $handler = new StreamHandler('php://memory');
-        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
-        $streamProp = new \ReflectionProperty('Monolog\Handler\StreamHandler', 'stream');
-        $streamProp->setAccessible(true);
-        $handle = $streamProp->getValue($handler);
+        $handler = new StreamHandler( 'php://memory' );
+        $handler->handle( $this->getRecord( Logger::WARNING, 'test' ) );
+        $streamProp = new \ReflectionProperty( 'Monolog\Handler\StreamHandler', 'stream' );
+        $streamProp->setAccessible( true );
+        $handle = $streamProp->getValue( $handler );
 
-        $this->assertTrue(is_resource($handle));
+        $this->assertTrue( is_resource( $handle ) );
         $handler->close();
-        $this->assertFalse(is_resource($handle));
+        $this->assertFalse( is_resource( $handle ) );
     }
 
     /**
@@ -65,8 +65,8 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteCreatesTheStreamResource()
     {
-        $handler = new StreamHandler('php://memory');
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( 'php://memory' );
+        $handler->handle( $this->getRecord() );
     }
 
     /**
@@ -75,9 +75,9 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteLocking()
     {
-        $temp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'monolog_locked_log';
-        $handler = new StreamHandler($temp, Logger::DEBUG, true, null, true);
-        $handler->handle($this->getRecord());
+        $temp = sys_get_temp_dir().DIRECTORY_SEPARATOR.'monolog_locked_log';
+        $handler = new StreamHandler( $temp, Logger::DEBUG, true, null, true );
+        $handler->handle( $this->getRecord() );
     }
 
     /**
@@ -87,8 +87,8 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteMissingResource()
     {
-        $handler = new StreamHandler(null);
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( null );
+        $handler->handle( $this->getRecord() );
     }
 
     public function invalidArgumentProvider()
@@ -103,11 +103,11 @@ class StreamHandlerTest extends TestCase
     /**
      * @dataProvider invalidArgumentProvider
      * @expectedException InvalidArgumentException
-     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers       Monolog\Handler\StreamHandler::__construct
      */
-    public function testWriteInvalidArgument($invalidArgument)
+    public function testWriteInvalidArgument( $invalidArgument )
     {
-        $handler = new StreamHandler($invalidArgument);
+        $handler = new StreamHandler( $invalidArgument );
     }
 
     /**
@@ -117,8 +117,8 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteInvalidResource()
     {
-        $handler = new StreamHandler('bogus://url');
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( 'bogus://url' );
+        $handler->handle( $this->getRecord() );
     }
 
     /**
@@ -128,8 +128,8 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteNonExistingResource()
     {
-        $handler = new StreamHandler('ftp://foo/bar/baz/'.rand(0, 10000));
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( 'ftp://foo/bar/baz/'.rand( 0, 10000 ) );
+        $handler->handle( $this->getRecord() );
     }
 
     /**
@@ -138,8 +138,9 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteNonExistingPath()
     {
-        $handler = new StreamHandler(sys_get_temp_dir().'/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( sys_get_temp_dir().'/bar/'.rand( 0, 10000 ).DIRECTORY_SEPARATOR.rand( 0,
+                10000 ) );
+        $handler->handle( $this->getRecord() );
     }
 
     /**
@@ -148,8 +149,9 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteNonExistingFileResource()
     {
-        $handler = new StreamHandler('file://'.sys_get_temp_dir().'/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( 'file://'.sys_get_temp_dir().'/bar/'.rand( 0, 10000 ).DIRECTORY_SEPARATOR.rand( 0,
+                10000 ) );
+        $handler->handle( $this->getRecord() );
     }
 
     /**
@@ -160,11 +162,12 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteNonExistingAndNotCreatablePath()
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $this->markTestSkipped('Permissions checks can not run on windows');
+        if ( defined( 'PHP_WINDOWS_VERSION_BUILD' ) )
+        {
+            $this->markTestSkipped( 'Permissions checks can not run on windows' );
         }
-        $handler = new StreamHandler('/foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( '/foo/bar/'.rand( 0, 10000 ).DIRECTORY_SEPARATOR.rand( 0, 10000 ) );
+        $handler->handle( $this->getRecord() );
     }
 
     /**
@@ -175,10 +178,11 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteNonExistingAndNotCreatableFileResource()
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $this->markTestSkipped('Permissions checks can not run on windows');
+        if ( defined( 'PHP_WINDOWS_VERSION_BUILD' ) )
+        {
+            $this->markTestSkipped( 'Permissions checks can not run on windows' );
         }
-        $handler = new StreamHandler('file:///foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
-        $handler->handle($this->getRecord());
+        $handler = new StreamHandler( 'file:///foo/bar/'.rand( 0, 10000 ).DIRECTORY_SEPARATOR.rand( 0, 10000 ) );
+        $handler->handle( $this->getRecord() );
     }
 }

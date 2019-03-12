@@ -20,16 +20,16 @@ class RequestMatcherTest extends TestCase
     /**
      * @dataProvider getMethodData
      */
-    public function testMethod($requestMethod, $matcherMethod, $isMatch)
+    public function testMethod( $requestMethod, $matcherMethod, $isMatch )
     {
         $matcher = new RequestMatcher();
-        $matcher->matchMethod($matcherMethod);
-        $request = Request::create('', $requestMethod);
-        $this->assertSame($isMatch, $matcher->matches($request));
+        $matcher->matchMethod( $matcherMethod );
+        $request = Request::create( '', $requestMethod );
+        $this->assertSame( $isMatch, $matcher->matches( $request ) );
 
-        $matcher = new RequestMatcher(null, null, $matcherMethod);
-        $request = Request::create('', $requestMethod);
-        $this->assertSame($isMatch, $matcher->matches($request));
+        $matcher = new RequestMatcher( null, null, $matcherMethod );
+        $request = Request::create( '', $requestMethod );
+        $this->assertSame( $isMatch, $matcher->matches( $request ) );
     }
 
     public function getMethodData()
@@ -46,51 +46,51 @@ class RequestMatcherTest extends TestCase
 
     public function testScheme()
     {
-        $httpRequest = $request = $request = Request::create('');
-        $httpsRequest = $request = $request = Request::create('', 'get', [], [], [], ['HTTPS' => 'on']);
+        $httpRequest = $request = $request = Request::create( '' );
+        $httpsRequest = $request = $request = Request::create( '', 'get', [], [], [], ['HTTPS' => 'on'] );
 
         $matcher = new RequestMatcher();
-        $matcher->matchScheme('https');
-        $this->assertFalse($matcher->matches($httpRequest));
-        $this->assertTrue($matcher->matches($httpsRequest));
+        $matcher->matchScheme( 'https' );
+        $this->assertFalse( $matcher->matches( $httpRequest ) );
+        $this->assertTrue( $matcher->matches( $httpsRequest ) );
 
-        $matcher->matchScheme('http');
-        $this->assertFalse($matcher->matches($httpsRequest));
-        $this->assertTrue($matcher->matches($httpRequest));
+        $matcher->matchScheme( 'http' );
+        $this->assertFalse( $matcher->matches( $httpsRequest ) );
+        $this->assertTrue( $matcher->matches( $httpRequest ) );
 
         $matcher = new RequestMatcher();
-        $this->assertTrue($matcher->matches($httpsRequest));
-        $this->assertTrue($matcher->matches($httpRequest));
+        $this->assertTrue( $matcher->matches( $httpsRequest ) );
+        $this->assertTrue( $matcher->matches( $httpRequest ) );
     }
 
     /**
      * @dataProvider getHostData
      */
-    public function testHost($pattern, $isMatch)
+    public function testHost( $pattern, $isMatch )
     {
         $matcher = new RequestMatcher();
-        $request = Request::create('', 'get', [], [], [], ['HTTP_HOST' => 'foo.example.com']);
+        $request = Request::create( '', 'get', [], [], [], ['HTTP_HOST' => 'foo.example.com'] );
 
-        $matcher->matchHost($pattern);
-        $this->assertSame($isMatch, $matcher->matches($request));
+        $matcher->matchHost( $pattern );
+        $this->assertSame( $isMatch, $matcher->matches( $request ) );
 
-        $matcher = new RequestMatcher(null, $pattern);
-        $this->assertSame($isMatch, $matcher->matches($request));
+        $matcher = new RequestMatcher( null, $pattern );
+        $this->assertSame( $isMatch, $matcher->matches( $request ) );
     }
 
     public function testPort()
     {
         $matcher = new RequestMatcher();
-        $request = Request::create('', 'get', [], [], [], ['HTTP_HOST' => null, 'SERVER_PORT' => 8000]);
+        $request = Request::create( '', 'get', [], [], [], ['HTTP_HOST' => null, 'SERVER_PORT' => 8000] );
 
-        $matcher->matchPort(8000);
-        $this->assertTrue($matcher->matches($request));
+        $matcher->matchPort( 8000 );
+        $this->assertTrue( $matcher->matches( $request ) );
 
-        $matcher->matchPort(9000);
-        $this->assertFalse($matcher->matches($request));
+        $matcher->matchPort( 9000 );
+        $this->assertFalse( $matcher->matches( $request ) );
 
-        $matcher = new RequestMatcher(null, null, null, null, [], null, 8000);
-        $this->assertTrue($matcher->matches($request));
+        $matcher = new RequestMatcher( null, null, null, null, [], null, 8000 );
+        $this->assertTrue( $matcher->matches( $request ) );
     }
 
     public function getHostData()
@@ -111,56 +111,56 @@ class RequestMatcherTest extends TestCase
     {
         $matcher = new RequestMatcher();
 
-        $request = Request::create('/admin/foo');
+        $request = Request::create( '/admin/foo' );
 
-        $matcher->matchPath('/admin/.*');
-        $this->assertTrue($matcher->matches($request));
+        $matcher->matchPath( '/admin/.*' );
+        $this->assertTrue( $matcher->matches( $request ) );
 
-        $matcher->matchPath('/admin');
-        $this->assertTrue($matcher->matches($request));
+        $matcher->matchPath( '/admin' );
+        $this->assertTrue( $matcher->matches( $request ) );
 
-        $matcher->matchPath('^/admin/.*$');
-        $this->assertTrue($matcher->matches($request));
+        $matcher->matchPath( '^/admin/.*$' );
+        $this->assertTrue( $matcher->matches( $request ) );
 
-        $matcher->matchMethod('/blog/.*');
-        $this->assertFalse($matcher->matches($request));
+        $matcher->matchMethod( '/blog/.*' );
+        $this->assertFalse( $matcher->matches( $request ) );
     }
 
     public function testPathWithLocaleIsNotSupported()
     {
         $matcher = new RequestMatcher();
-        $request = Request::create('/en/login');
-        $request->setLocale('en');
+        $request = Request::create( '/en/login' );
+        $request->setLocale( 'en' );
 
-        $matcher->matchPath('^/{_locale}/login$');
-        $this->assertFalse($matcher->matches($request));
+        $matcher->matchPath( '^/{_locale}/login$' );
+        $this->assertFalse( $matcher->matches( $request ) );
     }
 
     public function testPathWithEncodedCharacters()
     {
         $matcher = new RequestMatcher();
-        $request = Request::create('/admin/fo%20o');
-        $matcher->matchPath('^/admin/fo o*$');
-        $this->assertTrue($matcher->matches($request));
+        $request = Request::create( '/admin/fo%20o' );
+        $matcher->matchPath( '^/admin/fo o*$' );
+        $this->assertTrue( $matcher->matches( $request ) );
     }
 
     public function testAttributes()
     {
         $matcher = new RequestMatcher();
 
-        $request = Request::create('/admin/foo');
-        $request->attributes->set('foo', 'foo_bar');
+        $request = Request::create( '/admin/foo' );
+        $request->attributes->set( 'foo', 'foo_bar' );
 
-        $matcher->matchAttribute('foo', 'foo_.*');
-        $this->assertTrue($matcher->matches($request));
+        $matcher->matchAttribute( 'foo', 'foo_.*' );
+        $this->assertTrue( $matcher->matches( $request ) );
 
-        $matcher->matchAttribute('foo', 'foo');
-        $this->assertTrue($matcher->matches($request));
+        $matcher->matchAttribute( 'foo', 'foo' );
+        $this->assertTrue( $matcher->matches( $request ) );
 
-        $matcher->matchAttribute('foo', '^foo_bar$');
-        $this->assertTrue($matcher->matches($request));
+        $matcher->matchAttribute( 'foo', '^foo_bar$' );
+        $this->assertTrue( $matcher->matches( $request ) );
 
-        $matcher->matchAttribute('foo', 'babar');
-        $this->assertFalse($matcher->matches($request));
+        $matcher->matchAttribute( 'foo', 'babar' );
+        $this->assertFalse( $matcher->matches( $request ) );
     }
 }

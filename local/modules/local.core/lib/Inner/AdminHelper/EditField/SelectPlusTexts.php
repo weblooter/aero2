@@ -15,48 +15,55 @@ class SelectPlusTexts extends Select
     public function getEditFieldHtml()
     {
         $variants = [
-            "reference" => array_values($this->variants),
-            "reference_id" => array_keys($this->variants),
+            "reference" => array_values( $this->variants ),
+            "reference_id" => array_keys( $this->variants ),
         ];
 
         $value = $this->getValue();
 
-        if(!is_array($value)){
-            if($this->valueModificator){
-                $value = call_user_func($this->valueModificator, $value);
+        if ( !is_array( $value ) )
+        {
+            if ( $this->valueModificator )
+            {
+                $value = call_user_func( $this->valueModificator, $value );
             }
         }
 
         $return = [];
-        $return[] = SelectBoxFromArray($this->getCode().'[]', $variants, $value[0], "Не выбрано", "");
+        $return[] = SelectBoxFromArray( $this->getCode().'[]', $variants, $value[ 0 ], "Не выбрано", "" );
         $arInputs = [];
-        foreach ($this->inputs as $inputKey => $arInput) {
+        foreach ( $this->inputs as $inputKey => $arInput )
+        {
             $i = ['<input'];
 
-            if (!$arInput['type']) {
-                $arInput['type'] = 'text';
+            if ( !$arInput[ 'type' ] )
+            {
+                $arInput[ 'type' ] = 'text';
             }
 
-            if (!$arInput['name']) {
-                $arInput['name'] = $this->getCode().'[]';
+            if ( !$arInput[ 'name' ] )
+            {
+                $arInput[ 'name' ] = $this->getCode().'[]';
             }
 
-            if($value[$inputKey+1]){
-                $arInput['value'] = $value[$inputKey+1];
+            if ( $value[ $inputKey + 1 ] )
+            {
+                $arInput[ 'value' ] = $value[ $inputKey + 1 ];
             }
 
-            foreach ($arInput as $k => $v) {
+            foreach ( $arInput as $k => $v )
+            {
                 $i[] = "$k=\"$v\"";
             }
 
             $i[] = '/>';
-            $arInputs[] = join(' ', $i);
+            $arInputs[] = join( ' ', $i );
 
         }
 
-        $return[] = join($this->inputSeparator, $arInputs);
+        $return[] = join( $this->inputSeparator, $arInputs );
 
-        return join('&nbsp;', $return);
+        return join( '&nbsp;', $return );
     }
 
     /**
@@ -68,9 +75,11 @@ class SelectPlusTexts extends Select
     {
         $result = "";
 
-        if (!empty($this->getValue())) {
+        if ( !empty( $this->getValue() ) )
+        {
 
-            if (isset($this->variants[$this->getValue()])) {
+            if ( isset( $this->variants[ $this->getValue() ] ) )
+            {
 
                 $result = "{$this->variants[$this->getValue()]}[{$this->getValue()}]";
             }
@@ -82,12 +91,14 @@ class SelectPlusTexts extends Select
 
     /**
      * Добавляет текстовое поле ввода
+     *
      * @param array $input - массив атрибутов вида ['type' => 'text', 'required' => 'true']
+     *
      * @return $this
      */
 
 
-    public function addTextField(array $input = [])
+    public function addTextField( array $input = [] )
     {
         $this->inputs[] = $input;
 
@@ -96,10 +107,12 @@ class SelectPlusTexts extends Select
 
     /**
      * Устанавливает визуальный разделитель текстовых полей
+     *
      * @param string $inputSeparator
+     *
      * @return $this
      */
-    public function setTextFieldSeparator(string $inputSeparator)
+    public function setTextFieldSeparator( string $inputSeparator )
     {
         $this->inputSeparator = $inputSeparator;
         return $this;
@@ -108,10 +121,12 @@ class SelectPlusTexts extends Select
 
     /**
      * Устанавливает обработчик для разделения $this->value на части
+     *
      * @param string $valueModificator
+     *
      * @return $this
      */
-    public function setValueModificator(string $valueModificator)
+    public function setValueModificator( string $valueModificator )
     {
         $this->valueModificator = $valueModificator;
         return $this;

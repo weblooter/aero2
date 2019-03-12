@@ -24,7 +24,7 @@ class RequestStackContext implements ContextInterface
     private $basePath;
     private $secure;
 
-    public function __construct(RequestStack $requestStack, string $basePath = '', bool $secure = false)
+    public function __construct( RequestStack $requestStack, string $basePath = '', bool $secure = false )
     {
         $this->requestStack = $requestStack;
         $this->basePath = $basePath;
@@ -36,7 +36,8 @@ class RequestStackContext implements ContextInterface
      */
     public function getBasePath()
     {
-        if (!$request = $this->requestStack->getMasterRequest()) {
+        if ( !$request = $this->requestStack->getMasterRequest() )
+        {
             return $this->basePath;
         }
 
@@ -48,7 +49,8 @@ class RequestStackContext implements ContextInterface
      */
     public function isSecure()
     {
-        if (!$request = $this->requestStack->getMasterRequest()) {
+        if ( !$request = $this->requestStack->getMasterRequest() )
+        {
             return $this->secure;
         }
 

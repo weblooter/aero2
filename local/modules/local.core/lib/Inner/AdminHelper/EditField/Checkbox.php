@@ -18,7 +18,7 @@ class Checkbox extends Base
      */
     public function getEditFieldHtml()
     {
-        return InputType("checkbox", $this->getCode(), "Y", htmlspecialcharsbx($this->getValue()), false);
+        return InputType( "checkbox", $this->getCode(), "Y", htmlspecialcharsbx( $this->getValue() ), false );
     }
 
     /**

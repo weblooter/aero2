@@ -10,7 +10,7 @@ class Hidden extends Base
      */
     public function getRowHtml()
     {
-        return ($this->isEditable === true) ? $this->getEditFieldHtml() : $this->getViewFieldHtml();
+        return ( $this->isEditable === true ) ? $this->getEditFieldHtml() : $this->getViewFieldHtml();
     }
 
     /**
@@ -18,7 +18,7 @@ class Hidden extends Base
      */
     public function getEditFieldHtml()
     {
-        return InputType("hidden", $this->getCode(), htmlspecialcharsbx($this->getValue()), "", false);
+        return InputType( "hidden", $this->getCode(), htmlspecialcharsbx( $this->getValue() ), "", false );
     }
 
     /**

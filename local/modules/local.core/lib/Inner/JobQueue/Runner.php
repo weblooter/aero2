@@ -6,7 +6,7 @@ use \Local\Core\Model;
 use \Symfony\Component\Process\Process;
 
 
-set_time_limit(0);
+set_time_limit( 0 );
 
 final class Runner
 {
@@ -17,8 +17,9 @@ final class Runner
 
     public function __construct()
     {
-        if (php_sapi_name() != 'cli') {
-            p('Only CLI');
+        if ( php_sapi_name() != 'cli' )
+        {
+            p( 'Only CLI' );
             die;
         }
     }
@@ -38,9 +39,10 @@ final class Runner
     private function startDaemonIfPossible()
     {
         $arRes = [];
-        exec('ps aux | grep "' . $this->getProcessName() . '" | grep -v grep', $arRes);
-        if (empty($arRes)) {
-            cli_set_process_title($this->getProcessName());
+        exec( 'ps aux | grep "'.$this->getProcessName().'" | grep -v grep', $arRes );
+        if ( empty( $arRes ) )
+        {
+            cli_set_process_title( $this->getProcessName() );
             $this->startDaemon();
         }
     }
@@ -60,16 +62,19 @@ final class Runner
     private function startDaemon()
     {
         $counter = 0;
-        while (true) {
+        while ( true )
+        {
             $counter++;
-            if (self::MAX_CYCLES_COUNT > 0) {
-                if ($counter >= self::MAX_CYCLES_COUNT) {
+            if ( self::MAX_CYCLES_COUNT > 0 )
+            {
+                if ( $counter >= self::MAX_CYCLES_COUNT )
+                {
                     die;
                 }
             }
 
             $this->executeJobs();
-            sleep(self::TIME_BETWEEN_CYCLES);
+            sleep( self::TIME_BETWEEN_CYCLES );
         }
     }
 
@@ -82,22 +87,26 @@ final class Runner
     private function executeJobs()
     {
 
-        foreach (self::$arProcess as $k => $process) {
+        foreach ( self::$arProcess as $k => $process )
+        {
             /** @var Process $process */
-            if (!$process->isRunning()) {
-                unset(self::$arProcess[$k]);
+            if ( !$process->isRunning() )
+            {
+                unset( self::$arProcess[ $k ] );
             }
         }
 
-        if (empty(self::$arProcess)) {
+        if ( empty( self::$arProcess ) )
+        {
             self::$arProcess = [];
         }
 
-        $maximumJob = $this->getMaximumWorkers() - count(self::$arProcess);
+        $maximumJob = $this->getMaximumWorkers() - count( self::$arProcess );
 
-        $arJob = $this->findJob((int)$maximumJob);
-        foreach ($arJob as $ar) {
-            $this->executeJobByWorkerProcess($ar);
+        $arJob = $this->findJob( (int)$maximumJob );
+        foreach ( $arJob as $ar )
+        {
+            $this->executeJobByWorkerProcess( $ar );
         }
 
     }
@@ -110,7 +119,7 @@ final class Runner
      */
     private function getMaximumWorkers(): int
     {
-        return (int)\Bitrix\Main\Config\Option::get('local.core', 'MAXIMUM_WORKERS', self::MAXIMUM_WORKERS);
+        return (int)\Bitrix\Main\Config\Option::get( 'local.core', 'MAXIMUM_WORKERS', self::MAXIMUM_WORKERS );
     }
 
     /**
@@ -120,22 +129,25 @@ final class Runner
      * Статус новый  или обшибка<br>
      * НЕ выполняемый сейчас<br>
      * Исполнитель равен никто<br>
+     *
      * @param int $maximum
+     *
      * @return array
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    private function findJob(int $maximum): array
+    private function findJob( int $maximum ): array
     {
-        if ($maximum < 1) {
+        if ( $maximum < 1 )
+        {
             return [];
         }
 
-        $ar = Model\Data\JobQueueTable::getList([
+        $ar = Model\Data\JobQueueTable::getList( [
             'filter' => [
                 '>ATTEMPTS_LEFT' => 0,
-                '<=EXECUTE_AT' => \Bitrix\Main\Type\DateTime::createFromTimestamp(time()),
+                '<=EXECUTE_AT' => \Bitrix\Main\Type\DateTime::createFromTimestamp( time() ),
                 '=STATUS' => [
                     Model\Data\JobQueueTable::STATUS_ENUM_NEW,
                     Model\Data\JobQueueTable::STATUS_ENUM_ERROR,
@@ -145,22 +157,24 @@ final class Runner
             ],
             'limit' => $maximum,
             'select' => ['ID'],
-        ])->fetchAll();
+        ] )->fetchAll();
 
-        return is_array($ar) ? $ar : [];
+        return is_array( $ar ) ? $ar : [];
     }
 
     /**
      * Запускаеи процесс воркера
+     *
      * @param $ar
+     *
      * @throws \Bitrix\Main\SystemException
      */
-    private function executeJobByWorkerProcess($ar)
+    private function executeJobByWorkerProcess( $ar )
     {
-        $executorID = uniqid(getmypid(), true);
+        $executorID = uniqid( getmypid(), true );
         $updateData = [
             [
-                'ID' => $ar['ID'],
+                'ID' => $ar[ 'ID' ],
                 'EXECUTE_BY' => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
             ],
             [
@@ -168,25 +182,34 @@ final class Runner
             ]
         ];
 
-        $rs = Model\Data\JobQueueTable::update(...$updateData);
-        if ($rs->isSuccess()) {
+        $rs = Model\Data\JobQueueTable::update( ...$updateData );
+        if ( $rs->isSuccess() )
+        {
 
-            if ($rs->getAffectedRowsCount() === 1) {
-                try {
+            if ( $rs->getAffectedRowsCount() === 1 )
+            {
+                try
+                {
                     $rand = rand();
-                    self::$arProcess[$rand] = new Process(join(' ',
-                        $this->getProcessConfig((int)$ar['ID'], $executorID)));
-                    self::$arProcess[$rand]->setTimeout(0);
-                    self::$arProcess[$rand]->start();
-
-                } catch (\Throwable $t) {
-                    \Bitrix\Main\Application::getInstance()->getExceptionHandler()->writeToLog($t);
+                    self::$arProcess[ $rand ] = new Process( join( ' ',
+                        $this->getProcessConfig( (int)$ar[ 'ID' ], $executorID ) ) );
+                    self::$arProcess[ $rand ]->setTimeout( 0 );
+                    self::$arProcess[ $rand ]->start();
 
                 }
-            } else {
+                catch ( \Throwable $t )
+                {
+                    \Bitrix\Main\Application::getInstance()->getExceptionHandler()->writeToLog( $t );
+
+                }
+            }
+            else
+            {
                 #todo LogWriter
             }
-        } else {
+        }
+        else
+        {
             #todo LogWriter
         }
 
@@ -194,11 +217,13 @@ final class Runner
 
     /**
      * Возвращает массив для инита процесса
-     * @param int $jobID
+     *
+     * @param int    $jobID
      * @param string $executorID
+     *
      * @return array
      */
-    private function getProcessConfig(int $jobID, string $executorID): array
+    private function getProcessConfig( int $jobID, string $executorID ): array
     {
         $arReturn = [];
         $arReturn[] = "/usr/local/bin/php -d mbstring.func_overload=2";

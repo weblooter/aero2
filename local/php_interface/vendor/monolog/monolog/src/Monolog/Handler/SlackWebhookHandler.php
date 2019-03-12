@@ -36,20 +36,23 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     private $slackRecord;
 
     /**
-     * @param  string      $webhookUrl             Slack Webhook URL
-     * @param  string|null $channel                Slack channel (encoded ID or name)
-     * @param  string|null $username               Name of a bot
-     * @param  bool        $useAttachment          Whether the message should be added to Slack as attachment (plain text otherwise)
-     * @param  string|null $iconEmoji              The emoji name to use (or null)
-     * @param  bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
+     * @param  string      $webhookUrl Slack Webhook URL
+     * @param  string|null $channel Slack channel (encoded ID or name)
+     * @param  string|null $username Name of a bot
+     * @param  bool        $useAttachment Whether the message should be added to Slack as attachment (plain text
+     *     otherwise)
+     * @param  string|null $iconEmoji The emoji name to use (or null)
+     * @param  bool        $useShortAttachment Whether the the context/extra messages added to Slack as attachments are
+     *     in a short style
      * @param  bool        $includeContextAndExtra Whether the attachment should include context and extra data
-     * @param  int         $level                  The minimum logging level at which this handler will be triggered
-     * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
-     * @param  array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param  int         $level The minimum logging level at which this handler will be triggered
+     * @param  bool        $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param  array       $excludeFields Dot separated list of fields to exclude from slack message. E.g.
+     *     ['context.field1', 'extra.field2']
      */
-    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = array())
+    public function __construct( $webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = array() )
     {
-        parent::__construct($level, $bubble);
+        parent::__construct( $level, $bubble );
 
         $this->webhookUrl = $webhookUrl;
 
@@ -80,10 +83,10 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
-        $postData = $this->slackRecord->getSlackData($record);
-        $postString = json_encode($postData);
+        $postData = $this->slackRecord->getSlackData( $record );
+        $postString = json_encode( $postData );
 
         $ch = curl_init();
         $options = array(
@@ -93,19 +96,20 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             CURLOPT_HTTPHEADER => array('Content-type: application/json'),
             CURLOPT_POSTFIELDS => $postString
         );
-        if (defined('CURLOPT_SAFE_UPLOAD')) {
-            $options[CURLOPT_SAFE_UPLOAD] = true;
+        if ( defined( 'CURLOPT_SAFE_UPLOAD' ) )
+        {
+            $options[ CURLOPT_SAFE_UPLOAD ] = true;
         }
 
-        curl_setopt_array($ch, $options);
+        curl_setopt_array( $ch, $options );
 
-        Curl\Util::execute($ch);
+        Curl\Util::execute( $ch );
     }
 
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter( FormatterInterface $formatter )
     {
-        parent::setFormatter($formatter);
-        $this->slackRecord->setFormatter($formatter);
+        parent::setFormatter( $formatter );
+        $this->slackRecord->setFormatter( $formatter );
 
         return $this;
     }
@@ -113,7 +117,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     public function getFormatter()
     {
         $formatter = parent::getFormatter();
-        $this->slackRecord->setFormatter($formatter);
+        $this->slackRecord->setFormatter( $formatter );
 
         return $formatter;
     }

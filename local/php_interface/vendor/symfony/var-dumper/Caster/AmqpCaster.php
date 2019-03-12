@@ -44,7 +44,7 @@ class AmqpCaster
         AMQP_EX_TYPE_HEADERS => 'AMQP_EX_TYPE_HEADERS',
     ];
 
-    public static function castConnection(\AMQPConnection $c, array $a, Stub $stub, $isNested)
+    public static function castConnection( \AMQPConnection $c, array $a, Stub $stub, $isNested )
     {
         $prefix = Caster::PREFIX_VIRTUAL;
 
@@ -53,14 +53,18 @@ class AmqpCaster
         ];
 
         // Recent version of the extension already expose private properties
-        if (isset($a["\x00AMQPConnection\x00login"])) {
+        if ( isset( $a[ "\x00AMQPConnection\x00login" ] ) )
+        {
             return $a;
         }
 
         // BC layer in the amqp lib
-        if (method_exists($c, 'getReadTimeout')) {
+        if ( method_exists( $c, 'getReadTimeout' ) )
+        {
             $timeout = $c->getReadTimeout();
-        } else {
+        }
+        else
+        {
             $timeout = $c->getTimeout();
         }
 
@@ -77,7 +81,7 @@ class AmqpCaster
         return $a;
     }
 
-    public static function castChannel(\AMQPChannel $c, array $a, Stub $stub, $isNested)
+    public static function castChannel( \AMQPChannel $c, array $a, Stub $stub, $isNested )
     {
         $prefix = Caster::PREFIX_VIRTUAL;
 
@@ -87,7 +91,8 @@ class AmqpCaster
         ];
 
         // Recent version of the extension already expose private properties
-        if (isset($a["\x00AMQPChannel\x00connection"])) {
+        if ( isset( $a[ "\x00AMQPChannel\x00connection" ] ) )
+        {
             return $a;
         }
 
@@ -100,16 +105,17 @@ class AmqpCaster
         return $a;
     }
 
-    public static function castQueue(\AMQPQueue $c, array $a, Stub $stub, $isNested)
+    public static function castQueue( \AMQPQueue $c, array $a, Stub $stub, $isNested )
     {
         $prefix = Caster::PREFIX_VIRTUAL;
 
         $a += [
-            $prefix.'flags' => self::extractFlags($c->getFlags()),
+            $prefix.'flags' => self::extractFlags( $c->getFlags() ),
         ];
 
         // Recent version of the extension already expose private properties
-        if (isset($a["\x00AMQPQueue\x00name"])) {
+        if ( isset( $a[ "\x00AMQPQueue\x00name" ] ) )
+        {
             return $a;
         }
 
@@ -123,19 +129,21 @@ class AmqpCaster
         return $a;
     }
 
-    public static function castExchange(\AMQPExchange $c, array $a, Stub $stub, $isNested)
+    public static function castExchange( \AMQPExchange $c, array $a, Stub $stub, $isNested )
     {
         $prefix = Caster::PREFIX_VIRTUAL;
 
         $a += [
-            $prefix.'flags' => self::extractFlags($c->getFlags()),
+            $prefix.'flags' => self::extractFlags( $c->getFlags() ),
         ];
 
-        $type = isset(self::$exchangeTypes[$c->getType()]) ? new ConstStub(self::$exchangeTypes[$c->getType()], $c->getType()) : $c->getType();
+        $type = isset( self::$exchangeTypes[ $c->getType() ] ) ? new ConstStub( self::$exchangeTypes[ $c->getType() ],
+            $c->getType() ) : $c->getType();
 
         // Recent version of the extension already expose private properties
-        if (isset($a["\x00AMQPExchange\x00name"])) {
-            $a["\x00AMQPExchange\x00type"] = $type;
+        if ( isset( $a[ "\x00AMQPExchange\x00name" ] ) )
+        {
+            $a[ "\x00AMQPExchange\x00type" ] = $type;
 
             return $a;
         }
@@ -151,20 +159,23 @@ class AmqpCaster
         return $a;
     }
 
-    public static function castEnvelope(\AMQPEnvelope $c, array $a, Stub $stub, $isNested, $filter = 0)
+    public static function castEnvelope( \AMQPEnvelope $c, array $a, Stub $stub, $isNested, $filter = 0 )
     {
         $prefix = Caster::PREFIX_VIRTUAL;
 
-        $deliveryMode = new ConstStub($c->getDeliveryMode().(2 === $c->getDeliveryMode() ? ' (persistent)' : ' (non-persistent)'), $c->getDeliveryMode());
+        $deliveryMode = new ConstStub( $c->getDeliveryMode().( 2 === $c->getDeliveryMode() ? ' (persistent)' : ' (non-persistent)' ),
+            $c->getDeliveryMode() );
 
         // Recent version of the extension already expose private properties
-        if (isset($a["\x00AMQPEnvelope\x00body"])) {
-            $a["\0AMQPEnvelope\0delivery_mode"] = $deliveryMode;
+        if ( isset( $a[ "\x00AMQPEnvelope\x00body" ] ) )
+        {
+            $a[ "\0AMQPEnvelope\0delivery_mode" ] = $deliveryMode;
 
             return $a;
         }
 
-        if (!($filter & Caster::EXCLUDE_VERBOSE)) {
+        if ( !( $filter & Caster::EXCLUDE_VERBOSE ) )
+        {
             $a += [$prefix.'body' => $c->getBody()];
         }
 
@@ -191,20 +202,23 @@ class AmqpCaster
         return $a;
     }
 
-    private static function extractFlags($flags)
+    private static function extractFlags( $flags )
     {
         $flagsArray = [];
 
-        foreach (self::$flags as $value => $name) {
-            if ($flags & $value) {
+        foreach ( self::$flags as $value => $name )
+        {
+            if ( $flags & $value )
+            {
                 $flagsArray[] = $name;
             }
         }
 
-        if (!$flagsArray) {
+        if ( !$flagsArray )
+        {
             $flagsArray = ['AMQP_NOPARAM'];
         }
 
-        return new ConstStub(implode('|', $flagsArray), $flags);
+        return new ConstStub( implode( '|', $flagsArray ), $flags );
     }
 }

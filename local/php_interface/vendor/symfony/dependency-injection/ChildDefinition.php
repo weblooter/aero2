@@ -27,10 +27,10 @@ class ChildDefinition extends Definition
     /**
      * @param string $parent The id of Definition instance to decorate
      */
-    public function __construct(string $parent)
+    public function __construct( string $parent )
     {
         $this->parent = $parent;
-        $this->setPrivate(false);
+        $this->setPrivate( false );
     }
 
     /**
@@ -50,7 +50,7 @@ class ChildDefinition extends Definition
      *
      * @return $this
      */
-    public function setParent($parent)
+    public function setParent( $parent )
     {
         $this->parent = $parent;
 
@@ -69,13 +69,14 @@ class ChildDefinition extends Definition
      *
      * @throws OutOfBoundsException When the argument does not exist
      */
-    public function getArgument($index)
+    public function getArgument( $index )
     {
-        if (array_key_exists('index_'.$index, $this->arguments)) {
-            return $this->arguments['index_'.$index];
+        if ( array_key_exists( 'index_'.$index, $this->arguments ) )
+        {
+            return $this->arguments[ 'index_'.$index ];
         }
 
-        return parent::getArgument($index);
+        return parent::getArgument( $index );
     }
 
     /**
@@ -93,14 +94,19 @@ class ChildDefinition extends Definition
      *
      * @throws InvalidArgumentException when $index isn't an integer
      */
-    public function replaceArgument($index, $value)
+    public function replaceArgument( $index, $value )
     {
-        if (\is_int($index)) {
-            $this->arguments['index_'.$index] = $value;
-        } elseif (0 === strpos($index, '$')) {
-            $this->arguments[$index] = $value;
-        } else {
-            throw new InvalidArgumentException('The argument must be an existing index or the name of a constructor\'s parameter.');
+        if ( \is_int( $index ) )
+        {
+            $this->arguments[ 'index_'.$index ] = $value;
+        }
+        elseif ( 0 === strpos( $index, '$' ) )
+        {
+            $this->arguments[ $index ] = $value;
+        }
+        else
+        {
+            throw new InvalidArgumentException( 'The argument must be an existing index or the name of a constructor\'s parameter.' );
         }
 
         return $this;
@@ -109,16 +115,16 @@ class ChildDefinition extends Definition
     /**
      * @internal
      */
-    public function setAutoconfigured($autoconfigured)
+    public function setAutoconfigured( $autoconfigured )
     {
-        throw new BadMethodCallException('A ChildDefinition cannot be autoconfigured.');
+        throw new BadMethodCallException( 'A ChildDefinition cannot be autoconfigured.' );
     }
 
     /**
      * @internal
      */
-    public function setInstanceofConditionals(array $instanceof)
+    public function setInstanceofConditionals( array $instanceof )
     {
-        throw new BadMethodCallException('A ChildDefinition cannot have instanceof conditionals set on it.');
+        throw new BadMethodCallException( 'A ChildDefinition cannot have instanceof conditionals set on it.' );
     }
 }

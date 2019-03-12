@@ -22,34 +22,35 @@ class HtmlDumperTest extends TestCase
 {
     public function testGet()
     {
-        if (ini_get('xdebug.file_link_format') || get_cfg_var('xdebug.file_link_format')) {
-            $this->markTestSkipped('A custom file_link_format is defined.');
+        if ( ini_get( 'xdebug.file_link_format' ) || get_cfg_var( 'xdebug.file_link_format' ) )
+        {
+            $this->markTestSkipped( 'A custom file_link_format is defined.' );
         }
 
         require __DIR__.'/../Fixtures/dumb-var.php';
 
-        $dumper = new HtmlDumper('php://output');
-        $dumper->setDumpHeader('<foo></foo>');
-        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dumper = new HtmlDumper( 'php://output' );
+        $dumper->setDumpHeader( '<foo></foo>' );
+        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
         $cloner = new VarCloner();
-        $cloner->addCasters([
-            ':stream' => function ($res, $a) {
-                unset($a['uri'], $a['wrapper_data']);
+        $cloner->addCasters( [
+            ':stream' => function ( $res, $a ) {
+                unset( $a[ 'uri' ], $a[ 'wrapper_data' ] );
 
                 return $a;
             },
-        ]);
-        $data = $cloner->cloneVar($var);
+        ] );
+        $data = $cloner->cloneVar( $var );
 
         ob_start();
-        $dumper->dump($data);
+        $dumper->dump( $data );
         $out = ob_get_clean();
-        $out = preg_replace('/[ \t]+$/m', '', $out);
-        $var['file'] = htmlspecialchars($var['file'], ENT_QUOTES, 'UTF-8');
+        $out = preg_replace( '/[ \t]+$/m', '', $out );
+        $var[ 'file' ] = htmlspecialchars( $var[ 'file' ], ENT_QUOTES, 'UTF-8' );
         $intMax = PHP_INT_MAX;
-        preg_match('/sf-dump-\d+/', $out, $dumpId);
-        $dumpId = $dumpId[0];
-        $res = (int) $var['res'];
+        preg_match( '/sf-dump-\d+/', $out, $dumpId );
+        $dumpId = $dumpId[ 0 ];
+        $res = (int)$var[ 'res' ];
 
         $this->assertStringMatchesFormat(
             <<<EOTXT
@@ -121,15 +122,15 @@ EOTXT
 
     public function testCharset()
     {
-        $var = mb_convert_encoding('Словарь', 'CP1251', 'UTF-8');
+        $var = mb_convert_encoding( 'Словарь', 'CP1251', 'UTF-8' );
 
-        $dumper = new HtmlDumper('php://output', 'CP1251');
-        $dumper->setDumpHeader('<foo></foo>');
-        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dumper = new HtmlDumper( 'php://output', 'CP1251' );
+        $dumper->setDumpHeader( '<foo></foo>' );
+        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
         $cloner = new VarCloner();
 
-        $data = $cloner->cloneVar($var);
-        $out = $dumper->dump($data, true);
+        $data = $cloner->cloneVar( $var );
+        $out = $dumper->dump( $data, true );
 
         $this->assertStringMatchesFormat(
             <<<'EOTXT'
@@ -144,19 +145,19 @@ EOTXT
 
     public function testAppend()
     {
-        $out = fopen('php://memory', 'r+b');
+        $out = fopen( 'php://memory', 'r+b' );
 
         $dumper = new HtmlDumper();
-        $dumper->setDumpHeader('<foo></foo>');
-        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dumper->setDumpHeader( '<foo></foo>' );
+        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
         $cloner = new VarCloner();
 
-        $dumper->dump($cloner->cloneVar(123), $out);
-        $dumper->dump($cloner->cloneVar(456), $out);
+        $dumper->dump( $cloner->cloneVar( 123 ), $out );
+        $dumper->dump( $cloner->cloneVar( 456 ), $out );
 
-        $out = stream_get_contents($out, -1, 0);
+        $out = stream_get_contents( $out, -1, 0 );
 
-        $this->assertSame(<<<'EOTXT'
+        $this->assertSame( <<<'EOTXT'
 <foo></foo><bar><span class=sf-dump-num>123</span>
 </bar>
 <bar><span class=sf-dump-num>456</span>

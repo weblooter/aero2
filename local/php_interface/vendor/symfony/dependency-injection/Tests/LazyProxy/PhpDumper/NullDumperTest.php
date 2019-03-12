@@ -25,10 +25,10 @@ class NullDumperTest extends TestCase
     public function testNullDumper()
     {
         $dumper = new NullDumper();
-        $definition = new Definition('stdClass');
+        $definition = new Definition( 'stdClass' );
 
-        $this->assertFalse($dumper->isProxyCandidate($definition));
-        $this->assertSame('', $dumper->getProxyFactoryCode($definition, 'foo', '(false)'));
-        $this->assertSame('', $dumper->getProxyCode($definition));
+        $this->assertFalse( $dumper->isProxyCandidate( $definition ) );
+        $this->assertSame( '', $dumper->getProxyFactoryCode( $definition, 'foo', '(false)' ) );
+        $this->assertSame( '', $dumper->getProxyCode( $definition ) );
     }
 }

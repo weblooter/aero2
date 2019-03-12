@@ -24,7 +24,7 @@ class ExecutableFinder
     /**
      * Replaces default suffixes of executable.
      */
-    public function setSuffixes(array $suffixes)
+    public function setSuffixes( array $suffixes )
     {
         $this->suffixes = $suffixes;
     }
@@ -34,7 +34,7 @@ class ExecutableFinder
      *
      * @param string $suffix
      */
-    public function addSuffix($suffix)
+    public function addSuffix( $suffix )
     {
         $this->suffixes[] = $suffix;
     }
@@ -42,42 +42,54 @@ class ExecutableFinder
     /**
      * Finds an executable by name.
      *
-     * @param string $name      The executable name (without the extension)
-     * @param string $default   The default to return if no executable is found
+     * @param string $name The executable name (without the extension)
+     * @param string $default The default to return if no executable is found
      * @param array  $extraDirs Additional dirs to check into
      *
      * @return string The executable path or default value
      */
-    public function find($name, $default = null, array $extraDirs = array())
+    public function find( $name, $default = null, array $extraDirs = array() )
     {
-        if (ini_get('open_basedir')) {
-            $searchPath = explode(PATH_SEPARATOR, ini_get('open_basedir'));
+        if ( ini_get( 'open_basedir' ) )
+        {
+            $searchPath = explode( PATH_SEPARATOR, ini_get( 'open_basedir' ) );
             $dirs = array();
-            foreach ($searchPath as $path) {
+            foreach ( $searchPath as $path )
+            {
                 // Silencing against https://bugs.php.net/69240
-                if (@is_dir($path)) {
+                if ( @is_dir( $path ) )
+                {
                     $dirs[] = $path;
-                } else {
-                    if (basename($path) == $name && @is_executable($path)) {
+                }
+                else
+                {
+                    if ( basename( $path ) == $name && @is_executable( $path ) )
+                    {
                         return $path;
                     }
                 }
             }
-        } else {
+        }
+        else
+        {
             $dirs = array_merge(
-                explode(PATH_SEPARATOR, getenv('PATH') ?: getenv('Path')),
+                explode( PATH_SEPARATOR, getenv( 'PATH' ) ? : getenv( 'Path' ) ),
                 $extraDirs
             );
         }
 
         $suffixes = array('');
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            $pathExt = getenv('PATHEXT');
-            $suffixes = array_merge($pathExt ? explode(PATH_SEPARATOR, $pathExt) : $this->suffixes, $suffixes);
+        if ( '\\' === \DIRECTORY_SEPARATOR )
+        {
+            $pathExt = getenv( 'PATHEXT' );
+            $suffixes = array_merge( $pathExt ? explode( PATH_SEPARATOR, $pathExt ) : $this->suffixes, $suffixes );
         }
-        foreach ($suffixes as $suffix) {
-            foreach ($dirs as $dir) {
-                if (@is_file($file = $dir.\DIRECTORY_SEPARATOR.$name.$suffix) && ('\\' === \DIRECTORY_SEPARATOR || @is_executable($file))) {
+        foreach ( $suffixes as $suffix )
+        {
+            foreach ( $dirs as $dir )
+            {
+                if ( @is_file( $file = $dir.\DIRECTORY_SEPARATOR.$name.$suffix ) && ( '\\' === \DIRECTORY_SEPARATOR || @is_executable( $file ) ) )
+                {
                     return $file;
                 }
             }

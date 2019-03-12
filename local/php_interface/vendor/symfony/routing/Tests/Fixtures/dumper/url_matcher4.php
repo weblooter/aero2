@@ -10,32 +10,36 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
-    public function __construct(RequestContext $context)
+    public function __construct( RequestContext $context )
     {
         $this->context = $context;
     }
 
-    public function match($pathinfo)
+    public function match( $pathinfo )
     {
         $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode($pathinfo) ?: '/';
-        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
+        $pathinfo = rawurldecode( $pathinfo ) ? : '/';
+        $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
-        if ('HEAD' === $requestMethod) {
+        if ( 'HEAD' === $requestMethod )
+        {
             $canonicalMethod = 'GET';
         }
 
-        switch ($trimmedPathinfo) {
+        switch ( $trimmedPathinfo )
+        {
             case '/put_and_post':
                 // put_and_post
-                if ('/' !== $pathinfo && $trimmedPathinfo !== $pathinfo) {
+                if ( '/' !== $pathinfo && $trimmedPathinfo !== $pathinfo )
+                {
                     goto not_put_and_post;
                 }
 
                 $ret = ['_route' => 'put_and_post'];
-                if (!isset(($a = ['PUT' => 0, 'POST' => 1])[$requestMethod])) {
+                if ( !isset( ( $a = ['PUT' => 0, 'POST' => 1] )[ $requestMethod ] ) )
+                {
                     $allow += $a;
                     goto not_put_and_post;
                 }
@@ -43,12 +47,14 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
                 return $ret;
                 not_put_and_post:
                 // put_and_get_and_head
-                if ('/' !== $pathinfo && $trimmedPathinfo !== $pathinfo) {
+                if ( '/' !== $pathinfo && $trimmedPathinfo !== $pathinfo )
+                {
                     goto not_put_and_get_and_head;
                 }
 
                 $ret = ['_route' => 'put_and_get_and_head'];
-                if (!isset(($a = ['PUT' => 0, 'GET' => 1, 'HEAD' => 2])[$canonicalMethod])) {
+                if ( !isset( ( $a = ['PUT' => 0, 'GET' => 1, 'HEAD' => 2] )[ $canonicalMethod ] ) )
+                {
                     $allow += $a;
                     goto not_put_and_get_and_head;
                 }
@@ -64,22 +70,27 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
                     '/post_and_head' => [['_route' => 'post_and_head'], null, ['POST' => 0, 'HEAD' => 1], null, false],
                 ];
 
-                if (!isset($routes[$trimmedPathinfo])) {
+                if ( !isset( $routes[ $trimmedPathinfo ] ) )
+                {
                     break;
                 }
-                list($ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash) = $routes[$trimmedPathinfo];
-                if ('/' !== $pathinfo && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
+                list( $ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash ) = $routes[ $trimmedPathinfo ];
+                if ( '/' !== $pathinfo && $hasTrailingSlash === ( $trimmedPathinfo === $pathinfo ) )
+                {
                     break;
                 }
 
-                $hasRequiredScheme = !$requiredSchemes || isset($requiredSchemes[$context->getScheme()]);
-                if ($requiredMethods && !isset($requiredMethods[$canonicalMethod]) && !isset($requiredMethods[$requestMethod])) {
-                    if ($hasRequiredScheme) {
+                $hasRequiredScheme = !$requiredSchemes || isset( $requiredSchemes[ $context->getScheme() ] );
+                if ( $requiredMethods && !isset( $requiredMethods[ $canonicalMethod ] ) && !isset( $requiredMethods[ $requestMethod ] ) )
+                {
+                    if ( $hasRequiredScheme )
+                    {
                         $allow += $requiredMethods;
                     }
                     break;
                 }
-                if (!$hasRequiredScheme) {
+                if ( !$hasRequiredScheme )
+                {
                     $allowSchemes += $requiredSchemes;
                     break;
                 }
@@ -87,10 +98,11 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
                 return $ret;
         }
 
-        if ('/' === $pathinfo && !$allow && !$allowSchemes) {
+        if ( '/' === $pathinfo && !$allow && !$allowSchemes )
+        {
             throw new Symfony\Component\Routing\Exception\NoConfigurationException();
         }
 
-        throw $allow ? new MethodNotAllowedException(array_keys($allow)) : new ResourceNotFoundException();
+        throw $allow ? new MethodNotAllowedException( array_keys( $allow ) ) : new ResourceNotFoundException();
     }
 }

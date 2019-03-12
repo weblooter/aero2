@@ -43,7 +43,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException('You cannot compile a dumped container that was already compiled.');
+        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
     }
 
     public function isCompiled()
@@ -71,18 +71,18 @@ class ProjectServiceContainer extends Container
      */
     protected function getBusService()
     {
-        $a = ($this->services['App\Db'] ?? $this->getDbService());
+        $a = ( $this->services[ 'App\Db' ] ?? $this->getDbService() );
 
-        $this->services['App\Bus'] = $instance = new \App\Bus($a);
+        $this->services[ 'App\Bus' ] = $instance = new \App\Bus( $a );
 
-        $b = ($this->privates['App\Schema'] ?? $this->getSchemaService());
+        $b = ( $this->privates[ 'App\Schema' ] ?? $this->getSchemaService() );
         $c = new \App\Registry();
         $c->processor = [0 => $a, 1 => $instance];
 
-        $d = new \App\Processor($c, $a);
+        $d = new \App\Processor( $c, $a );
 
-        $instance->handler1 = new \App\Handler1($a, $b, $d);
-        $instance->handler2 = new \App\Handler2($a, $b, $d);
+        $instance->handler1 = new \App\Handler1( $a, $b, $d );
+        $instance->handler2 = new \App\Handler2( $a, $b, $d );
 
         return $instance;
     }
@@ -94,9 +94,9 @@ class ProjectServiceContainer extends Container
      */
     protected function getDbService()
     {
-        $this->services['App\Db'] = $instance = new \App\Db();
+        $this->services[ 'App\Db' ] = $instance = new \App\Db();
 
-        $instance->schema = ($this->privates['App\Schema'] ?? $this->getSchemaService());
+        $instance->schema = ( $this->privates[ 'App\Schema' ] ?? $this->getSchemaService() );
 
         return $instance;
     }
@@ -108,12 +108,13 @@ class ProjectServiceContainer extends Container
      */
     protected function getSchemaService()
     {
-        $a = ($this->services['App\Db'] ?? $this->getDbService());
+        $a = ( $this->services[ 'App\Db' ] ?? $this->getDbService() );
 
-        if (isset($this->privates['App\Schema'])) {
-            return $this->privates['App\Schema'];
+        if ( isset( $this->privates[ 'App\Schema' ] ) )
+        {
+            return $this->privates[ 'App\Schema' ];
         }
 
-        return $this->privates['App\Schema'] = new \App\Schema($a);
+        return $this->privates[ 'App\Schema' ] = new \App\Schema( $a );
     }
 }

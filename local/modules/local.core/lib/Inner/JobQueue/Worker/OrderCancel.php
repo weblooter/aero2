@@ -1,4 +1,5 @@
 <?php
+
 namespace Local\Core\Inner\JobQueue\Worker;
 
 use \Local\Core\Inner;
@@ -20,22 +21,24 @@ class OrderCancel extends \Local\Core\Inner\JobQueue\Abstracts\Worker implements
         $result = new Main\Result();
         $arInputData = $this->getInputData();
 
-        \Bitrix\Main\Loader::includeModule('sale');
+        \Bitrix\Main\Loader::includeModule( 'sale' );
 
-        if( empty($arInputData['ORDER_ID']) )
-            throw new \Local\Core\Inner\JobQueue\Exception\FailException('Order id is empty');
+        if ( empty( $arInputData[ 'ORDER_ID' ] ) )
+        {
+            throw new \Local\Core\Inner\JobQueue\Exception\FailException( 'Order id is empty' );
+        }
 
-        $obOrder = \Bitrix\Sale\Order::load( $arInputData['ORDER_ID'] );
+        $obOrder = \Bitrix\Sale\Order::load( $arInputData[ 'ORDER_ID' ] );
 
         $obClient = \Local\Core\Exchange\Onec\Webservice\Soap::getInstance();
-        $obRes = $obClient->CanselOrder(['Orders' => $obOrder->getField('ACCOUNT_NUMBER')]);
+        $obRes = $obClient->CanselOrder( ['Orders' => $obOrder->getField( 'ACCOUNT_NUMBER' )] );
 
         /**
          * @var \Bitrix\Main\Result $obRes
          */
-        if( !$obRes->isSuccess() )
+        if ( !$obRes->isSuccess() )
         {
-            throw new \Exception( implode('; ', $obRes->getErrorMessages() ) );
+            throw new \Exception( implode( '; ', $obRes->getErrorMessages() ) );
         }
 
         //Some php code
@@ -57,9 +60,9 @@ class OrderCancel extends \Local\Core\Inner\JobQueue\Abstracts\Worker implements
     /**
      * @inheritdoc
      */
-    public function getNextExecuteAt(int $addSecond = 120): Main\Type\DateTime
+    public function getNextExecuteAt( int $addSecond = 120 ): Main\Type\DateTime
     {
         //Some Another logic
-        return parent::getNextExecuteAt($addSecond);
+        return parent::getNextExecuteAt( $addSecond );
     }
 }

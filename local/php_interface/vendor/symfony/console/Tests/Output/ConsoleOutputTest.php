@@ -20,23 +20,25 @@ class ConsoleOutputTest extends TestCase
 {
     public function testConstructor()
     {
-        $output = new ConsoleOutput(Output::VERBOSITY_QUIET, true);
-        $this->assertEquals(Output::VERBOSITY_QUIET, $output->getVerbosity(), '__construct() takes the verbosity as its first argument');
-        $this->assertSame($output->getFormatter(), $output->getErrorOutput()->getFormatter(), '__construct() takes a formatter or null as the third argument');
+        $output = new ConsoleOutput( Output::VERBOSITY_QUIET, true );
+        $this->assertEquals( Output::VERBOSITY_QUIET, $output->getVerbosity(),
+            '__construct() takes the verbosity as its first argument' );
+        $this->assertSame( $output->getFormatter(), $output->getErrorOutput()->getFormatter(),
+            '__construct() takes a formatter or null as the third argument' );
     }
 
     public function testSetFormatter()
     {
         $output = new ConsoleOutput();
         $outputFormatter = new OutputFormatter();
-        $output->setFormatter($outputFormatter);
-        $this->assertSame($outputFormatter, $output->getFormatter());
+        $output->setFormatter( $outputFormatter );
+        $this->assertSame( $outputFormatter, $output->getFormatter() );
     }
 
     public function testSetVerbosity()
     {
         $output = new ConsoleOutput();
-        $output->setVerbosity(Output::VERBOSITY_VERBOSE);
-        $this->assertSame(Output::VERBOSITY_VERBOSE, $output->getVerbosity());
+        $output->setVerbosity( Output::VERBOSITY_VERBOSE );
+        $this->assertSame( Output::VERBOSITY_VERBOSE, $output->getVerbosity() );
     }
 }

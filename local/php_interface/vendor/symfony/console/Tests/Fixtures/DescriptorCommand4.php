@@ -18,8 +18,7 @@ class DescriptorCommand4 extends Command
     protected function configure()
     {
         $this
-            ->setName('descriptor:command4')
-            ->setAliases(['descriptor:alias_command4', 'command4:descriptor'])
-        ;
+            ->setName( 'descriptor:command4' )
+            ->setAliases( ['descriptor:alias_command4', 'command4:descriptor'] );
     }
 }

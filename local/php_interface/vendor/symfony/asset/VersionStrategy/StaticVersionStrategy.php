@@ -23,18 +23,18 @@ class StaticVersionStrategy implements VersionStrategyInterface
 
     /**
      * @param string $version Version number
-     * @param string $format  Url format
+     * @param string $format Url format
      */
-    public function __construct(string $version, string $format = null)
+    public function __construct( string $version, string $format = null )
     {
         $this->version = $version;
-        $this->format = $format ?: '%s?%s';
+        $this->format = $format ? : '%s?%s';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getVersion($path)
+    public function getVersion( $path )
     {
         return $this->version;
     }
@@ -42,11 +42,12 @@ class StaticVersionStrategy implements VersionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function applyVersion($path)
+    public function applyVersion( $path )
     {
-        $versionized = sprintf($this->format, ltrim($path, '/'), $this->getVersion($path));
+        $versionized = sprintf( $this->format, ltrim( $path, '/' ), $this->getVersion( $path ) );
 
-        if ($path && '/' == $path[0]) {
+        if ( $path && '/' == $path[ 0 ] )
+        {
             return '/'.$versionized;
         }
 

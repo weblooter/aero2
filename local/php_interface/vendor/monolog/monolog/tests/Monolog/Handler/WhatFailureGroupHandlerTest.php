@@ -22,7 +22,7 @@ class WhatFailureGroupHandlerTest extends TestCase
      */
     public function testConstructorOnlyTakesHandler()
     {
-        new WhatFailureGroupHandler(array(new TestHandler(), "foo"));
+        new WhatFailureGroupHandler( array(new TestHandler(), "foo") );
     }
 
     /**
@@ -32,13 +32,14 @@ class WhatFailureGroupHandlerTest extends TestCase
     public function testHandle()
     {
         $testHandlers = array(new TestHandler(), new TestHandler());
-        $handler = new WhatFailureGroupHandler($testHandlers);
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::INFO));
-        foreach ($testHandlers as $test) {
-            $this->assertTrue($test->hasDebugRecords());
-            $this->assertTrue($test->hasInfoRecords());
-            $this->assertTrue(count($test->getRecords()) === 2);
+        $handler = new WhatFailureGroupHandler( $testHandlers );
+        $handler->handle( $this->getRecord( Logger::DEBUG ) );
+        $handler->handle( $this->getRecord( Logger::INFO ) );
+        foreach ( $testHandlers as $test )
+        {
+            $this->assertTrue( $test->hasDebugRecords() );
+            $this->assertTrue( $test->hasInfoRecords() );
+            $this->assertTrue( count( $test->getRecords() ) === 2 );
         }
     }
 
@@ -48,12 +49,13 @@ class WhatFailureGroupHandlerTest extends TestCase
     public function testHandleBatch()
     {
         $testHandlers = array(new TestHandler(), new TestHandler());
-        $handler = new WhatFailureGroupHandler($testHandlers);
-        $handler->handleBatch(array($this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)));
-        foreach ($testHandlers as $test) {
-            $this->assertTrue($test->hasDebugRecords());
-            $this->assertTrue($test->hasInfoRecords());
-            $this->assertTrue(count($test->getRecords()) === 2);
+        $handler = new WhatFailureGroupHandler( $testHandlers );
+        $handler->handleBatch( array($this->getRecord( Logger::DEBUG ), $this->getRecord( Logger::INFO )) );
+        foreach ( $testHandlers as $test )
+        {
+            $this->assertTrue( $test->hasDebugRecords() );
+            $this->assertTrue( $test->hasInfoRecords() );
+            $this->assertTrue( count( $test->getRecords() ) === 2 );
         }
     }
 
@@ -62,11 +64,11 @@ class WhatFailureGroupHandlerTest extends TestCase
      */
     public function testIsHandling()
     {
-        $testHandlers = array(new TestHandler(Logger::ERROR), new TestHandler(Logger::WARNING));
-        $handler = new WhatFailureGroupHandler($testHandlers);
-        $this->assertTrue($handler->isHandling($this->getRecord(Logger::ERROR)));
-        $this->assertTrue($handler->isHandling($this->getRecord(Logger::WARNING)));
-        $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
+        $testHandlers = array(new TestHandler( Logger::ERROR ), new TestHandler( Logger::WARNING ));
+        $handler = new WhatFailureGroupHandler( $testHandlers );
+        $this->assertTrue( $handler->isHandling( $this->getRecord( Logger::ERROR ) ) );
+        $this->assertTrue( $handler->isHandling( $this->getRecord( Logger::WARNING ) ) );
+        $this->assertFalse( $handler->isHandling( $this->getRecord( Logger::DEBUG ) ) );
     }
 
     /**
@@ -75,16 +77,16 @@ class WhatFailureGroupHandlerTest extends TestCase
     public function testHandleUsesProcessors()
     {
         $test = new TestHandler();
-        $handler = new WhatFailureGroupHandler(array($test));
-        $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+        $handler = new WhatFailureGroupHandler( array($test) );
+        $handler->pushProcessor( function ( $record ) {
+            $record[ 'extra' ][ 'foo' ] = true;
 
             return $record;
-        });
-        $handler->handle($this->getRecord(Logger::WARNING));
-        $this->assertTrue($test->hasWarningRecords());
+        } );
+        $handler->handle( $this->getRecord( Logger::WARNING ) );
+        $this->assertTrue( $test->hasWarningRecords() );
         $records = $test->getRecords();
-        $this->assertTrue($records[0]['extra']['foo']);
+        $this->assertTrue( $records[ 0 ][ 'extra' ][ 'foo' ] );
     }
 
     /**
@@ -93,20 +95,21 @@ class WhatFailureGroupHandlerTest extends TestCase
     public function testHandleBatchUsesProcessors()
     {
         $testHandlers = array(new TestHandler(), new TestHandler());
-        $handler = new WhatFailureGroupHandler($testHandlers);
-        $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+        $handler = new WhatFailureGroupHandler( $testHandlers );
+        $handler->pushProcessor( function ( $record ) {
+            $record[ 'extra' ][ 'foo' ] = true;
 
             return $record;
-        });
-        $handler->handleBatch(array($this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)));
-        foreach ($testHandlers as $test) {
-            $this->assertTrue($test->hasDebugRecords());
-            $this->assertTrue($test->hasInfoRecords());
-            $this->assertTrue(count($test->getRecords()) === 2);
+        } );
+        $handler->handleBatch( array($this->getRecord( Logger::DEBUG ), $this->getRecord( Logger::INFO )) );
+        foreach ( $testHandlers as $test )
+        {
+            $this->assertTrue( $test->hasDebugRecords() );
+            $this->assertTrue( $test->hasInfoRecords() );
+            $this->assertTrue( count( $test->getRecords() ) === 2 );
             $records = $test->getRecords();
-            $this->assertTrue($records[0]['extra']['foo']);
-            $this->assertTrue($records[1]['extra']['foo']);
+            $this->assertTrue( $records[ 0 ][ 'extra' ][ 'foo' ] );
+            $this->assertTrue( $records[ 1 ][ 'extra' ][ 'foo' ] );
         }
     }
 
@@ -117,16 +120,16 @@ class WhatFailureGroupHandlerTest extends TestCase
     {
         $test = new TestHandler();
         $exception = new ExceptionTestHandler();
-        $handler = new WhatFailureGroupHandler(array($exception, $test, $exception));
-        $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+        $handler = new WhatFailureGroupHandler( array($exception, $test, $exception) );
+        $handler->pushProcessor( function ( $record ) {
+            $record[ 'extra' ][ 'foo' ] = true;
 
             return $record;
-        });
-        $handler->handle($this->getRecord(Logger::WARNING));
-        $this->assertTrue($test->hasWarningRecords());
+        } );
+        $handler->handle( $this->getRecord( Logger::WARNING ) );
+        $this->assertTrue( $test->hasWarningRecords() );
         $records = $test->getRecords();
-        $this->assertTrue($records[0]['extra']['foo']);
+        $this->assertTrue( $records[ 0 ][ 'extra' ][ 'foo' ] );
     }
 }
 
@@ -135,10 +138,10 @@ class ExceptionTestHandler extends TestHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle( array $record )
     {
-        parent::handle($record);
+        parent::handle( $record );
 
-        throw new \Exception("ExceptionTestHandler::handle");
+        throw new \Exception( "ExceptionTestHandler::handle" );
     }
 }

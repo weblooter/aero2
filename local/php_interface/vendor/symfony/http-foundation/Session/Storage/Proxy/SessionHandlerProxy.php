@@ -18,11 +18,11 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
 {
     protected $handler;
 
-    public function __construct(\SessionHandlerInterface $handler)
+    public function __construct( \SessionHandlerInterface $handler )
     {
         $this->handler = $handler;
-        $this->wrapper = ($handler instanceof \SessionHandler);
-        $this->saveHandlerName = $this->wrapper ? ini_get('session.save_handler') : 'user';
+        $this->wrapper = ( $handler instanceof \SessionHandler );
+        $this->saveHandlerName = $this->wrapper ? ini_get( 'session.save_handler' ) : 'user';
     }
 
     /**
@@ -38,9 +38,9 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
+    public function open( $savePath, $sessionName )
     {
-        return (bool) $this->handler->open($savePath, $sessionName);
+        return (bool)$this->handler->open( $savePath, $sessionName );
     }
 
     /**
@@ -48,54 +48,55 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
      */
     public function close()
     {
-        return (bool) $this->handler->close();
+        return (bool)$this->handler->close();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
+    public function read( $sessionId )
     {
-        return (string) $this->handler->read($sessionId);
+        return (string)$this->handler->read( $sessionId );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $data)
+    public function write( $sessionId, $data )
     {
-        return (bool) $this->handler->write($sessionId, $data);
+        return (bool)$this->handler->write( $sessionId, $data );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
+    public function destroy( $sessionId )
     {
-        return (bool) $this->handler->destroy($sessionId);
+        return (bool)$this->handler->destroy( $sessionId );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
+    public function gc( $maxlifetime )
     {
-        return (bool) $this->handler->gc($maxlifetime);
+        return (bool)$this->handler->gc( $maxlifetime );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateId($sessionId)
+    public function validateId( $sessionId )
     {
-        return !$this->handler instanceof \SessionUpdateTimestampHandlerInterface || $this->handler->validateId($sessionId);
+        return !$this->handler instanceof \SessionUpdateTimestampHandlerInterface || $this->handler->validateId( $sessionId );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
+    public function updateTimestamp( $sessionId, $data )
     {
-        return $this->handler instanceof \SessionUpdateTimestampHandlerInterface ? $this->handler->updateTimestamp($sessionId, $data) : $this->write($sessionId, $data);
+        return $this->handler instanceof \SessionUpdateTimestampHandlerInterface ? $this->handler->updateTimestamp( $sessionId,
+            $data ) : $this->write( $sessionId, $data );
     }
 }

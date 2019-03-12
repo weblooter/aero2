@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare( strict_types = 1 );
 
 namespace Local\Core\Inner\JobQueue;
 
@@ -22,7 +22,7 @@ class AddResult extends \Bitrix\Main\Result
     /**
      * @param mixed $jobID
      */
-    public function setJobID(int $jobID): void
+    public function setJobID( int $jobID ): void
     {
         $this->jobID = $jobID;
     }
@@ -39,7 +39,7 @@ class AddResult extends \Bitrix\Main\Result
     /**
      * @param bool $isAlreadyExist
      */
-    public function setIsAlreadyExist(bool $isAlreadyExist): void
+    public function setIsAlreadyExist( bool $isAlreadyExist ): void
     {
         $this->isAlreadyExist = $isAlreadyExist;
     }

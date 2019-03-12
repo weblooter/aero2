@@ -26,23 +26,25 @@ class DateByRegion
         ];
     }
 
-    protected static function decodeValue($val)
+    protected static function decodeValue( $val )
     {
         $val = (int)$val;
 
-        if ($val <= 10000000000) {
+        if ( $val <= 10000000000 )
+        {
             return [0, 0];
         }
 
-        $region_id = (int)floor($val * 0.0000000001);
+        $region_id = (int)floor( $val * 0.0000000001 );
 
         $time = $val - $region_id * 10000000000;
 
         return [$region_id, $time];
     }
 
-    protected static function getRegionList(){
-        return RegionTable::getList([
+    protected static function getRegionList()
+    {
+        return RegionTable::getList( [
             "select" => [
                 "ID",
                 "NAME",
@@ -50,7 +52,7 @@ class DateByRegion
             ],
             "filter" => ["=ACTIVE" => "Y"],
             "cache" => ["ttl" => 86400]
-        ])->fetchAll();
+        ] )->fetchAll();
     }
 
     /**
@@ -64,16 +66,16 @@ class DateByRegion
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetPropertyFieldHtml.php
      */
-    public static function GetPropertyFieldHtml($property, $value, $HTMLControlName)
+    public static function GetPropertyFieldHtml( $property, $value, $HTMLControlName )
     {
-        \Bitrix\Main\UI\Extension::load('local-core.vue.components.admin.dateregion');
+        \Bitrix\Main\UI\Extension::load( 'local-core.vue.components.admin.dateregion' );
 
-        $app_id = 'fld_' . md5($HTMLControlName['VALUE']);
+        $app_id = 'fld_'.md5( $HTMLControlName[ 'VALUE' ] );
 
-        $json_regions = json_encode(self::getRegionList(), JSON_UNESCAPED_UNICODE);
-        $json_property = json_encode($property, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT);
-        $json_value = json_encode($value, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT);
-        $json_control_name = json_encode($HTMLControlName, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT);
+        $json_regions = json_encode( self::getRegionList(), JSON_UNESCAPED_UNICODE );
+        $json_property = json_encode( $property, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT );
+        $json_value = json_encode( $value, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT );
+        $json_control_name = json_encode( $HTMLControlName, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT );
 
         $html = <<<JAVASCRIPT
         <div id="{$app_id}">
@@ -86,12 +88,12 @@ class DateByRegion
             data(){
                 return {
                     regions: {$json_regions},
-                    property: {$json_property},
+                    property;: {$json_property},
                     value: {$json_value},
-                    control: {$json_control_name}
+                    control;: {$json_control_name}
                 }
             }
-        });
+        })
         </script>
 JAVASCRIPT;
 
@@ -109,16 +111,16 @@ JAVASCRIPT;
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/getpropertyfieldhtmlmulty.php
      */
-    public static function GetPropertyFieldHtmlMultiple($property, $value, $HTMLControlName)
+    public static function GetPropertyFieldHtmlMultiple( $property, $value, $HTMLControlName )
     {
-        \Bitrix\Main\UI\Extension::load('local-core.vue.components.admin.dateregionmulti');
+        \Bitrix\Main\UI\Extension::load( 'local-core.vue.components.admin.dateregionmulti' );
 
-        $app_id = 'fld_' . md5($HTMLControlName['VALUE']);
+        $app_id = 'fld_'.md5( $HTMLControlName[ 'VALUE' ] );
 
-        $json_regions = json_encode(self::getRegionList(), JSON_UNESCAPED_UNICODE);
-        $json_property = json_encode($property, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT);
-        $json_value = json_encode($value, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT);
-        $json_control_name = json_encode($HTMLControlName, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT);
+        $json_regions = json_encode( self::getRegionList(), JSON_UNESCAPED_UNICODE );
+        $json_property = json_encode( $property, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT );
+        $json_value = json_encode( $value, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT );
+        $json_control_name = json_encode( $HTMLControlName, JSON_UNESCAPED_UNICODE ^ JSON_FORCE_OBJECT );
 
         $html = <<<JAVASCRIPT
         <div id="{$app_id}">
@@ -131,12 +133,12 @@ JAVASCRIPT;
             data(){
                 return {
                     regions: {$json_regions},
-                    property: {$json_property},
+                    property;: {$json_property},
                     value: {$json_value},
-                    control: {$json_control_name}
+                    control;: {$json_control_name}
                 }
             }
-        });
+        })
         </script>
 JAVASCRIPT;
 

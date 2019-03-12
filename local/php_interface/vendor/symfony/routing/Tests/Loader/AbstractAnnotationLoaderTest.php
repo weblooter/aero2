@@ -17,17 +17,15 @@ abstract class AbstractAnnotationLoaderTest extends TestCase
 {
     public function getReader()
     {
-        return $this->getMockBuilder('Doctrine\Common\Annotations\Reader')
+        return $this->getMockBuilder( 'Doctrine\Common\Annotations\Reader' )
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
     }
 
-    public function getClassLoader($reader)
+    public function getClassLoader( $reader )
     {
-        return $this->getMockBuilder('Symfony\Component\Routing\Loader\AnnotationClassLoader')
-            ->setConstructorArgs([$reader])
-            ->getMockForAbstractClass()
-        ;
+        return $this->getMockBuilder( 'Symfony\Component\Routing\Loader\AnnotationClassLoader' )
+            ->setConstructorArgs( [$reader] )
+            ->getMockForAbstractClass();
     }
 }

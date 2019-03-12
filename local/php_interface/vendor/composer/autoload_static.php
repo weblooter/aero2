@@ -196,7 +196,6 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\JobQueue\\Worker\\User\\ImportOrganizations' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/User/ImportOrganizations.php',
         'Local\\Core\\Inner\\JobQueue\\Worker\\User\\UpdateNetCat' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/User/UpdateNetCat.php',
         'Local\\Core\\Inner\\JobQueue\\Worker\\User\\UpdateOneC' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/User/UpdateOneC.php',
-        'Local\\Core\\Inner\\RetailStructure\\Relation' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/RetailStructure/Relation.php',
         'Local\\Core\\Inner\\Route' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Route.php',
         'Local\\Core\\Model\\Data\\BillBasketTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/BillBasketTable.php',
         'Local\\Core\\Model\\Data\\BillProductTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/BillProductTable.php',

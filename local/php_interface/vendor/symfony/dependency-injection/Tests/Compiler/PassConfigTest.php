@@ -23,32 +23,32 @@ class PassConfigTest extends TestCase
     public function testPassOrdering()
     {
         $config = new PassConfig();
-        $config->setBeforeOptimizationPasses([]);
+        $config->setBeforeOptimizationPasses( [] );
 
-        $pass1 = $this->getMockBuilder(CompilerPassInterface::class)->getMock();
-        $config->addPass($pass1, PassConfig::TYPE_BEFORE_OPTIMIZATION, 10);
+        $pass1 = $this->getMockBuilder( CompilerPassInterface::class )->getMock();
+        $config->addPass( $pass1, PassConfig::TYPE_BEFORE_OPTIMIZATION, 10 );
 
-        $pass2 = $this->getMockBuilder(CompilerPassInterface::class)->getMock();
-        $config->addPass($pass2, PassConfig::TYPE_BEFORE_OPTIMIZATION, 30);
+        $pass2 = $this->getMockBuilder( CompilerPassInterface::class )->getMock();
+        $config->addPass( $pass2, PassConfig::TYPE_BEFORE_OPTIMIZATION, 30 );
 
         $passes = $config->getBeforeOptimizationPasses();
-        $this->assertSame($pass2, $passes[0]);
-        $this->assertSame($pass1, $passes[1]);
+        $this->assertSame( $pass2, $passes[ 0 ] );
+        $this->assertSame( $pass1, $passes[ 1 ] );
     }
 
     public function testPassOrderingWithoutPasses()
     {
         $config = new PassConfig();
-        $config->setBeforeOptimizationPasses([]);
-        $config->setAfterRemovingPasses([]);
-        $config->setBeforeRemovingPasses([]);
-        $config->setOptimizationPasses([]);
-        $config->setRemovingPasses([]);
+        $config->setBeforeOptimizationPasses( [] );
+        $config->setAfterRemovingPasses( [] );
+        $config->setBeforeRemovingPasses( [] );
+        $config->setOptimizationPasses( [] );
+        $config->setRemovingPasses( [] );
 
-        $this->assertEmpty($config->getBeforeOptimizationPasses());
-        $this->assertEmpty($config->getAfterRemovingPasses());
-        $this->assertEmpty($config->getBeforeRemovingPasses());
-        $this->assertEmpty($config->getOptimizationPasses());
-        $this->assertEmpty($config->getRemovingPasses());
+        $this->assertEmpty( $config->getBeforeOptimizationPasses() );
+        $this->assertEmpty( $config->getAfterRemovingPasses() );
+        $this->assertEmpty( $config->getBeforeRemovingPasses() );
+        $this->assertEmpty( $config->getOptimizationPasses() );
+        $this->assertEmpty( $config->getRemovingPasses() );
     }
 }

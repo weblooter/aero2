@@ -25,13 +25,15 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     private $currentHandler;
     private $writeOnlyHandler;
 
-    public function __construct(\SessionHandlerInterface $currentHandler, \SessionHandlerInterface $writeOnlyHandler)
+    public function __construct( \SessionHandlerInterface $currentHandler, \SessionHandlerInterface $writeOnlyHandler )
     {
-        if (!$currentHandler instanceof \SessionUpdateTimestampHandlerInterface) {
-            $currentHandler = new StrictSessionHandler($currentHandler);
+        if ( !$currentHandler instanceof \SessionUpdateTimestampHandlerInterface )
+        {
+            $currentHandler = new StrictSessionHandler( $currentHandler );
         }
-        if (!$writeOnlyHandler instanceof \SessionUpdateTimestampHandlerInterface) {
-            $writeOnlyHandler = new StrictSessionHandler($writeOnlyHandler);
+        if ( !$writeOnlyHandler instanceof \SessionUpdateTimestampHandlerInterface )
+        {
+            $writeOnlyHandler = new StrictSessionHandler( $writeOnlyHandler );
         }
 
         $this->currentHandler = $currentHandler;
@@ -52,10 +54,10 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
+    public function destroy( $sessionId )
     {
-        $result = $this->currentHandler->destroy($sessionId);
-        $this->writeOnlyHandler->destroy($sessionId);
+        $result = $this->currentHandler->destroy( $sessionId );
+        $this->writeOnlyHandler->destroy( $sessionId );
 
         return $result;
     }
@@ -63,10 +65,10 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
+    public function gc( $maxlifetime )
     {
-        $result = $this->currentHandler->gc($maxlifetime);
-        $this->writeOnlyHandler->gc($maxlifetime);
+        $result = $this->currentHandler->gc( $maxlifetime );
+        $this->writeOnlyHandler->gc( $maxlifetime );
 
         return $result;
     }
@@ -74,10 +76,10 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
+    public function open( $savePath, $sessionName )
     {
-        $result = $this->currentHandler->open($savePath, $sessionName);
-        $this->writeOnlyHandler->open($savePath, $sessionName);
+        $result = $this->currentHandler->open( $savePath, $sessionName );
+        $this->writeOnlyHandler->open( $savePath, $sessionName );
 
         return $result;
     }
@@ -85,19 +87,19 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
+    public function read( $sessionId )
     {
         // No reading from new handler until switch-over
-        return $this->currentHandler->read($sessionId);
+        return $this->currentHandler->read( $sessionId );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $sessionData)
+    public function write( $sessionId, $sessionData )
     {
-        $result = $this->currentHandler->write($sessionId, $sessionData);
-        $this->writeOnlyHandler->write($sessionId, $sessionData);
+        $result = $this->currentHandler->write( $sessionId, $sessionData );
+        $this->writeOnlyHandler->write( $sessionId, $sessionData );
 
         return $result;
     }
@@ -105,19 +107,19 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
     /**
      * {@inheritdoc}
      */
-    public function validateId($sessionId)
+    public function validateId( $sessionId )
     {
         // No reading from new handler until switch-over
-        return $this->currentHandler->validateId($sessionId);
+        return $this->currentHandler->validateId( $sessionId );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $sessionData)
+    public function updateTimestamp( $sessionId, $sessionData )
     {
-        $result = $this->currentHandler->updateTimestamp($sessionId, $sessionData);
-        $this->writeOnlyHandler->updateTimestamp($sessionId, $sessionData);
+        $result = $this->currentHandler->updateTimestamp( $sessionId, $sessionData );
+        $this->writeOnlyHandler->updateTimestamp( $sessionId, $sessionData );
 
         return $result;
     }

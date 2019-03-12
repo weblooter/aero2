@@ -43,7 +43,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException('You cannot compile a dumped container that was already compiled.');
+        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
     }
 
     public function isCompiled()
@@ -71,17 +71,18 @@ class ProjectServiceContainer extends Container
         $b = new \TSantos\Serializer\Normalizer\CollectionNormalizer();
 
         $c = new \TSantos\Serializer\EventDispatcher\EventDispatcher();
-        $c->addSubscriber(new \TSantos\SerializerBundle\EventListener\StopwatchListener(new \Symfony\Component\Stopwatch\Stopwatch(true)));
+        $c->addSubscriber( new \TSantos\SerializerBundle\EventListener\StopwatchListener( new \Symfony\Component\Stopwatch\Stopwatch( true ) ) );
 
-        $this->services['tsantos_serializer'] = $instance = new \TSantos\Serializer\EventEmitterSerializer(new \TSantos\Serializer\Encoder\JsonEncoder(), $a, $c);
+        $this->services[ 'tsantos_serializer' ] = $instance = new \TSantos\Serializer\EventEmitterSerializer( new \TSantos\Serializer\Encoder\JsonEncoder(),
+            $a, $c );
 
-        $b->setSerializer($instance);
+        $b->setSerializer( $instance );
         $d = new \TSantos\Serializer\Normalizer\JsonNormalizer();
-        $d->setSerializer($instance);
+        $d->setSerializer( $instance );
 
-        $a->add(new \TSantos\Serializer\Normalizer\ObjectNormalizer(new \TSantos\SerializerBundle\Serializer\CircularReferenceHandler()));
-        $a->add($b);
-        $a->add($d);
+        $a->add( new \TSantos\Serializer\Normalizer\ObjectNormalizer( new \TSantos\SerializerBundle\Serializer\CircularReferenceHandler() ) );
+        $a->add( $b );
+        $a->add( $d );
 
         return $instance;
     }

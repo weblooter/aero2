@@ -28,22 +28,24 @@ class RoutingResolverPass implements CompilerPassInterface
     private $resolverServiceId;
     private $loaderTag;
 
-    public function __construct(string $resolverServiceId = 'routing.resolver', string $loaderTag = 'routing.loader')
+    public function __construct( string $resolverServiceId = 'routing.resolver', string $loaderTag = 'routing.loader' )
     {
         $this->resolverServiceId = $resolverServiceId;
         $this->loaderTag = $loaderTag;
     }
 
-    public function process(ContainerBuilder $container)
+    public function process( ContainerBuilder $container )
     {
-        if (false === $container->hasDefinition($this->resolverServiceId)) {
+        if ( false === $container->hasDefinition( $this->resolverServiceId ) )
+        {
             return;
         }
 
-        $definition = $container->getDefinition($this->resolverServiceId);
+        $definition = $container->getDefinition( $this->resolverServiceId );
 
-        foreach ($this->findAndSortTaggedServices($this->loaderTag, $container) as $id) {
-            $definition->addMethodCall('addLoader', [new Reference($id)]);
+        foreach ( $this->findAndSortTaggedServices( $this->loaderTag, $container ) as $id )
+        {
+            $definition->addMethodCall( 'addLoader', [new Reference( $id )] );
         }
     }
 }

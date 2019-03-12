@@ -9,13 +9,12 @@ class Foo2Command extends Command
     protected function configure()
     {
         $this
-            ->setName('foo1:bar')
-            ->setDescription('The foo1:bar command')
-            ->setAliases(['afoobar2'])
-        ;
+            ->setName( 'foo1:bar' )
+            ->setDescription( 'The foo1:bar command' )
+            ->setAliases( ['afoobar2'] );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute( InputInterface $input, OutputInterface $output )
     {
     }
 }

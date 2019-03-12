@@ -25,29 +25,33 @@ use Symfony\Component\Process\Exception\RuntimeException;
 class PhpProcess extends Process
 {
     /**
-     * @param string      $script  The PHP script to run (as a string)
-     * @param string|null $cwd     The working directory or null to use the working dir of the current PHP process
-     * @param array|null  $env     The environment variables or null to use the same environment as the current PHP process
+     * @param string      $script The PHP script to run (as a string)
+     * @param string|null $cwd The working directory or null to use the working dir of the current PHP process
+     * @param array|null  $env The environment variables or null to use the same environment as the current PHP process
      * @param int         $timeout The timeout in seconds
-     * @param array|null  $php     Path to the PHP binary to use with any additional arguments
+     * @param array|null  $php Path to the PHP binary to use with any additional arguments
      */
-    public function __construct(string $script, string $cwd = null, array $env = null, int $timeout = 60, array $php = null)
+    public function __construct( string $script, string $cwd = null, array $env = null, int $timeout = 60, array $php = null )
     {
         $executableFinder = new PhpExecutableFinder();
-        if (false === $php = $php ?? $executableFinder->find(false)) {
+        if ( false === $php = $php ?? $executableFinder->find( false ) )
+        {
             $php = null;
-        } else {
-            $php = array_merge(array($php), $executableFinder->findArguments());
         }
-        if ('phpdbg' === \PHP_SAPI) {
-            $file = tempnam(sys_get_temp_dir(), 'dbg');
-            file_put_contents($file, $script);
-            register_shutdown_function('unlink', $file);
+        else
+        {
+            $php = array_merge( array($php), $executableFinder->findArguments() );
+        }
+        if ( 'phpdbg' === \PHP_SAPI )
+        {
+            $file = tempnam( sys_get_temp_dir(), 'dbg' );
+            file_put_contents( $file, $script );
+            register_shutdown_function( 'unlink', $file );
             $php[] = $file;
             $script = null;
         }
 
-        parent::__construct($php, $cwd, $env, $script, $timeout);
+        parent::__construct( $php, $cwd, $env, $script, $timeout );
     }
 
     /**
@@ -55,22 +59,24 @@ class PhpProcess extends Process
      *
      * @deprecated since Symfony 4.2, use the $php argument of the constructor instead.
      */
-    public function setPhpBinary($php)
+    public function setPhpBinary( $php )
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.2, use the $php argument of the constructor instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error( sprintf( 'The "%s()" method is deprecated since Symfony 4.2, use the $php argument of the constructor instead.',
+            __METHOD__ ), E_USER_DEPRECATED );
 
-        $this->setCommandLine($php);
+        $this->setCommandLine( $php );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function start(callable $callback = null, array $env = array())
+    public function start( callable $callback = null, array $env = array() )
     {
-        if (null === $this->getCommandLine()) {
-            throw new RuntimeException('Unable to find the PHP executable.');
+        if ( null === $this->getCommandLine() )
+        {
+            throw new RuntimeException( 'Unable to find the PHP executable.' );
         }
 
-        parent::start($callback, $env);
+        parent::start( $callback, $env );
     }
 }

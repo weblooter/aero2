@@ -10,39 +10,52 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher
 {
-    public function __construct(RequestContext $context)
+    public function __construct( RequestContext $context )
     {
         $this->context = $context;
     }
 
-    public function match($pathinfo)
+    public function match( $pathinfo )
     {
         $allow = $allowSchemes = [];
-        if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
+        if ( $ret = $this->doMatch( $pathinfo, $allow, $allowSchemes ) )
+        {
             return $ret;
         }
-        if ($allow) {
-            throw new MethodNotAllowedException(array_keys($allow));
+        if ( $allow )
+        {
+            throw new MethodNotAllowedException( array_keys( $allow ) );
         }
-        if (!in_array($this->context->getMethod(), ['HEAD', 'GET'], true)) {
+        if ( !in_array( $this->context->getMethod(), ['HEAD', 'GET'], true ) )
+        {
             // no-op
-        } elseif ($allowSchemes) {
+        }
+        elseif ( $allowSchemes )
+        {
             redirect_scheme:
             $scheme = $this->context->getScheme();
-            $this->context->setScheme(key($allowSchemes));
-            try {
-                if ($ret = $this->doMatch($pathinfo)) {
-                    return $this->redirect($pathinfo, $ret['_route'], $this->context->getScheme()) + $ret;
+            $this->context->setScheme( key( $allowSchemes ) );
+            try
+            {
+                if ( $ret = $this->doMatch( $pathinfo ) )
+                {
+                    return $this->redirect( $pathinfo, $ret[ '_route' ], $this->context->getScheme() ) + $ret;
                 }
-            } finally {
-                $this->context->setScheme($scheme);
             }
-        } elseif ('/' !== $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/') {
+            finally
+            {
+                $this->context->setScheme( $scheme );
+            }
+        }
+        elseif ( '/' !== $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/' )
+        {
             $pathinfo = $trimmedPathinfo === $pathinfo ? $pathinfo.'/' : $trimmedPathinfo;
-            if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
-                return $this->redirect($pathinfo, $ret['_route']) + $ret;
+            if ( $ret = $this->doMatch( $pathinfo, $allow, $allowSchemes ) )
+            {
+                return $this->redirect( $pathinfo, $ret[ '_route' ] ) + $ret;
             }
-            if ($allowSchemes) {
+            if ( $allowSchemes )
+            {
                 goto redirect_scheme;
             }
         }
@@ -50,19 +63,21 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
         throw new ResourceNotFoundException();
     }
 
-    private function doMatch(string $pathinfo, array &$allow = [], array &$allowSchemes = []): array
+    private function doMatch( string $pathinfo, array &$allow = [], array &$allowSchemes = [] ): array
     {
         $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode($pathinfo) ?: '/';
-        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
+        $pathinfo = rawurldecode( $pathinfo ) ? : '/';
+        $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
-        if ('HEAD' === $requestMethod) {
+        if ( 'HEAD' === $requestMethod )
+        {
             $canonicalMethod = 'GET';
         }
 
-        switch ($trimmedPathinfo) {
+        switch ( $trimmedPathinfo )
+        {
             default:
                 $routes = [
                     '/a/11' => [['_route' => 'a_first'], null, null, null, false],
@@ -79,25 +94,31 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
                     '/slashed/group/c' => [['_route' => 'slashed_c'], null, null, null, true],
                 ];
 
-                if (!isset($routes[$trimmedPathinfo])) {
+                if ( !isset( $routes[ $trimmedPathinfo ] ) )
+                {
                     break;
                 }
-                list($ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash) = $routes[$trimmedPathinfo];
-                if ('/' !== $pathinfo && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
-                    if ('GET' === $canonicalMethod && (!$requiredMethods || isset($requiredMethods['GET']))) {
+                list( $ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash ) = $routes[ $trimmedPathinfo ];
+                if ( '/' !== $pathinfo && $hasTrailingSlash === ( $trimmedPathinfo === $pathinfo ) )
+                {
+                    if ( 'GET' === $canonicalMethod && ( !$requiredMethods || isset( $requiredMethods[ 'GET' ] ) ) )
+                    {
                         return $allow = $allowSchemes = [];
                     }
                     break;
                 }
 
-                $hasRequiredScheme = !$requiredSchemes || isset($requiredSchemes[$context->getScheme()]);
-                if ($requiredMethods && !isset($requiredMethods[$canonicalMethod]) && !isset($requiredMethods[$requestMethod])) {
-                    if ($hasRequiredScheme) {
+                $hasRequiredScheme = !$requiredSchemes || isset( $requiredSchemes[ $context->getScheme() ] );
+                if ( $requiredMethods && !isset( $requiredMethods[ $canonicalMethod ] ) && !isset( $requiredMethods[ $requestMethod ] ) )
+                {
+                    if ( $hasRequiredScheme )
+                    {
                         $allow += $requiredMethods;
                     }
                     break;
                 }
-                if (!$hasRequiredScheme) {
+                if ( !$hasRequiredScheme )
+                {
                     $allowSchemes += $requiredSchemes;
                     break;
                 }
@@ -108,47 +129,59 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
         $matchedPathinfo = $pathinfo;
         $regexList = [
             0 => '{^(?'
-                    .'|/([^/]++)(*:16)'
-                    .'|/nested/([^/]++)(*:39)'
-                .')/?$}sD',
+                 .'|/([^/]++)(*:16)'
+                 .'|/nested/([^/]++)(*:39)'
+                 .')/?$}sD',
         ];
 
-        foreach ($regexList as $offset => $regex) {
-            while (preg_match($regex, $matchedPathinfo, $matches)) {
-                switch ($m = (int) $matches['MARK']) {
+        foreach ( $regexList as $offset => $regex )
+        {
+            while ( preg_match( $regex, $matchedPathinfo, $matches ) )
+            {
+                switch ( $m = (int)$matches[ 'MARK' ] )
+                {
                     default:
                         $routes = [
                             16 => [['_route' => 'a_wildcard'], ['param'], null, null, false, true],
                             39 => [['_route' => 'nested_wildcard'], ['param'], null, null, false, true],
                         ];
 
-                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
+                        list( $ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar ) = $routes[ $m ];
 
                         $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
-                        if ('/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
-                            if ('GET' === $canonicalMethod && (!$requiredMethods || isset($requiredMethods['GET']))) {
+                        if ( '/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ( $trimmedPathinfo === $pathinfo ) )
+                        {
+                            if ( 'GET' === $canonicalMethod && ( !$requiredMethods || isset( $requiredMethods[ 'GET' ] ) ) )
+                            {
                                 return $allow = $allowSchemes = [];
                             }
                             break;
                         }
-                        if ($hasTrailingSlash && $hasTrailingVar && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
+                        if ( $hasTrailingSlash && $hasTrailingVar && preg_match( $regex,
+                                rtrim( $matchedPathinfo, '/' ) ? : '/', $n ) && $m === (int)$n[ 'MARK' ] )
+                        {
                             $matches = $n;
                         }
 
-                        foreach ($vars as $i => $v) {
-                            if (isset($matches[1 + $i])) {
-                                $ret[$v] = $matches[1 + $i];
+                        foreach ( $vars as $i => $v )
+                        {
+                            if ( isset( $matches[ 1 + $i ] ) )
+                            {
+                                $ret[ $v ] = $matches[ 1 + $i ];
                             }
                         }
 
-                        $hasRequiredScheme = !$requiredSchemes || isset($requiredSchemes[$context->getScheme()]);
-                        if ($requiredMethods && !isset($requiredMethods[$canonicalMethod]) && !isset($requiredMethods[$requestMethod])) {
-                            if ($hasRequiredScheme) {
+                        $hasRequiredScheme = !$requiredSchemes || isset( $requiredSchemes[ $context->getScheme() ] );
+                        if ( $requiredMethods && !isset( $requiredMethods[ $canonicalMethod ] ) && !isset( $requiredMethods[ $requestMethod ] ) )
+                        {
+                            if ( $hasRequiredScheme )
+                            {
                                 $allow += $requiredMethods;
                             }
                             break;
                         }
-                        if (!$hasRequiredScheme) {
+                        if ( !$hasRequiredScheme )
+                        {
                             $allowSchemes += $requiredSchemes;
                             break;
                         }
@@ -156,14 +189,16 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
                         return $ret;
                 }
 
-                if (39 === $m) {
+                if ( 39 === $m )
+                {
                     break;
                 }
-                $regex = substr_replace($regex, 'F', $m - $offset, 1 + strlen($m));
-                $offset += strlen($m);
+                $regex = substr_replace( $regex, 'F', $m - $offset, 1 + strlen( $m ) );
+                $offset += strlen( $m );
             }
         }
-        if ('/' === $pathinfo && !$allow && !$allowSchemes) {
+        if ( '/' === $pathinfo && !$allow && !$allowSchemes )
+        {
             throw new Symfony\Component\Routing\Exception\NoConfigurationException();
         }
 

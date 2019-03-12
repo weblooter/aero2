@@ -36,138 +36,132 @@ class IntegrationTest extends TestCase
     public function testProcessRemovesAndInlinesRecursively()
     {
         $container = new ContainerBuilder();
-        $container->setResourceTracking(false);
+        $container->setResourceTracking( false );
 
         $a = $container
-            ->register('a', '\stdClass')
-            ->addArgument(new Reference('c'))
-            ->setPublic(true)
-        ;
+            ->register( 'a', '\stdClass' )
+            ->addArgument( new Reference( 'c' ) )
+            ->setPublic( true );
 
         $b = $container
-            ->register('b', '\stdClass')
-            ->addArgument(new Reference('c'))
-            ->setPublic(false)
-        ;
+            ->register( 'b', '\stdClass' )
+            ->addArgument( new Reference( 'c' ) )
+            ->setPublic( false );
 
         $c = $container
-            ->register('c', '\stdClass')
-            ->setPublic(false)
-        ;
+            ->register( 'c', '\stdClass' )
+            ->setPublic( false );
 
         $container->compile();
 
-        $this->assertTrue($container->hasDefinition('a'));
+        $this->assertTrue( $container->hasDefinition( 'a' ) );
         $arguments = $a->getArguments();
-        $this->assertSame($c, $arguments[0]);
-        $this->assertFalse($container->hasDefinition('b'));
-        $this->assertFalse($container->hasDefinition('c'));
+        $this->assertSame( $c, $arguments[ 0 ] );
+        $this->assertFalse( $container->hasDefinition( 'b' ) );
+        $this->assertFalse( $container->hasDefinition( 'c' ) );
     }
 
     public function testProcessInlinesReferencesToAliases()
     {
         $container = new ContainerBuilder();
-        $container->setResourceTracking(false);
+        $container->setResourceTracking( false );
 
         $a = $container
-            ->register('a', '\stdClass')
-            ->addArgument(new Reference('b'))
-            ->setPublic(true)
-        ;
+            ->register( 'a', '\stdClass' )
+            ->addArgument( new Reference( 'b' ) )
+            ->setPublic( true );
 
-        $container->setAlias('b', new Alias('c', false));
+        $container->setAlias( 'b', new Alias( 'c', false ) );
 
         $c = $container
-            ->register('c', '\stdClass')
-            ->setPublic(false)
-        ;
+            ->register( 'c', '\stdClass' )
+            ->setPublic( false );
 
         $container->compile();
 
-        $this->assertTrue($container->hasDefinition('a'));
+        $this->assertTrue( $container->hasDefinition( 'a' ) );
         $arguments = $a->getArguments();
-        $this->assertSame($c, $arguments[0]);
-        $this->assertFalse($container->hasAlias('b'));
-        $this->assertFalse($container->hasDefinition('c'));
+        $this->assertSame( $c, $arguments[ 0 ] );
+        $this->assertFalse( $container->hasAlias( 'b' ) );
+        $this->assertFalse( $container->hasDefinition( 'c' ) );
     }
 
     public function testProcessInlinesWhenThereAreMultipleReferencesButFromTheSameDefinition()
     {
         $container = new ContainerBuilder();
-        $container->setResourceTracking(false);
+        $container->setResourceTracking( false );
 
         $container
-            ->register('a', '\stdClass')
-            ->addArgument(new Reference('b'))
-            ->addMethodCall('setC', [new Reference('c')])
-            ->setPublic(true)
-        ;
+            ->register( 'a', '\stdClass' )
+            ->addArgument( new Reference( 'b' ) )
+            ->addMethodCall( 'setC', [new Reference( 'c' )] )
+            ->setPublic( true );
 
         $container
-            ->register('b', '\stdClass')
-            ->addArgument(new Reference('c'))
-            ->setPublic(false)
-        ;
+            ->register( 'b', '\stdClass' )
+            ->addArgument( new Reference( 'c' ) )
+            ->setPublic( false );
 
         $container
-            ->register('c', '\stdClass')
-            ->setPublic(false)
-        ;
+            ->register( 'c', '\stdClass' )
+            ->setPublic( false );
 
         $container->compile();
 
-        $this->assertTrue($container->hasDefinition('a'));
-        $this->assertFalse($container->hasDefinition('b'));
-        $this->assertFalse($container->hasDefinition('c'), 'Service C was not inlined.');
+        $this->assertTrue( $container->hasDefinition( 'a' ) );
+        $this->assertFalse( $container->hasDefinition( 'b' ) );
+        $this->assertFalse( $container->hasDefinition( 'c' ), 'Service C was not inlined.' );
     }
 
     public function testCanDecorateServiceSubscriber()
     {
         $container = new ContainerBuilder();
-        $container->register(ServiceSubscriberStub::class)
-            ->addTag('container.service_subscriber')
-            ->setPublic(true);
+        $container->register( ServiceSubscriberStub::class )
+            ->addTag( 'container.service_subscriber' )
+            ->setPublic( true );
 
-        $container->register(DecoratedServiceSubscriber::class)
-            ->setDecoratedService(ServiceSubscriberStub::class);
+        $container->register( DecoratedServiceSubscriber::class )
+            ->setDecoratedService( ServiceSubscriberStub::class );
 
         $container->compile();
 
-        $this->assertInstanceOf(DecoratedServiceSubscriber::class, $container->get(ServiceSubscriberStub::class));
+        $this->assertInstanceOf( DecoratedServiceSubscriber::class, $container->get( ServiceSubscriberStub::class ) );
     }
 
     /**
      * @dataProvider getYamlCompileTests
      */
-    public function testYamlContainerCompiles($directory, $actualServiceId, $expectedServiceId, ContainerBuilder $mainContainer = null)
+    public function testYamlContainerCompiles( $directory, $actualServiceId, $expectedServiceId, ContainerBuilder $mainContainer = null )
     {
         // allow a container to be passed in, which might have autoconfigure settings
-        $container = $mainContainer ?: new ContainerBuilder();
-        $container->setResourceTracking(false);
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Fixtures/yaml/integration/'.$directory));
-        $loader->load('main.yml');
+        $container = $mainContainer ? : new ContainerBuilder();
+        $container->setResourceTracking( false );
+        $loader = new YamlFileLoader( $container,
+            new FileLocator( __DIR__.'/../Fixtures/yaml/integration/'.$directory ) );
+        $loader->load( 'main.yml' );
         $container->compile();
-        $actualService = $container->getDefinition($actualServiceId);
+        $actualService = $container->getDefinition( $actualServiceId );
 
         // create a fresh ContainerBuilder, to avoid autoconfigure stuff
         $container = new ContainerBuilder();
-        $container->setResourceTracking(false);
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Fixtures/yaml/integration/'.$directory));
-        $loader->load('expected.yml');
+        $container->setResourceTracking( false );
+        $loader = new YamlFileLoader( $container,
+            new FileLocator( __DIR__.'/../Fixtures/yaml/integration/'.$directory ) );
+        $loader->load( 'expected.yml' );
         $container->compile();
-        $expectedService = $container->getDefinition($expectedServiceId);
+        $expectedService = $container->getDefinition( $expectedServiceId );
 
         // reset changes, we don't care if these differ
-        $actualService->setChanges([]);
-        $expectedService->setChanges([]);
+        $actualService->setChanges( [] );
+        $expectedService->setChanges( [] );
 
-        $this->assertEquals($expectedService, $actualService);
+        $this->assertEquals( $expectedService, $actualService );
     }
 
     public function getYamlCompileTests()
     {
         $container = new ContainerBuilder();
-        $container->registerForAutoconfiguration(IntegrationTestStub::class);
+        $container->registerForAutoconfiguration( IntegrationTestStub::class );
         yield [
             'autoconfigure_child_not_applied',
             'child_service',
@@ -176,7 +170,7 @@ class IntegrationTest extends TestCase
         ];
 
         $container = new ContainerBuilder();
-        $container->registerForAutoconfiguration(IntegrationTestStub::class);
+        $container->registerForAutoconfiguration( IntegrationTestStub::class );
         yield [
             'autoconfigure_parent_child',
             'child_service',
@@ -185,8 +179,8 @@ class IntegrationTest extends TestCase
         ];
 
         $container = new ContainerBuilder();
-        $container->registerForAutoconfiguration(IntegrationTestStub::class)
-            ->addTag('from_autoconfigure');
+        $container->registerForAutoconfiguration( IntegrationTestStub::class )
+            ->addTag( 'from_autoconfigure' );
         yield [
             'autoconfigure_parent_child_tags',
             'child_service',
@@ -225,8 +219,8 @@ class IntegrationTest extends TestCase
         ];
 
         $container = new ContainerBuilder();
-        $container->registerForAutoconfiguration(IntegrationTestStub::class)
-            ->addMethodCall('setSunshine', ['supernova']);
+        $container->registerForAutoconfiguration( IntegrationTestStub::class )
+            ->addMethodCall( 'setSunshine', ['supernova'] );
         yield [
             'instanceof_and_calls',
             'main_service',
@@ -254,12 +248,12 @@ class IntegrationTestStub extends IntegrationTestStubParent
 
 class IntegrationTestStubParent
 {
-    public function enableSummer($enable)
+    public function enableSummer( $enable )
     {
         // methods used in calls - added here to prevent errors for not existing
     }
 
-    public function setSunshine($type)
+    public function setSunshine( $type )
     {
     }
 }

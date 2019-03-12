@@ -27,24 +27,25 @@ class NativeFileSessionHandlerTest extends TestCase
 {
     public function testConstruct()
     {
-        $storage = new NativeSessionStorage(['name' => 'TESTING'], new NativeFileSessionHandler(sys_get_temp_dir()));
+        $storage = new NativeSessionStorage( ['name' => 'TESTING'],
+            new NativeFileSessionHandler( sys_get_temp_dir() ) );
 
-        $this->assertEquals('user', ini_get('session.save_handler'));
+        $this->assertEquals( 'user', ini_get( 'session.save_handler' ) );
 
-        $this->assertEquals(sys_get_temp_dir(), ini_get('session.save_path'));
-        $this->assertEquals('TESTING', ini_get('session.name'));
+        $this->assertEquals( sys_get_temp_dir(), ini_get( 'session.save_path' ) );
+        $this->assertEquals( 'TESTING', ini_get( 'session.name' ) );
     }
 
     /**
      * @dataProvider savePathDataProvider
      */
-    public function testConstructSavePath($savePath, $expectedSavePath, $path)
+    public function testConstructSavePath( $savePath, $expectedSavePath, $path )
     {
-        $handler = new NativeFileSessionHandler($savePath);
-        $this->assertEquals($expectedSavePath, ini_get('session.save_path'));
-        $this->assertTrue(is_dir(realpath($path)));
+        $handler = new NativeFileSessionHandler( $savePath );
+        $this->assertEquals( $expectedSavePath, ini_get( 'session.save_path' ) );
+        $this->assertTrue( is_dir( realpath( $path ) ) );
 
-        rmdir($path);
+        rmdir( $path );
     }
 
     public function savePathDataProvider()
@@ -63,14 +64,14 @@ class NativeFileSessionHandlerTest extends TestCase
      */
     public function testConstructException()
     {
-        $handler = new NativeFileSessionHandler('something;invalid;with;too-many-args');
+        $handler = new NativeFileSessionHandler( 'something;invalid;with;too-many-args' );
     }
 
     public function testConstructDefault()
     {
-        $path = ini_get('session.save_path');
-        $storage = new NativeSessionStorage(['name' => 'TESTING'], new NativeFileSessionHandler());
+        $path = ini_get( 'session.save_path' );
+        $storage = new NativeSessionStorage( ['name' => 'TESTING'], new NativeFileSessionHandler() );
 
-        $this->assertEquals($path, ini_get('session.save_path'));
+        $this->assertEquals( $path, ini_get( 'session.save_path' ) );
     }
 }

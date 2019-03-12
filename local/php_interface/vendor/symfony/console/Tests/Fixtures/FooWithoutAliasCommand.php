@@ -9,13 +9,12 @@ class FooWithoutAliasCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('foo')
-            ->setDescription('The foo command')
-        ;
+            ->setName( 'foo' )
+            ->setDescription( 'The foo command' );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute( InputInterface $input, OutputInterface $output )
     {
-        $output->writeln('called');
+        $output->writeln( 'called' );
     }
 }

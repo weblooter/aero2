@@ -28,7 +28,7 @@ class InputStream implements \IteratorAggregate
     /**
      * Sets a callback that is called when the write buffer becomes empty.
      */
-    public function onEmpty(callable $onEmpty = null)
+    public function onEmpty( callable $onEmpty = null )
     {
         $this->onEmpty = $onEmpty;
     }
@@ -39,15 +39,17 @@ class InputStream implements \IteratorAggregate
      * @param resource|string|int|float|bool|\Traversable|null $input The input to append as scalar,
      *                                                                stream resource or \Traversable
      */
-    public function write($input)
+    public function write( $input )
     {
-        if (null === $input) {
+        if ( null === $input )
+        {
             return;
         }
-        if ($this->isClosed()) {
-            throw new RuntimeException(sprintf('%s is closed', static::class));
+        if ( $this->isClosed() )
+        {
+            throw new RuntimeException( sprintf( '%s is closed', static::class ) );
         }
-        $this->input[] = ProcessUtils::validateInput(__METHOD__, $input);
+        $this->input[] = ProcessUtils::validateInput( __METHOD__, $input );
     }
 
     /**
@@ -70,20 +72,26 @@ class InputStream implements \IteratorAggregate
     {
         $this->open = true;
 
-        while ($this->open || $this->input) {
-            if (!$this->input) {
+        while ( $this->open || $this->input )
+        {
+            if ( !$this->input )
+            {
                 yield '';
                 continue;
             }
-            $current = array_shift($this->input);
+            $current = array_shift( $this->input );
 
-            if ($current instanceof \Iterator) {
+            if ( $current instanceof \Iterator )
+            {
                 yield from $current;
-            } else {
+            }
+            else
+            {
                 yield $current;
             }
-            if (!$this->input && $this->open && null !== $onEmpty = $this->onEmpty) {
-                $this->write($onEmpty($this));
+            if ( !$this->input && $this->open && null !== $onEmpty = $this->onEmpty )
+            {
+                $this->write( $onEmpty( $this ) );
             }
         }
     }

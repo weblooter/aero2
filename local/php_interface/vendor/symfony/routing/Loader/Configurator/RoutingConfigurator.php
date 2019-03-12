@@ -25,7 +25,7 @@ class RoutingConfigurator
     private $path;
     private $file;
 
-    public function __construct(RouteCollection $collection, PhpFileLoader $loader, string $path, string $file)
+    public function __construct( RouteCollection $collection, PhpFileLoader $loader, string $path, string $file )
     {
         $this->collection = $collection;
         $this->loader = $loader;
@@ -36,27 +36,29 @@ class RoutingConfigurator
     /**
      * @return ImportConfigurator
      */
-    final public function import($resource, $type = null, $ignoreErrors = false)
+    final public function import( $resource, $type = null, $ignoreErrors = false )
     {
-        $this->loader->setCurrentDir(\dirname($this->path));
-        $imported = $this->loader->import($resource, $type, $ignoreErrors, $this->file);
-        if (!\is_array($imported)) {
-            return new ImportConfigurator($this->collection, $imported);
+        $this->loader->setCurrentDir( \dirname( $this->path ) );
+        $imported = $this->loader->import( $resource, $type, $ignoreErrors, $this->file );
+        if ( !\is_array( $imported ) )
+        {
+            return new ImportConfigurator( $this->collection, $imported );
         }
 
         $mergedCollection = new RouteCollection();
-        foreach ($imported as $subCollection) {
-            $mergedCollection->addCollection($subCollection);
+        foreach ( $imported as $subCollection )
+        {
+            $mergedCollection->addCollection( $subCollection );
         }
 
-        return new ImportConfigurator($this->collection, $mergedCollection);
+        return new ImportConfigurator( $this->collection, $mergedCollection );
     }
 
     /**
      * @return CollectionConfigurator
      */
-    final public function collection($name = '')
+    final public function collection( $name = '' )
     {
-        return new CollectionConfigurator($this->collection, $name);
+        return new CollectionConfigurator( $this->collection, $name );
     }
 }

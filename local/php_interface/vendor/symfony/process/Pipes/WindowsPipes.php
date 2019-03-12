@@ -35,11 +35,12 @@ class WindowsPipes extends AbstractPipes
     );
     private $haveReadSupport;
 
-    public function __construct($input, bool $haveReadSupport)
+    public function __construct( $input, bool $haveReadSupport )
     {
         $this->haveReadSupport = $haveReadSupport;
 
-        if ($this->haveReadSupport) {
+        if ( $this->haveReadSupport )
+        {
             // Fix for PHP bug #51800: reading from STDOUT pipe hangs forever on Windows if the output is too big.
             // Workaround for this problem is to use temporary files instead of pipes on Windows platform.
             //
@@ -50,39 +51,48 @@ class WindowsPipes extends AbstractPipes
             );
             $tmpDir = sys_get_temp_dir();
             $lastError = 'unknown reason';
-            set_error_handler(function ($type, $msg) use (&$lastError) { $lastError = $msg; });
-            for ($i = 0;; ++$i) {
-                foreach ($pipes as $pipe => $name) {
-                    $file = sprintf('%s\\sf_proc_%02X.%s', $tmpDir, $i, $name);
+            set_error_handler( function ( $type, $msg ) use ( &$lastError ) {
+                $lastError = $msg;
+            } );
+            for ( $i = 0; ; ++$i )
+            {
+                foreach ( $pipes as $pipe => $name )
+                {
+                    $file = sprintf( '%s\\sf_proc_%02X.%s', $tmpDir, $i, $name );
 
-                    if (!$h = fopen($file.'.lock', 'w')) {
+                    if ( !$h = fopen( $file.'.lock', 'w' ) )
+                    {
                         restore_error_handler();
-                        throw new RuntimeException(sprintf('A temporary file could not be opened to write the process output: %s', $lastError));
+                        throw new RuntimeException( sprintf( 'A temporary file could not be opened to write the process output: %s',
+                            $lastError ) );
                     }
-                    if (!flock($h, LOCK_EX | LOCK_NB)) {
+                    if ( !flock( $h, LOCK_EX | LOCK_NB ) )
+                    {
                         continue 2;
                     }
-                    if (isset($this->lockHandles[$pipe])) {
-                        flock($this->lockHandles[$pipe], LOCK_UN);
-                        fclose($this->lockHandles[$pipe]);
+                    if ( isset( $this->lockHandles[ $pipe ] ) )
+                    {
+                        flock( $this->lockHandles[ $pipe ], LOCK_UN );
+                        fclose( $this->lockHandles[ $pipe ] );
                     }
-                    $this->lockHandles[$pipe] = $h;
+                    $this->lockHandles[ $pipe ] = $h;
 
-                    if (!fclose(fopen($file, 'w')) || !$h = fopen($file, 'r')) {
-                        flock($this->lockHandles[$pipe], LOCK_UN);
-                        fclose($this->lockHandles[$pipe]);
-                        unset($this->lockHandles[$pipe]);
+                    if ( !fclose( fopen( $file, 'w' ) ) || !$h = fopen( $file, 'r' ) )
+                    {
+                        flock( $this->lockHandles[ $pipe ], LOCK_UN );
+                        fclose( $this->lockHandles[ $pipe ] );
+                        unset( $this->lockHandles[ $pipe ] );
                         continue 2;
                     }
-                    $this->fileHandles[$pipe] = $h;
-                    $this->files[$pipe] = $file;
+                    $this->fileHandles[ $pipe ] = $h;
+                    $this->files[ $pipe ] = $file;
                 }
                 break;
             }
             restore_error_handler();
         }
 
-        parent::__construct($input);
+        parent::__construct( $input );
     }
 
     public function __destruct()
@@ -95,8 +105,9 @@ class WindowsPipes extends AbstractPipes
      */
     public function getDescriptors()
     {
-        if (!$this->haveReadSupport) {
-            $nullstream = fopen('NUL', 'c');
+        if ( !$this->haveReadSupport )
+        {
+            $nullstream = fopen( 'NUL', 'c' );
 
             return array(
                 array('pipe', 'r'),
@@ -126,32 +137,39 @@ class WindowsPipes extends AbstractPipes
     /**
      * {@inheritdoc}
      */
-    public function readAndWrite($blocking, $close = false)
+    public function readAndWrite( $blocking, $close = false )
     {
         $this->unblock();
         $w = $this->write();
         $read = $r = $e = array();
 
-        if ($blocking) {
-            if ($w) {
-                @stream_select($r, $w, $e, 0, Process::TIMEOUT_PRECISION * 1E6);
-            } elseif ($this->fileHandles) {
-                usleep(Process::TIMEOUT_PRECISION * 1E6);
+        if ( $blocking )
+        {
+            if ( $w )
+            {
+                @stream_select( $r, $w, $e, 0, Process::TIMEOUT_PRECISION * 1E6 );
+            }
+            elseif ( $this->fileHandles )
+            {
+                usleep( Process::TIMEOUT_PRECISION * 1E6 );
             }
         }
-        foreach ($this->fileHandles as $type => $fileHandle) {
-            $data = stream_get_contents($fileHandle, -1, $this->readBytes[$type]);
+        foreach ( $this->fileHandles as $type => $fileHandle )
+        {
+            $data = stream_get_contents( $fileHandle, -1, $this->readBytes[ $type ] );
 
-            if (isset($data[0])) {
-                $this->readBytes[$type] += \strlen($data);
-                $read[$type] = $data;
+            if ( isset( $data[ 0 ] ) )
+            {
+                $this->readBytes[ $type ] += \strlen( $data );
+                $read[ $type ] = $data;
             }
-            if ($close) {
-                ftruncate($fileHandle, 0);
-                fclose($fileHandle);
-                flock($this->lockHandles[$type], LOCK_UN);
-                fclose($this->lockHandles[$type]);
-                unset($this->fileHandles[$type], $this->lockHandles[$type]);
+            if ( $close )
+            {
+                ftruncate( $fileHandle, 0 );
+                fclose( $fileHandle );
+                flock( $this->lockHandles[ $type ], LOCK_UN );
+                fclose( $this->lockHandles[ $type ] );
+                unset( $this->fileHandles[ $type ], $this->lockHandles[ $type ] );
             }
         }
 
@@ -180,11 +198,12 @@ class WindowsPipes extends AbstractPipes
     public function close()
     {
         parent::close();
-        foreach ($this->fileHandles as $type => $handle) {
-            ftruncate($handle, 0);
-            fclose($handle);
-            flock($this->lockHandles[$type], LOCK_UN);
-            fclose($this->lockHandles[$type]);
+        foreach ( $this->fileHandles as $type => $handle )
+        {
+            ftruncate( $handle, 0 );
+            fclose( $handle );
+            flock( $this->lockHandles[ $type ], LOCK_UN );
+            fclose( $this->lockHandles[ $type ] );
         }
         $this->fileHandles = $this->lockHandles = array();
     }

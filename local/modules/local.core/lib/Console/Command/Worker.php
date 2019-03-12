@@ -17,35 +17,36 @@ class Worker extends Command
     protected function configure(): void
     {
         $this
-            ->setName('worker')
-            ->setDescription("Запускает worker, исполняющий задачу из очереди. 
+            ->setName( 'worker' )
+            ->setDescription( "Запускает worker, исполняющий задачу из очереди. 
                              Пример вызова для дебага: 
-                             $ <info>php -d mbstring.func_overload=2 console worker 1002 NONE</info>")
-            ->addArgument('jobID', InputArgument::REQUIRED, '')
-            ->addArgument('executorID', InputArgument::REQUIRED, '');
+                             $ <info>php -d mbstring.func_overload=2 console worker 1002 NONE</info>" )
+            ->addArgument( 'jobID', InputArgument::REQUIRED, '' )
+            ->addArgument( 'executorID', InputArgument::REQUIRED, '' );
     }
 
     /**
      * Бизнес-логика
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute( InputInterface $input, OutputInterface $output ): void
     {
-        $jobID = $input->getArgument('jobID');
-        $executorID = $input->getArgument('executorID');
-        cli_set_process_title('kd_queue_job_worker_'.$jobID);
+        $jobID = $input->getArgument( 'jobID' );
+        $executorID = $input->getArgument( 'executorID' );
+        cli_set_process_title( 'kd_queue_job_worker_'.$jobID );
 
-        $arJob = JobQueueTable::getList([
+        $arJob = JobQueueTable::getList( [
             'filter' => [
                 'ID' => $jobID,
                 'EXECUTE_BY' => $executorID,
             ],
-        ])->fetch();
+        ] )->fetch();
 
-        if (is_array($arJob)) {
+        if ( is_array( $arJob ) )
+        {
             /** @var \Local\Core\Inner\JobQueue\Abstracts\Worker $worker */
-            $worker = new $arJob['WORKER_CLASS_NAME']($arJob['INPUT_DATA'], $jobID, $executorID);
+            $worker = new $arJob[ 'WORKER_CLASS_NAME' ]( $arJob[ 'INPUT_DATA' ], $jobID, $executorID );
             $worker->execute();
 
         }

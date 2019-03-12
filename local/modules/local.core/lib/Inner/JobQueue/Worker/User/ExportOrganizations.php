@@ -22,17 +22,20 @@ class ExportOrganizations extends Inner\JobQueue\Abstracts\Worker implements Inn
         $result = new Main\Result();
         $arInputData = $this->getInputData();
 
-        $legal_id = (int)$arInputData['LEGAL_ID'];
+        $legal_id = (int)$arInputData[ 'LEGAL_ID' ];
 
-        if($legal_id <= 0)
-            throw new Inner\JobQueue\Exception\FailException('Не верный ID юридического лица');
-
-        try {
-            \Local\Core\Exchange\Onec\User\ExportOrganizations::export($legal_id);
-        }
-        catch(\Exception $e)
+        if ( $legal_id <= 0 )
         {
-            throw new \Exception('При попытке выгрузки данных юридического лица [ID=' . $legal_id . '] в 1С возникло исключение: ' . $e->getMessage());
+            throw new Inner\JobQueue\Exception\FailException( 'Не верный ID юридического лица' );
+        }
+
+        try
+        {
+            \Local\Core\Exchange\Onec\User\ExportOrganizations::export( $legal_id );
+        }
+        catch ( \Exception $e )
+        {
+            throw new \Exception( 'При попытке выгрузки данных юридического лица [ID='.$legal_id.'] в 1С возникло исключение: '.$e->getMessage() );
         }
 
         return $result;

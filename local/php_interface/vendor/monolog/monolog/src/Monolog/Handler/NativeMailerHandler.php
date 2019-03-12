@@ -65,19 +65,19 @@ class NativeMailerHandler extends MailHandler
     protected $encoding = 'utf-8';
 
     /**
-     * @param string|array $to             The receiver of the mail
-     * @param string       $subject        The subject of the mail
-     * @param string       $from           The sender of the mail
-     * @param int          $level          The minimum logging level at which this handler will be triggered
-     * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param string|array $to The receiver of the mail
+     * @param string       $subject The subject of the mail
+     * @param string       $from The sender of the mail
+     * @param int          $level The minimum logging level at which this handler will be triggered
+     * @param bool         $bubble Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
+    public function __construct( $to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70 )
     {
-        parent::__construct($level, $bubble);
-        $this->to = is_array($to) ? $to : array($to);
+        parent::__construct( $level, $bubble );
+        $this->to = is_array( $to ) ? $to : array($to);
         $this->subject = $subject;
-        $this->addHeader(sprintf('From: %s', $from));
+        $this->addHeader( sprintf( 'From: %s', $from ) );
         $this->maxColumnWidth = $maxColumnWidth;
     }
 
@@ -85,13 +85,16 @@ class NativeMailerHandler extends MailHandler
      * Add headers to the message
      *
      * @param  string|array $headers Custom added headers
+     *
      * @return self
      */
-    public function addHeader($headers)
+    public function addHeader( $headers )
     {
-        foreach ((array) $headers as $header) {
-            if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
-                throw new \InvalidArgumentException('Headers can not contain newline characters for security reasons');
+        foreach ( (array)$headers as $header )
+        {
+            if ( strpos( $header, "\n" ) !== false || strpos( $header, "\r" ) !== false )
+            {
+                throw new \InvalidArgumentException( 'Headers can not contain newline characters for security reasons' );
             }
             $this->headers[] = $header;
         }
@@ -103,11 +106,12 @@ class NativeMailerHandler extends MailHandler
      * Add parameters to the message
      *
      * @param  string|array $parameters Custom added parameters
+     *
      * @return self
      */
-    public function addParameter($parameters)
+    public function addParameter( $parameters )
     {
-        $this->parameters = array_merge($this->parameters, (array) $parameters);
+        $this->parameters = array_merge( $this->parameters, (array)$parameters );
 
         return $this;
     }
@@ -115,24 +119,27 @@ class NativeMailerHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content, array $records)
+    protected function send( $content, array $records )
     {
-        $content = wordwrap($content, $this->maxColumnWidth);
-        $headers = ltrim(implode("\r\n", $this->headers) . "\r\n", "\r\n");
-        $headers .= 'Content-type: ' . $this->getContentType() . '; charset=' . $this->getEncoding() . "\r\n";
-        if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
-            $headers .= 'MIME-Version: 1.0' . "\r\n";
+        $content = wordwrap( $content, $this->maxColumnWidth );
+        $headers = ltrim( implode( "\r\n", $this->headers )."\r\n", "\r\n" );
+        $headers .= 'Content-type: '.$this->getContentType().'; charset='.$this->getEncoding()."\r\n";
+        if ( $this->getContentType() == 'text/html' && false === strpos( $headers, 'MIME-Version:' ) )
+        {
+            $headers .= 'MIME-Version: 1.0'."\r\n";
         }
 
         $subject = $this->subject;
-        if ($records) {
-            $subjectFormatter = new LineFormatter($this->subject);
-            $subject = $subjectFormatter->format($this->getHighestRecord($records));
+        if ( $records )
+        {
+            $subjectFormatter = new LineFormatter( $this->subject );
+            $subject = $subjectFormatter->format( $this->getHighestRecord( $records ) );
         }
 
-        $parameters = implode(' ', $this->parameters);
-        foreach ($this->to as $to) {
-            mail($to, $subject, $content, $headers, $parameters);
+        $parameters = implode( ' ', $this->parameters );
+        foreach ( $this->to as $to )
+        {
+            mail( $to, $subject, $content, $headers, $parameters );
         }
     }
 
@@ -155,12 +162,14 @@ class NativeMailerHandler extends MailHandler
     /**
      * @param  string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML
      *                             messages.
+     *
      * @return self
      */
-    public function setContentType($contentType)
+    public function setContentType( $contentType )
     {
-        if (strpos($contentType, "\n") !== false || strpos($contentType, "\r") !== false) {
-            throw new \InvalidArgumentException('The content type can not contain newline characters to prevent email header injection');
+        if ( strpos( $contentType, "\n" ) !== false || strpos( $contentType, "\r" ) !== false )
+        {
+            throw new \InvalidArgumentException( 'The content type can not contain newline characters to prevent email header injection' );
         }
 
         $this->contentType = $contentType;
@@ -170,12 +179,14 @@ class NativeMailerHandler extends MailHandler
 
     /**
      * @param  string $encoding
+     *
      * @return self
      */
-    public function setEncoding($encoding)
+    public function setEncoding( $encoding )
     {
-        if (strpos($encoding, "\n") !== false || strpos($encoding, "\r") !== false) {
-            throw new \InvalidArgumentException('The encoding can not contain newline characters to prevent email header injection');
+        if ( strpos( $encoding, "\n" ) !== false || strpos( $encoding, "\r" ) !== false )
+        {
+            throw new \InvalidArgumentException( 'The encoding can not contain newline characters to prevent email header injection' );
         }
 
         $this->encoding = $encoding;

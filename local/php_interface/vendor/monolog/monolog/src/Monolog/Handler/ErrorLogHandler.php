@@ -28,18 +28,20 @@ class ErrorLogHandler extends AbstractProcessingHandler
     protected $expandNewlines;
 
     /**
-     * @param int  $messageType    Says where the error should go.
-     * @param int  $level          The minimum logging level at which this handler will be triggered
-     * @param bool $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
+     * @param int  $messageType Says where the error should go.
+     * @param int  $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log
+     *     entries
      */
-    public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true, $expandNewlines = false)
+    public function __construct( $messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true, $expandNewlines = false )
     {
-        parent::__construct($level, $bubble);
+        parent::__construct( $level, $bubble );
 
-        if (false === in_array($messageType, self::getAvailableTypes())) {
-            $message = sprintf('The given message type "%s" is not supported', print_r($messageType, true));
-            throw new \InvalidArgumentException($message);
+        if ( false === in_array( $messageType, self::getAvailableTypes() ) )
+        {
+            $message = sprintf( 'The given message type "%s" is not supported', print_r( $messageType, true ) );
+            throw new \InvalidArgumentException( $message );
         }
 
         $this->messageType = $messageType;
@@ -62,21 +64,25 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new LineFormatter('[%datetime%] %channel%.%level_name%: %message% %context% %extra%');
+        return new LineFormatter( '[%datetime%] %channel%.%level_name%: %message% %context% %extra%' );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
-        if ($this->expandNewlines) {
-            $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
-            foreach ($lines as $line) {
-                error_log($line, $this->messageType);
+        if ( $this->expandNewlines )
+        {
+            $lines = preg_split( '{[\r\n]+}', (string)$record[ 'formatted' ] );
+            foreach ( $lines as $line )
+            {
+                error_log( $line, $this->messageType );
             }
-        } else {
-            error_log((string) $record['formatted'], $this->messageType);
+        }
+        else
+        {
+            error_log( (string)$record[ 'formatted' ], $this->messageType );
         }
     }
 }

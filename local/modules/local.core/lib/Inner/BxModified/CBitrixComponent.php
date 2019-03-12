@@ -1,4 +1,5 @@
 <?
+
 namespace Local\Core\Inner\BxModified;
 
 class CBitrixComponent extends \CBitrixComponent
@@ -7,8 +8,8 @@ class CBitrixComponent extends \CBitrixComponent
     /**
      * Проверка прав пользователя на компанию
      *
-     * @param int $intCompanyId ID компании
-     * @param int $intUserId ID пользователя
+     * @param int  $intCompanyId ID компании
+     * @param int  $intUserId ID пользователя
      * @param bool $init404Process Запустить процесс 404й (true) или просто вернуть boolean (false), по умолчанию true
      *
      * @return bool
@@ -18,7 +19,7 @@ class CBitrixComponent extends \CBitrixComponent
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    protected function _checkCompanyAccess($intCompanyId, $intUserId = 0, $init404Process = true)
+    protected function _checkCompanyAccess( $intCompanyId, $intUserId = 0, $init404Process = true )
     {
         $isSuccessAccess = true;
 
@@ -30,7 +31,7 @@ class CBitrixComponent extends \CBitrixComponent
                 break;
         }
 
-        if( !$isSuccessAccess && $init404Process )
+        if ( !$isSuccessAccess && $init404Process )
         {
             $this->_show404Page();
         }
@@ -45,9 +46,9 @@ class CBitrixComponent extends \CBitrixComponent
      *
      * @throws \Bitrix\Main\LoaderException
      */
-    protected function _show404Page($strMessage = '')
+    protected function _show404Page( $strMessage = '' )
     {
-        \Bitrix\Main\Loader::includeModule('iblock');
-        \Bitrix\Iblock\Component\Tools::process404($strMessage, true, true, true, "");
+        \Bitrix\Main\Loader::includeModule( 'iblock' );
+        \Bitrix\Iblock\Component\Tools::process404( $strMessage, true, true, true, "" );
     }
 }

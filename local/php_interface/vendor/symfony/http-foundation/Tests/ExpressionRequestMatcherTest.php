@@ -24,33 +24,33 @@ class ExpressionRequestMatcherTest extends TestCase
     public function testWhenNoExpressionIsSet()
     {
         $expressionRequestMatcher = new ExpressionRequestMatcher();
-        $expressionRequestMatcher->matches(new Request());
+        $expressionRequestMatcher->matches( new Request() );
     }
 
     /**
      * @dataProvider provideExpressions
      */
-    public function testMatchesWhenParentMatchesIsTrue($expression, $expected)
+    public function testMatchesWhenParentMatchesIsTrue( $expression, $expected )
     {
-        $request = Request::create('/foo');
+        $request = Request::create( '/foo' );
         $expressionRequestMatcher = new ExpressionRequestMatcher();
 
-        $expressionRequestMatcher->setExpression(new ExpressionLanguage(), $expression);
-        $this->assertSame($expected, $expressionRequestMatcher->matches($request));
+        $expressionRequestMatcher->setExpression( new ExpressionLanguage(), $expression );
+        $this->assertSame( $expected, $expressionRequestMatcher->matches( $request ) );
     }
 
     /**
      * @dataProvider provideExpressions
      */
-    public function testMatchesWhenParentMatchesIsFalse($expression)
+    public function testMatchesWhenParentMatchesIsFalse( $expression )
     {
-        $request = Request::create('/foo');
-        $request->attributes->set('foo', 'foo');
+        $request = Request::create( '/foo' );
+        $request->attributes->set( 'foo', 'foo' );
         $expressionRequestMatcher = new ExpressionRequestMatcher();
-        $expressionRequestMatcher->matchAttribute('foo', 'bar');
+        $expressionRequestMatcher->matchAttribute( 'foo', 'bar' );
 
-        $expressionRequestMatcher->setExpression(new ExpressionLanguage(), $expression);
-        $this->assertFalse($expressionRequestMatcher->matches($request));
+        $expressionRequestMatcher->setExpression( new ExpressionLanguage(), $expression );
+        $this->assertFalse( $expressionRequestMatcher->matches( $request ) );
     }
 
     public function provideExpressions()
@@ -61,9 +61,15 @@ class ExpressionRequestMatcherTest extends TestCase
             ['request.getHost() == host', true],
             ['request.getClientIp() == ip', true],
             ['request.attributes.all() == attributes', true],
-            ['request.getMethod() == method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes', true],
+            [
+                'request.getMethod() == method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes',
+                true
+            ],
             ['request.getMethod() != method', false],
-            ['request.getMethod() != method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes', false],
+            [
+                'request.getMethod() != method && request.getPathInfo() == path && request.getHost() == host && request.getClientIp() == ip &&  request.attributes.all() == attributes',
+                false
+            ],
         ];
     }
 }

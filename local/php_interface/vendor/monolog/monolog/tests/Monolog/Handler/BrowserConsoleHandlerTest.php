@@ -26,18 +26,18 @@ class BrowserConsoleHandlerTest extends TestCase
 
     protected function generateScript()
     {
-        $reflMethod = new \ReflectionMethod('Monolog\Handler\BrowserConsoleHandler', 'generateScript');
-        $reflMethod->setAccessible(true);
+        $reflMethod = new \ReflectionMethod( 'Monolog\Handler\BrowserConsoleHandler', 'generateScript' );
+        $reflMethod->setAccessible( true );
 
-        return $reflMethod->invoke(null);
+        return $reflMethod->invoke( null );
     }
 
     public function testStyling()
     {
         $handler = new BrowserConsoleHandler();
-        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->setFormatter( $this->getIdentityFormatter() );
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'foo[[bar]]{color: red}'));
+        $handler->handle( $this->getRecord( Logger::DEBUG, 'foo[[bar]]{color: red}' ) );
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -45,15 +45,15 @@ c.log("%cfoo%cbar%c", "font-weight: normal", "color: red", "font-weight: normal"
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, $this->generateScript());
+        $this->assertEquals( $expected, $this->generateScript() );
     }
 
     public function testEscaping()
     {
         $handler = new BrowserConsoleHandler();
-        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->setFormatter( $this->getIdentityFormatter() );
 
-        $handler->handle($this->getRecord(Logger::DEBUG, "[foo] [[\"bar\n[baz]\"]]{color: red}"));
+        $handler->handle( $this->getRecord( Logger::DEBUG, "[foo] [[\"bar\n[baz]\"]]{color: red}" ) );
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -61,17 +61,17 @@ c.log("%c[foo] %c\"bar\\n[baz]\"%c", "font-weight: normal", "color: red", "font-
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, $this->generateScript());
+        $this->assertEquals( $expected, $this->generateScript() );
     }
 
     public function testAutolabel()
     {
         $handler = new BrowserConsoleHandler();
-        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->setFormatter( $this->getIdentityFormatter() );
 
-        $handler->handle($this->getRecord(Logger::DEBUG, '[[foo]]{macro: autolabel}'));
-        $handler->handle($this->getRecord(Logger::DEBUG, '[[bar]]{macro: autolabel}'));
-        $handler->handle($this->getRecord(Logger::DEBUG, '[[foo]]{macro: autolabel}'));
+        $handler->handle( $this->getRecord( Logger::DEBUG, '[[foo]]{macro: autolabel}' ) );
+        $handler->handle( $this->getRecord( Logger::DEBUG, '[[bar]]{macro: autolabel}' ) );
+        $handler->handle( $this->getRecord( Logger::DEBUG, '[[foo]]{macro: autolabel}' ) );
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -81,15 +81,15 @@ c.log("%c%cfoo%c", "font-weight: normal", "background-color: blue; color: white;
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, $this->generateScript());
+        $this->assertEquals( $expected, $this->generateScript() );
     }
 
     public function testContext()
     {
         $handler = new BrowserConsoleHandler();
-        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->setFormatter( $this->getIdentityFormatter() );
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'test', array('foo' => 'bar')));
+        $handler->handle( $this->getRecord( Logger::DEBUG, 'test', array('foo' => 'bar') ) );
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -100,21 +100,21 @@ c.groupEnd();
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, $this->generateScript());
+        $this->assertEquals( $expected, $this->generateScript() );
     }
 
     public function testConcurrentHandlers()
     {
         $handler1 = new BrowserConsoleHandler();
-        $handler1->setFormatter($this->getIdentityFormatter());
+        $handler1->setFormatter( $this->getIdentityFormatter() );
 
         $handler2 = new BrowserConsoleHandler();
-        $handler2->setFormatter($this->getIdentityFormatter());
+        $handler2->setFormatter( $this->getIdentityFormatter() );
 
-        $handler1->handle($this->getRecord(Logger::DEBUG, 'test1'));
-        $handler2->handle($this->getRecord(Logger::DEBUG, 'test2'));
-        $handler1->handle($this->getRecord(Logger::DEBUG, 'test3'));
-        $handler2->handle($this->getRecord(Logger::DEBUG, 'test4'));
+        $handler1->handle( $this->getRecord( Logger::DEBUG, 'test1' ) );
+        $handler2->handle( $this->getRecord( Logger::DEBUG, 'test2' ) );
+        $handler1->handle( $this->getRecord( Logger::DEBUG, 'test3' ) );
+        $handler2->handle( $this->getRecord( Logger::DEBUG, 'test4' ) );
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -125,6 +125,6 @@ c.log("%ctest4", "font-weight: normal");
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, $this->generateScript());
+        $this->assertEquals( $expected, $this->generateScript() );
     }
 }

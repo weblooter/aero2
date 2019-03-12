@@ -32,36 +32,39 @@ class LockableTraitTest extends TestCase
     {
         $command = new \FooLockCommand();
 
-        $tester = new CommandTester($command);
-        $this->assertSame(2, $tester->execute([]));
-        $this->assertSame(2, $tester->execute([]));
+        $tester = new CommandTester( $command );
+        $this->assertSame( 2, $tester->execute( [] ) );
+        $this->assertSame( 2, $tester->execute( [] ) );
     }
 
     public function testLockReturnsFalseIfAlreadyLockedByAnotherCommand()
     {
         $command = new \FooLockCommand();
 
-        if (SemaphoreStore::isSupported()) {
+        if ( SemaphoreStore::isSupported() )
+        {
             $store = new SemaphoreStore();
-        } else {
+        }
+        else
+        {
             $store = new FlockStore();
         }
 
-        $lock = (new Factory($store))->createLock($command->getName());
+        $lock = ( new Factory( $store ) )->createLock( $command->getName() );
         $lock->acquire();
 
-        $tester = new CommandTester($command);
-        $this->assertSame(1, $tester->execute([]));
+        $tester = new CommandTester( $command );
+        $this->assertSame( 1, $tester->execute( [] ) );
 
         $lock->release();
-        $this->assertSame(2, $tester->execute([]));
+        $this->assertSame( 2, $tester->execute( [] ) );
     }
 
     public function testMultipleLockCallsThrowLogicException()
     {
         $command = new \FooLock2Command();
 
-        $tester = new CommandTester($command);
-        $this->assertSame(1, $tester->execute([]));
+        $tester = new CommandTester( $command );
+        $this->assertSame( 1, $tester->execute( [] ) );
     }
 }

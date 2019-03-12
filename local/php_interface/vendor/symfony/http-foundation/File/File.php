@@ -26,18 +26,19 @@ class File extends \SplFileInfo
     /**
      * Constructs a new file from the given path.
      *
-     * @param string $path      The path to the file
+     * @param string $path The path to the file
      * @param bool   $checkPath Whether to check the path or not
      *
      * @throws FileNotFoundException If the given path is not a file
      */
-    public function __construct(string $path, bool $checkPath = true)
+    public function __construct( string $path, bool $checkPath = true )
     {
-        if ($checkPath && !is_file($path)) {
-            throw new FileNotFoundException($path);
+        if ( $checkPath && !is_file( $path ) )
+        {
+            throw new FileNotFoundException( $path );
         }
 
-        parent::__construct($path);
+        parent::__construct( $path );
     }
 
     /**
@@ -58,7 +59,7 @@ class File extends \SplFileInfo
         $type = $this->getMimeType();
         $guesser = ExtensionGuesser::getInstance();
 
-        return $guesser->guess($type);
+        return $guesser->guess( $type );
     }
 
     /**
@@ -76,48 +77,57 @@ class File extends \SplFileInfo
     {
         $guesser = MimeTypeGuesser::getInstance();
 
-        return $guesser->guess($this->getPathname());
+        return $guesser->guess( $this->getPathname() );
     }
 
     /**
      * Moves the file to a new location.
      *
      * @param string $directory The destination folder
-     * @param string $name      The new file name
+     * @param string $name The new file name
      *
      * @return self A File object representing the new file
      *
      * @throws FileException if the target file could not be created
      */
-    public function move($directory, $name = null)
+    public function move( $directory, $name = null )
     {
-        $target = $this->getTargetFile($directory, $name);
+        $target = $this->getTargetFile( $directory, $name );
 
-        set_error_handler(function ($type, $msg) use (&$error) { $error = $msg; });
-        $renamed = rename($this->getPathname(), $target);
+        set_error_handler( function ( $type, $msg ) use ( &$error ) {
+            $error = $msg;
+        } );
+        $renamed = rename( $this->getPathname(), $target );
         restore_error_handler();
-        if (!$renamed) {
-            throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s)', $this->getPathname(), $target, strip_tags($error)));
+        if ( !$renamed )
+        {
+            throw new FileException( sprintf( 'Could not move the file "%s" to "%s" (%s)', $this->getPathname(),
+                $target, strip_tags( $error ) ) );
         }
 
-        @chmod($target, 0666 & ~umask());
+        @chmod( $target, 0666 & ~umask() );
 
         return $target;
     }
 
-    protected function getTargetFile($directory, $name = null)
+    protected function getTargetFile( $directory, $name = null )
     {
-        if (!is_dir($directory)) {
-            if (false === @mkdir($directory, 0777, true) && !is_dir($directory)) {
-                throw new FileException(sprintf('Unable to create the "%s" directory', $directory));
+        if ( !is_dir( $directory ) )
+        {
+            if ( false === @mkdir( $directory, 0777, true ) && !is_dir( $directory ) )
+            {
+                throw new FileException( sprintf( 'Unable to create the "%s" directory', $directory ) );
             }
-        } elseif (!is_writable($directory)) {
-            throw new FileException(sprintf('Unable to write in the "%s" directory', $directory));
+        }
+        elseif ( !is_writable( $directory ) )
+        {
+            throw new FileException( sprintf( 'Unable to write in the "%s" directory', $directory ) );
         }
 
-        $target = rtrim($directory, '/\\').\DIRECTORY_SEPARATOR.(null === $name ? $this->getBasename() : $this->getName($name));
+        $target = rtrim( $directory,
+                '/\\' ).\DIRECTORY_SEPARATOR.( null === $name ? $this->getBasename() : $this->getName( $name ) );
 
-        return new self($target, false);
+        return new self( $target, false );
     }
 
     /**
@@ -127,11 +137,11 @@ class File extends \SplFileInfo
      *
      * @return string containing
      */
-    protected function getName($name)
+    protected function getName( $name )
     {
-        $originalName = str_replace('\\', '/', $name);
-        $pos = strrpos($originalName, '/');
-        $originalName = false === $pos ? $originalName : substr($originalName, $pos + 1);
+        $originalName = str_replace( '\\', '/', $name );
+        $pos = strrpos( $originalName, '/' );
+        $originalName = false === $pos ? $originalName : substr( $originalName, $pos + 1 );
 
         return $originalName;
     }

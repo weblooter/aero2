@@ -4,7 +4,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\DumperInterface as ProxyDumper;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 
-function sc_configure($instance)
+function sc_configure( $instance )
 {
     $instance->configure();
 }
@@ -14,7 +14,7 @@ class BarClass extends BazClass
     protected $baz;
     public $foo = 'foo';
 
-    public function setBaz(BazClass $baz)
+    public function setBaz( BazClass $baz )
     {
         $this->baz = $baz;
     }
@@ -29,12 +29,12 @@ class BazClass
 {
     protected $foo;
 
-    public function setFoo(Foo $foo)
+    public function setFoo( Foo $foo )
     {
         $this->foo = $foo;
     }
 
-    public function configure($instance)
+    public function configure( $instance )
     {
         $instance->configure();
     }
@@ -44,7 +44,7 @@ class BazClass
         return new self();
     }
 
-    public static function configureStatic($instance)
+    public static function configureStatic( $instance )
     {
         $instance->configure();
     }
@@ -58,7 +58,7 @@ class BarUserClass
 {
     public $bar;
 
-    public function __construct(BarClass $bar)
+    public function __construct( BarClass $bar )
     {
         $this->bar = $bar;
     }
@@ -72,7 +72,7 @@ class MethodCallClass
 
     public function callMe()
     {
-        $this->callPassed = is_scalar($this->simple) && is_object($this->complex);
+        $this->callPassed = is_scalar( $this->simple ) && is_object( $this->complex );
     }
 
     public function callPassed()
@@ -83,17 +83,17 @@ class MethodCallClass
 
 class DummyProxyDumper implements ProxyDumper
 {
-    public function isProxyCandidate(Definition $definition)
+    public function isProxyCandidate( Definition $definition )
     {
         return $definition->isLazy();
     }
 
-    public function getProxyFactoryCode(Definition $definition, $id, $factoryCall = null)
+    public function getProxyFactoryCode( Definition $definition, $id, $factoryCall = null )
     {
         return "        // lazy factory for {$definition->getClass()}\n\n";
     }
 
-    public function getProxyCode(Definition $definition)
+    public function getProxyCode( Definition $definition )
     {
         return "// proxy code for {$definition->getClass()}\n";
     }
@@ -104,7 +104,7 @@ class LazyContext
     public $lazyValues;
     public $lazyEmptyValues;
 
-    public function __construct($lazyValues, $lazyEmptyValues)
+    public function __construct( $lazyValues, $lazyEmptyValues )
     {
         $this->lazyValues = $lazyValues;
         $this->lazyEmptyValues = $lazyEmptyValues;
@@ -113,7 +113,7 @@ class LazyContext
 
 class FoobarCircular
 {
-    public function __construct(FooCircular $foo)
+    public function __construct( FooCircular $foo )
     {
         $this->foo = $foo;
     }
@@ -121,7 +121,7 @@ class FoobarCircular
 
 class FooCircular
 {
-    public function __construct(BarCircular $bar)
+    public function __construct( BarCircular $bar )
     {
         $this->bar = $bar;
     }
@@ -129,7 +129,7 @@ class FooCircular
 
 class BarCircular
 {
-    public function addFoobar(FoobarCircular $foobar)
+    public function addFoobar( FoobarCircular $foobar )
     {
         $this->foobar = $foobar;
     }

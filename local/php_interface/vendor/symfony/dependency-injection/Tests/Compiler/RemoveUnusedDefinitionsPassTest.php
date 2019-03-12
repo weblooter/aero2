@@ -26,60 +26,53 @@ class RemoveUnusedDefinitionsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container
-            ->register('foo')
-            ->setPublic(false)
-        ;
+            ->register( 'foo' )
+            ->setPublic( false );
         $container
-            ->register('bar')
-            ->setPublic(false)
-        ;
+            ->register( 'bar' )
+            ->setPublic( false );
         $container
-            ->register('moo')
-            ->setArguments([new Reference('bar')])
-        ;
+            ->register( 'moo' )
+            ->setArguments( [new Reference( 'bar' )] );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->assertFalse($container->hasDefinition('foo'));
-        $this->assertTrue($container->hasDefinition('bar'));
-        $this->assertTrue($container->hasDefinition('moo'));
+        $this->assertFalse( $container->hasDefinition( 'foo' ) );
+        $this->assertTrue( $container->hasDefinition( 'bar' ) );
+        $this->assertTrue( $container->hasDefinition( 'moo' ) );
     }
 
     public function testProcessRemovesUnusedDefinitionsRecursively()
     {
         $container = new ContainerBuilder();
         $container
-            ->register('foo')
-            ->setPublic(false)
-        ;
+            ->register( 'foo' )
+            ->setPublic( false );
         $container
-            ->register('bar')
-            ->setArguments([new Reference('foo')])
-            ->setPublic(false)
-        ;
+            ->register( 'bar' )
+            ->setArguments( [new Reference( 'foo' )] )
+            ->setPublic( false );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->assertFalse($container->hasDefinition('foo'));
-        $this->assertFalse($container->hasDefinition('bar'));
+        $this->assertFalse( $container->hasDefinition( 'foo' ) );
+        $this->assertFalse( $container->hasDefinition( 'bar' ) );
     }
 
     public function testProcessWorksWithInlinedDefinitions()
     {
         $container = new ContainerBuilder();
         $container
-            ->register('foo')
-            ->setPublic(false)
-        ;
+            ->register( 'foo' )
+            ->setPublic( false );
         $container
-            ->register('bar')
-            ->setArguments([new Definition(null, [new Reference('foo')])])
-        ;
+            ->register( 'bar' )
+            ->setArguments( [new Definition( null, [new Reference( 'foo' )] )] );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->assertTrue($container->hasDefinition('foo'));
-        $this->assertTrue($container->hasDefinition('bar'));
+        $this->assertTrue( $container->hasDefinition( 'foo' ) );
+        $this->assertTrue( $container->hasDefinition( 'bar' ) );
     }
 
     public function testProcessWontRemovePrivateFactory()
@@ -87,51 +80,50 @@ class RemoveUnusedDefinitionsPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $container
-            ->register('foo', 'stdClass')
-            ->setFactory(['stdClass', 'getInstance'])
-            ->setPublic(false);
+            ->register( 'foo', 'stdClass' )
+            ->setFactory( ['stdClass', 'getInstance'] )
+            ->setPublic( false );
 
         $container
-            ->register('bar', 'stdClass')
-            ->setFactory([new Reference('foo'), 'getInstance'])
-            ->setPublic(false);
+            ->register( 'bar', 'stdClass' )
+            ->setFactory( [new Reference( 'foo' ), 'getInstance'] )
+            ->setPublic( false );
 
         $container
-            ->register('foobar')
-            ->addArgument(new Reference('bar'));
+            ->register( 'foobar' )
+            ->addArgument( new Reference( 'bar' ) );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->assertTrue($container->hasDefinition('foo'));
-        $this->assertTrue($container->hasDefinition('bar'));
-        $this->assertTrue($container->hasDefinition('foobar'));
+        $this->assertTrue( $container->hasDefinition( 'foo' ) );
+        $this->assertTrue( $container->hasDefinition( 'bar' ) );
+        $this->assertTrue( $container->hasDefinition( 'foobar' ) );
     }
 
     public function testProcessConsiderEnvVariablesAsUsedEvenInPrivateServices()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('env(FOOBAR)', 'test');
+        $container->setParameter( 'env(FOOBAR)', 'test' );
         $container
-            ->register('foo')
-            ->setArguments(['%env(FOOBAR)%'])
-            ->setPublic(false)
-        ;
+            ->register( 'foo' )
+            ->setArguments( ['%env(FOOBAR)%'] )
+            ->setPublic( false );
 
         $resolvePass = new ResolveParameterPlaceHoldersPass();
-        $resolvePass->process($container);
+        $resolvePass->process( $container );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->assertFalse($container->hasDefinition('foo'));
+        $this->assertFalse( $container->hasDefinition( 'foo' ) );
 
         $envCounters = $container->getEnvCounters();
-        $this->assertArrayHasKey('FOOBAR', $envCounters);
-        $this->assertSame(1, $envCounters['FOOBAR']);
+        $this->assertArrayHasKey( 'FOOBAR', $envCounters );
+        $this->assertSame( 1, $envCounters[ 'FOOBAR' ] );
     }
 
-    protected function process(ContainerBuilder $container)
+    protected function process( ContainerBuilder $container )
     {
-        $repeatedPass = new RepeatedPass([new AnalyzeServiceReferencesPass(), new RemoveUnusedDefinitionsPass()]);
-        $repeatedPass->process($container);
+        $repeatedPass = new RepeatedPass( [new AnalyzeServiceReferencesPass(), new RemoveUnusedDefinitionsPass()] );
+        $repeatedPass->process( $container );
     }
 }

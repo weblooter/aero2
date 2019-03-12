@@ -14,7 +14,7 @@ class Editor extends Base
                     <td colspan=\"2\">{$this->getTitle()}</td>
                 </tr>
                 <tr>
-                    <td colspan=\"2\">" . ($this->isEditable === true) ? $this->getEditFieldHtml() : $this->getViewFieldHtml() . "</td>
+                    <td colspan=\"2\">".( $this->isEditable === true ) ? $this->getEditFieldHtml() : $this->getViewFieldHtml()."</td>
                 </tr>";
     }
 
@@ -29,12 +29,12 @@ class Editor extends Base
             $this->getCode(), $this->getValue(), "", "html",
             [
                 "height" => 450,
-                "width"  => "100%"
+                "width" => "100%"
             ],
             "N", 0, "", "", "s1", true, false,
             [
-                "toolbarConfig"    => \CFileMan::GetEditorToolbarConfig("admin"),
-                "saveEditorKey"    => 1,
+                "toolbarConfig" => \CFileMan::GetEditorToolbarConfig( "admin" ),
+                "saveEditorKey" => 1,
                 "hideTypeSelector" => "N",
             ]
         );
@@ -50,7 +50,7 @@ class Editor extends Base
      */
     public function getViewFieldHtml()
     {
-        return (new \CBXSanitizer)->SanitizeHtml($this->getValue());
+        return ( new \CBXSanitizer )->SanitizeHtml( $this->getValue() );
     }
 
 }

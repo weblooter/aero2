@@ -22,25 +22,28 @@ class ImportOrders extends Inner\JobQueue\Abstracts\Worker implements Inner\Inte
         $result = new Main\Result();
         $arInputData = $this->getInputData();
 
-        $user_id = (int)$arInputData['USER_ID'];
+        $user_id = (int)$arInputData[ 'USER_ID' ];
 
-        if($user_id <= 0)
-            throw new Inner\JobQueue\Exception\FailException('Не верный ID пользователя');
-
-        try {
-            \Local\Core\Exchange\Onec\Webservice\OrderSync::syncByUser($user_id);
-        }
-        catch(\Exception $e)
+        if ( $user_id <= 0 )
         {
-            throw new \Exception('При синхронизации заказов пользователя [ID=' . $user_id . '] возникло исключение: ' . $e->getMessage());
+            throw new Inner\JobQueue\Exception\FailException( 'Не верный ID пользователя' );
+        }
+
+        try
+        {
+            \Local\Core\Exchange\Onec\Webservice\OrderSync::syncByUser( $user_id );
+        }
+        catch ( \Exception $e )
+        {
+            throw new \Exception( 'При синхронизации заказов пользователя [ID='.$user_id.'] возникло исключение: '.$e->getMessage() );
         }
 
         return $result;
     }
 
-    public function getNextExecuteAt(int $addSecond = 120): Main\Type\DateTime
+    public function getNextExecuteAt( int $addSecond = 120 ): Main\Type\DateTime
     {
         //Some Another logic
-        return parent::getNextExecuteAt($addSecond);
+        return parent::getNextExecuteAt( $addSecond );
     }
 }

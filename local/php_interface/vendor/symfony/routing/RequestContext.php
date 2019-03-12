@@ -33,16 +33,16 @@ class RequestContext
     private $queryString;
     private $parameters = [];
 
-    public function __construct(string $baseUrl = '', string $method = 'GET', string $host = 'localhost', string $scheme = 'http', int $httpPort = 80, int $httpsPort = 443, string $path = '/', string $queryString = '')
+    public function __construct( string $baseUrl = '', string $method = 'GET', string $host = 'localhost', string $scheme = 'http', int $httpPort = 80, int $httpsPort = 443, string $path = '/', string $queryString = '' )
     {
-        $this->setBaseUrl($baseUrl);
-        $this->setMethod($method);
-        $this->setHost($host);
-        $this->setScheme($scheme);
-        $this->setHttpPort($httpPort);
-        $this->setHttpsPort($httpsPort);
-        $this->setPathInfo($path);
-        $this->setQueryString($queryString);
+        $this->setBaseUrl( $baseUrl );
+        $this->setMethod( $method );
+        $this->setHost( $host );
+        $this->setScheme( $scheme );
+        $this->setHttpPort( $httpPort );
+        $this->setHttpsPort( $httpsPort );
+        $this->setPathInfo( $path );
+        $this->setQueryString( $queryString );
     }
 
     /**
@@ -50,16 +50,16 @@ class RequestContext
      *
      * @return $this
      */
-    public function fromRequest(Request $request)
+    public function fromRequest( Request $request )
     {
-        $this->setBaseUrl($request->getBaseUrl());
-        $this->setPathInfo($request->getPathInfo());
-        $this->setMethod($request->getMethod());
-        $this->setHost($request->getHost());
-        $this->setScheme($request->getScheme());
-        $this->setHttpPort($request->isSecure() ? $this->httpPort : $request->getPort());
-        $this->setHttpsPort($request->isSecure() ? $request->getPort() : $this->httpsPort);
-        $this->setQueryString($request->server->get('QUERY_STRING', ''));
+        $this->setBaseUrl( $request->getBaseUrl() );
+        $this->setPathInfo( $request->getPathInfo() );
+        $this->setMethod( $request->getMethod() );
+        $this->setHost( $request->getHost() );
+        $this->setScheme( $request->getScheme() );
+        $this->setHttpPort( $request->isSecure() ? $this->httpPort : $request->getPort() );
+        $this->setHttpsPort( $request->isSecure() ? $request->getPort() : $this->httpsPort );
+        $this->setQueryString( $request->server->get( 'QUERY_STRING', '' ) );
 
         return $this;
     }
@@ -81,7 +81,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setBaseUrl($baseUrl)
+    public function setBaseUrl( $baseUrl )
     {
         $this->baseUrl = $baseUrl;
 
@@ -105,7 +105,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setPathInfo($pathInfo)
+    public function setPathInfo( $pathInfo )
     {
         $this->pathInfo = $pathInfo;
 
@@ -131,9 +131,9 @@ class RequestContext
      *
      * @return $this
      */
-    public function setMethod($method)
+    public function setMethod( $method )
     {
-        $this->method = strtoupper($method);
+        $this->method = strtoupper( $method );
 
         return $this;
     }
@@ -157,9 +157,9 @@ class RequestContext
      *
      * @return $this
      */
-    public function setHost($host)
+    public function setHost( $host )
     {
-        $this->host = strtolower($host);
+        $this->host = strtolower( $host );
 
         return $this;
     }
@@ -181,9 +181,9 @@ class RequestContext
      *
      * @return $this
      */
-    public function setScheme($scheme)
+    public function setScheme( $scheme )
     {
-        $this->scheme = strtolower($scheme);
+        $this->scheme = strtolower( $scheme );
 
         return $this;
     }
@@ -205,9 +205,9 @@ class RequestContext
      *
      * @return $this
      */
-    public function setHttpPort($httpPort)
+    public function setHttpPort( $httpPort )
     {
-        $this->httpPort = (int) $httpPort;
+        $this->httpPort = (int)$httpPort;
 
         return $this;
     }
@@ -229,9 +229,9 @@ class RequestContext
      *
      * @return $this
      */
-    public function setHttpsPort($httpsPort)
+    public function setHttpsPort( $httpsPort )
     {
-        $this->httpsPort = (int) $httpsPort;
+        $this->httpsPort = (int)$httpsPort;
 
         return $this;
     }
@@ -253,10 +253,10 @@ class RequestContext
      *
      * @return $this
      */
-    public function setQueryString($queryString)
+    public function setQueryString( $queryString )
     {
         // string cast to be fault-tolerant, accepting null
-        $this->queryString = (string) $queryString;
+        $this->queryString = (string)$queryString;
 
         return $this;
     }
@@ -278,7 +278,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setParameters(array $parameters)
+    public function setParameters( array $parameters )
     {
         $this->parameters = $parameters;
 
@@ -292,9 +292,9 @@ class RequestContext
      *
      * @return mixed The parameter value or null if nonexistent
      */
-    public function getParameter($name)
+    public function getParameter( $name )
     {
-        return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
+        return isset( $this->parameters[ $name ] ) ? $this->parameters[ $name ] : null;
     }
 
     /**
@@ -304,22 +304,22 @@ class RequestContext
      *
      * @return bool True if the parameter value is set, false otherwise
      */
-    public function hasParameter($name)
+    public function hasParameter( $name )
     {
-        return array_key_exists($name, $this->parameters);
+        return array_key_exists( $name, $this->parameters );
     }
 
     /**
      * Sets a parameter value.
      *
-     * @param string $name      A parameter name
+     * @param string $name A parameter name
      * @param mixed  $parameter The parameter value
      *
      * @return $this
      */
-    public function setParameter($name, $parameter)
+    public function setParameter( $name, $parameter )
     {
-        $this->parameters[$name] = $parameter;
+        $this->parameters[ $name ] = $parameter;
 
         return $this;
     }

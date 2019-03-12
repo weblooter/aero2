@@ -24,38 +24,42 @@ class GitProcessor implements ProcessorInterface
     private $level;
     private static $cache;
 
-    public function __construct($level = Logger::DEBUG)
+    public function __construct( $level = Logger::DEBUG )
     {
-        $this->level = Logger::toMonologLevel($level);
+        $this->level = Logger::toMonologLevel( $level );
     }
 
     /**
      * @param  array $record
+     *
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke( array $record )
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ( $record[ 'level' ] < $this->level )
+        {
             return $record;
         }
 
-        $record['extra']['git'] = self::getGitInfo();
+        $record[ 'extra' ][ 'git' ] = self::getGitInfo();
 
         return $record;
     }
 
     private static function getGitInfo()
     {
-        if (self::$cache) {
+        if ( self::$cache )
+        {
             return self::$cache;
         }
 
         $branches = `git branch -v --no-abbrev`;
-        if (preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
+        if ( preg_match( '{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches ) )
+        {
             return self::$cache = array(
-                'branch' => $matches[1],
-                'commit' => $matches[2],
+                'branch' => $matches[ 1 ],
+                'commit' => $matches[ 2 ],
             );
         }
 

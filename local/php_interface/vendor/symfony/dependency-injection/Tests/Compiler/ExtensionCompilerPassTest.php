@@ -33,22 +33,22 @@ class ExtensionCompilerPassTest extends TestCase
 
     public function testProcess()
     {
-        $extension1 = new CompilerPassExtension('extension1');
-        $extension2 = new DummyExtension('extension2');
-        $extension3 = new DummyExtension('extension3');
-        $extension4 = new CompilerPassExtension('extension4');
+        $extension1 = new CompilerPassExtension( 'extension1' );
+        $extension2 = new DummyExtension( 'extension2' );
+        $extension3 = new DummyExtension( 'extension3' );
+        $extension4 = new CompilerPassExtension( 'extension4' );
 
-        $this->container->registerExtension($extension1);
-        $this->container->registerExtension($extension2);
-        $this->container->registerExtension($extension3);
-        $this->container->registerExtension($extension4);
+        $this->container->registerExtension( $extension1 );
+        $this->container->registerExtension( $extension2 );
+        $this->container->registerExtension( $extension3 );
+        $this->container->registerExtension( $extension4 );
 
-        $this->pass->process($this->container);
+        $this->pass->process( $this->container );
 
-        $this->assertTrue($this->container->hasDefinition('extension1'));
-        $this->assertFalse($this->container->hasDefinition('extension2'));
-        $this->assertFalse($this->container->hasDefinition('extension3'));
-        $this->assertTrue($this->container->hasDefinition('extension4'));
+        $this->assertTrue( $this->container->hasDefinition( 'extension1' ) );
+        $this->assertFalse( $this->container->hasDefinition( 'extension2' ) );
+        $this->assertFalse( $this->container->hasDefinition( 'extension3' ) );
+        $this->assertTrue( $this->container->hasDefinition( 'extension4' ) );
     }
 }
 
@@ -56,7 +56,7 @@ class DummyExtension extends Extension
 {
     private $alias;
 
-    public function __construct($alias)
+    public function __construct( $alias )
     {
         $this->alias = $alias;
     }
@@ -66,13 +66,13 @@ class DummyExtension extends Extension
         return $this->alias;
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load( array $configs, ContainerBuilder $container )
     {
     }
 
-    public function process(ContainerBuilder $container)
+    public function process( ContainerBuilder $container )
     {
-        $container->register($this->alias);
+        $container->register( $this->alias );
     }
 }
 

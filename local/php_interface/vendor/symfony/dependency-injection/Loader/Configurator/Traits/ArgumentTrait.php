@@ -20,9 +20,9 @@ trait ArgumentTrait
      *
      * @return $this
      */
-    final public function args(array $arguments)
+    final public function args( array $arguments )
     {
-        $this->definition->setArguments(static::processValue($arguments, true));
+        $this->definition->setArguments( static::processValue( $arguments, true ) );
 
         return $this;
     }
@@ -35,9 +35,9 @@ trait ArgumentTrait
      *
      * @return $this
      */
-    final public function arg($key, $value)
+    final public function arg( $key, $value )
     {
-        $this->definition->setArgument($key, static::processValue($value, true));
+        $this->definition->setArgument( $key, static::processValue( $value, true ) );
 
         return $this;
     }

@@ -36,18 +36,20 @@ trait PriorityTaggedServiceTrait
      *
      * @return Reference[]
      */
-    private function findAndSortTaggedServices($tagName, ContainerBuilder $container)
+    private function findAndSortTaggedServices( $tagName, ContainerBuilder $container )
     {
         $services = [];
 
-        foreach ($container->findTaggedServiceIds($tagName, true) as $serviceId => $attributes) {
-            $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
-            $services[$priority][] = new Reference($serviceId);
+        foreach ( $container->findTaggedServiceIds( $tagName, true ) as $serviceId => $attributes )
+        {
+            $priority = isset( $attributes[ 0 ][ 'priority' ] ) ? $attributes[ 0 ][ 'priority' ] : 0;
+            $services[ $priority ][] = new Reference( $serviceId );
         }
 
-        if ($services) {
-            krsort($services);
-            $services = array_merge(...$services);
+        if ( $services )
+        {
+            krsort( $services );
+            $services = array_merge( ...$services );
         }
 
         return $services;

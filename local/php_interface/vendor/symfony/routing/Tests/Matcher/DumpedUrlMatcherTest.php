@@ -17,14 +17,14 @@ use Symfony\Component\Routing\RouteCollection;
 
 class DumpedUrlMatcherTest extends UrlMatcherTest
 {
-    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = null)
+    protected function getUrlMatcher( RouteCollection $routes, RequestContext $context = null )
     {
         static $i = 0;
 
         $class = 'DumpedUrlMatcher'.++$i;
-        $dumper = new PhpMatcherDumper($routes);
-        eval('?>'.$dumper->dump(['class' => $class]));
+        $dumper = new PhpMatcherDumper( $routes );
+        eval( '?>'.$dumper->dump( ['class' => $class] ) );
 
-        return new $class($context ?: new RequestContext());
+        return new $class( $context ? : new RequestContext() );
     }
 }

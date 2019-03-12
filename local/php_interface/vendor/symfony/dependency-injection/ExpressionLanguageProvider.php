@@ -26,7 +26,7 @@ class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
     private $serviceCompiler;
 
-    public function __construct(callable $serviceCompiler = null)
+    public function __construct( callable $serviceCompiler = null )
     {
         $this->serviceCompiler = $serviceCompiler;
     }
@@ -34,17 +34,17 @@ class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
     public function getFunctions()
     {
         return [
-            new ExpressionFunction('service', $this->serviceCompiler ?: function ($arg) {
-                return sprintf('$this->get(%s)', $arg);
-            }, function (array $variables, $value) {
-                return $variables['container']->get($value);
-            }),
+            new ExpressionFunction( 'service', $this->serviceCompiler ? : function ( $arg ) {
+                return sprintf( '$this->get(%s)', $arg );
+            }, function ( array $variables, $value ) {
+                return $variables[ 'container' ]->get( $value );
+            } ),
 
-            new ExpressionFunction('parameter', function ($arg) {
-                return sprintf('$this->getParameter(%s)', $arg);
-            }, function (array $variables, $value) {
-                return $variables['container']->getParameter($value);
-            }),
+            new ExpressionFunction( 'parameter', function ( $arg ) {
+                return sprintf( '$this->getParameter(%s)', $arg );
+            }, function ( array $variables, $value ) {
+                return $variables[ 'container' ]->getParameter( $value );
+            } ),
         ];
     }
 }

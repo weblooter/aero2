@@ -26,7 +26,7 @@ class ResolveHotPathPass extends AbstractRecursivePass
     private $tagName;
     private $resolvedIds = [];
 
-    public function __construct($tagName = 'container.hot_path')
+    public function __construct( $tagName = 'container.hot_path' )
     {
         $this->tagName = $tagName;
     }
@@ -34,12 +34,15 @@ class ResolveHotPathPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process( ContainerBuilder $container )
     {
-        try {
-            parent::process($container);
-            $container->getDefinition('service_container')->clearTag($this->tagName);
-        } finally {
+        try
+        {
+            parent::process( $container );
+            $container->getDefinition( 'service_container' )->clearTag( $this->tagName );
+        }
+        finally
+        {
             $this->resolvedIds = [];
         }
     }
@@ -47,25 +50,29 @@ class ResolveHotPathPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    protected function processValue($value, $isRoot = false)
+    protected function processValue( $value, $isRoot = false )
     {
-        if ($value instanceof ArgumentInterface) {
+        if ( $value instanceof ArgumentInterface )
+        {
             return $value;
         }
-        if ($value instanceof Definition && $isRoot && (isset($this->resolvedIds[$this->currentId]) || !$value->hasTag($this->tagName) || $value->isDeprecated())) {
-            return $value->isDeprecated() ? $value->clearTag($this->tagName) : $value;
+        if ( $value instanceof Definition && $isRoot && ( isset( $this->resolvedIds[ $this->currentId ] ) || !$value->hasTag( $this->tagName ) || $value->isDeprecated() ) )
+        {
+            return $value->isDeprecated() ? $value->clearTag( $this->tagName ) : $value;
         }
-        if ($value instanceof Reference && ContainerBuilder::IGNORE_ON_UNINITIALIZED_REFERENCE !== $value->getInvalidBehavior() && $this->container->has($id = (string) $value)) {
-            $definition = $this->container->findDefinition($id);
-            if (!$definition->hasTag($this->tagName) && !$definition->isDeprecated()) {
-                $this->resolvedIds[$id] = true;
-                $definition->addTag($this->tagName);
-                parent::processValue($definition, false);
+        if ( $value instanceof Reference && ContainerBuilder::IGNORE_ON_UNINITIALIZED_REFERENCE !== $value->getInvalidBehavior() && $this->container->has( $id = (string)$value ) )
+        {
+            $definition = $this->container->findDefinition( $id );
+            if ( !$definition->hasTag( $this->tagName ) && !$definition->isDeprecated() )
+            {
+                $this->resolvedIds[ $id ] = true;
+                $definition->addTag( $this->tagName );
+                parent::processValue( $definition, false );
             }
 
             return $value;
         }
 
-        return parent::processValue($value, $isRoot);
+        return parent::processValue( $value, $isRoot );
     }
 }

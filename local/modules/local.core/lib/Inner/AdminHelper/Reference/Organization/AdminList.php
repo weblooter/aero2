@@ -32,20 +32,23 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      *
      * @return \Bitrix\Main\Result
      */
-    public function getAdminUri(string $operation = "menuVisible"): \Bitrix\Main\Result
+    public function getAdminUri( string $operation = "menuVisible" ): \Bitrix\Main\Result
     {
         $result = new \Bitrix\Main\Result;
 
-        $check = $this->checkRights($operation);
-        if ($check->isSuccess()) {
-            $result->setData([
-                "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
+        $check = $this->checkRights( $operation );
+        if ( $check->isSuccess() )
+        {
+            $result->setData( [
+                "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri( [
                     \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                     \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                ]),
-            ]);
-        } else {
-            $result->addErrors($check->getErrors());
+                ] ),
+            ] );
+        }
+        else
+        {
+            $result->addErrors( $check->getErrors() );
         }
 
         return $result;
@@ -55,15 +58,17 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      * #TODO корректировка прав
      * {@inheritdoc}
      */
-    protected function checkRights($operation = ""): \Bitrix\Main\Result
+    protected function checkRights( $operation = "" ): \Bitrix\Main\Result
     {
         $result = new \Bitrix\Main\Result();
 
-        if ($this->user instanceof \CUser && !$this->user->isAdmin()) {
-            $result->addError(new \Bitrix\Main\Error("Необходим доступ администратора"));
+        if ( $this->user instanceof \CUser && !$this->user->isAdmin() )
+        {
+            $result->addError( new \Bitrix\Main\Error( "Необходим доступ администратора" ) );
         }
 
-        switch ($operation) {
+        switch ( $operation )
+        {
 
             case "can_add":
                 break;
@@ -83,7 +88,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getTableListId()
     {
-        return \str_replace(["\\"], ["_"], __CLASS__);
+        return \str_replace( ["\\"], ["_"], __CLASS__ );
     }
 
     /**
@@ -93,7 +98,8 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $buttons = [];
 
-        if ($this->checkRights("can_add")->isSuccess()) {
+        if ( $this->checkRights( "can_add" )->isSuccess() )
+        {
             $buttons = [
                 [
                     "TEXT" => "Добавить",
@@ -114,16 +120,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         return [
             "ID" => [
-                "NAME" => self::$fields["ID"],
+                "NAME" => self::$fields[ "ID" ],
                 "TYPE" => "TEXT",
             ],
             "APPROVED" => [
-                "NAME" => self::$fields["APPROVED"],
+                "NAME" => self::$fields[ "APPROVED" ],
                 "TYPE" => "SELECT",
                 "VARIANTS" => self::$approved_values
             ],
             "ACTIVE" => [
-                "NAME" => self::$fields["ACTIVE"],
+                "NAME" => self::$fields[ "ACTIVE" ],
                 "TYPE" => "SELECT",
                 "VARIANTS" => [
                     "Y" => "Да",
@@ -131,51 +137,51 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 ]
             ],
             "NAME" => [
-                "NAME" => self::$fields["NAME"],
+                "NAME" => self::$fields[ "NAME" ],
                 "TYPE" => "TEXT",
             ],
             "OPF" => [
-                "NAME" => self::$fields["OPF"],
+                "NAME" => self::$fields[ "OPF" ],
                 "TYPE" => "TEXT",
             ],
             "INN" => [
-                "NAME" => self::$fields["INN"],
+                "NAME" => self::$fields[ "INN" ],
                 "TYPE" => "TEXT",
             ],
             "KPP" => [
-                "NAME" => self::$fields["KPP"],
+                "NAME" => self::$fields[ "KPP" ],
                 "TYPE" => "TEXT",
             ],
             "LEGAL_ADDRESS" => [
-                "NAME" => self::$fields["LEGAL_ADDRESS"],
+                "NAME" => self::$fields[ "LEGAL_ADDRESS" ],
                 "TYPE" => "TEXT",
             ],
             "POST_ADDRESS" => [
-                "NAME" => self::$fields["POST_ADDRESS"],
+                "NAME" => self::$fields[ "POST_ADDRESS" ],
                 "TYPE" => "TEXT",
             ],
             "BANK" => [
-                "NAME" => self::$fields["BANK"],
+                "NAME" => self::$fields[ "BANK" ],
                 "TYPE" => "TEXT",
             ],
             "BIK" => [
-                "NAME" => self::$fields["BIK"],
+                "NAME" => self::$fields[ "BIK" ],
                 "TYPE" => "TEXT",
             ],
             "RSCH" => [
-                "NAME" => self::$fields["RSCH"],
+                "NAME" => self::$fields[ "RSCH" ],
                 "TYPE" => "TEXT",
             ],
             "FAX" => [
-                "NAME" => self::$fields["FAX"],
+                "NAME" => self::$fields[ "FAX" ],
                 "TYPE" => "TEXT",
             ],
             "DATE_INSERT" => [
-                "NAME" => self::$fields["DATE_INSERT"],
+                "NAME" => self::$fields[ "DATE_INSERT" ],
                 "TYPE" => "DATE_PERIOD",
             ],
             "TIMESTAMP_X" => [
-                "NAME" => self::$fields["TIMESTAMP_X"],
+                "NAME" => self::$fields[ "TIMESTAMP_X" ],
                 "TYPE" => "DATE_PERIOD",
             ],
         ];
@@ -184,18 +190,21 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     /**
      * {@inheritdoc}
      */
-    protected function prepareFilterList($filterSearch)
+    protected function prepareFilterList( $filterSearch )
     {
         $arFilter = [
         ];
 
-        foreach ($filterSearch ?? [] as $code => $value) {
+        foreach ( $filterSearch ?? [] as $code => $value )
+        {
 
-            if (!empty(trim($value))) {
-                switch ($code) {
+            if ( !empty( trim( $value ) ) )
+            {
+                switch ( $code )
+                {
 
                     case "ID":
-                        $arFilter["=" . $code] = trim($value);
+                        $arFilter[ "=".$code ] = trim( $value );
                         break;
 
                     case "NAME":
@@ -208,33 +217,35 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                     case "BIK":
                     case "RSCH":
                     case "FAX":
-                        $arFilter["%" . $code] = trim($value);
+                        $arFilter[ "%".$code ] = trim( $value );
                         break;
 
                     case "APPROVED":
-                        if (isset(self::$approved_values[$value])) {
-                            $arFilter["=" . $code] = trim($value);
+                        if ( isset( self::$approved_values[ $value ] ) )
+                        {
+                            $arFilter[ "=".$code ] = trim( $value );
                         }
                         break;
 
                     case "ACTIVE":
-                        if (in_array($value, ['Y', 'N'])) {
-                            $arFilter["=" . $code] = trim($value);
+                        if ( in_array( $value, ['Y', 'N'] ) )
+                        {
+                            $arFilter[ "=".$code ] = trim( $value );
                         }
                         break;
 
                     case "TIMESTAMP_X":
-                        $arFilter[">=" . $code] = $value;
+                        $arFilter[ ">=".$code ] = $value;
                         break;
                     case "TIMESTAMP_X_2":
-                        $arFilter["<=" . $code] = $value;
+                        $arFilter[ "<=".$code ] = $value;
                         break;
 
                     case "DATE_INSERT":
-                        $arFilter[">=" . $code] = $value;
+                        $arFilter[ ">=".$code ] = $value;
                         break;
                     case "DATE_INSERT_2":
-                        $arFilter["<=" . $code] = $value;
+                        $arFilter[ "<=".$code ] = $value;
                         break;
                 }
             }
@@ -248,13 +259,13 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getList()
     {
-        return \Local\Core\Model\Reference\OrganizationTable::getlist([
+        return \Local\Core\Model\Reference\OrganizationTable::getlist( [
             "select" => [
                 "*",
             ],
             "filter" => $this->filterList,
             "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
-        ]);
+        ] );
     }
 
     /**
@@ -264,7 +275,8 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $columns = [];
 
-        foreach (self::$fields as $columnCode => $columnName) {
+        foreach ( self::$fields as $columnCode => $columnName )
+        {
             $columns[] = [
                 "id" => $columnCode,
                 "content" => $columnName,
@@ -279,48 +291,51 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     /**
      * {@inheritdoc}
      */
-    protected function prepareRowField(\CAdminListRow $row, $fields)
+    protected function prepareRowField( \CAdminListRow $row, $fields )
     {
 
 
-        $row->AddViewField("APPROVED", (self::$approved_values[$fields["APPROVED"]] ?: "Ошибка: Неизвестный статус"));
-        $row->AddCheckField("ACTIVE");
+        $row->AddViewField( "APPROVED",
+            ( self::$approved_values[ $fields[ "APPROVED" ] ] ? : "Ошибка: Неизвестный статус" ) );
+        $row->AddCheckField( "ACTIVE" );
 
-        $row->AddInputField("NAME", ['size' => 20]);
-        $row->AddInputField("OPF", ['size' => 20]);
-        $row->AddInputField("INN", ['size' => 20]);
-        $row->AddInputField("KPP", ['size' => 20]);
-        $row->AddInputField("LEGAL_ADDRESS", ['size' => 20]);
-        $row->AddInputField("POST_ADDRESS", ['size' => 20]);
-        $row->AddInputField("BANK", ['size' => 20]);
-        $row->AddInputField("BIK", ['size' => 20]);
-        $row->AddInputField("RSCH", ['size' => 20]);
-        $row->AddInputField("FAX", ['size' => 20]);
+        $row->AddInputField( "NAME", ['size' => 20] );
+        $row->AddInputField( "OPF", ['size' => 20] );
+        $row->AddInputField( "INN", ['size' => 20] );
+        $row->AddInputField( "KPP", ['size' => 20] );
+        $row->AddInputField( "LEGAL_ADDRESS", ['size' => 20] );
+        $row->AddInputField( "POST_ADDRESS", ['size' => 20] );
+        $row->AddInputField( "BANK", ['size' => 20] );
+        $row->AddInputField( "BIK", ['size' => 20] );
+        $row->AddInputField( "RSCH", ['size' => 20] );
+        $row->AddInputField( "FAX", ['size' => 20] );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getRowAction($fields)
+    protected function getRowAction( $fields )
     {
         $actions = [];
 
-        if ($this->checkRights("can_edit")->isSuccess()) {
+        if ( $this->checkRights( "can_edit" )->isSuccess() )
+        {
             $actions[] = [
                 "ICON" => "edit",
                 "TEXT" => "Редактировать",
-                "ACTION" => $this->CAdminList->ActionRedirect($this->getEditLink($fields)),
+                "ACTION" => $this->CAdminList->ActionRedirect( $this->getEditLink( $fields ) ),
             ];
         }
 
-        if ($this->checkRights("can_delete")->isSuccess()) {
-            $addParams = \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY . "=" . self::ADMIN_ENTITY_VALUE .
-                "&" . \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION . "=" . self::ADMIN_ACTION_VALUE;
+        if ( $this->checkRights( "can_delete" )->isSuccess() )
+        {
+            $addParams = \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY."=".self::ADMIN_ENTITY_VALUE.
+                         "&".\Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION."=".self::ADMIN_ACTION_VALUE;
             $actions[] = [
                 "ICON" => "delete",
                 "TEXT" => "Удалить",
-                "ACTION" => "if(confirm('Действительно удалить?')) " . $this->CAdminList->ActionDoGroup($fields["ID"],
-                        "delete", $addParams)
+                "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup( $fields[ "ID" ],
+                        "delete", $addParams )
             ];
         }
 
@@ -334,12 +349,14 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $actions = [];
 
-        if ($this->checkRights("can_delete")->isSuccess()) {
-            $actions["delete"] = "Удалить";
+        if ( $this->checkRights( "can_delete" )->isSuccess() )
+        {
+            $actions[ "delete" ] = "Удалить";
         }
 
-        if ($this->checkRights("can_edit")->isSuccess()) {
-            $actions["edit"] = "Редактировать";
+        if ( $this->checkRights( "can_edit" )->isSuccess() )
+        {
+            $actions[ "edit" ] = "Редактировать";
         }
 
         return $actions;
@@ -348,38 +365,45 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     /**
      * {@inheritdoc}
      */
-    protected function editAction($id, $fields)
+    protected function editAction( $id, $fields )
     {
         $result = new \Bitrix\Main\Result;
-        $checkRights = $this->checkRights("can_edit");
+        $checkRights = $this->checkRights( "can_edit" );
 
-        if ($checkRights->isSuccess()) {
-            try {
+        if ( $checkRights->isSuccess() )
+        {
+            try
+            {
                 $arFields = [
-                    "APPROVED" => $fields["APPROVED"] ?? "N",
-                    "ACTIVE" => $fields["ACTIVE"] ?? "N",
-                    "NAME" => trim($fields['NAME']),
-                    "OPF" => trim($fields['OPF']),
-                    "INN" => trim($fields['INN']),
-                    "KPP" => trim($fields['KPP']),
-                    "LEGAL_ADDRESS" => trim($fields['LEGAL_ADDRESS']),
-                    "POST_ADDRESS" => trim($fields['POST_ADDRESS']),
-                    "BANK" => trim($fields['BANK']),
-                    "BIK" => trim($fields['BIK']),
-                    "RSCH" => trim($fields['RSCH']),
-                    "FAX" => trim($fields['FAX']),
+                    "APPROVED" => $fields[ "APPROVED" ] ?? "N",
+                    "ACTIVE" => $fields[ "ACTIVE" ] ?? "N",
+                    "NAME" => trim( $fields[ 'NAME' ] ),
+                    "OPF" => trim( $fields[ 'OPF' ] ),
+                    "INN" => trim( $fields[ 'INN' ] ),
+                    "KPP" => trim( $fields[ 'KPP' ] ),
+                    "LEGAL_ADDRESS" => trim( $fields[ 'LEGAL_ADDRESS' ] ),
+                    "POST_ADDRESS" => trim( $fields[ 'POST_ADDRESS' ] ),
+                    "BANK" => trim( $fields[ 'BANK' ] ),
+                    "BIK" => trim( $fields[ 'BIK' ] ),
+                    "RSCH" => trim( $fields[ 'RSCH' ] ),
+                    "FAX" => trim( $fields[ 'FAX' ] ),
                 ];
 
-                $res = \Local\Core\Model\Reference\OrganizationTable::update($id, $arFields);
-                if (!$res->isSuccess()) {
-                    $result->addErrors($res->getErrors());
+                $res = \Local\Core\Model\Reference\OrganizationTable::update( $id, $arFields );
+                if ( !$res->isSuccess() )
+                {
+                    $result->addErrors( $res->getErrors() );
                 }
 
-            } catch (\Exception $e) {
-                $result->addError(new \Bitrix\Main\Error($e->getMessage()));
             }
-        } else {
-            $result->addErrors($checkRights->getErrors());
+            catch ( \Exception $e )
+            {
+                $result->addError( new \Bitrix\Main\Error( $e->getMessage() ) );
+            }
+        }
+        else
+        {
+            $result->addErrors( $checkRights->getErrors() );
         }
 
         return $result;
@@ -392,24 +416,31 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      *
      * @return \Bitrix\Main\Result
      */
-    protected function deleteAction($id)
+    protected function deleteAction( $id )
     {
         $result = new \Bitrix\Main\Result;
-        $checkRights = $this->checkRights("can_delete");
+        $checkRights = $this->checkRights( "can_delete" );
 
-        if ($checkRights->isSuccess()) {
-            try {
+        if ( $checkRights->isSuccess() )
+        {
+            try
+            {
 
-                $res = \Local\Core\Model\Reference\OrganizationTable::delete((int)$id);
-                if (!$res->isSuccess()) {
-                    $result->addErrors($res->getErrors());
+                $res = \Local\Core\Model\Reference\OrganizationTable::delete( (int)$id );
+                if ( !$res->isSuccess() )
+                {
+                    $result->addErrors( $res->getErrors() );
                 }
 
-            } catch (\Exception $e) {
-                $result->addError(new \Bitrix\Main\Error($e->getMessage()));
             }
-        } else {
-            $result->addErrors($checkRights->getErrors());
+            catch ( \Exception $e )
+            {
+                $result->addError( new \Bitrix\Main\Error( $e->getMessage() ) );
+            }
+        }
+        else
+        {
+            $result->addErrors( $checkRights->getErrors() );
         }
 
         return $result;
@@ -418,24 +449,24 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     /**
      * {@inheritdoc}
      */
-    protected function getEditLink($fields = [])
+    protected function getEditLink( $fields = [] )
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri( [
             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
-            "id" => $fields["ID"],
-        ]);
+            "id" => $fields[ "ID" ],
+        ] );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getFilterUri(array $arData = []): string
+    protected function getFilterUri( array $arData = [] ): string
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri( [
             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-        ]);
+        ] );
     }
 
     /**
@@ -443,10 +474,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getSortUri(): string
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri( [
             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-        ]);
+        ] );
     }
 
     /**
@@ -454,9 +485,12 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     public function render()
     {
-        foreach (\Local\Core\Model\Reference\OrganizationTable::getMap() ?? [] as $column) {
-            if ($column instanceof \Bitrix\Main\ORM\Fields\ScalarField)
-                self::$fields[$column->getColumnName()] = $column->getTitle();
+        foreach ( \Local\Core\Model\Reference\OrganizationTable::getMap() ?? [] as $column )
+        {
+            if ( $column instanceof \Bitrix\Main\ORM\Fields\ScalarField )
+            {
+                self::$fields[ $column->getColumnName() ] = $column->getTitle();
+            }
         }
 
         parent::render();

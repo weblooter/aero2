@@ -30,45 +30,51 @@ class CrossCheckTest extends TestCase
     /**
      * @dataProvider crossCheckLoadersDumpers
      */
-    public function testCrossCheck($fixture, $type)
+    public function testCrossCheck( $fixture, $type )
     {
-        $loaderClass = 'Symfony\\Component\\DependencyInjection\\Loader\\'.ucfirst($type).'FileLoader';
-        $dumperClass = 'Symfony\\Component\\DependencyInjection\\Dumper\\'.ucfirst($type).'Dumper';
+        $loaderClass = 'Symfony\\Component\\DependencyInjection\\Loader\\'.ucfirst( $type ).'FileLoader';
+        $dumperClass = 'Symfony\\Component\\DependencyInjection\\Dumper\\'.ucfirst( $type ).'Dumper';
 
-        $tmp = tempnam(sys_get_temp_dir(), 'sf');
+        $tmp = tempnam( sys_get_temp_dir(), 'sf' );
 
-        copy(self::$fixturesPath.'/'.$type.'/'.$fixture, $tmp);
+        copy( self::$fixturesPath.'/'.$type.'/'.$fixture, $tmp );
 
         $container1 = new ContainerBuilder();
-        $loader1 = new $loaderClass($container1, new FileLocator());
-        $loader1->load($tmp);
+        $loader1 = new $loaderClass( $container1, new FileLocator() );
+        $loader1->load( $tmp );
 
-        $dumper = new $dumperClass($container1);
-        file_put_contents($tmp, $dumper->dump());
+        $dumper = new $dumperClass( $container1 );
+        file_put_contents( $tmp, $dumper->dump() );
 
         $container2 = new ContainerBuilder();
-        $loader2 = new $loaderClass($container2, new FileLocator());
-        $loader2->load($tmp);
+        $loader2 = new $loaderClass( $container2, new FileLocator() );
+        $loader2->load( $tmp );
 
-        unlink($tmp);
+        unlink( $tmp );
 
-        $this->assertEquals($container2->getAliases(), $container1->getAliases(), 'loading a dump from a previously loaded container returns the same container');
-        $this->assertEquals($container2->getDefinitions(), $container1->getDefinitions(), 'loading a dump from a previously loaded container returns the same container');
-        $this->assertEquals($container2->getParameterBag()->all(), $container1->getParameterBag()->all(), '->getParameterBag() returns the same value for both containers');
-        $this->assertEquals(serialize($container2), serialize($container1), 'loading a dump from a previously loaded container returns the same container');
+        $this->assertEquals( $container2->getAliases(), $container1->getAliases(),
+            'loading a dump from a previously loaded container returns the same container' );
+        $this->assertEquals( $container2->getDefinitions(), $container1->getDefinitions(),
+            'loading a dump from a previously loaded container returns the same container' );
+        $this->assertEquals( $container2->getParameterBag()->all(), $container1->getParameterBag()->all(),
+            '->getParameterBag() returns the same value for both containers' );
+        $this->assertEquals( serialize( $container2 ), serialize( $container1 ),
+            'loading a dump from a previously loaded container returns the same container' );
 
         $services1 = [];
-        foreach ($container1 as $id => $service) {
-            $services1[$id] = serialize($service);
+        foreach ( $container1 as $id => $service )
+        {
+            $services1[ $id ] = serialize( $service );
         }
         $services2 = [];
-        foreach ($container2 as $id => $service) {
-            $services2[$id] = serialize($service);
+        foreach ( $container2 as $id => $service )
+        {
+            $services2[ $id ] = serialize( $service );
         }
 
-        unset($services1['service_container'], $services2['service_container']);
+        unset( $services1[ 'service_container' ], $services2[ 'service_container' ] );
 
-        $this->assertEquals($services2, $services1, 'Iterator on the containers returns the same services');
+        $this->assertEquals( $services2, $services1, 'Iterator on the containers returns the same services' );
     }
 
     public function crossCheckLoadersDumpers()

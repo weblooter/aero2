@@ -32,21 +32,24 @@ class Cache
 
     /**
      * Cache constructor.
+     *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct( ContainerInterface $container )
     {
         $this->container = $container;
     }
 
     /**
      * Получить кэш ответа сервиса дадата
+     *
      * @param Interfaces\QueryInterface $query
+     *
      * @return |null
      */
-    public function get(Interfaces\QueryInterface $query)
+    public function get( Interfaces\QueryInterface $query )
     {
-        $hash = $this->hash($query);
+        $hash = $this->hash( $query );
 
         $ar_filter = [
             'select' => [
@@ -59,11 +62,12 @@ class Cache
             'limit' => 1,
         ];
 
-        $result = DadataCacheTable::getList($ar_filter);
+        $result = DadataCacheTable::getList( $ar_filter );
 
-        if ($row = $result->fetch()) {
-            DadataCacheTable::hit($row['ID']);
-            return $row['DATA'];
+        if ( $row = $result->fetch() )
+        {
+            DadataCacheTable::hit( $row[ 'ID' ] );
+            return $row[ 'DATA' ];
         }
 
         return null;
@@ -71,22 +75,25 @@ class Cache
 
     /**
      * Поместить в кэш ответ сервиса дадата
+     *
      * @param Interfaces\QueryInterface $query
-     * @param array $response
+     * @param array                     $response
+     *
      * @return bool
      */
-    public function set(Interfaces\QueryInterface $query, array $response)
+    public function set( Interfaces\QueryInterface $query, array $response )
     {
-        $hash = $this->hash($query);
+        $hash = $this->hash( $query );
 
         $ar_fields = [
-            'TYPE' => 'GENERAL', // пока в запросе нет никакого идентификатора, поэтому все запросы пока будут одного типа, как появится необходимость разграничить - сделаем
+            'TYPE' => 'GENERAL',
+            // пока в запросе нет никакого идентификатора, поэтому все запросы пока будут одного типа, как появится необходимость разграничить - сделаем
             'HASH' => $hash,
             'DATA' => $response,
         ];
 
         /** @var $result AddResult */
-        $result = DadataCacheTable::add($ar_fields);
+        $result = DadataCacheTable::add( $ar_fields );
 
         return $result->isSuccess();
     }
@@ -99,7 +106,7 @@ class Cache
     public function clear()
     {
         $date = new DateTime;
-        $date->add('- ' . self::CACHE_TIME . ' second');
+        $date->add( '- '.self::CACHE_TIME.' second' );
 
         $ar_filter = [
             'select' => [
@@ -110,22 +117,25 @@ class Cache
             ],
         ];
 
-        $result = DadataCacheTable::getList($ar_filter);
+        $result = DadataCacheTable::getList( $ar_filter );
 
-        while ($row = $result->fetch()) {
-            DadataCacheTable::delete($row['ID']);
+        while ( $row = $result->fetch() )
+        {
+            DadataCacheTable::delete( $row[ 'ID' ] );
         }
     }
 
     /**
      * Получить хеш запроса к сервису дадата
+     *
      * @param Interfaces\QueryInterface $query
+     *
      * @return string
      */
-    protected function hash(Interfaces\QueryInterface $query)
+    protected function hash( Interfaces\QueryInterface $query )
     {
-        $dump = Arrays::dump($query->toArray());
+        $dump = Arrays::dump( $query->toArray() );
 
-        return md5($dump);
+        return md5( $dump );
     }
 }

@@ -31,26 +31,29 @@ class InputArgument
     private $description;
 
     /**
-     * @param string               $name        The argument name
-     * @param int|null             $mode        The argument mode: self::REQUIRED or self::OPTIONAL
+     * @param string               $name The argument name
+     * @param int|null             $mode The argument mode: self::REQUIRED or self::OPTIONAL
      * @param string               $description A description text
-     * @param string|string[]|null $default     The default value (for self::OPTIONAL mode only)
+     * @param string|string[]|null $default The default value (for self::OPTIONAL mode only)
      *
      * @throws InvalidArgumentException When argument mode is not valid
      */
-    public function __construct(string $name, int $mode = null, string $description = '', $default = null)
+    public function __construct( string $name, int $mode = null, string $description = '', $default = null )
     {
-        if (null === $mode) {
+        if ( null === $mode )
+        {
             $mode = self::OPTIONAL;
-        } elseif ($mode > 7 || $mode < 1) {
-            throw new InvalidArgumentException(sprintf('Argument mode "%s" is not valid.', $mode));
+        }
+        elseif ( $mode > 7 || $mode < 1 )
+        {
+            throw new InvalidArgumentException( sprintf( 'Argument mode "%s" is not valid.', $mode ) );
         }
 
         $this->name = $name;
         $this->mode = $mode;
         $this->description = $description;
 
-        $this->setDefault($default);
+        $this->setDefault( $default );
     }
 
     /**
@@ -70,7 +73,7 @@ class InputArgument
      */
     public function isRequired()
     {
-        return self::REQUIRED === (self::REQUIRED & $this->mode);
+        return self::REQUIRED === ( self::REQUIRED & $this->mode );
     }
 
     /**
@@ -80,7 +83,7 @@ class InputArgument
      */
     public function isArray()
     {
-        return self::IS_ARRAY === (self::IS_ARRAY & $this->mode);
+        return self::IS_ARRAY === ( self::IS_ARRAY & $this->mode );
     }
 
     /**
@@ -90,17 +93,22 @@ class InputArgument
      *
      * @throws LogicException When incorrect default value is given
      */
-    public function setDefault($default = null)
+    public function setDefault( $default = null )
     {
-        if (self::REQUIRED === $this->mode && null !== $default) {
-            throw new LogicException('Cannot set a default value except for InputArgument::OPTIONAL mode.');
+        if ( self::REQUIRED === $this->mode && null !== $default )
+        {
+            throw new LogicException( 'Cannot set a default value except for InputArgument::OPTIONAL mode.' );
         }
 
-        if ($this->isArray()) {
-            if (null === $default) {
+        if ( $this->isArray() )
+        {
+            if ( null === $default )
+            {
                 $default = [];
-            } elseif (!\is_array($default)) {
-                throw new LogicException('A default value for an array argument must be an array.');
+            }
+            elseif ( !\is_array( $default ) )
+            {
+                throw new LogicException( 'A default value for an array argument must be an array.' );
             }
         }
 

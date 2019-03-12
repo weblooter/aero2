@@ -36,12 +36,14 @@ class PropertyValueCollection extends EntityCollection
 
     /**
      * Добавить элемент в колекцию
+     *
      * @param PropertyValue $item
+     *
      * @return \Local\Core\Inner\CollectableEntity
      * @throws \Bitrix\Main\ArgumentTypeException
      */
-    public function addItem(PropertyValue $item)
+    public function addItem( PropertyValue $item )
     {
-        return parent::addItem($item);
+        return parent::addItem( $item );
     }
 }

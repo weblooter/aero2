@@ -1,9 +1,11 @@
 <?
-if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
-	die();
+if ( !defined( 'B_PROLOG_INCLUDED' ) || B_PROLOG_INCLUDED !== true )
+{
+    die();
+}
 
 $arTemplate = Array(
-	'NAME' => 'feed: Публичная часть',
-	'DESCRIPTION' => 'feed: Публичная часть'
+    'NAME' => 'feed: Публичная часть',
+    'DESCRIPTION' => 'feed: Публичная часть'
 );
 ?>

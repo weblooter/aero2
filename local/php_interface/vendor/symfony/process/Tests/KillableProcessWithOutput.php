@@ -19,8 +19,9 @@ $outputs = array(
 
 $iterationTime = 10000;
 
-foreach ($outputs as $output) {
-    usleep($iterationTime);
+foreach ( $outputs as $output )
+{
+    usleep( $iterationTime );
     $iterationTime *= 10;
     echo $output."\n";
 }

@@ -53,10 +53,11 @@ class TableStyle
      *
      * @return $this
      */
-    public function setPaddingChar($paddingChar)
+    public function setPaddingChar( $paddingChar )
     {
-        if (!$paddingChar) {
-            throw new LogicException('The padding char must not be empty');
+        if ( !$paddingChar )
+        {
+            throw new LogicException( 'The padding char must not be empty' );
         }
 
         $this->paddingChar = $paddingChar;
@@ -89,9 +90,9 @@ class TableStyle
      * </code>
      *
      * @param string      $outside Outside border char (see #1 of example)
-     * @param string|null $inside  Inside border char (see #2 of example), equals $outside if null
+     * @param string|null $inside Inside border char (see #2 of example), equals $outside if null
      */
-    public function setHorizontalBorderChars(string $outside, string $inside = null): self
+    public function setHorizontalBorderChars( string $outside, string $inside = null ): self
     {
         $this->horizontalOutsideBorderChar = $outside;
         $this->horizontalInsideBorderChar = $inside ?? $outside;
@@ -108,11 +109,12 @@ class TableStyle
      *
      * @deprecated since Symfony 4.1, use {@link setHorizontalBorderChars()} instead.
      */
-    public function setHorizontalBorderChar($horizontalBorderChar)
+    public function setHorizontalBorderChar( $horizontalBorderChar )
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.1, use setHorizontalBorderChars() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error( sprintf( 'The "%s()" method is deprecated since Symfony 4.1, use setHorizontalBorderChars() instead.',
+            __METHOD__ ), E_USER_DEPRECATED );
 
-        return $this->setHorizontalBorderChars($horizontalBorderChar, $horizontalBorderChar);
+        return $this->setHorizontalBorderChars( $horizontalBorderChar, $horizontalBorderChar );
     }
 
     /**
@@ -124,7 +126,8 @@ class TableStyle
      */
     public function getHorizontalBorderChar()
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.1, use getBorderChars() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error( sprintf( 'The "%s()" method is deprecated since Symfony 4.1, use getBorderChars() instead.',
+            __METHOD__ ), E_USER_DEPRECATED );
 
         return $this->horizontalOutsideBorderChar;
     }
@@ -145,9 +148,9 @@ class TableStyle
      * </code>
      *
      * @param string      $outside Outside border char (see #1 of example)
-     * @param string|null $inside  Inside border char (see #2 of example), equals $outside if null
+     * @param string|null $inside Inside border char (see #2 of example), equals $outside if null
      */
-    public function setVerticalBorderChars(string $outside, string $inside = null): self
+    public function setVerticalBorderChars( string $outside, string $inside = null ): self
     {
         $this->verticalOutsideBorderChar = $outside;
         $this->verticalInsideBorderChar = $inside ?? $outside;
@@ -164,11 +167,12 @@ class TableStyle
      *
      * @deprecated since Symfony 4.1, use {@link setVerticalBorderChars()} instead.
      */
-    public function setVerticalBorderChar($verticalBorderChar)
+    public function setVerticalBorderChar( $verticalBorderChar )
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.1, use setVerticalBorderChars() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error( sprintf( 'The "%s()" method is deprecated since Symfony 4.1, use setVerticalBorderChars() instead.',
+            __METHOD__ ), E_USER_DEPRECATED );
 
-        return $this->setVerticalBorderChars($verticalBorderChar, $verticalBorderChar);
+        return $this->setVerticalBorderChars( $verticalBorderChar, $verticalBorderChar );
     }
 
     /**
@@ -180,7 +184,8 @@ class TableStyle
      */
     public function getVerticalBorderChar()
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.1, use getBorderChars() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error( sprintf( 'The "%s()" method is deprecated since Symfony 4.1, use getBorderChars() instead.',
+            __METHOD__ ), E_USER_DEPRECATED );
 
         return $this->verticalOutsideBorderChar;
     }
@@ -216,20 +221,20 @@ class TableStyle
      * 7═══════════════6══════════════════════════6══════════════════5
      * </code>
      *
-     * @param string      $cross          Crossing char (see #0 of example)
-     * @param string      $topLeft        Top left char (see #1 of example)
-     * @param string      $topMid         Top mid char (see #2 of example)
-     * @param string      $topRight       Top right char (see #3 of example)
-     * @param string      $midRight       Mid right char (see #4 of example)
-     * @param string      $bottomRight    Bottom right char (see #5 of example)
-     * @param string      $bottomMid      Bottom mid char (see #6 of example)
-     * @param string      $bottomLeft     Bottom left char (see #7 of example)
-     * @param string      $midLeft        Mid left char (see #8 of example)
-     * @param string|null $topLeftBottom  Top left bottom char (see #8' of example), equals to $midLeft if null
-     * @param string|null $topMidBottom   Top mid bottom char (see #0' of example), equals to $cross if null
+     * @param string      $cross Crossing char (see #0 of example)
+     * @param string      $topLeft Top left char (see #1 of example)
+     * @param string      $topMid Top mid char (see #2 of example)
+     * @param string      $topRight Top right char (see #3 of example)
+     * @param string      $midRight Mid right char (see #4 of example)
+     * @param string      $bottomRight Bottom right char (see #5 of example)
+     * @param string      $bottomMid Bottom mid char (see #6 of example)
+     * @param string      $bottomLeft Bottom left char (see #7 of example)
+     * @param string      $midLeft Mid left char (see #8 of example)
+     * @param string|null $topLeftBottom Top left bottom char (see #8' of example), equals to $midLeft if null
+     * @param string|null $topMidBottom Top mid bottom char (see #0' of example), equals to $cross if null
      * @param string|null $topRightBottom Top right bottom char (see #4' of example), equals to $midRight if null
      */
-    public function setCrossingChars(string $cross, string $topLeft, string $topMid, string $topRight, string $midRight, string $bottomRight, string $bottomMid, string $bottomLeft, string $midLeft, string $topLeftBottom = null, string $topMidBottom = null, string $topRightBottom = null): self
+    public function setCrossingChars( string $cross, string $topLeft, string $topMid, string $topRight, string $midRight, string $bottomRight, string $bottomMid, string $bottomLeft, string $midLeft, string $topLeftBottom = null, string $topMidBottom = null, string $topRightBottom = null ): self
     {
         $this->crossingChar = $cross;
         $this->crossingTopLeftChar = $topLeft;
@@ -252,9 +257,9 @@ class TableStyle
      *
      * @see {@link setCrossingChars()} for setting each crossing individually.
      */
-    public function setDefaultCrossingChar(string $char): self
+    public function setDefaultCrossingChar( string $char ): self
     {
-        return $this->setCrossingChars($char, $char, $char, $char, $char, $char, $char, $char, $char);
+        return $this->setCrossingChars( $char, $char, $char, $char, $char, $char, $char, $char, $char );
     }
 
     /**
@@ -266,11 +271,12 @@ class TableStyle
      *
      * @deprecated since Symfony 4.1. Use {@link setDefaultCrossingChar()} instead.
      */
-    public function setCrossingChar($crossingChar)
+    public function setCrossingChar( $crossingChar )
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.1. Use setDefaultCrossingChar() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error( sprintf( 'The "%s()" method is deprecated since Symfony 4.1. Use setDefaultCrossingChar() instead.',
+            __METHOD__ ), E_USER_DEPRECATED );
 
-        return $this->setDefaultCrossingChar($crossingChar);
+        return $this->setDefaultCrossingChar( $crossingChar );
     }
 
     /**
@@ -313,7 +319,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setCellHeaderFormat($cellHeaderFormat)
+    public function setCellHeaderFormat( $cellHeaderFormat )
     {
         $this->cellHeaderFormat = $cellHeaderFormat;
 
@@ -337,7 +343,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setCellRowFormat($cellRowFormat)
+    public function setCellRowFormat( $cellRowFormat )
     {
         $this->cellRowFormat = $cellRowFormat;
 
@@ -361,7 +367,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setCellRowContentFormat($cellRowContentFormat)
+    public function setCellRowContentFormat( $cellRowContentFormat )
     {
         $this->cellRowContentFormat = $cellRowContentFormat;
 
@@ -385,7 +391,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setBorderFormat($borderFormat)
+    public function setBorderFormat( $borderFormat )
     {
         $this->borderFormat = $borderFormat;
 
@@ -409,10 +415,11 @@ class TableStyle
      *
      * @return $this
      */
-    public function setPadType($padType)
+    public function setPadType( $padType )
     {
-        if (!\in_array($padType, [STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH], true)) {
-            throw new InvalidArgumentException('Invalid padding type. Expected one of (STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH).');
+        if ( !\in_array( $padType, [STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH], true ) )
+        {
+            throw new InvalidArgumentException( 'Invalid padding type. Expected one of (STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH).' );
         }
 
         $this->padType = $padType;

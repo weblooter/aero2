@@ -24,84 +24,99 @@ class MongoDBFormatter implements FormatterInterface
     private $maxNestingLevel;
 
     /**
-     * @param int  $maxNestingLevel        0 means infinite nesting, the $record itself is level 1, $record['context'] is 2
+     * @param int  $maxNestingLevel 0 means infinite nesting, the $record itself is level 1, $record['context'] is 2
      * @param bool $exceptionTraceAsString set to false to log exception traces as a sub documents instead of strings
      */
-    public function __construct($maxNestingLevel = 3, $exceptionTraceAsString = true)
+    public function __construct( $maxNestingLevel = 3, $exceptionTraceAsString = true )
     {
-        $this->maxNestingLevel = max($maxNestingLevel, 0);
-        $this->exceptionTraceAsString = (bool) $exceptionTraceAsString;
+        $this->maxNestingLevel = max( $maxNestingLevel, 0 );
+        $this->exceptionTraceAsString = (bool)$exceptionTraceAsString;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function format(array $record)
+    public function format( array $record )
     {
-        return $this->formatArray($record);
+        return $this->formatArray( $record );
     }
 
     /**
      * {@inheritDoc}
      */
-    public function formatBatch(array $records)
+    public function formatBatch( array $records )
     {
-        foreach ($records as $key => $record) {
-            $records[$key] = $this->format($record);
+        foreach ( $records as $key => $record )
+        {
+            $records[ $key ] = $this->format( $record );
         }
 
         return $records;
     }
 
-    protected function formatArray(array $record, $nestingLevel = 0)
+    protected function formatArray( array $record, $nestingLevel = 0 )
     {
-        if ($this->maxNestingLevel == 0 || $nestingLevel <= $this->maxNestingLevel) {
-            foreach ($record as $name => $value) {
-                if ($value instanceof \DateTime) {
-                    $record[$name] = $this->formatDate($value, $nestingLevel + 1);
-                } elseif ($value instanceof \Exception) {
-                    $record[$name] = $this->formatException($value, $nestingLevel + 1);
-                } elseif (is_array($value)) {
-                    $record[$name] = $this->formatArray($value, $nestingLevel + 1);
-                } elseif (is_object($value)) {
-                    $record[$name] = $this->formatObject($value, $nestingLevel + 1);
+        if ( $this->maxNestingLevel == 0 || $nestingLevel <= $this->maxNestingLevel )
+        {
+            foreach ( $record as $name => $value )
+            {
+                if ( $value instanceof \DateTime )
+                {
+                    $record[ $name ] = $this->formatDate( $value, $nestingLevel + 1 );
+                }
+                elseif ( $value instanceof \Exception )
+                {
+                    $record[ $name ] = $this->formatException( $value, $nestingLevel + 1 );
+                }
+                elseif ( is_array( $value ) )
+                {
+                    $record[ $name ] = $this->formatArray( $value, $nestingLevel + 1 );
+                }
+                elseif ( is_object( $value ) )
+                {
+                    $record[ $name ] = $this->formatObject( $value, $nestingLevel + 1 );
                 }
             }
-        } else {
+        }
+        else
+        {
             $record = '[...]';
         }
 
         return $record;
     }
 
-    protected function formatObject($value, $nestingLevel)
+    protected function formatObject( $value, $nestingLevel )
     {
-        $objectVars = get_object_vars($value);
-        $objectVars['class'] = Utils::getClass($value);
+        $objectVars = get_object_vars( $value );
+        $objectVars[ 'class' ] = Utils::getClass( $value );
 
-        return $this->formatArray($objectVars, $nestingLevel);
+        return $this->formatArray( $objectVars, $nestingLevel );
     }
 
-    protected function formatException(\Exception $exception, $nestingLevel)
+    protected function formatException( \Exception $exception, $nestingLevel )
     {
         $formattedException = array(
-            'class' => Utils::getClass($exception),
+            'class' => Utils::getClass( $exception ),
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
-            'file' => $exception->getFile() . ':' . $exception->getLine(),
+            'file' => $exception->getFile().':'.$exception->getLine(),
         );
 
-        if ($this->exceptionTraceAsString === true) {
-            $formattedException['trace'] = $exception->getTraceAsString();
-        } else {
-            $formattedException['trace'] = $exception->getTrace();
+        if ( $this->exceptionTraceAsString === true )
+        {
+            $formattedException[ 'trace' ] = $exception->getTraceAsString();
+        }
+        else
+        {
+            $formattedException[ 'trace' ] = $exception->getTrace();
         }
 
-        return $this->formatArray($formattedException, $nestingLevel);
+        return $this->formatArray( $formattedException, $nestingLevel );
     }
 
-    protected function formatDate(\DateTime $value, $nestingLevel)
+    protected function formatDate( \DateTime $value, $nestingLevel )
     {
-        return new \MongoDate($value->getTimestamp());
+        return new \MongoDate( $value->getTimestamp() );
     }
 }

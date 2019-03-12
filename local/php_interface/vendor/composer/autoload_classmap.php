@@ -97,7 +97,6 @@ return array(
     'Local\\Core\\Inner\\JobQueue\\Worker\\User\\ImportOrganizations' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Worker/User/ImportOrganizations.php',
     'Local\\Core\\Inner\\JobQueue\\Worker\\User\\UpdateNetCat' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Worker/User/UpdateNetCat.php',
     'Local\\Core\\Inner\\JobQueue\\Worker\\User\\UpdateOneC' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Worker/User/UpdateOneC.php',
-    'Local\\Core\\Inner\\RetailStructure\\Relation' => $baseDir . '/../modules/local.core/lib/Inner/RetailStructure/Relation.php',
     'Local\\Core\\Inner\\Route' => $baseDir . '/../modules/local.core/lib/Inner/Route.php',
     'Local\\Core\\Model\\Data\\BillBasketTable' => $baseDir . '/../modules/local.core/lib/Model/Data/BillBasketTable.php',
     'Local\\Core\\Model\\Data\\BillProductTable' => $baseDir . '/../modules/local.core/lib/Model/Data/BillProductTable.php',

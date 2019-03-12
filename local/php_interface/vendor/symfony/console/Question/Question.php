@@ -32,9 +32,9 @@ class Question
 
     /**
      * @param string $question The question to ask to the user
-     * @param mixed  $default  The default answer to return if the user enters nothing
+     * @param mixed  $default The default answer to return if the user enters nothing
      */
-    public function __construct(string $question, $default = null)
+    public function __construct( string $question, $default = null )
     {
         $this->question = $question;
         $this->default = $default;
@@ -79,13 +79,14 @@ class Question
      *
      * @throws LogicException In case the autocompleter is also used
      */
-    public function setHidden($hidden)
+    public function setHidden( $hidden )
     {
-        if ($this->autocompleterValues) {
-            throw new LogicException('A hidden question cannot use the autocompleter.');
+        if ( $this->autocompleterValues )
+        {
+            throw new LogicException( 'A hidden question cannot use the autocompleter.' );
         }
 
-        $this->hidden = (bool) $hidden;
+        $this->hidden = (bool)$hidden;
 
         return $this;
     }
@@ -107,9 +108,9 @@ class Question
      *
      * @return $this
      */
-    public function setHiddenFallback($fallback)
+    public function setHiddenFallback( $fallback )
     {
-        $this->hiddenFallback = (bool) $fallback;
+        $this->hiddenFallback = (bool)$fallback;
 
         return $this;
     }
@@ -134,18 +135,22 @@ class Question
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function setAutocompleterValues($values)
+    public function setAutocompleterValues( $values )
     {
-        if (\is_array($values)) {
-            $values = $this->isAssoc($values) ? array_merge(array_keys($values), array_values($values)) : array_values($values);
+        if ( \is_array( $values ) )
+        {
+            $values = $this->isAssoc( $values ) ? array_merge( array_keys( $values ),
+                array_values( $values ) ) : array_values( $values );
         }
 
-        if (null !== $values && !\is_array($values) && !$values instanceof \Traversable) {
-            throw new InvalidArgumentException('Autocompleter values can be either an array, `null` or a `Traversable` object.');
+        if ( null !== $values && !\is_array( $values ) && !$values instanceof \Traversable )
+        {
+            throw new InvalidArgumentException( 'Autocompleter values can be either an array, `null` or a `Traversable` object.' );
         }
 
-        if ($this->hidden) {
-            throw new LogicException('A hidden question cannot use the autocompleter.');
+        if ( $this->hidden )
+        {
+            throw new LogicException( 'A hidden question cannot use the autocompleter.' );
         }
 
         $this->autocompleterValues = $values;
@@ -160,7 +165,7 @@ class Question
      *
      * @return $this
      */
-    public function setValidator(callable $validator = null)
+    public function setValidator( callable $validator = null )
     {
         $this->validator = $validator;
 
@@ -188,10 +193,11 @@ class Question
      *
      * @throws InvalidArgumentException in case the number of attempts is invalid
      */
-    public function setMaxAttempts($attempts)
+    public function setMaxAttempts( $attempts )
     {
-        if (null !== $attempts && $attempts < 1) {
-            throw new InvalidArgumentException('Maximum number of attempts must be a positive value.');
+        if ( null !== $attempts && $attempts < 1 )
+        {
+            throw new InvalidArgumentException( 'Maximum number of attempts must be a positive value.' );
         }
 
         $this->attempts = $attempts;
@@ -220,7 +226,7 @@ class Question
      *
      * @return $this
      */
-    public function setNormalizer(callable $normalizer)
+    public function setNormalizer( callable $normalizer )
     {
         $this->normalizer = $normalizer;
 
@@ -239,8 +245,8 @@ class Question
         return $this->normalizer;
     }
 
-    protected function isAssoc($array)
+    protected function isAssoc( $array )
     {
-        return (bool) \count(array_filter(array_keys($array), 'is_string'));
+        return (bool)\count( array_filter( array_keys( $array ), 'is_string' ) );
     }
 }

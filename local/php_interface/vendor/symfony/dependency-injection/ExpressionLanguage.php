@@ -26,11 +26,11 @@ class ExpressionLanguage extends BaseExpressionLanguage
     /**
      * {@inheritdoc}
      */
-    public function __construct(CacheItemPoolInterface $cache = null, array $providers = [], callable $serviceCompiler = null)
+    public function __construct( CacheItemPoolInterface $cache = null, array $providers = [], callable $serviceCompiler = null )
     {
         // prepend the default provider to let users override it easily
-        array_unshift($providers, new ExpressionLanguageProvider($serviceCompiler));
+        array_unshift( $providers, new ExpressionLanguageProvider( $serviceCompiler ) );
 
-        parent::__construct($cache, $providers);
+        parent::__construct( $cache, $providers );
     }
 }

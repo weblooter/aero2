@@ -26,38 +26,42 @@ class PhpFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load( $resource, $type = null )
     {
         // the container and loader variables are exposed to the included file below
         $container = $this->container;
         $loader = $this;
 
-        $path = $this->locator->locate($resource);
-        $this->setCurrentDir(\dirname($path));
-        $this->container->fileExists($path);
+        $path = $this->locator->locate( $resource );
+        $this->setCurrentDir( \dirname( $path ) );
+        $this->container->fileExists( $path );
 
         // the closure forbids access to the private scope in the included file
-        $load = \Closure::bind(function ($path) use ($container, $loader, $resource, $type) {
+        $load = \Closure::bind( function ( $path ) use ( $container, $loader, $resource, $type ) {
             return include $path;
-        }, $this, ProtectedPhpFileLoader::class);
+        }, $this, ProtectedPhpFileLoader::class );
 
-        $callback = $load($path);
+        $callback = $load( $path );
 
-        if (\is_object($callback) && \is_callable($callback)) {
-            $callback(new ContainerConfigurator($this->container, $this, $this->instanceof, $path, $resource), $this->container, $this);
+        if ( \is_object( $callback ) && \is_callable( $callback ) )
+        {
+            $callback( new ContainerConfigurator( $this->container, $this, $this->instanceof, $path, $resource ),
+                $this->container, $this );
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports( $resource, $type = null )
     {
-        if (!\is_string($resource)) {
+        if ( !\is_string( $resource ) )
+        {
             return false;
         }
 
-        if (null === $type && 'php' === pathinfo($resource, PATHINFO_EXTENSION)) {
+        if ( null === $type && 'php' === pathinfo( $resource, PATHINFO_EXTENSION ) )
+        {
             return true;
         }
 

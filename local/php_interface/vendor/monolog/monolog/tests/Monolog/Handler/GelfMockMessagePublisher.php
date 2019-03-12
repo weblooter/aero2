@@ -16,7 +16,7 @@ use Gelf\Message;
 
 class GelfMockMessagePublisher extends MessagePublisher
 {
-    public function publish(Message $message)
+    public function publish( Message $message )
     {
         $this->lastMessage = $message;
     }

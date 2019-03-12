@@ -24,18 +24,18 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
 {
     private $client;
 
-    public function __construct(CouchDBClient $client, $level = Logger::DEBUG, $bubble = true)
+    public function __construct( CouchDBClient $client, $level = Logger::DEBUG, $bubble = true )
     {
         $this->client = $client;
-        parent::__construct($level, $bubble);
+        parent::__construct( $level, $bubble );
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
-        $this->client->postDocument($record['formatted']);
+        $this->client->postDocument( $record[ 'formatted' ] );
     }
 
     protected function getDefaultFormatter()

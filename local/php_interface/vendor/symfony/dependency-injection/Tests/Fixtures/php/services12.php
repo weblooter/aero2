@@ -27,8 +27,9 @@ class ProjectServiceContainer extends Container
     public function __construct()
     {
         $dir = __DIR__;
-        for ($i = 1; $i <= 5; ++$i) {
-            $this->targetDirs[$i] = $dir = \dirname($dir);
+        for ( $i = 1; $i <= 5; ++$i )
+        {
+            $this->targetDirs[ $i ] = $dir = \dirname( $dir );
         }
         $this->parameters = $this->getDefaultParameters();
 
@@ -48,7 +49,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException('You cannot compile a dumped container that was already compiled.');
+        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
     }
 
     public function isCompiled()
@@ -71,43 +72,50 @@ class ProjectServiceContainer extends Container
      */
     protected function getTestService()
     {
-        return $this->services['test'] = new \stdClass(('wiz'.$this->targetDirs[1]), [('wiz'.$this->targetDirs[1]) => ($this->targetDirs[2].'/')]);
+        return $this->services[ 'test' ] = new \stdClass( ( 'wiz'.$this->targetDirs[ 1 ] ),
+            [( 'wiz'.$this->targetDirs[ 1 ] ) => ( $this->targetDirs[ 2 ].'/' )] );
     }
 
-    public function getParameter($name)
+    public function getParameter( $name )
     {
-        $name = (string) $name;
+        $name = (string)$name;
 
-        if (!(isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters))) {
-            throw new InvalidArgumentException(sprintf('The parameter "%s" must be defined.', $name));
+        if ( !( isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
+                $this->parameters ) ) )
+        {
+            throw new InvalidArgumentException( sprintf( 'The parameter "%s" must be defined.', $name ) );
         }
-        if (isset($this->loadedDynamicParameters[$name])) {
-            return $this->loadedDynamicParameters[$name] ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
+        if ( isset( $this->loadedDynamicParameters[ $name ] ) )
+        {
+            return $this->loadedDynamicParameters[ $name ] ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
         }
 
-        return $this->parameters[$name];
+        return $this->parameters[ $name ];
     }
 
-    public function hasParameter($name)
+    public function hasParameter( $name )
     {
-        $name = (string) $name;
+        $name = (string)$name;
 
-        return isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters);
+        return isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
+                $this->parameters );
     }
 
-    public function setParameter($name, $value)
+    public function setParameter( $name, $value )
     {
-        throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
+        throw new LogicException( 'Impossible to call set() on a frozen ParameterBag.' );
     }
 
     public function getParameterBag()
     {
-        if (null === $this->parameterBag) {
+        if ( null === $this->parameterBag )
+        {
             $parameters = $this->parameters;
-            foreach ($this->loadedDynamicParameters as $name => $loaded) {
-                $parameters[$name] = $loaded ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
+            foreach ( $this->loadedDynamicParameters as $name => $loaded )
+            {
+                $parameters[ $name ] = $loaded ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
             }
-            $this->parameterBag = new FrozenParameterBag($parameters);
+            $this->parameterBag = new FrozenParameterBag( $parameters );
         }
 
         return $this->parameterBag;
@@ -128,16 +136,22 @@ class ProjectServiceContainer extends Container
      *
      * @throws InvalidArgumentException When the dynamic parameter does not exist
      */
-    private function getDynamicParameter($name)
+    private function getDynamicParameter( $name )
     {
-        switch ($name) {
-            case 'foo': $value = ('wiz'.$this->targetDirs[1]); break;
-            case 'buz': $value = $this->targetDirs[2]; break;
-            default: throw new InvalidArgumentException(sprintf('The dynamic parameter "%s" must be defined.', $name));
+        switch ( $name )
+        {
+            case 'foo':
+                $value = ( 'wiz'.$this->targetDirs[ 1 ] );
+                break;
+            case 'buz':
+                $value = $this->targetDirs[ 2 ];
+                break;
+            default:
+                throw new InvalidArgumentException( sprintf( 'The dynamic parameter "%s" must be defined.', $name ) );
         }
-        $this->loadedDynamicParameters[$name] = true;
+        $this->loadedDynamicParameters[ $name ] = true;
 
-        return $this->dynamicParameters[$name] = $value;
+        return $this->dynamicParameters[ $name ] = $value;
     }
 
     /**
@@ -149,7 +163,7 @@ class ProjectServiceContainer extends Container
     {
         return [
             'bar' => __DIR__,
-            'baz' => (__DIR__.'/PhpDumperTest.php'),
+            'baz' => ( __DIR__.'/PhpDumperTest.php' ),
         ];
     }
 }

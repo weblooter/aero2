@@ -17,10 +17,10 @@ class FakeFile extends OrigFile
 {
     private $realpath;
 
-    public function __construct($realpath, $path)
+    public function __construct( $realpath, $path )
     {
         $this->realpath = $realpath;
-        parent::__construct($path, false);
+        parent::__construct( $path, false );
     }
 
     public function isReadable()

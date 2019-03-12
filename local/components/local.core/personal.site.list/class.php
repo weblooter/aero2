@@ -4,7 +4,7 @@ class PersonalSiteListComponent extends \Local\Core\Inner\BxModified\CBitrixComp
 {
     public function executeComponent()
     {
-        $this->_checkCompanyAccess($this->arParams['COMPANY_ID'], $GLOBALS['USER']->GetID());
+        $this->_checkCompanyAccess( $this->arParams[ 'COMPANY_ID' ], $GLOBALS[ 'USER' ]->GetID() );
 
         $this->includeComponentTemplate();
     }

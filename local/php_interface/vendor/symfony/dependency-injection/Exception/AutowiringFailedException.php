@@ -18,11 +18,11 @@ class AutowiringFailedException extends RuntimeException
 {
     private $serviceId;
 
-    public function __construct(string $serviceId, string $message = '', int $code = 0, \Exception $previous = null)
+    public function __construct( string $serviceId, string $message = '', int $code = 0, \Exception $previous = null )
     {
         $this->serviceId = $serviceId;
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct( $message, $code, $previous );
     }
 
     public function getServiceId()

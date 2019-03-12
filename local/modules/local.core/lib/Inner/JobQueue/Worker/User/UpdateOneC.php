@@ -1,4 +1,5 @@
 <?
+
 namespace Local\Core\Inner\JobQueue\Worker\User;
 
 use \Local\Core\Inner;
@@ -17,11 +18,12 @@ class UpdateOneC extends Inner\JobQueue\Abstracts\Worker implements Inner\Interf
         /**
          * @var \Bitrix\Main\Result $obRes
          */
-        if (empty($arInputData['USER_ID'])) {
-            throw new \Local\Core\Inner\JobQueue\Exception\FailException('Не передан ID пользователя');
+        if ( empty( $arInputData[ 'USER_ID' ] ) )
+        {
+            throw new \Local\Core\Inner\JobQueue\Exception\FailException( 'Не передан ID пользователя' );
         }
 
-        \Local\Core\Exchange\Onec\User\User::update($arInputData['USER_ID']);
+        \Local\Core\Exchange\Onec\User\User::update( $arInputData[ 'USER_ID' ] );
 
         return $result;
     }
@@ -29,10 +31,10 @@ class UpdateOneC extends Inner\JobQueue\Abstracts\Worker implements Inner\Interf
     /**
      * @inheritdoc
      */
-    public function getNextExecuteAt(int $addSecond = 120): Main\Type\DateTime
+    public function getNextExecuteAt( int $addSecond = 120 ): Main\Type\DateTime
     {
         //Some Another logic
-        return parent::getNextExecuteAt($addSecond);
+        return parent::getNextExecuteAt( $addSecond );
     }
 
 }

@@ -51,9 +51,9 @@ class MockArraySessionStorageTest extends TestCase
         ];
 
         $this->storage = new MockArraySessionStorage();
-        $this->storage->registerBag($this->flashes);
-        $this->storage->registerBag($this->attributes);
-        $this->storage->setSessionData($this->data);
+        $this->storage->registerBag( $this->flashes );
+        $this->storage->registerBag( $this->attributes );
+        $this->storage->setSessionData( $this->data );
     }
 
     protected function tearDown()
@@ -66,12 +66,12 @@ class MockArraySessionStorageTest extends TestCase
 
     public function testStart()
     {
-        $this->assertEquals('', $this->storage->getId());
+        $this->assertEquals( '', $this->storage->getId() );
         $this->storage->start();
         $id = $this->storage->getId();
-        $this->assertNotEquals('', $id);
+        $this->assertNotEquals( '', $id );
         $this->storage->start();
-        $this->assertEquals($id, $this->storage->getId());
+        $this->assertEquals( $id, $this->storage->getId() );
     }
 
     public function testRegenerate()
@@ -79,37 +79,37 @@ class MockArraySessionStorageTest extends TestCase
         $this->storage->start();
         $id = $this->storage->getId();
         $this->storage->regenerate();
-        $this->assertNotEquals($id, $this->storage->getId());
-        $this->assertEquals(['foo' => 'bar'], $this->storage->getBag('attributes')->all());
-        $this->assertEquals(['notice' => 'hello'], $this->storage->getBag('flashes')->peekAll());
+        $this->assertNotEquals( $id, $this->storage->getId() );
+        $this->assertEquals( ['foo' => 'bar'], $this->storage->getBag( 'attributes' )->all() );
+        $this->assertEquals( ['notice' => 'hello'], $this->storage->getBag( 'flashes' )->peekAll() );
 
         $id = $this->storage->getId();
-        $this->storage->regenerate(true);
-        $this->assertNotEquals($id, $this->storage->getId());
-        $this->assertEquals(['foo' => 'bar'], $this->storage->getBag('attributes')->all());
-        $this->assertEquals(['notice' => 'hello'], $this->storage->getBag('flashes')->peekAll());
+        $this->storage->regenerate( true );
+        $this->assertNotEquals( $id, $this->storage->getId() );
+        $this->assertEquals( ['foo' => 'bar'], $this->storage->getBag( 'attributes' )->all() );
+        $this->assertEquals( ['notice' => 'hello'], $this->storage->getBag( 'flashes' )->peekAll() );
     }
 
     public function testGetId()
     {
-        $this->assertEquals('', $this->storage->getId());
+        $this->assertEquals( '', $this->storage->getId() );
         $this->storage->start();
-        $this->assertNotEquals('', $this->storage->getId());
+        $this->assertNotEquals( '', $this->storage->getId() );
     }
 
     public function testClearClearsBags()
     {
         $this->storage->clear();
 
-        $this->assertSame([], $this->storage->getBag('attributes')->all());
-        $this->assertSame([], $this->storage->getBag('flashes')->peekAll());
+        $this->assertSame( [], $this->storage->getBag( 'attributes' )->all() );
+        $this->assertSame( [], $this->storage->getBag( 'flashes' )->peekAll() );
     }
 
     public function testClearStartsSession()
     {
         $this->storage->clear();
 
-        $this->assertTrue($this->storage->isStarted());
+        $this->assertTrue( $this->storage->isStarted() );
     }
 
     public function testClearWithNoBagsStartsSession()
@@ -118,7 +118,7 @@ class MockArraySessionStorageTest extends TestCase
 
         $storage->clear();
 
-        $this->assertTrue($storage->isStarted());
+        $this->assertTrue( $storage->isStarted() );
     }
 
     /**

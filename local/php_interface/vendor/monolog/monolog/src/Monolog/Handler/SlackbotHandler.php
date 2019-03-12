@@ -41,14 +41,14 @@ class SlackbotHandler extends AbstractProcessingHandler
 
     /**
      * @param  string $slackTeam Slack team slug
-     * @param  string $token     Slackbot token
-     * @param  string $channel   Slack channel (encoded ID or name)
-     * @param  int    $level     The minimum logging level at which this handler will be triggered
-     * @param  bool   $bubble    Whether the messages that are handled can bubble up the stack or not
+     * @param  string $token Slackbot token
+     * @param  string $channel Slack channel (encoded ID or name)
+     * @param  int    $level The minimum logging level at which this handler will be triggered
+     * @param  bool   $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($slackTeam, $token, $channel, $level = Logger::CRITICAL, $bubble = true)
+    public function __construct( $slackTeam, $token, $channel, $level = Logger::CRITICAL, $bubble = true )
     {
-        parent::__construct($level, $bubble);
+        parent::__construct( $level, $bubble );
 
         $this->slackTeam = $slackTeam;
         $this->token = $token;
@@ -60,7 +60,7 @@ class SlackbotHandler extends AbstractProcessingHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
         $slackbotUrl = sprintf(
             'https://%s.slack.com/services/hooks/slackbot?token=%s&channel=%s',
@@ -70,11 +70,11 @@ class SlackbotHandler extends AbstractProcessingHandler
         );
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $slackbotUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $record['message']);
+        curl_setopt( $ch, CURLOPT_URL, $slackbotUrl );
+        curl_setopt( $ch, CURLOPT_POST, true );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $record[ 'message' ] );
 
-        Curl\Util::execute($ch);
+        Curl\Util::execute( $ch );
     }
 }

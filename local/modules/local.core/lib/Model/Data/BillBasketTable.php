@@ -46,14 +46,14 @@ class BillBasketTable extends \Bitrix\Main\ORM\Data\DataManager
                     return new \Bitrix\Main\Type\DateTime();
                 }
             ] ),
-            new Fields\IntegerField('BILL_ID', [
+            new Fields\IntegerField( 'BILL_ID', [
                 'title' => 'ID счета корзины'
-            ]),
+            ] ),
 
             new Fields\Relations\Reference(
                 'BILL',
                 \Local\Core\Model\Data\BillTable::class,
-                \Bitrix\Main\ORM\Query\Join::on('this.BILL_ID', 'ref.ID'),
+                \Bitrix\Main\ORM\Query\Join::on( 'this.BILL_ID', 'ref.ID' ),
                 [
                     'title' => 'ORM: Счет корзины'
                 ]
@@ -61,7 +61,7 @@ class BillBasketTable extends \Bitrix\Main\ORM\Data\DataManager
             new Fields\Relations\Reference(
                 'PRODUCT',
                 \Local\Core\Model\Data\BillProductTable::class,
-                \Bitrix\Main\ORM\Query\Join::on('this.ID', 'ref.BILL_BASKET_ID'),
+                \Bitrix\Main\ORM\Query\Join::on( 'this.ID', 'ref.BILL_BASKET_ID' ),
                 [
                     'title' => 'ORM: Товары корзины'
                 ]
@@ -77,24 +77,24 @@ class BillBasketTable extends \Bitrix\Main\ORM\Data\DataManager
      * @return \Bitrix\Main\ORM\EventResult|void
      * @throws \Bitrix\Main\ObjectException
      */
-    public static function onBeforeUpdate(\Bitrix\Main\ORM\Event $event)
+    public static function OnBeforeUpdate( \Bitrix\Main\ORM\Event $event )
     {
         $arModifiedFields = [];
 
         /** @var \Bitrix\Main\ORM\Event $event */
-        $arFields = $event->getParameter('fields');
+        $arFields = $event->getParameter( 'fields' );
 
-        if( !empty( $arFields ) )
+        if ( !empty( $arFields ) )
         {
-            $arModifiedFields['DATE_MODIFIED'] = new \Bitrix\Main\Type\DateTime();
+            $arModifiedFields[ 'DATE_MODIFIED' ] = new \Bitrix\Main\Type\DateTime();
         }
 
-        $arFields = array_merge($arFields, $arModifiedFields);
-        $event->setParameter('fields', $arFields);
+        $arFields = array_merge( $arFields, $arModifiedFields );
+        $event->setParameter( 'fields', $arFields );
 
         /** @var \Bitrix\Main\ORM\EventResult $result */
         $result = new \Bitrix\Main\ORM\EventResult;
-        $result->modifyFields($arModifiedFields);
+        $result->modifyFields( $arModifiedFields );
 
         return $result;
     }
@@ -108,14 +108,14 @@ class BillBasketTable extends \Bitrix\Main\ORM\Data\DataManager
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function OnAfterUpdate(\Bitrix\Main\ORM\Event $event)
+    public static function OnAfterUpdate( \Bitrix\Main\ORM\Event $event )
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if( !empty( $arEventParams['primary'] ) )
+        if ( !empty( $arEventParams[ 'primary' ][ 'ID' ] ) )
         {
-            $ar = self::getById($arEventParams['primary'])->fetchRaw();
-            self::clearComponentsCache($ar);
+            $ar = self::getById( $arEventParams[ 'primary' ][ 'ID' ] )->fetchRaw();
+            self::clearComponentsCache( $ar );
         }
     }
 
@@ -128,14 +128,14 @@ class BillBasketTable extends \Bitrix\Main\ORM\Data\DataManager
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function OnDelete(\Bitrix\Main\ORM\Event $event)
+    public static function OnDelete( \Bitrix\Main\ORM\Event $event )
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if( !empty( $arEventParams['primary'] ) )
+        if ( !empty( $arEventParams[ 'primary' ][ 'ID' ] ) )
         {
-            $ar = self::getById($arEventParams['primary'])->fetchRaw();
-            self::clearComponentsCache($ar);
+            $ar = self::getById( $arEventParams[ 'primary' ][ 'ID' ] )->fetchRaw();
+            self::clearComponentsCache( $ar );
         }
     }
 
@@ -144,7 +144,7 @@ class BillBasketTable extends \Bitrix\Main\ORM\Data\DataManager
      *
      * @param $arFields
      */
-    public static function clearComponentsCache($arFields)
+    public static function clearComponentsCache( $arFields )
     {
 //        \Local\Core\Assistant\Cache::deleteComponentCache('personal.company.list', [ 'user_id='.$arFields['USER_OWN_ID'] ]);
     }

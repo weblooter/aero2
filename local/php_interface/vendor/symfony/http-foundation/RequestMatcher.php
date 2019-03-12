@@ -61,17 +61,18 @@ class RequestMatcher implements RequestMatcherInterface
      * @param array                $attributes
      * @param string|string[]|null $schemes
      */
-    public function __construct(string $path = null, string $host = null, $methods = null, $ips = null, array $attributes = [], $schemes = null, int $port = null)
+    public function __construct( string $path = null, string $host = null, $methods = null, $ips = null, array $attributes = [], $schemes = null, int $port = null )
     {
-        $this->matchPath($path);
-        $this->matchHost($host);
-        $this->matchMethod($methods);
-        $this->matchIps($ips);
-        $this->matchScheme($schemes);
-        $this->matchPort($port);
+        $this->matchPath( $path );
+        $this->matchHost( $host );
+        $this->matchMethod( $methods );
+        $this->matchIps( $ips );
+        $this->matchScheme( $schemes );
+        $this->matchPort( $port );
 
-        foreach ($attributes as $k => $v) {
-            $this->matchAttribute($k, $v);
+        foreach ( $attributes as $k => $v )
+        {
+            $this->matchAttribute( $k, $v );
         }
     }
 
@@ -80,9 +81,9 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $scheme An HTTP scheme or an array of HTTP schemes
      */
-    public function matchScheme($scheme)
+    public function matchScheme( $scheme )
     {
-        $this->schemes = null !== $scheme ? array_map('strtolower', (array) $scheme) : [];
+        $this->schemes = null !== $scheme ? array_map( 'strtolower', (array)$scheme ) : [];
     }
 
     /**
@@ -90,7 +91,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|null $regexp A Regexp
      */
-    public function matchHost($regexp)
+    public function matchHost( $regexp )
     {
         $this->host = $regexp;
     }
@@ -100,7 +101,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param int|null $port The port number to connect to
      */
-    public function matchPort(int $port = null)
+    public function matchPort( int $port = null )
     {
         $this->port = $port;
     }
@@ -110,7 +111,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|null $regexp A Regexp
      */
-    public function matchPath($regexp)
+    public function matchPath( $regexp )
     {
         $this->path = $regexp;
     }
@@ -120,9 +121,9 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string $ip A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
      */
-    public function matchIp($ip)
+    public function matchIp( $ip )
     {
-        $this->matchIps($ip);
+        $this->matchIps( $ip );
     }
 
     /**
@@ -130,9 +131,9 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $ips A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
      */
-    public function matchIps($ips)
+    public function matchIps( $ips )
     {
-        $this->ips = null !== $ips ? (array) $ips : [];
+        $this->ips = null !== $ips ? (array)$ips : [];
     }
 
     /**
@@ -140,59 +141,67 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $method An HTTP method or an array of HTTP methods
      */
-    public function matchMethod($method)
+    public function matchMethod( $method )
     {
-        $this->methods = null !== $method ? array_map('strtoupper', (array) $method) : [];
+        $this->methods = null !== $method ? array_map( 'strtoupper', (array)$method ) : [];
     }
 
     /**
      * Adds a check for request attribute.
      *
-     * @param string $key    The request attribute name
+     * @param string $key The request attribute name
      * @param string $regexp A Regexp
      */
-    public function matchAttribute($key, $regexp)
+    public function matchAttribute( $key, $regexp )
     {
-        $this->attributes[$key] = $regexp;
+        $this->attributes[ $key ] = $regexp;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function matches(Request $request)
+    public function matches( Request $request )
     {
-        if ($this->schemes && !\in_array($request->getScheme(), $this->schemes, true)) {
+        if ( $this->schemes && !\in_array( $request->getScheme(), $this->schemes, true ) )
+        {
             return false;
         }
 
-        if ($this->methods && !\in_array($request->getMethod(), $this->methods, true)) {
+        if ( $this->methods && !\in_array( $request->getMethod(), $this->methods, true ) )
+        {
             return false;
         }
 
-        foreach ($this->attributes as $key => $pattern) {
-            if (!preg_match('{'.$pattern.'}', $request->attributes->get($key))) {
+        foreach ( $this->attributes as $key => $pattern )
+        {
+            if ( !preg_match( '{'.$pattern.'}', $request->attributes->get( $key ) ) )
+            {
                 return false;
             }
         }
 
-        if (null !== $this->path && !preg_match('{'.$this->path.'}', rawurldecode($request->getPathInfo()))) {
+        if ( null !== $this->path && !preg_match( '{'.$this->path.'}', rawurldecode( $request->getPathInfo() ) ) )
+        {
             return false;
         }
 
-        if (null !== $this->host && !preg_match('{'.$this->host.'}i', $request->getHost())) {
+        if ( null !== $this->host && !preg_match( '{'.$this->host.'}i', $request->getHost() ) )
+        {
             return false;
         }
 
-        if (null !== $this->port && 0 < $this->port && $request->getPort() !== $this->port) {
+        if ( null !== $this->port && 0 < $this->port && $request->getPort() !== $this->port )
+        {
             return false;
         }
 
-        if (IpUtils::checkIp($request->getClientIp(), $this->ips)) {
+        if ( IpUtils::checkIp( $request->getClientIp(), $this->ips ) )
+        {
             return true;
         }
 
         // Note to future implementors: add additional checks above the
         // foreach above or else your check might not be run!
-        return 0 === \count($this->ips);
+        return 0 === \count( $this->ips );
     }
 }

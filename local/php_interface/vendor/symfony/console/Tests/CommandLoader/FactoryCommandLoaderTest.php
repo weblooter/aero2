@@ -19,25 +19,33 @@ class FactoryCommandLoaderTest extends TestCase
 {
     public function testHas()
     {
-        $loader = new FactoryCommandLoader([
-            'foo' => function () { return new Command('foo'); },
-            'bar' => function () { return new Command('bar'); },
-        ]);
+        $loader = new FactoryCommandLoader( [
+            'foo' => function () {
+                return new Command( 'foo' );
+            },
+            'bar' => function () {
+                return new Command( 'bar' );
+            },
+        ] );
 
-        $this->assertTrue($loader->has('foo'));
-        $this->assertTrue($loader->has('bar'));
-        $this->assertFalse($loader->has('baz'));
+        $this->assertTrue( $loader->has( 'foo' ) );
+        $this->assertTrue( $loader->has( 'bar' ) );
+        $this->assertFalse( $loader->has( 'baz' ) );
     }
 
     public function testGet()
     {
-        $loader = new FactoryCommandLoader([
-            'foo' => function () { return new Command('foo'); },
-            'bar' => function () { return new Command('bar'); },
-        ]);
+        $loader = new FactoryCommandLoader( [
+            'foo' => function () {
+                return new Command( 'foo' );
+            },
+            'bar' => function () {
+                return new Command( 'bar' );
+            },
+        ] );
 
-        $this->assertInstanceOf(Command::class, $loader->get('foo'));
-        $this->assertInstanceOf(Command::class, $loader->get('bar'));
+        $this->assertInstanceOf( Command::class, $loader->get( 'foo' ) );
+        $this->assertInstanceOf( Command::class, $loader->get( 'bar' ) );
     }
 
     /**
@@ -45,16 +53,20 @@ class FactoryCommandLoaderTest extends TestCase
      */
     public function testGetUnknownCommandThrows()
     {
-        (new FactoryCommandLoader([]))->get('unknown');
+        ( new FactoryCommandLoader( [] ) )->get( 'unknown' );
     }
 
     public function testGetCommandNames()
     {
-        $loader = new FactoryCommandLoader([
-            'foo' => function () { return new Command('foo'); },
-            'bar' => function () { return new Command('bar'); },
-        ]);
+        $loader = new FactoryCommandLoader( [
+            'foo' => function () {
+                return new Command( 'foo' );
+            },
+            'bar' => function () {
+                return new Command( 'bar' );
+            },
+        ] );
 
-        $this->assertSame(['foo', 'bar'], $loader->getNames());
+        $this->assertSame( ['foo', 'bar'], $loader->getNames() );
     }
 }

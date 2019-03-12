@@ -20,7 +20,7 @@ class ContainerBag extends FrozenParameterBag implements ContainerBagInterface
 {
     private $container;
 
-    public function __construct(Container $container)
+    public function __construct( Container $container )
     {
         $this->container = $container;
     }
@@ -36,16 +36,16 @@ class ContainerBag extends FrozenParameterBag implements ContainerBagInterface
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get( $name )
     {
-        return $this->container->getParameter($name);
+        return $this->container->getParameter( $name );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function has($name)
+    public function has( $name )
     {
-        return $this->container->hasParameter($name);
+        return $this->container->hasParameter( $name );
     }
 }

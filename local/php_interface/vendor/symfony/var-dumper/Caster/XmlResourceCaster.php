@@ -45,15 +45,16 @@ class XmlResourceCaster
         XML_ERROR_EXTERNAL_ENTITY_HANDLING => 'XML_ERROR_EXTERNAL_ENTITY_HANDLING',
     ];
 
-    public static function castXml($h, array $a, Stub $stub, $isNested)
+    public static function castXml( $h, array $a, Stub $stub, $isNested )
     {
-        $a['current_byte_index'] = xml_get_current_byte_index($h);
-        $a['current_column_number'] = xml_get_current_column_number($h);
-        $a['current_line_number'] = xml_get_current_line_number($h);
-        $a['error_code'] = xml_get_error_code($h);
+        $a[ 'current_byte_index' ] = xml_get_current_byte_index( $h );
+        $a[ 'current_column_number' ] = xml_get_current_column_number( $h );
+        $a[ 'current_line_number' ] = xml_get_current_line_number( $h );
+        $a[ 'error_code' ] = xml_get_error_code( $h );
 
-        if (isset(self::$xmlErrors[$a['error_code']])) {
-            $a['error_code'] = new ConstStub(self::$xmlErrors[$a['error_code']], $a['error_code']);
+        if ( isset( self::$xmlErrors[ $a[ 'error_code' ] ] ) )
+        {
+            $a[ 'error_code' ] = new ConstStub( self::$xmlErrors[ $a[ 'error_code' ] ], $a[ 'error_code' ] );
         }
 
         return $a;

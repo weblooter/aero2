@@ -34,28 +34,30 @@ abstract class Descriptor implements DescriptorInterface
     /**
      * {@inheritdoc}
      */
-    public function describe(OutputInterface $output, $object, array $options = [])
+    public function describe( OutputInterface $output, $object, array $options = [] )
     {
         $this->output = $output;
 
-        switch (true) {
+        switch ( true )
+        {
             case $object instanceof InputArgument:
-                $this->describeInputArgument($object, $options);
+                $this->describeInputArgument( $object, $options );
                 break;
             case $object instanceof InputOption:
-                $this->describeInputOption($object, $options);
+                $this->describeInputOption( $object, $options );
                 break;
             case $object instanceof InputDefinition:
-                $this->describeInputDefinition($object, $options);
+                $this->describeInputDefinition( $object, $options );
                 break;
             case $object instanceof Command:
-                $this->describeCommand($object, $options);
+                $this->describeCommand( $object, $options );
                 break;
             case $object instanceof Application:
-                $this->describeApplication($object, $options);
+                $this->describeApplication( $object, $options );
                 break;
             default:
-                throw new InvalidArgumentException(sprintf('Object of type "%s" is not describable.', \get_class($object)));
+                throw new InvalidArgumentException( sprintf( 'Object of type "%s" is not describable.',
+                    \get_class( $object ) ) );
         }
     }
 
@@ -65,9 +67,10 @@ abstract class Descriptor implements DescriptorInterface
      * @param string $content
      * @param bool   $decorated
      */
-    protected function write($content, $decorated = false)
+    protected function write( $content, $decorated = false )
     {
-        $this->output->write($content, false, $decorated ? OutputInterface::OUTPUT_NORMAL : OutputInterface::OUTPUT_RAW);
+        $this->output->write( $content, false,
+            $decorated ? OutputInterface::OUTPUT_NORMAL : OutputInterface::OUTPUT_RAW );
     }
 
     /**
@@ -75,33 +78,33 @@ abstract class Descriptor implements DescriptorInterface
      *
      * @return string|mixed
      */
-    abstract protected function describeInputArgument(InputArgument $argument, array $options = []);
+    abstract protected function describeInputArgument( InputArgument $argument, array $options = [] );
 
     /**
      * Describes an InputOption instance.
      *
      * @return string|mixed
      */
-    abstract protected function describeInputOption(InputOption $option, array $options = []);
+    abstract protected function describeInputOption( InputOption $option, array $options = [] );
 
     /**
      * Describes an InputDefinition instance.
      *
      * @return string|mixed
      */
-    abstract protected function describeInputDefinition(InputDefinition $definition, array $options = []);
+    abstract protected function describeInputDefinition( InputDefinition $definition, array $options = [] );
 
     /**
      * Describes a Command instance.
      *
      * @return string|mixed
      */
-    abstract protected function describeCommand(Command $command, array $options = []);
+    abstract protected function describeCommand( Command $command, array $options = [] );
 
     /**
      * Describes an Application instance.
      *
      * @return string|mixed
      */
-    abstract protected function describeApplication(Application $application, array $options = []);
+    abstract protected function describeApplication( Application $application, array $options = [] );
 }

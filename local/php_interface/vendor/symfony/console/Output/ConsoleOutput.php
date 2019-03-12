@@ -33,19 +33,21 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
     private $consoleSectionOutputs = [];
 
     /**
-     * @param int                           $verbosity The verbosity level (one of the VERBOSITY constants in OutputInterface)
+     * @param int                           $verbosity The verbosity level (one of the VERBOSITY constants in
+     *     OutputInterface)
      * @param bool|null                     $decorated Whether to decorate messages (null for auto-guessing)
      * @param OutputFormatterInterface|null $formatter Output formatter instance (null to use default OutputFormatter)
      */
-    public function __construct(int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = null, OutputFormatterInterface $formatter = null)
+    public function __construct( int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = null, OutputFormatterInterface $formatter = null )
     {
-        parent::__construct($this->openOutputStream(), $verbosity, $decorated, $formatter);
+        parent::__construct( $this->openOutputStream(), $verbosity, $decorated, $formatter );
 
         $actualDecorated = $this->isDecorated();
-        $this->stderr = new StreamOutput($this->openErrorStream(), $verbosity, $decorated, $this->getFormatter());
+        $this->stderr = new StreamOutput( $this->openErrorStream(), $verbosity, $decorated, $this->getFormatter() );
 
-        if (null === $decorated) {
-            $this->setDecorated($actualDecorated && $this->stderr->isDecorated());
+        if ( null === $decorated )
+        {
+            $this->setDecorated( $actualDecorated && $this->stderr->isDecorated() );
         }
     }
 
@@ -54,34 +56,35 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
      */
     public function section(): ConsoleSectionOutput
     {
-        return new ConsoleSectionOutput($this->getStream(), $this->consoleSectionOutputs, $this->getVerbosity(), $this->isDecorated(), $this->getFormatter());
+        return new ConsoleSectionOutput( $this->getStream(), $this->consoleSectionOutputs, $this->getVerbosity(),
+            $this->isDecorated(), $this->getFormatter() );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDecorated($decorated)
+    public function setDecorated( $decorated )
     {
-        parent::setDecorated($decorated);
-        $this->stderr->setDecorated($decorated);
+        parent::setDecorated( $decorated );
+        $this->stderr->setDecorated( $decorated );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(OutputFormatterInterface $formatter)
+    public function setFormatter( OutputFormatterInterface $formatter )
     {
-        parent::setFormatter($formatter);
-        $this->stderr->setFormatter($formatter);
+        parent::setFormatter( $formatter );
+        $this->stderr->setFormatter( $formatter );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setVerbosity($level)
+    public function setVerbosity( $level )
     {
-        parent::setVerbosity($level);
-        $this->stderr->setVerbosity($level);
+        parent::setVerbosity( $level );
+        $this->stderr->setVerbosity( $level );
     }
 
     /**
@@ -95,7 +98,7 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
     /**
      * {@inheritdoc}
      */
-    public function setErrorOutput(OutputInterface $error)
+    public function setErrorOutput( OutputInterface $error )
     {
         $this->stderr = $error;
     }
@@ -131,12 +134,12 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
     private function isRunningOS400()
     {
         $checks = [
-            \function_exists('php_uname') ? php_uname('s') : '',
-            getenv('OSTYPE'),
+            \function_exists( 'php_uname' ) ? php_uname( 's' ) : '',
+            getenv( 'OSTYPE' ),
             PHP_OS,
         ];
 
-        return false !== stripos(implode(';', $checks), 'OS400');
+        return false !== stripos( implode( ';', $checks ), 'OS400' );
     }
 
     /**
@@ -144,11 +147,12 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
      */
     private function openOutputStream()
     {
-        if (!$this->hasStdoutSupport()) {
-            return fopen('php://output', 'w');
+        if ( !$this->hasStdoutSupport() )
+        {
+            return fopen( 'php://output', 'w' );
         }
 
-        return @fopen('php://stdout', 'w') ?: fopen('php://output', 'w');
+        return @fopen( 'php://stdout', 'w' ) ? : fopen( 'php://output', 'w' );
     }
 
     /**
@@ -156,6 +160,6 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
      */
     private function openErrorStream()
     {
-        return fopen($this->hasStderrSupport() ? 'php://stderr' : 'php://output', 'w');
+        return fopen( $this->hasStderrSupport() ? 'php://stderr' : 'php://output', 'w' );
     }
 }

@@ -22,7 +22,7 @@ class FormatterHelperTest extends TestCase
 
         $this->assertEquals(
             '<info>[cli]</info> Some text to display',
-            $formatter->formatSection('cli', 'Some text to display'),
+            $formatter->formatSection( 'cli', 'Some text to display' ),
             '::formatSection() formats a message in a section'
         );
     }
@@ -33,14 +33,14 @@ class FormatterHelperTest extends TestCase
 
         $this->assertEquals(
             '<error> Some text to display </error>',
-            $formatter->formatBlock('Some text to display', 'error'),
+            $formatter->formatBlock( 'Some text to display', 'error' ),
             '::formatBlock() formats a message in a block'
         );
 
         $this->assertEquals(
             '<error> Some text to display </error>'."\n".
             '<error> foo bar              </error>',
-            $formatter->formatBlock(['Some text to display', 'foo bar'], 'error'),
+            $formatter->formatBlock( ['Some text to display', 'foo bar'], 'error' ),
             '::formatBlock() formats a message in a block'
         );
 
@@ -48,7 +48,7 @@ class FormatterHelperTest extends TestCase
             '<error>                        </error>'."\n".
             '<error>  Some text to display  </error>'."\n".
             '<error>                        </error>',
-            $formatter->formatBlock('Some text to display', 'error', true),
+            $formatter->formatBlock( 'Some text to display', 'error', true ),
             '::formatBlock() formats a message in a block'
         );
     }
@@ -61,7 +61,7 @@ class FormatterHelperTest extends TestCase
             '<error>                       </error>'."\n".
             '<error>  Du texte à afficher  </error>'."\n".
             '<error>                       </error>',
-            $formatter->formatBlock('Du texte à afficher', 'error', true),
+            $formatter->formatBlock( 'Du texte à afficher', 'error', true ),
             '::formatBlock() formats a message in a block'
         );
     }
@@ -73,7 +73,7 @@ class FormatterHelperTest extends TestCase
             '<error>                    </error>'."\n".
             '<error>  表示するテキスト  </error>'."\n".
             '<error>                    </error>',
-            $formatter->formatBlock('表示するテキスト', 'error', true),
+            $formatter->formatBlock( '表示するテキスト', 'error', true ),
             '::formatBlock() formats a message in a block'
         );
     }
@@ -86,7 +86,7 @@ class FormatterHelperTest extends TestCase
             '<error>                            </error>'."\n".
             '<error>  \<info>some info\</info>  </error>'."\n".
             '<error>                            </error>',
-            $formatter->formatBlock('<info>some info</info>', 'error', true),
+            $formatter->formatBlock( '<info>some info</info>', 'error', true ),
             '::formatBlock() escapes \'<\' chars'
         );
     }
@@ -96,10 +96,10 @@ class FormatterHelperTest extends TestCase
         $formatter = new FormatterHelper();
         $message = 'testing truncate';
 
-        $this->assertSame('test...', $formatter->truncate($message, 4));
-        $this->assertSame('testing truncat...', $formatter->truncate($message, 15));
-        $this->assertSame('testing truncate...', $formatter->truncate($message, 16));
-        $this->assertSame('zażółć gęślą...', $formatter->truncate('zażółć gęślą jaźń', 12));
+        $this->assertSame( 'test...', $formatter->truncate( $message, 4 ) );
+        $this->assertSame( 'testing truncat...', $formatter->truncate( $message, 15 ) );
+        $this->assertSame( 'testing truncate...', $formatter->truncate( $message, 16 ) );
+        $this->assertSame( 'zażółć gęślą...', $formatter->truncate( 'zażółć gęślą jaźń', 12 ) );
     }
 
     public function testTruncatingMessageWithCustomSuffix()
@@ -107,7 +107,7 @@ class FormatterHelperTest extends TestCase
         $formatter = new FormatterHelper();
         $message = 'testing truncate';
 
-        $this->assertSame('test!', $formatter->truncate($message, 4, '!'));
+        $this->assertSame( 'test!', $formatter->truncate( $message, 4, '!' ) );
     }
 
     public function testTruncatingWithLongerLengthThanMessageWithSuffix()
@@ -115,7 +115,7 @@ class FormatterHelperTest extends TestCase
         $formatter = new FormatterHelper();
         $message = 'test';
 
-        $this->assertSame($message, $formatter->truncate($message, 10));
+        $this->assertSame( $message, $formatter->truncate( $message, 10 ) );
     }
 
     public function testTruncatingWithNegativeLength()
@@ -123,7 +123,7 @@ class FormatterHelperTest extends TestCase
         $formatter = new FormatterHelper();
         $message = 'testing truncate';
 
-        $this->assertSame('testing tru...', $formatter->truncate($message, -5));
-        $this->assertSame('...', $formatter->truncate($message, -100));
+        $this->assertSame( 'testing tru...', $formatter->truncate( $message, -5 ) );
+        $this->assertSame( '...', $formatter->truncate( $message, -100 ) );
     }
 }

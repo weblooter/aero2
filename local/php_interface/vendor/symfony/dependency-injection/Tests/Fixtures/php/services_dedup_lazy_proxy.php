@@ -43,7 +43,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException('You cannot compile a dumped container that was already compiled.');
+        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
     }
 
     public function isCompiled()
@@ -59,7 +59,7 @@ class ProjectServiceContainer extends Container
         ];
     }
 
-    protected function createProxy($class, \Closure $factory)
+    protected function createProxy( $class, \Closure $factory )
     {
         return $factory();
     }
@@ -69,7 +69,7 @@ class ProjectServiceContainer extends Container
      *
      * @return \stdClass
      */
-    protected function getBarService($lazyLoad = true)
+    protected function getBarService( $lazyLoad = true )
     {
         // lazy factory for stdClass
 
@@ -81,7 +81,7 @@ class ProjectServiceContainer extends Container
      *
      * @return \stdClass
      */
-    protected function getFooService($lazyLoad = true)
+    protected function getFooService( $lazyLoad = true )
     {
         // lazy factory for stdClass
 

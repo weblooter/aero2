@@ -33,7 +33,7 @@ interface ContainerBagInterface extends ContainerInterface
      *
      * @throws ParameterNotFoundException if a placeholder references a parameter that does not exist
      */
-    public function resolveValue($value);
+    public function resolveValue( $value );
 
     /**
      * Escape parameter placeholders %.
@@ -42,7 +42,7 @@ interface ContainerBagInterface extends ContainerInterface
      *
      * @return mixed
      */
-    public function escapeValue($value);
+    public function escapeValue( $value );
 
     /**
      * Unescape parameter placeholders %.
@@ -51,5 +51,5 @@ interface ContainerBagInterface extends ContainerInterface
      *
      * @return mixed
      */
-    public function unescapeValue($value);
+    public function unescapeValue( $value );
 }

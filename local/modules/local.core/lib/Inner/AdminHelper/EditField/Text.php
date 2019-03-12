@@ -12,7 +12,7 @@ class Text extends Base
      */
     public function getEditFieldHtml()
     {
-        return "<input type=\"text\" name=\"{$this->getCode()}\" value=\"" . htmlspecialcharsbx($this->getValue()) . "\" size=\"40\" placeholder=\"{$this->getPlaceholder()}\" />";
+        return "<input type=\"text\" name=\"{$this->getCode()}\" value=\"".htmlspecialcharsbx( $this->getValue() )."\" size=\"40\" placeholder=\"{$this->getPlaceholder()}\" />";
     }
 
     /**
@@ -20,15 +20,17 @@ class Text extends Base
      */
     public function getViewFieldHtml()
     {
-        return htmlspecialcharsbx($this->getValue());
+        return htmlspecialcharsbx( $this->getValue() );
     }
 
-    public function setPlaceholder($placeholder){
+    public function setPlaceholder( $placeholder )
+    {
         $this->_placeholder = $placeholder;
         return $this;
     }
 
-    public function getPlaceholder(){
+    public function getPlaceholder()
+    {
         return $this->_placeholder;
     }
 }

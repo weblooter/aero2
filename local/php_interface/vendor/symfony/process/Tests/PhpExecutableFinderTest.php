@@ -29,8 +29,8 @@ class PhpExecutableFinderTest extends TestCase
         $current = PHP_BINARY;
         $args = 'phpdbg' === \PHP_SAPI ? ' -qrr' : '';
 
-        $this->assertEquals($current.$args, $f->find(), '::find() returns the executable PHP');
-        $this->assertEquals($current, $f->find(false), '::find() returns the executable PHP');
+        $this->assertEquals( $current.$args, $f->find(), '::find() returns the executable PHP' );
+        $this->assertEquals( $current, $f->find( false ), '::find() returns the executable PHP' );
     }
 
     /**
@@ -40,10 +40,13 @@ class PhpExecutableFinderTest extends TestCase
     {
         $f = new PhpExecutableFinder();
 
-        if ('phpdbg' === \PHP_SAPI) {
-            $this->assertEquals($f->findArguments(), array('-qrr'), '::findArguments() returns phpdbg arguments');
-        } else {
-            $this->assertEquals($f->findArguments(), array(), '::findArguments() returns no arguments');
+        if ( 'phpdbg' === \PHP_SAPI )
+        {
+            $this->assertEquals( $f->findArguments(), array('-qrr'), '::findArguments() returns phpdbg arguments' );
+        }
+        else
+        {
+            $this->assertEquals( $f->findArguments(), array(), '::findArguments() returns no arguments' );
         }
     }
 }

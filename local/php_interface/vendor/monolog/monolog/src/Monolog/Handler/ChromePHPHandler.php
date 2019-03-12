@@ -58,34 +58,38 @@ class ChromePHPHandler extends AbstractProcessingHandler
     protected static $sendHeaders = true;
 
     /**
-     * @param int  $level  The minimum logging level at which this handler will be triggered
+     * @param int  $level The minimum logging level at which this handler will be triggered
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
+    public function __construct( $level = Logger::DEBUG, $bubble = true )
     {
-        parent::__construct($level, $bubble);
-        if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s ChromePHPHandler');
+        parent::__construct( $level, $bubble );
+        if ( !function_exists( 'json_encode' ) )
+        {
+            throw new \RuntimeException( 'PHP\'s json extension is required to use Monolog\'s ChromePHPHandler' );
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch( array $records )
     {
         $messages = array();
 
-        foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+        foreach ( $records as $record )
+        {
+            if ( $record[ 'level' ] < $this->level )
+            {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+            $messages[] = $this->processRecord( $record );
         }
 
-        if (!empty($messages)) {
-            $messages = $this->getFormatter()->formatBatch($messages);
-            self::$json['rows'] = array_merge(self::$json['rows'], $messages);
+        if ( !empty( $messages ) )
+        {
+            $messages = $this->getFormatter()->formatBatch( $messages );
+            self::$json[ 'rows' ] = array_merge( self::$json[ 'rows' ], $messages );
             $this->send();
         }
     }
@@ -103,11 +107,12 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      * @see send()
+     *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
-        self::$json['rows'][] = $record['formatted'];
+        self::$json[ 'rows' ][] = $record[ 'formatted' ];
 
         $this->send();
     }
@@ -119,42 +124,47 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected function send()
     {
-        if (self::$overflowed || !self::$sendHeaders) {
+        if ( self::$overflowed || !self::$sendHeaders )
+        {
             return;
         }
 
-        if (!self::$initialized) {
+        if ( !self::$initialized )
+        {
             self::$initialized = true;
 
             self::$sendHeaders = $this->headersAccepted();
-            if (!self::$sendHeaders) {
+            if ( !self::$sendHeaders )
+            {
                 return;
             }
 
-            self::$json['request_uri'] = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+            self::$json[ 'request_uri' ] = isset( $_SERVER[ 'REQUEST_URI' ] ) ? $_SERVER[ 'REQUEST_URI' ] : '';
         }
 
-        $json = @json_encode(self::$json);
-        $data = base64_encode(utf8_encode($json));
-        if (strlen($data) > 240 * 1024) {
+        $json = @json_encode( self::$json );
+        $data = base64_encode( utf8_encode( $json ) );
+        if ( strlen( $data ) > 240 * 1024 )
+        {
             self::$overflowed = true;
 
             $record = array(
                 'message' => 'Incomplete logs, chrome header size limit reached',
                 'context' => array(),
                 'level' => Logger::WARNING,
-                'level_name' => Logger::getLevelName(Logger::WARNING),
+                'level_name' => Logger::getLevelName( Logger::WARNING ),
                 'channel' => 'monolog',
                 'datetime' => new \DateTime(),
                 'extra' => array(),
             );
-            self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
-            $json = @json_encode(self::$json);
-            $data = base64_encode(utf8_encode($json));
+            self::$json[ 'rows' ][ count( self::$json[ 'rows' ] ) - 1 ] = $this->getFormatter()->format( $record );
+            $json = @json_encode( self::$json );
+            $data = base64_encode( utf8_encode( $json ) );
         }
 
-        if (trim($data) !== '') {
-            $this->sendHeader(self::HEADER_NAME, $data);
+        if ( trim( $data ) !== '' )
+        {
+            $this->sendHeader( self::HEADER_NAME, $data );
         }
     }
 
@@ -164,10 +174,11 @@ class ChromePHPHandler extends AbstractProcessingHandler
      * @param string $header
      * @param string $content
      */
-    protected function sendHeader($header, $content)
+    protected function sendHeader( $header, $content )
     {
-        if (!headers_sent() && self::$sendHeaders) {
-            header(sprintf('%s: %s', $header, $content));
+        if ( !headers_sent() && self::$sendHeaders )
+        {
+            header( sprintf( '%s: %s', $header, $content ) );
         }
     }
 
@@ -178,20 +189,22 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected function headersAccepted()
     {
-        if (empty($_SERVER['HTTP_USER_AGENT'])) {
+        if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) )
+        {
             return false;
         }
 
-        return preg_match(self::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']);
+        return preg_match( self::USER_AGENT_REGEX, $_SERVER[ 'HTTP_USER_AGENT' ] );
     }
 
     /**
      * BC getter for the sendHeaders property that has been made static
      */
-    public function __get($property)
+    public function __get( $property )
     {
-        if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+        if ( 'sendHeaders' !== $property )
+        {
+            throw new \InvalidArgumentException( 'Undefined property '.$property );
         }
 
         return static::$sendHeaders;
@@ -200,10 +213,11 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * BC setter for the sendHeaders property that has been made static
      */
-    public function __set($property, $value)
+    public function __set( $property, $value )
     {
-        if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+        if ( 'sendHeaders' !== $property )
+        {
+            throw new \InvalidArgumentException( 'Undefined property '.$property );
         }
 
         static::$sendHeaders = $value;

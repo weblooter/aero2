@@ -10,7 +10,7 @@ class Date extends Base
      */
     public function getEditFieldHtml()
     {
-        return CalendarDate($this->getCode(), htmlspecialcharsbx($this->getValue()), "post_form", "20");
+        return CalendarDate( $this->getCode(), htmlspecialcharsbx( $this->getValue() ), "post_form", "20" );
     }
 
     /**

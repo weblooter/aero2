@@ -12,11 +12,11 @@ class Select extends Base
     public function getEditFieldHtml()
     {
         $variants = [
-            "reference"    => array_values($this->variants),
-            "reference_id" => array_keys($this->variants),
+            "reference" => array_values( $this->variants ),
+            "reference_id" => array_keys( $this->variants ),
         ];
 
-        return SelectBoxFromArray($this->getCode(), $variants, $this->getValue(), "Не выбрано", "");
+        return SelectBoxFromArray( $this->getCode(), $variants, $this->getValue(), "Не выбрано", "" );
     }
 
     /**
@@ -26,9 +26,11 @@ class Select extends Base
     {
         $result = "";
 
-        if (!empty($this->getValue())) {
+        if ( !empty( $this->getValue() ) )
+        {
 
-            if(isset($this->variants[$this->getValue()])){
+            if ( isset( $this->variants[ $this->getValue() ] ) )
+            {
 
                 $result = "{$this->variants[$this->getValue()]}[{$this->getValue()}]";
             }
@@ -45,7 +47,7 @@ class Select extends Base
      *
      * @return $this
      */
-    public function setVariants(array $variants)
+    public function setVariants( array $variants )
     {
         $this->variants = $variants;
 

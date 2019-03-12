@@ -35,7 +35,7 @@ class Matrix2 extends Base
 									BX.create('input', {
 										props: {
 											type: 'text',
-											name: '" . $this->getCode() . "[' + (cntVariants + 1) + '][0]',
+											name: '".$this->getCode()."[' + (cntVariants + 1) + '][0]',
 											value: ''
 										}
 									})
@@ -46,7 +46,7 @@ class Matrix2 extends Base
 									BX.create('input', {
 										props: {
 											type: 'text',
-											name: '" . $this->getCode() . "[' + (cntVariants + 1) + '][1]',
+											name: '".$this->getCode()."[' + (cntVariants + 1) + '][1]',
 											value: ''
 										}
 									})
@@ -66,11 +66,13 @@ class Matrix2 extends Base
         $result .= "<table id='js_radio_variants'>";
 
         $lastKey = 0;
-        if (!empty($values)) {
-            foreach ($values as $key => $value) {
+        if ( !empty( $values ) )
+        {
+            foreach ( $values as $key => $value )
+            {
                 $result .= "<tr class='js-variant'>";
-                $result .= "<td><input type='text' name='" . $this->getCode() . "[" . $lastKey . "][0]' value='" . htmlspecialchars($value[0]) . "'/></td>";
-                $result .= "<td><input type='text' name='" . $this->getCode() . "[" . $lastKey . "][1]' value='" . htmlspecialchars($value[1]) . "'/></td>";
+                $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][0]' value='".htmlspecialchars( $value[ 0 ] )."'/></td>";
+                $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][1]' value='".htmlspecialchars( $value[ 1 ] )."'/></td>";
                 $result .= "</tr>";
 
                 $lastKey++;
@@ -78,8 +80,8 @@ class Matrix2 extends Base
         }
 
         $result .= "<tr class='js-variant'>";
-        $result .= "<td><input type='text' name='" . $this->getCode() . "[" . $lastKey . "][0]' value=''/></td>";
-        $result .= "<td><input type='text' name='" . $this->getCode() . "[" . $lastKey . "][1]' value=''/></td>";
+        $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][0]' value=''/></td>";
+        $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][1]' value=''/></td>";
         $result .= "</tr>";
 
         $result .= "</table>";
@@ -96,12 +98,14 @@ class Matrix2 extends Base
     {
         $result = "<table id='js_radio_variants'>";
 
-        if (!empty($this->getValue())) {
-            foreach($this->getValue() as $key => $value){
+        if ( !empty( $this->getValue() ) )
+        {
+            foreach ( $this->getValue() as $key => $value )
+            {
 
                 $result .= "<tr class='js-variant'>";
-                $result .= "<td>".strip_tags($key)."</td>";
-                $result .= "<td>".strip_tags($value)."</td>";
+                $result .= "<td>".strip_tags( $key )."</td>";
+                $result .= "<td>".strip_tags( $value )."</td>";
                 $result .= "</tr>";
             }
         }

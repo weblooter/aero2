@@ -9,11 +9,13 @@ class CLocalCore
      *
      * @throws \Bitrix\Main\Db\SqlQueryException
      */
-    public static function initDBTable($ormClassTable)
+    public static function initDBTable( $ormClassTable )
     {
-        $sqlString = str_replace(' NOT NULL ', ' ', $ormClassTable::getEntity()->compileDbTableStructureDump()[0] );
-        if( !empty( $sqlString ) )
+        $sqlString = str_replace( ' NOT NULL ', ' ', $ormClassTable::getEntity()->compileDbTableStructureDump()[ 0 ] );
+        if ( !empty( $sqlString ) )
+        {
             \Bitrix\Main\Application::getConnection()->query( $sqlString );
+        }
     }
 
     /**
@@ -23,11 +25,13 @@ class CLocalCore
      *
      * @throws \Bitrix\Main\Db\SqlQueryException
      */
-    public static function dropDBTable($ormClassTable)
+    public static function dropDBTable( $ormClassTable )
     {
         $sqlString = $ormClassTable::getTableName();
-        if( !empty( $sqlString ) )
+        if ( !empty( $sqlString ) )
+        {
             \Bitrix\Main\Application::getConnection()->dropTable( $sqlString );
+        }
     }
 
     /**
@@ -37,9 +41,9 @@ class CLocalCore
      *
      * @throws \Bitrix\Main\Db\SqlQueryException
      */
-    public static function resetDBTable($ormClassTable)
+    public static function resetDBTable( $ormClassTable )
     {
-        static::dropDBTable($ormClassTable);
-        static::initDBTable($ormClassTable);
+        static::dropDBTable( $ormClassTable );
+        static::initDBTable( $ormClassTable );
     }
 }

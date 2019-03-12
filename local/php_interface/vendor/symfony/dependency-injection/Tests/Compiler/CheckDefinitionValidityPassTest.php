@@ -23,9 +23,9 @@ class CheckDefinitionValidityPassTest extends TestCase
     public function testProcessDetectsSyntheticNonPublicDefinitions()
     {
         $container = new ContainerBuilder();
-        $container->register('a')->setSynthetic(true)->setPublic(false);
+        $container->register( 'a' )->setSynthetic( true )->setPublic( false );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     /**
@@ -34,35 +34,35 @@ class CheckDefinitionValidityPassTest extends TestCase
     public function testProcessDetectsNonSyntheticNonAbstractDefinitionWithoutClass()
     {
         $container = new ContainerBuilder();
-        $container->register('a')->setSynthetic(false)->setAbstract(false);
+        $container->register( 'a' )->setSynthetic( false )->setAbstract( false );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     public function testProcess()
     {
         $container = new ContainerBuilder();
-        $container->register('a', 'class');
-        $container->register('b', 'class')->setSynthetic(true)->setPublic(true);
-        $container->register('c', 'class')->setAbstract(true);
-        $container->register('d', 'class')->setSynthetic(true);
+        $container->register( 'a', 'class' );
+        $container->register( 'b', 'class' )->setSynthetic( true )->setPublic( true );
+        $container->register( 'c', 'class' )->setAbstract( true );
+        $container->register( 'd', 'class' )->setSynthetic( true );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->addToAssertionCount(1);
+        $this->addToAssertionCount( 1 );
     }
 
     public function testValidTags()
     {
         $container = new ContainerBuilder();
-        $container->register('a', 'class')->addTag('foo', ['bar' => 'baz']);
-        $container->register('b', 'class')->addTag('foo', ['bar' => null]);
-        $container->register('c', 'class')->addTag('foo', ['bar' => 1]);
-        $container->register('d', 'class')->addTag('foo', ['bar' => 1.1]);
+        $container->register( 'a', 'class' )->addTag( 'foo', ['bar' => 'baz'] );
+        $container->register( 'b', 'class' )->addTag( 'foo', ['bar' => null] );
+        $container->register( 'c', 'class' )->addTag( 'foo', ['bar' => 1] );
+        $container->register( 'd', 'class' )->addTag( 'foo', ['bar' => 1.1] );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->addToAssertionCount(1);
+        $this->addToAssertionCount( 1 );
     }
 
     /**
@@ -71,9 +71,9 @@ class CheckDefinitionValidityPassTest extends TestCase
     public function testInvalidTags()
     {
         $container = new ContainerBuilder();
-        $container->register('a', 'class')->addTag('foo', ['bar' => ['baz' => 'baz']]);
+        $container->register( 'a', 'class' )->addTag( 'foo', ['bar' => ['baz' => 'baz']] );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     /**
@@ -82,10 +82,10 @@ class CheckDefinitionValidityPassTest extends TestCase
     public function testDynamicPublicServiceName()
     {
         $container = new ContainerBuilder();
-        $env = $container->getParameterBag()->get('env(BAR)');
-        $container->register("foo.$env", 'class')->setPublic(true);
+        $env = $container->getParameterBag()->get( 'env(BAR)' );
+        $container->register( "foo.$env", 'class' )->setPublic( true );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     /**
@@ -94,27 +94,27 @@ class CheckDefinitionValidityPassTest extends TestCase
     public function testDynamicPublicAliasName()
     {
         $container = new ContainerBuilder();
-        $env = $container->getParameterBag()->get('env(BAR)');
-        $container->setAlias("foo.$env", 'class')->setPublic(true);
+        $env = $container->getParameterBag()->get( 'env(BAR)' );
+        $container->setAlias( "foo.$env", 'class' )->setPublic( true );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     public function testDynamicPrivateName()
     {
         $container = new ContainerBuilder();
-        $env = $container->getParameterBag()->get('env(BAR)');
-        $container->register("foo.$env", 'class');
-        $container->setAlias("bar.$env", 'class');
+        $env = $container->getParameterBag()->get( 'env(BAR)' );
+        $container->register( "foo.$env", 'class' );
+        $container->setAlias( "bar.$env", 'class' );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->addToAssertionCount(1);
+        $this->addToAssertionCount( 1 );
     }
 
-    protected function process(ContainerBuilder $container)
+    protected function process( ContainerBuilder $container )
     {
         $pass = new CheckDefinitionValidityPass();
-        $pass->process($container);
+        $pass->process( $container );
     }
 }

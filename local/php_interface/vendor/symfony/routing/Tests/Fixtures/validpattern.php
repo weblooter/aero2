@@ -4,7 +4,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 $collection = new RouteCollection();
-$collection->add('blog_show', new Route(
+$collection->add( 'blog_show', new Route(
     '/blog/{slug}',
     ['_controller' => 'MyBlogBundle:Blog:show'],
     ['locale' => '\w+'],
@@ -13,6 +13,6 @@ $collection->add('blog_show', new Route(
     ['https'],
     ['GET', 'POST', 'put', 'OpTiOnS'],
     'context.getMethod() == "GET"'
-));
+) );
 
 return $collection;

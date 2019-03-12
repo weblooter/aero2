@@ -25,26 +25,26 @@ class CheckReferenceValidityPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $container->register('a')->setAbstract(true);
-        $container->register('b')->addArgument(new Reference('a'));
+        $container->register( 'a' )->setAbstract( true );
+        $container->register( 'b' )->addArgument( new Reference( 'a' ) );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     public function testProcess()
     {
         $container = new ContainerBuilder();
-        $container->register('a')->addArgument(new Reference('b'));
-        $container->register('b');
+        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
+        $container->register( 'b' );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->addToAssertionCount(1);
+        $this->addToAssertionCount( 1 );
     }
 
-    protected function process(ContainerBuilder $container)
+    protected function process( ContainerBuilder $container )
     {
         $pass = new CheckReferenceValidityPass();
-        $pass->process($container);
+        $pass->process( $container );
     }
 }

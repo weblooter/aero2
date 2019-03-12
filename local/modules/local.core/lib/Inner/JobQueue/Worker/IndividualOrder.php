@@ -22,21 +22,26 @@ class IndividualOrder extends Inner\JobQueue\Abstracts\Worker implements Inner\I
         $result = new Main\Result();
         $arInputData = $this->getInputData();
 
-        $webFormId = (int)$arInputData['WEB_FORM_ID'];
-        $resultId = (int)$arInputData['RESULT_ID'];
+        $webFormId = (int)$arInputData[ 'WEB_FORM_ID' ];
+        $resultId = (int)$arInputData[ 'RESULT_ID' ];
 
-        if ($webFormId <= 0) {
-            throw new Inner\JobQueue\Exception\FailException('Не верный ID web формы');
+        if ( $webFormId <= 0 )
+        {
+            throw new Inner\JobQueue\Exception\FailException( 'Не верный ID web формы' );
         }
 
-        if ($resultId <= 0) {
-            throw new Inner\JobQueue\Exception\FailException('Не верный ID результата web формы');
+        if ( $resultId <= 0 )
+        {
+            throw new Inner\JobQueue\Exception\FailException( 'Не верный ID результата web формы' );
         }
 
-        try{
-            \Local\Core\Exchange\Onec\IndividualOrder::export($webFormId, $resultId);
-        } catch (\Exception $e){
-            throw new \Exception("При попытке выгрузки заявки на индивидуальный заказ [WEB_FORM_ID = $webFormId, RESULT_ID = $resultId] в 1С возникло исключение: ".$e->getMessage());
+        try
+        {
+            \Local\Core\Exchange\Onec\IndividualOrder::export( $webFormId, $resultId );
+        }
+        catch ( \Exception $e )
+        {
+            throw new \Exception( "При попытке выгрузки заявки на индивидуальный заказ [WEB_FORM_ID = $webFormId, RESULT_ID = $resultId] в 1С возникло исключение: ".$e->getMessage() );
         }
 
         return $result;

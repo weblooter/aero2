@@ -19,20 +19,21 @@ class ClosureLoaderTest extends TestCase
 {
     public function testSupports()
     {
-        $loader = new ClosureLoader(new ContainerBuilder());
+        $loader = new ClosureLoader( new ContainerBuilder() );
 
-        $this->assertTrue($loader->supports(function ($container) {}), '->supports() returns true if the resource is loadable');
-        $this->assertFalse($loader->supports('foo.foo'), '->supports() returns true if the resource is loadable');
+        $this->assertTrue( $loader->supports( function ( $container ) {
+        } ), '->supports() returns true if the resource is loadable' );
+        $this->assertFalse( $loader->supports( 'foo.foo' ), '->supports() returns true if the resource is loadable' );
     }
 
     public function testLoad()
     {
-        $loader = new ClosureLoader($container = new ContainerBuilder());
+        $loader = new ClosureLoader( $container = new ContainerBuilder() );
 
-        $loader->load(function ($container) {
-            $container->setParameter('foo', 'foo');
-        });
+        $loader->load( function ( $container ) {
+            $container->setParameter( 'foo', 'foo' );
+        } );
 
-        $this->assertEquals('foo', $container->getParameter('foo'), '->load() loads a \Closure resource');
+        $this->assertEquals( 'foo', $container->getParameter( 'foo' ), '->load() loads a \Closure resource' );
     }
 }

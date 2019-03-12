@@ -26,63 +26,61 @@ class TableTest extends TestCase
 
     protected function setUp()
     {
-        $this->stream = fopen('php://memory', 'r+');
+        $this->stream = fopen( 'php://memory', 'r+' );
     }
 
     protected function tearDown()
     {
-        fclose($this->stream);
+        fclose( $this->stream );
         $this->stream = null;
     }
 
     /**
      * @dataProvider renderProvider
      */
-    public function testRender($headers, $rows, $style, $expected, $decorated = false)
+    public function testRender( $headers, $rows, $style, $expected, $decorated = false )
     {
-        $table = new Table($output = $this->getOutputStream($decorated));
+        $table = new Table( $output = $this->getOutputStream( $decorated ) );
         $table
-            ->setHeaders($headers)
-            ->setRows($rows)
-            ->setStyle($style)
-        ;
+            ->setHeaders( $headers )
+            ->setRows( $rows )
+            ->setStyle( $style );
         $table->render();
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     /**
      * @dataProvider renderProvider
      */
-    public function testRenderAddRows($headers, $rows, $style, $expected, $decorated = false)
+    public function testRenderAddRows( $headers, $rows, $style, $expected, $decorated = false )
     {
-        $table = new Table($output = $this->getOutputStream($decorated));
+        $table = new Table( $output = $this->getOutputStream( $decorated ) );
         $table
-            ->setHeaders($headers)
-            ->addRows($rows)
-            ->setStyle($style)
-        ;
+            ->setHeaders( $headers )
+            ->addRows( $rows )
+            ->setStyle( $style );
         $table->render();
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     /**
      * @dataProvider renderProvider
      */
-    public function testRenderAddRowsOneByOne($headers, $rows, $style, $expected, $decorated = false)
+    public function testRenderAddRowsOneByOne( $headers, $rows, $style, $expected, $decorated = false )
     {
-        $table = new Table($output = $this->getOutputStream($decorated));
+        $table = new Table( $output = $this->getOutputStream( $decorated ) );
         $table
-            ->setHeaders($headers)
-            ->setStyle($style)
-        ;
-        foreach ($rows as $row) {
-            $table->addRow($row);
+            ->setHeaders( $headers )
+            ->setStyle( $style );
+        foreach ( $rows as $row )
+        {
+            $table->addRow( $row );
         }
         $table->render();
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function renderProvider()
@@ -99,7 +97,7 @@ class TableTest extends TestCase
                 ['ISBN', 'Title', 'Author'],
                 $books,
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---------------+--------------------------+------------------+
 | ISBN          | Title                    | Author           |
 +---------------+--------------------------+------------------+
@@ -115,7 +113,7 @@ TABLE
                 ['ISBN', 'Title', 'Author'],
                 $books,
                 'compact',
-<<<'TABLE'
+                <<<'TABLE'
  ISBN          Title                    Author           
  99921-58-10-7 Divine Comedy            Dante Alighieri  
  9971-5-0210-0 A Tale of Two Cities     Charles Dickens  
@@ -128,7 +126,7 @@ TABLE
                 ['ISBN', 'Title', 'Author'],
                 $books,
                 'borderless',
-<<<'TABLE'
+                <<<'TABLE'
  =============== ========================== ================== 
   ISBN            Title                      Author            
  =============== ========================== ================== 
@@ -188,7 +186,7 @@ TABLE
                     ['80-902734-1-6', 'And Then There Were None', 'Agatha Christie'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---------------+--------------------------+------------------+
 | ISBN          | Title                    |                  |
 +---------------+--------------------------+------------------+
@@ -209,7 +207,7 @@ TABLE
                     ['80-902734-1-6', 'And Then There Were None', 'Agatha Christie'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---------------+--------------------------+------------------+
 | 99921-58-10-7 | Divine Comedy            | Dante Alighieri  |
 | 9971-5-0210-0 |                          |                  |
@@ -228,7 +226,7 @@ TABLE
                     ['960-425-059-0', 'The Lord of the Rings', "J. R. R.\nTolkien"],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---------------+----------------------------+-----------------+
 | ISBN          | Title                      | Author          |
 +---------------+----------------------------+-----------------+
@@ -248,7 +246,7 @@ TABLE
                 ['ISBN', 'Title'],
                 [],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +------+-------+
 | ISBN | Title |
 +------+-------+
@@ -264,11 +262,15 @@ TABLE
             'Cell text with tags used for Output styling' => [
                 ['ISBN', 'Title', 'Author'],
                 [
-                    ['<info>99921-58-10-7</info>', '<error>Divine Comedy</error>', '<fg=blue;bg=white>Dante Alighieri</fg=blue;bg=white>'],
+                    [
+                        '<info>99921-58-10-7</info>',
+                        '<error>Divine Comedy</error>',
+                        '<fg=blue;bg=white>Dante Alighieri</fg=blue;bg=white>'
+                    ],
                     ['9971-5-0210-0', 'A Tale of Two Cities', '<info>Charles Dickens</>'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---------------+----------------------+-----------------+
 | ISBN          | Title                | Author          |
 +---------------+----------------------+-----------------+
@@ -285,7 +287,7 @@ TABLE
                     ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +----------------------------------+----------------------+-----------------+
 | ISBN                             | Title                | Author          |
 +----------------------------------+----------------------+-----------------+
@@ -300,24 +302,25 @@ TABLE
                 [
                     ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'],
                     new TableSeparator(),
-                    [new TableCell('Divine Comedy(Dante Alighieri)', ['colspan' => 3])],
+                    [new TableCell( 'Divine Comedy(Dante Alighieri)', ['colspan' => 3] )],
                     new TableSeparator(),
                     [
-                        new TableCell('Arduino: A Quick-Start Guide', ['colspan' => 2]),
+                        new TableCell( 'Arduino: A Quick-Start Guide', ['colspan' => 2] ),
                         'Mark Schmidt',
                     ],
                     new TableSeparator(),
                     [
                         '9971-5-0210-0',
-                        new TableCell("A Tale of \nTwo Cities", ['colspan' => 2]),
+                        new TableCell( "A Tale of \nTwo Cities", ['colspan' => 2] ),
                     ],
                     new TableSeparator(),
                     [
-                        new TableCell('Cupiditate dicta atque porro, tempora exercitationem modi animi nulla nemo vel nihil!', ['colspan' => 3]),
+                        new TableCell( 'Cupiditate dicta atque porro, tempora exercitationem modi animi nulla nemo vel nihil!',
+                            ['colspan' => 3] ),
                     ],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +-------------------------------+-------------------------------+-----------------------------+
 | ISBN                          | Title                         | Author                      |
 +-------------------------------+-------------------------------+-----------------------------+
@@ -339,18 +342,22 @@ TABLE
                 ['ISBN', 'Title', 'Author'],
                 [
                     [
-                        new TableCell('9971-5-0210-0', ['rowspan' => 3]),
-                        new TableCell('Divine Comedy', ['rowspan' => 2]),
+                        new TableCell( '9971-5-0210-0', ['rowspan' => 3] ),
+                        new TableCell( 'Divine Comedy', ['rowspan' => 2] ),
                         'Dante Alighieri',
                     ],
                     [],
                     ["The Lord of \nthe Rings", "J. R. \nR. Tolkien"],
                     new TableSeparator(),
-                    ['80-902734-1-6', new TableCell("And Then \nThere \nWere None", ['rowspan' => 3]), 'Agatha Christie'],
+                    [
+                        '80-902734-1-6',
+                        new TableCell( "And Then \nThere \nWere None", ['rowspan' => 3] ),
+                        'Agatha Christie'
+                    ],
                     ['80-902734-1-7', 'Test'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---------------+---------------+-----------------+
 | ISBN          | Title         | Author          |
 +---------------+---------------+-----------------+
@@ -370,20 +377,20 @@ TABLE
                 ['ISBN', 'Title', 'Author'],
                 [
                     [
-                        new TableCell('9971-5-0210-0', ['rowspan' => 2, 'colspan' => 2]),
+                        new TableCell( '9971-5-0210-0', ['rowspan' => 2, 'colspan' => 2] ),
                         'Dante Alighieri',
                     ],
                     ['Charles Dickens'],
                     new TableSeparator(),
                     [
                         'Dante Alighieri',
-                        new TableCell('9971-5-0210-0', ['rowspan' => 3, 'colspan' => 2]),
+                        new TableCell( '9971-5-0210-0', ['rowspan' => 3, 'colspan' => 2] ),
                     ],
                     ['J. R. R. Tolkien'],
                     ['J. R. R'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +------------------+---------+-----------------+
 | ISBN             | Title   | Author          |
 +------------------+---------+-----------------+
@@ -401,24 +408,24 @@ TABLE
                 ['ISBN', 'Title', 'Author'],
                 [
                     [
-                        new TableCell("9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2]),
+                        new TableCell( "9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2] ),
                         'Dante Alighieri',
                     ],
                     ['Charles Dickens'],
                     new TableSeparator(),
                     [
                         'Dante Alighieri',
-                        new TableCell("9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2]),
+                        new TableCell( "9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2] ),
                     ],
                     ['Charles Dickens'],
                     new TableSeparator(),
                     [
-                        new TableCell("9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2]),
-                        new TableCell("Dante \nAlighieri", ['rowspan' => 2, 'colspan' => 1]),
+                        new TableCell( "9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2] ),
+                        new TableCell( "Dante \nAlighieri", ['rowspan' => 2, 'colspan' => 1] ),
                     ],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +-----------------+-------+-----------------+
 | ISBN            | Title | Author          |
 +-----------------+-------+-----------------+
@@ -444,18 +451,18 @@ TABLE
                 ['ISBN', 'Title', 'Author'],
                 [
                     [
-                        new TableCell("9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2]),
+                        new TableCell( "9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2] ),
                         'Dante Alighieri',
                     ],
                     ['Charles Dickens'],
                     [
                         'Dante Alighieri',
-                        new TableCell("9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2]),
+                        new TableCell( "9971\n-5-\n021\n0-0", ['rowspan' => 2, 'colspan' => 2] ),
                     ],
                     ['Charles Dickens'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +-----------------+-------+-----------------+
 | ISBN            | Title | Author          |
 +-----------------+-------+-----------------+
@@ -475,14 +482,14 @@ TABLE
                 ['ISBN', 'Author'],
                 [
                     [
-                        new TableCell('9971-5-0210-0', ['rowspan' => 3, 'colspan' => 1]),
+                        new TableCell( '9971-5-0210-0', ['rowspan' => 3, 'colspan' => 1] ),
                         'Dante Alighieri',
                     ],
                     [new TableSeparator()],
                     ['Charles Dickens'],
                 ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---------------+-----------------+
 | ISBN          | Author          |
 +---------------+-----------------+
@@ -495,12 +502,12 @@ TABLE
             ],
             'Multiple header lines' => [
                 [
-                    [new TableCell('Main title', ['colspan' => 3])],
+                    [new TableCell( 'Main title', ['colspan' => 3] )],
                     ['ISBN', 'Title', 'Author'],
                 ],
                 [],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +------+-------+--------+
 | Main title            |
 +------+-------+--------+
@@ -513,14 +520,14 @@ TABLE
                 [],
                 [
                     [
-                        new TableCell('1', ['colspan' => 3]),
-                        new TableCell('2', ['colspan' => 2]),
-                        new TableCell('3', ['colspan' => 2]),
-                        new TableCell('4', ['colspan' => 2]),
+                        new TableCell( '1', ['colspan' => 3] ),
+                        new TableCell( '2', ['colspan' => 2] ),
+                        new TableCell( '3', ['colspan' => 2] ),
+                        new TableCell( '4', ['colspan' => 2] ),
                     ],
-        ],
+                ],
                 'default',
-<<<'TABLE'
+                <<<'TABLE'
 +---+--+--+---+--+---+--+---+--+
 | 1       | 2    | 3    | 4    |
 +---+--+--+---+--+---+--+---+--+
@@ -529,11 +536,11 @@ TABLE
             ],
             'Coslpan and table cells with comment style' => [
                 [
-                    new TableCell('<comment>Long Title</comment>', ['colspan' => 3]),
+                    new TableCell( '<comment>Long Title</comment>', ['colspan' => 3] ),
                 ],
                 [
                     [
-                        new TableCell('9971-5-0210-0', ['colspan' => 3]),
+                        new TableCell( '9971-5-0210-0', ['colspan' => 3] ),
                     ],
                     new TableSeparator(),
                     [
@@ -553,19 +560,19 @@ TABLE
 +-----------------+------------------+---------+
 
 TABLE
-            ,
+                ,
                 true,
             ],
             'Row with formatted cells containing a newline' => [
                 [],
                 [
                     [
-                        new TableCell('<error>Dont break'."\n".'here</error>', ['colspan' => 2]),
+                        new TableCell( '<error>Dont break'."\n".'here</error>', ['colspan' => 2] ),
                     ],
                     new TableSeparator(),
                     [
                         'foo',
-                         new TableCell('<error>Dont break'."\n".'here</error>', ['rowspan' => 2]),
+                        new TableCell( '<error>Dont break'."\n".'here</error>', ['rowspan' => 2] ),
                     ],
                     [
                         'bar',
@@ -582,7 +589,7 @@ TABLE
 +-------+------------+
 
 TABLE
-            ,
+                ,
                 true,
             ],
         ];
@@ -590,16 +597,15 @@ TABLE
 
     public function testRenderMultiByte()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
         $table
-            ->setHeaders(['■■'])
-            ->setRows([[1234]])
-            ->setStyle('default')
-        ;
+            ->setHeaders( ['■■'] )
+            ->setRows( [[1234]] )
+            ->setStyle( 'default' );
         $table->render();
 
         $expected =
-<<<'TABLE'
+            <<<'TABLE'
 +------+
 | ■■   |
 +------+
@@ -608,64 +614,63 @@ TABLE
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testTableCellWithNumericIntValue()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
 
-        $table->setRows([[new TableCell(12345)]]);
+        $table->setRows( [[new TableCell( 12345 )]] );
         $table->render();
 
         $expected =
-<<<'TABLE'
+            <<<'TABLE'
 +-------+
 | 12345 |
 +-------+
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testTableCellWithNumericFloatValue()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
 
-        $table->setRows([[new TableCell(12345.01)]]);
+        $table->setRows( [[new TableCell( 12345.01 )]] );
         $table->render();
 
         $expected =
-<<<'TABLE'
+            <<<'TABLE'
 +----------+
 | 12345.01 |
 +----------+
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testStyle()
     {
         $style = new TableStyle();
         $style
-            ->setHorizontalBorderChars('.')
-            ->setVerticalBorderChars('.')
-            ->setDefaultCrossingChar('.')
-        ;
+            ->setHorizontalBorderChars( '.' )
+            ->setVerticalBorderChars( '.' )
+            ->setDefaultCrossingChar( '.' );
 
-        Table::setStyleDefinition('dotfull', $style);
-        $table = new Table($output = $this->getOutputStream());
+        Table::setStyleDefinition( 'dotfull', $style );
+        $table = new Table( $output = $this->getOutputStream() );
         $table
-            ->setHeaders(['Foo'])
-            ->setRows([['Bar']])
-            ->setStyle('dotfull');
+            ->setHeaders( ['Foo'] )
+            ->setRows( [['Bar']] )
+            ->setStyle( 'dotfull' );
         $table->render();
 
         $expected =
-<<<'TABLE'
+            <<<'TABLE'
 .......
 . Foo .
 .......
@@ -674,25 +679,25 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testRowSeparator()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
         $table
-            ->setHeaders(['Foo'])
-            ->setRows([
+            ->setHeaders( ['Foo'] )
+            ->setRows( [
                 ['Bar1'],
                 new TableSeparator(),
                 ['Bar2'],
                 new TableSeparator(),
                 ['Bar3'],
-            ]);
+            ] );
         $table->render();
 
         $expected =
-<<<'TABLE'
+            <<<'TABLE'
 +------+
 | Foo  |
 +------+
@@ -705,23 +710,24 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
 
-        $this->assertEquals($table, $table->addRow(new TableSeparator()), 'fluent interface on addRow() with a single TableSeparator() works');
+        $this->assertEquals( $table, $table->addRow( new TableSeparator() ),
+            'fluent interface on addRow() with a single TableSeparator() works' );
     }
 
     public function testRenderMultiCalls()
     {
-        $table = new Table($output = $this->getOutputStream());
-        $table->setRows([
-            [new TableCell('foo', ['colspan' => 2])],
-        ]);
+        $table = new Table( $output = $this->getOutputStream() );
+        $table->setRows( [
+            [new TableCell( 'foo', ['colspan' => 2] )],
+        ] );
         $table->render();
         $table->render();
         $table->render();
 
         $expected =
-<<<TABLE
+            <<<TABLE
 +----+---+
 | foo    |
 +----+---+
@@ -734,22 +740,22 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testColumnStyle()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author', 'Price'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author', 'Price'] )
+            ->setRows( [
                 ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'],
                 ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'],
-            ]);
+            ] );
 
         $style = new TableStyle();
-        $style->setPadType(STR_PAD_LEFT);
-        $table->setColumnStyle(3, $style);
+        $style->setPadType( STR_PAD_LEFT );
+        $table->setColumnStyle( 3, $style );
 
         $table->render();
 
@@ -764,7 +770,7 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     /**
@@ -773,31 +779,31 @@ TABLE;
      */
     public function testThrowsWhenTheCellInAnArray()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author', 'Price'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author', 'Price'] )
+            ->setRows( [
                 ['99921-58-10-7', [], 'Dante Alighieri', '9.95'],
-            ]);
+            ] );
 
         $table->render();
     }
 
     public function testColumnWidth()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author', 'Price'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author', 'Price'] )
+            ->setRows( [
                 ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'],
                 ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'],
-            ])
-            ->setColumnWidth(0, 15)
-            ->setColumnWidth(3, 10);
+            ] )
+            ->setColumnWidth( 0, 15 )
+            ->setColumnWidth( 3, 10 );
 
         $style = new TableStyle();
-        $style->setPadType(STR_PAD_LEFT);
-        $table->setColumnStyle(3, $style);
+        $style->setPadType( STR_PAD_LEFT );
+        $table->setColumnStyle( 3, $style );
 
         $table->render();
 
@@ -812,23 +818,23 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testColumnWidths()
     {
-        $table = new Table($output = $this->getOutputStream());
+        $table = new Table( $output = $this->getOutputStream() );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author', 'Price'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author', 'Price'] )
+            ->setRows( [
                 ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'],
                 ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'],
-            ])
-            ->setColumnWidths([15, 0, -1, 10]);
+            ] )
+            ->setColumnWidths( [15, 0, -1, 10] );
 
         $style = new TableStyle();
-        $style->setPadType(STR_PAD_LEFT);
-        $table->setColumnStyle(3, $style);
+        $style->setPadType( STR_PAD_LEFT );
+        $table->setColumnStyle( 3, $style );
 
         $table->render();
 
@@ -843,24 +849,25 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testSectionOutput()
     {
         $sections = [];
-        $stream = $this->getOutputStream(true);
-        $output = new ConsoleSectionOutput($stream->getStream(), $sections, $stream->getVerbosity(), $stream->isDecorated(), new OutputFormatter());
-        $table = new Table($output);
+        $stream = $this->getOutputStream( true );
+        $output = new ConsoleSectionOutput( $stream->getStream(), $sections, $stream->getVerbosity(),
+            $stream->isDecorated(), new OutputFormatter() );
+        $table = new Table( $output );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author', 'Price'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author', 'Price'] )
+            ->setRows( [
                 ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'],
-            ]);
+            ] );
 
         $table->render();
 
-        $table->appendRow(['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25']);
+        $table->appendRow( ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'] );
 
         $expected =
             <<<TABLE
@@ -878,22 +885,23 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testSectionOutputDoesntClearIfTableIsntRendered()
     {
         $sections = [];
-        $stream = $this->getOutputStream(true);
-        $output = new ConsoleSectionOutput($stream->getStream(), $sections, $stream->getVerbosity(), $stream->isDecorated(), new OutputFormatter());
-        $table = new Table($output);
+        $stream = $this->getOutputStream( true );
+        $output = new ConsoleSectionOutput( $stream->getStream(), $sections, $stream->getVerbosity(),
+            $stream->isDecorated(), new OutputFormatter() );
+        $table = new Table( $output );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author', 'Price'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author', 'Price'] )
+            ->setRows( [
                 ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'],
-            ]);
+            ] );
 
-        $table->appendRow(['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25']);
+        $table->appendRow( ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'] );
 
         $expected =
             <<<TABLE
@@ -906,24 +914,25 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     public function testSectionOutputWithoutDecoration()
     {
         $sections = [];
         $stream = $this->getOutputStream();
-        $output = new ConsoleSectionOutput($stream->getStream(), $sections, $stream->getVerbosity(), $stream->isDecorated(), new OutputFormatter());
-        $table = new Table($output);
+        $output = new ConsoleSectionOutput( $stream->getStream(), $sections, $stream->getVerbosity(),
+            $stream->isDecorated(), new OutputFormatter() );
+        $table = new Table( $output );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author', 'Price'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author', 'Price'] )
+            ->setRows( [
                 ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri', '9.95'],
-            ]);
+            ] );
 
         $table->render();
 
-        $table->appendRow(['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25']);
+        $table->appendRow( ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'] );
 
         $expected =
             <<<TABLE
@@ -941,18 +950,20 @@ TABLE;
 
 TABLE;
 
-        $this->assertEquals($expected, $this->getOutputContent($output));
+        $this->assertEquals( $expected, $this->getOutputContent( $output ) );
     }
 
     /**
      * @expectedException \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Output should be an instance of "Symfony\Component\Console\Output\ConsoleSectionOutput" when calling "Symfony\Component\Console\Helper\Table::appendRow".
+     * @expectedExceptionMessage Output should be an instance of
+     *     "Symfony\Component\Console\Output\ConsoleSectionOutput" when calling
+     *     "Symfony\Component\Console\Helper\Table::appendRow".
      */
     public function testAppendRowWithoutSectionOutput()
     {
-        $table = new Table($this->getOutputStream());
+        $table = new Table( $this->getOutputStream() );
 
-        $table->appendRow(['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25']);
+        $table->appendRow( ['9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens', '139.25'] );
     }
 
     /**
@@ -961,8 +972,8 @@ TABLE;
      */
     public function testIsNotDefinedStyleException()
     {
-        $table = new Table($this->getOutputStream());
-        $table->setStyle('absent');
+        $table = new Table( $this->getOutputStream() );
+        $table->setStyle( 'absent' );
     }
 
     /**
@@ -971,28 +982,26 @@ TABLE;
      */
     public function testGetStyleDefinition()
     {
-        Table::getStyleDefinition('absent');
+        Table::getStyleDefinition( 'absent' );
     }
 
     public function testBoxedStyleWithColspan()
     {
         $boxed = new TableStyle();
         $boxed
-            ->setHorizontalBorderChars('─')
-            ->setVerticalBorderChars('│')
-            ->setCrossingChars('┼', '┌', '┬', '┐', '┤', '┘', '┴', '└', '├')
-        ;
+            ->setHorizontalBorderChars( '─' )
+            ->setVerticalBorderChars( '│' )
+            ->setCrossingChars( '┼', '┌', '┬', '┐', '┤', '┘', '┴', '└', '├' );
 
-        $table = new Table($output = $this->getOutputStream());
-        $table->setStyle($boxed);
+        $table = new Table( $output = $this->getOutputStream() );
+        $table->setStyle( $boxed );
         $table
-            ->setHeaders(['ISBN', 'Title', 'Author'])
-            ->setRows([
+            ->setHeaders( ['ISBN', 'Title', 'Author'] )
+            ->setRows( [
                 ['99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'],
                 new TableSeparator(),
-                [new TableCell('This value spans 3 columns.', ['colspan' => 3])],
-            ])
-        ;
+                [new TableCell( 'This value spans 3 columns.', ['colspan' => 3] )],
+            ] );
         $table->render();
 
         $expected =
@@ -1007,18 +1016,18 @@ TABLE;
 
 TABLE;
 
-        $this->assertSame($expected, $this->getOutputContent($output));
+        $this->assertSame( $expected, $this->getOutputContent( $output ) );
     }
 
-    protected function getOutputStream($decorated = false)
+    protected function getOutputStream( $decorated = false )
     {
-        return new StreamOutput($this->stream, StreamOutput::VERBOSITY_NORMAL, $decorated);
+        return new StreamOutput( $this->stream, StreamOutput::VERBOSITY_NORMAL, $decorated );
     }
 
-    protected function getOutputContent(StreamOutput $output)
+    protected function getOutputContent( StreamOutput $output )
     {
-        rewind($output->getStream());
+        rewind( $output->getStream() );
 
-        return str_replace(PHP_EOL, "\n", stream_get_contents($output->getStream()));
+        return str_replace( PHP_EOL, "\n", stream_get_contents( $output->getStream() ) );
     }
 }

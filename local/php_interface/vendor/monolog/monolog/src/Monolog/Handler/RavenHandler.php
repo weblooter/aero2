@@ -28,13 +28,13 @@ class RavenHandler extends AbstractProcessingHandler
      * Translates Monolog log levels to Raven log levels.
      */
     protected $logLevels = array(
-        Logger::DEBUG     => Raven_Client::DEBUG,
-        Logger::INFO      => Raven_Client::INFO,
-        Logger::NOTICE    => Raven_Client::INFO,
-        Logger::WARNING   => Raven_Client::WARNING,
-        Logger::ERROR     => Raven_Client::ERROR,
-        Logger::CRITICAL  => Raven_Client::FATAL,
-        Logger::ALERT     => Raven_Client::FATAL,
+        Logger::DEBUG => Raven_Client::DEBUG,
+        Logger::INFO => Raven_Client::INFO,
+        Logger::NOTICE => Raven_Client::INFO,
+        Logger::WARNING => Raven_Client::WARNING,
+        Logger::ERROR => Raven_Client::ERROR,
+        Logger::CRITICAL => Raven_Client::FATAL,
+        Logger::ALERT => Raven_Client::FATAL,
         Logger::EMERGENCY => Raven_Client::FATAL,
     );
 
@@ -56,12 +56,12 @@ class RavenHandler extends AbstractProcessingHandler
 
     /**
      * @param Raven_Client $ravenClient
-     * @param int          $level       The minimum logging level at which this handler will be triggered
-     * @param bool         $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param int          $level The minimum logging level at which this handler will be triggered
+     * @param bool         $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
+    public function __construct( Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true )
     {
-        parent::__construct($level, $bubble);
+        parent::__construct( $level, $bubble );
 
         $this->ravenClient = $ravenClient;
     }
@@ -69,39 +69,43 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch( array $records )
     {
         $level = $this->level;
 
         // filter records based on their level
-        $records = array_filter($records, function ($record) use ($level) {
-            return $record['level'] >= $level;
-        });
+        $records = array_filter( $records, function ( $record ) use ( $level ) {
+            return $record[ 'level' ] >= $level;
+        } );
 
-        if (!$records) {
+        if ( !$records )
+        {
             return;
         }
 
         // the record with the highest severity is the "main" one
-        $record = array_reduce($records, function ($highest, $record) {
-            if ($record['level'] > $highest['level']) {
+        $record = array_reduce( $records, function ( $highest, $record ) {
+            if ( $record[ 'level' ] > $highest[ 'level' ] )
+            {
                 return $record;
             }
 
             return $highest;
-        });
+        } );
 
         // the other ones are added as a context item
         $logs = array();
-        foreach ($records as $r) {
-            $logs[] = $this->processRecord($r);
+        foreach ( $records as $r )
+        {
+            $logs[] = $this->processRecord( $r );
         }
 
-        if ($logs) {
-            $record['context']['logs'] = (string) $this->getBatchFormatter()->formatBatch($logs);
+        if ( $logs )
+        {
+            $record[ 'context' ][ 'logs' ] = (string)$this->getBatchFormatter()->formatBatch( $logs );
         }
 
-        $this->handle($record);
+        $this->handle( $record );
     }
 
     /**
@@ -109,7 +113,7 @@ class RavenHandler extends AbstractProcessingHandler
      *
      * @param FormatterInterface $formatter
      */
-    public function setBatchFormatter(FormatterInterface $formatter)
+    public function setBatchFormatter( FormatterInterface $formatter )
     {
         $this->batchFormatter = $formatter;
     }
@@ -121,7 +125,8 @@ class RavenHandler extends AbstractProcessingHandler
      */
     public function getBatchFormatter()
     {
-        if (!$this->batchFormatter) {
+        if ( !$this->batchFormatter )
+        {
             $this->batchFormatter = $this->getDefaultBatchFormatter();
         }
 
@@ -131,63 +136,80 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
         $previousUserContext = false;
         $options = array();
-        $options['level'] = $this->logLevels[$record['level']];
-        $options['tags'] = array();
-        if (!empty($record['extra']['tags'])) {
-            $options['tags'] = array_merge($options['tags'], $record['extra']['tags']);
-            unset($record['extra']['tags']);
+        $options[ 'level' ] = $this->logLevels[ $record[ 'level' ] ];
+        $options[ 'tags' ] = array();
+        if ( !empty( $record[ 'extra' ][ 'tags' ] ) )
+        {
+            $options[ 'tags' ] = array_merge( $options[ 'tags' ], $record[ 'extra' ][ 'tags' ] );
+            unset( $record[ 'extra' ][ 'tags' ] );
         }
-        if (!empty($record['context']['tags'])) {
-            $options['tags'] = array_merge($options['tags'], $record['context']['tags']);
-            unset($record['context']['tags']);
+        if ( !empty( $record[ 'context' ][ 'tags' ] ) )
+        {
+            $options[ 'tags' ] = array_merge( $options[ 'tags' ], $record[ 'context' ][ 'tags' ] );
+            unset( $record[ 'context' ][ 'tags' ] );
         }
-        if (!empty($record['context']['fingerprint'])) {
-            $options['fingerprint'] = $record['context']['fingerprint'];
-            unset($record['context']['fingerprint']);
+        if ( !empty( $record[ 'context' ][ 'fingerprint' ] ) )
+        {
+            $options[ 'fingerprint' ] = $record[ 'context' ][ 'fingerprint' ];
+            unset( $record[ 'context' ][ 'fingerprint' ] );
         }
-        if (!empty($record['context']['logger'])) {
-            $options['logger'] = $record['context']['logger'];
-            unset($record['context']['logger']);
-        } else {
-            $options['logger'] = $record['channel'];
+        if ( !empty( $record[ 'context' ][ 'logger' ] ) )
+        {
+            $options[ 'logger' ] = $record[ 'context' ][ 'logger' ];
+            unset( $record[ 'context' ][ 'logger' ] );
         }
-        foreach ($this->getExtraParameters() as $key) {
-            foreach (array('extra', 'context') as $source) {
-                if (!empty($record[$source][$key])) {
-                    $options[$key] = $record[$source][$key];
-                    unset($record[$source][$key]);
+        else
+        {
+            $options[ 'logger' ] = $record[ 'channel' ];
+        }
+        foreach ( $this->getExtraParameters() as $key )
+        {
+            foreach ( array('extra', 'context') as $source )
+            {
+                if ( !empty( $record[ $source ][ $key ] ) )
+                {
+                    $options[ $key ] = $record[ $source ][ $key ];
+                    unset( $record[ $source ][ $key ] );
                 }
             }
         }
-        if (!empty($record['context'])) {
-            $options['extra']['context'] = $record['context'];
-            if (!empty($record['context']['user'])) {
+        if ( !empty( $record[ 'context' ] ) )
+        {
+            $options[ 'extra' ][ 'context' ] = $record[ 'context' ];
+            if ( !empty( $record[ 'context' ][ 'user' ] ) )
+            {
                 $previousUserContext = $this->ravenClient->context->user;
-                $this->ravenClient->user_context($record['context']['user']);
-                unset($options['extra']['context']['user']);
+                $this->ravenClient->user_context( $record[ 'context' ][ 'user' ] );
+                unset( $options[ 'extra' ][ 'context' ][ 'user' ] );
             }
         }
-        if (!empty($record['extra'])) {
-            $options['extra']['extra'] = $record['extra'];
+        if ( !empty( $record[ 'extra' ] ) )
+        {
+            $options[ 'extra' ][ 'extra' ] = $record[ 'extra' ];
         }
 
-        if (!empty($this->release) && !isset($options['release'])) {
-            $options['release'] = $this->release;
+        if ( !empty( $this->release ) && !isset( $options[ 'release' ] ) )
+        {
+            $options[ 'release' ] = $this->release;
         }
 
-        if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || (PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable))) {
-            $options['message'] = $record['formatted'];
-            $this->ravenClient->captureException($record['context']['exception'], $options);
-        } else {
-            $this->ravenClient->captureMessage($record['formatted'], array(), $options);
+        if ( isset( $record[ 'context' ][ 'exception' ] ) && ( $record[ 'context' ][ 'exception' ] instanceof \Exception || ( PHP_VERSION_ID >= 70000 && $record[ 'context' ][ 'exception' ] instanceof \Throwable ) ) )
+        {
+            $options[ 'message' ] = $record[ 'formatted' ];
+            $this->ravenClient->captureException( $record[ 'context' ][ 'exception' ], $options );
+        }
+        else
+        {
+            $this->ravenClient->captureMessage( $record[ 'formatted' ], array(), $options );
         }
 
-        if ($previousUserContext !== false) {
-            $this->ravenClient->user_context($previousUserContext);
+        if ( $previousUserContext !== false )
+        {
+            $this->ravenClient->user_context( $previousUserContext );
         }
     }
 
@@ -196,7 +218,7 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new LineFormatter('[%channel%] %message%');
+        return new LineFormatter( '[%channel%] %message%' );
     }
 
     /**
@@ -221,9 +243,10 @@ class RavenHandler extends AbstractProcessingHandler
 
     /**
      * @param string $value
+     *
      * @return self
      */
-    public function setRelease($value)
+    public function setRelease( $value )
     {
         $this->release = $value;
 

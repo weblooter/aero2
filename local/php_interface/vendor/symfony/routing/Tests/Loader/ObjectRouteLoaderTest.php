@@ -20,7 +20,8 @@ class ObjectRouteLoaderTest extends TestCase
 {
     /**
      * @group legacy
-     * @expectedDeprecation Referencing service route loaders with a single colon is deprecated since Symfony 4.1. Use my_route_provider_service::loadRoutes instead.
+     * @expectedDeprecation Referencing service route loaders with a single colon is deprecated since Symfony 4.1. Use
+     *     my_route_provider_service::loadRoutes instead.
      */
     public function testLoadCallsServiceAndReturnsCollectionWithLegacyNotation()
     {
@@ -28,10 +29,10 @@ class ObjectRouteLoaderTest extends TestCase
 
         // create a basic collection that will be returned
         $collection = new RouteCollection();
-        $collection->add('foo', new Route('/foo'));
+        $collection->add( 'foo', new Route( '/foo' ) );
 
         $loader->loaderMap = [
-            'my_route_provider_service' => new RouteService($collection),
+            'my_route_provider_service' => new RouteService( $collection ),
         ];
 
         $actualRoutes = $loader->load(
@@ -39,9 +40,9 @@ class ObjectRouteLoaderTest extends TestCase
             'service'
         );
 
-        $this->assertSame($collection, $actualRoutes);
+        $this->assertSame( $collection, $actualRoutes );
         // the service file should be listed as a resource
-        $this->assertNotEmpty($actualRoutes->getResources());
+        $this->assertNotEmpty( $actualRoutes->getResources() );
     }
 
     public function testLoadCallsServiceAndReturnsCollection()
@@ -50,10 +51,10 @@ class ObjectRouteLoaderTest extends TestCase
 
         // create a basic collection that will be returned
         $collection = new RouteCollection();
-        $collection->add('foo', new Route('/foo'));
+        $collection->add( 'foo', new Route( '/foo' ) );
 
         $loader->loaderMap = [
-            'my_route_provider_service' => new RouteService($collection),
+            'my_route_provider_service' => new RouteService( $collection ),
         ];
 
         $actualRoutes = $loader->load(
@@ -61,19 +62,19 @@ class ObjectRouteLoaderTest extends TestCase
             'service'
         );
 
-        $this->assertSame($collection, $actualRoutes);
+        $this->assertSame( $collection, $actualRoutes );
         // the service file should be listed as a resource
-        $this->assertNotEmpty($actualRoutes->getResources());
+        $this->assertNotEmpty( $actualRoutes->getResources() );
     }
 
     /**
      * @expectedException \InvalidArgumentException
      * @dataProvider getBadResourceStrings
      */
-    public function testExceptionWithoutSyntax($resourceString)
+    public function testExceptionWithoutSyntax( $resourceString )
     {
         $loader = new ObjectRouteLoaderForTest();
-        $loader->load($resourceString);
+        $loader->load( $resourceString );
     }
 
     public function getBadResourceStrings()
@@ -91,7 +92,7 @@ class ObjectRouteLoaderTest extends TestCase
     {
         $loader = new ObjectRouteLoaderForTest();
         $loader->loaderMap = ['my_service' => 'NOT_AN_OBJECT'];
-        $loader->load('my_service::method');
+        $loader->load( 'my_service::method' );
     }
 
     /**
@@ -101,7 +102,7 @@ class ObjectRouteLoaderTest extends TestCase
     {
         $loader = new ObjectRouteLoaderForTest();
         $loader->loaderMap = ['my_service' => new \stdClass()];
-        $loader->load('my_service::method');
+        $loader->load( 'my_service::method' );
     }
 
     /**
@@ -109,16 +110,16 @@ class ObjectRouteLoaderTest extends TestCase
      */
     public function testExceptionOnMethodNotReturningCollection()
     {
-        $service = $this->getMockBuilder('stdClass')
-            ->setMethods(['loadRoutes'])
+        $service = $this->getMockBuilder( 'stdClass' )
+            ->setMethods( ['loadRoutes'] )
             ->getMock();
-        $service->expects($this->once())
-            ->method('loadRoutes')
-            ->will($this->returnValue('NOT_A_COLLECTION'));
+        $service->expects( $this->once() )
+            ->method( 'loadRoutes' )
+            ->will( $this->returnValue( 'NOT_A_COLLECTION' ) );
 
         $loader = new ObjectRouteLoaderForTest();
         $loader->loaderMap = ['my_service' => $service];
-        $loader->load('my_service::loadRoutes');
+        $loader->load( 'my_service::loadRoutes' );
     }
 }
 
@@ -126,9 +127,9 @@ class ObjectRouteLoaderForTest extends ObjectRouteLoader
 {
     public $loaderMap = [];
 
-    protected function getServiceObject($id)
+    protected function getServiceObject( $id )
     {
-        return isset($this->loaderMap[$id]) ? $this->loaderMap[$id] : null;
+        return isset( $this->loaderMap[ $id ] ) ? $this->loaderMap[ $id ] : null;
     }
 }
 
@@ -136,7 +137,7 @@ class RouteService
 {
     private $collection;
 
-    public function __construct($collection)
+    public function __construct( $collection )
     {
         $this->collection = $collection;
     }

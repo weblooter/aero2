@@ -25,14 +25,16 @@ class ResolveReferencesToAliasesPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process( ContainerBuilder $container )
     {
-        parent::process($container);
+        parent::process( $container );
 
-        foreach ($container->getAliases() as $id => $alias) {
-            $aliasId = (string) $alias;
-            if ($aliasId !== $defId = $this->getDefinitionId($aliasId, $container)) {
-                $container->setAlias($id, $defId)->setPublic($alias->isPublic())->setPrivate($alias->isPrivate());
+        foreach ( $container->getAliases() as $id => $alias )
+        {
+            $aliasId = (string)$alias;
+            if ( $aliasId !== $defId = $this->getDefinitionId( $aliasId, $container ) )
+            {
+                $container->setAlias( $id, $defId )->setPublic( $alias->isPublic() )->setPrivate( $alias->isPrivate() );
             }
         }
     }
@@ -40,28 +42,32 @@ class ResolveReferencesToAliasesPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    protected function processValue($value, $isRoot = false)
+    protected function processValue( $value, $isRoot = false )
     {
-        if ($value instanceof Reference) {
-            $defId = $this->getDefinitionId($id = (string) $value, $this->container);
+        if ( $value instanceof Reference )
+        {
+            $defId = $this->getDefinitionId( $id = (string)$value, $this->container );
 
-            if ($defId !== $id) {
-                return new Reference($defId, $value->getInvalidBehavior());
+            if ( $defId !== $id )
+            {
+                return new Reference( $defId, $value->getInvalidBehavior() );
             }
         }
 
-        return parent::processValue($value);
+        return parent::processValue( $value );
     }
 
-    private function getDefinitionId(string $id, ContainerBuilder $container): string
+    private function getDefinitionId( string $id, ContainerBuilder $container ): string
     {
         $seen = [];
-        while ($container->hasAlias($id)) {
-            if (isset($seen[$id])) {
-                throw new ServiceCircularReferenceException($id, array_merge(array_keys($seen), [$id]));
+        while ( $container->hasAlias( $id ) )
+        {
+            if ( isset( $seen[ $id ] ) )
+            {
+                throw new ServiceCircularReferenceException( $id, array_merge( array_keys( $seen ), [$id] ) );
             }
-            $seen[$id] = true;
-            $id = (string) $container->getAlias($id);
+            $seen[ $id ] = true;
+            $id = (string)$container->getAlias( $id );
         }
 
         return $id;

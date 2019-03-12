@@ -22,8 +22,9 @@ class FrozenParameterBagTest extends TestCase
             'foo' => 'foo',
             'bar' => 'bar',
         ];
-        $bag = new FrozenParameterBag($parameters);
-        $this->assertEquals($parameters, $bag->all(), '__construct() takes an array of parameters as its first argument');
+        $bag = new FrozenParameterBag( $parameters );
+        $this->assertEquals( $parameters, $bag->all(),
+            '__construct() takes an array of parameters as its first argument' );
     }
 
     /**
@@ -31,7 +32,7 @@ class FrozenParameterBagTest extends TestCase
      */
     public function testClear()
     {
-        $bag = new FrozenParameterBag([]);
+        $bag = new FrozenParameterBag( [] );
         $bag->clear();
     }
 
@@ -40,8 +41,8 @@ class FrozenParameterBagTest extends TestCase
      */
     public function testSet()
     {
-        $bag = new FrozenParameterBag([]);
-        $bag->set('foo', 'bar');
+        $bag = new FrozenParameterBag( [] );
+        $bag->set( 'foo', 'bar' );
     }
 
     /**
@@ -49,8 +50,8 @@ class FrozenParameterBagTest extends TestCase
      */
     public function testAdd()
     {
-        $bag = new FrozenParameterBag([]);
-        $bag->add([]);
+        $bag = new FrozenParameterBag( [] );
+        $bag->add( [] );
     }
 
     /**
@@ -58,7 +59,7 @@ class FrozenParameterBagTest extends TestCase
      */
     public function testRemove()
     {
-        $bag = new FrozenParameterBag(['foo' => 'bar']);
-        $bag->remove('foo');
+        $bag = new FrozenParameterBag( ['foo' => 'bar'] );
+        $bag->remove( 'foo' );
     }
 }

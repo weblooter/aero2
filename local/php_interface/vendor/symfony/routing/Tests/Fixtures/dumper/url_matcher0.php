@@ -10,27 +10,29 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
-    public function __construct(RequestContext $context)
+    public function __construct( RequestContext $context )
     {
         $this->context = $context;
     }
 
-    public function match($pathinfo)
+    public function match( $pathinfo )
     {
         $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode($pathinfo) ?: '/';
-        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
+        $pathinfo = rawurldecode( $pathinfo ) ? : '/';
+        $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
-        if ('HEAD' === $requestMethod) {
+        if ( 'HEAD' === $requestMethod )
+        {
             $canonicalMethod = 'GET';
         }
 
-        if ('/' === $pathinfo && !$allow && !$allowSchemes) {
+        if ( '/' === $pathinfo && !$allow && !$allowSchemes )
+        {
             throw new Symfony\Component\Routing\Exception\NoConfigurationException();
         }
 
-        throw $allow ? new MethodNotAllowedException(array_keys($allow)) : new ResourceNotFoundException();
+        throw $allow ? new MethodNotAllowedException( array_keys( $allow ) ) : new ResourceNotFoundException();
     }
 }

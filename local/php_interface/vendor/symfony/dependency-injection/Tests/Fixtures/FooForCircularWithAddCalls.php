@@ -13,7 +13,7 @@ namespace Symfony\Component\DependencyInjection\Tests\Fixtures;
 
 class FooForCircularWithAddCalls
 {
-    public function call(\stdClass $argument)
+    public function call( \stdClass $argument )
     {
     }
 }

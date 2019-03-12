@@ -22,13 +22,13 @@ class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
     private $actionLevel;
 
-    public function __construct($actionLevel)
+    public function __construct( $actionLevel )
     {
-        $this->actionLevel = Logger::toMonologLevel($actionLevel);
+        $this->actionLevel = Logger::toMonologLevel( $actionLevel );
     }
 
-    public function isHandlerActivated(array $record)
+    public function isHandlerActivated( array $record )
     {
-        return $record['level'] >= $this->actionLevel;
+        return $record[ 'level' ] >= $this->actionLevel;
     }
 }

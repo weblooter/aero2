@@ -34,7 +34,7 @@ class ContainerConfigurator extends AbstractConfigurator
     private $file;
     private $anonymousCount = 0;
 
-    public function __construct(ContainerBuilder $container, PhpFileLoader $loader, array &$instanceof, string $path, string $file)
+    public function __construct( ContainerBuilder $container, PhpFileLoader $loader, array &$instanceof, string $path, string $file )
     {
         $this->container = $container;
         $this->loader = $loader;
@@ -43,53 +43,57 @@ class ContainerConfigurator extends AbstractConfigurator
         $this->file = $file;
     }
 
-    final public function extension(string $namespace, array $config)
+    final public function extension( string $namespace, array $config )
     {
-        if (!$this->container->hasExtension($namespace)) {
-            $extensions = array_filter(array_map(function (ExtensionInterface $ext) { return $ext->getAlias(); }, $this->container->getExtensions()));
-            throw new InvalidArgumentException(sprintf(
+        if ( !$this->container->hasExtension( $namespace ) )
+        {
+            $extensions = array_filter( array_map( function ( ExtensionInterface $ext ) {
+                return $ext->getAlias();
+            }, $this->container->getExtensions() ) );
+            throw new InvalidArgumentException( sprintf(
                 'There is no extension able to load the configuration for "%s" (in %s). Looked for namespace "%s", found %s',
                 $namespace,
                 $this->file,
                 $namespace,
-                $extensions ? sprintf('"%s"', implode('", "', $extensions)) : 'none'
-            ));
+                $extensions ? sprintf( '"%s"', implode( '", "', $extensions ) ) : 'none'
+            ) );
         }
 
-        $this->container->loadFromExtension($namespace, static::processValue($config));
+        $this->container->loadFromExtension( $namespace, static::processValue( $config ) );
     }
 
-    final public function import(string $resource, string $type = null, bool $ignoreErrors = false)
+    final public function import( string $resource, string $type = null, bool $ignoreErrors = false )
     {
-        $this->loader->setCurrentDir(\dirname($this->path));
-        $this->loader->import($resource, $type, $ignoreErrors, $this->file);
+        $this->loader->setCurrentDir( \dirname( $this->path ) );
+        $this->loader->import( $resource, $type, $ignoreErrors, $this->file );
     }
 
     final public function parameters(): ParametersConfigurator
     {
-        return new ParametersConfigurator($this->container);
+        return new ParametersConfigurator( $this->container );
     }
 
     final public function services(): ServicesConfigurator
     {
-        return new ServicesConfigurator($this->container, $this->loader, $this->instanceof, $this->path, $this->anonymousCount);
+        return new ServicesConfigurator( $this->container, $this->loader, $this->instanceof, $this->path,
+            $this->anonymousCount );
     }
 }
 
 /**
  * Creates a service reference.
  */
-function ref(string $id): ReferenceConfigurator
+function ref( string $id ): ReferenceConfigurator
 {
-    return new ReferenceConfigurator($id);
+    return new ReferenceConfigurator( $id );
 }
 
 /**
  * Creates an inline service.
  */
-function inline(string $class = null): InlineServiceConfigurator
+function inline( string $class = null ): InlineServiceConfigurator
 {
-    return new InlineServiceConfigurator(new Definition($class));
+    return new InlineServiceConfigurator( new Definition( $class ) );
 }
 
 /**
@@ -97,23 +101,23 @@ function inline(string $class = null): InlineServiceConfigurator
  *
  * @param ReferenceConfigurator[] $values
  */
-function iterator(array $values): IteratorArgument
+function iterator( array $values ): IteratorArgument
 {
-    return new IteratorArgument(AbstractConfigurator::processValue($values, true));
+    return new IteratorArgument( AbstractConfigurator::processValue( $values, true ) );
 }
 
 /**
  * Creates a lazy iterator by tag name.
  */
-function tagged(string $tag): TaggedIteratorArgument
+function tagged( string $tag ): TaggedIteratorArgument
 {
-    return new TaggedIteratorArgument($tag);
+    return new TaggedIteratorArgument( $tag );
 }
 
 /**
  * Creates an expression.
  */
-function expr(string $expression): Expression
+function expr( string $expression ): Expression
 {
-    return new Expression($expression);
+    return new Expression( $expression );
 }

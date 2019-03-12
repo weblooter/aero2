@@ -40,9 +40,10 @@ class HandlerWrapper implements HandlerInterface, ResettableInterface
 
     /**
      * HandlerWrapper constructor.
+     *
      * @param HandlerInterface $handler
      */
-    public function __construct(HandlerInterface $handler)
+    public function __construct( HandlerInterface $handler )
     {
         $this->handler = $handler;
     }
@@ -50,33 +51,33 @@ class HandlerWrapper implements HandlerInterface, ResettableInterface
     /**
      * {@inheritdoc}
      */
-    public function isHandling(array $record)
+    public function isHandling( array $record )
     {
-        return $this->handler->isHandling($record);
+        return $this->handler->isHandling( $record );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle( array $record )
     {
-        return $this->handler->handle($record);
+        return $this->handler->handle( $record );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch( array $records )
     {
-        return $this->handler->handleBatch($records);
+        return $this->handler->handleBatch( $records );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function pushProcessor($callback)
+    public function pushProcessor( $callback )
     {
-        $this->handler->pushProcessor($callback);
+        $this->handler->pushProcessor( $callback );
 
         return $this;
     }
@@ -92,9 +93,9 @@ class HandlerWrapper implements HandlerInterface, ResettableInterface
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter( FormatterInterface $formatter )
     {
-        $this->handler->setFormatter($formatter);
+        $this->handler->setFormatter( $formatter );
 
         return $this;
     }
@@ -109,7 +110,8 @@ class HandlerWrapper implements HandlerInterface, ResettableInterface
 
     public function reset()
     {
-        if ($this->handler instanceof ResettableInterface) {
+        if ( $this->handler instanceof ResettableInterface )
+        {
             return $this->handler->reset();
         }
     }

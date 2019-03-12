@@ -18,19 +18,20 @@ class DoctrineCouchDBHandlerTest extends TestCase
 {
     protected function setup()
     {
-        if (!class_exists('Doctrine\CouchDB\CouchDBClient')) {
-            $this->markTestSkipped('The "doctrine/couchdb" package is not installed');
+        if ( !class_exists( 'Doctrine\CouchDB\CouchDBClient' ) )
+        {
+            $this->markTestSkipped( 'The "doctrine/couchdb" package is not installed' );
         }
     }
 
     public function testHandle()
     {
-        $client = $this->getMockBuilder('Doctrine\\CouchDB\\CouchDBClient')
-            ->setMethods(array('postDocument'))
+        $client = $this->getMockBuilder( 'Doctrine\\CouchDB\\CouchDBClient' )
+            ->setMethods( array('postDocument') )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+        $record = $this->getRecord( Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34) );
 
         $expected = array(
             'message' => 'test',
@@ -38,15 +39,15 @@ class DoctrineCouchDBHandlerTest extends TestCase
             'level' => Logger::WARNING,
             'level_name' => 'WARNING',
             'channel' => 'test',
-            'datetime' => $record['datetime']->format('Y-m-d H:i:s'),
+            'datetime' => $record[ 'datetime' ]->format( 'Y-m-d H:i:s' ),
             'extra' => array(),
         );
 
-        $client->expects($this->once())
-            ->method('postDocument')
-            ->with($expected);
+        $client->expects( $this->once() )
+            ->method( 'postDocument' )
+            ->with( $expected );
 
-        $handler = new DoctrineCouchDBHandler($client);
-        $handler->handle($record);
+        $handler = new DoctrineCouchDBHandler( $client );
+        $handler->handle( $record );
     }
 }

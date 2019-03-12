@@ -7,19 +7,22 @@ use Bitrix\Main;
 use Local\Core\Assistant\Arrays;
 use Local\Core\Inner\CollectableEntity;
 
-Loc::loadMessages(__FILE__);
+Loc::loadMessages( __FILE__ );
 
 class PropertyValue extends CollectableEntity
 {
     /**
      * Создать массив коллекций свойств элементов
+     *
      * @param ElementCollection $collection
-     * @param bool $select
+     * @param bool              $select
+     *
      * @return array
      */
-    public static function getCollectionArrayByIblockElementCollection(ElementCollection $collection, $select = false)
+    public static function getCollectionArrayByIblockElementCollection( ElementCollection $collection, $select = false )
     {
-        if (!$select) {
+        if ( !$select )
+        {
             return [];
         }
 
@@ -30,12 +33,14 @@ class PropertyValue extends CollectableEntity
         $collections = [];
 
         /** @var $item IblockElement */
-        foreach ($collection as $item) {
-            if (!$iblock_id) {
+        foreach ( $collection as $item )
+        {
+            if ( !$iblock_id )
+            {
                 $iblock_id = $item->getIblockId();
             }
 
-            $arr_props[$item->getId()] = false;
+            $arr_props[ $item->getId() ] = false;
         }
 
         $filter = array(
@@ -49,30 +54,40 @@ class PropertyValue extends CollectableEntity
             'ACTIVE' => 'Y'
         ];
 
-        if (!in_array('*', $select)) {
-            foreach ($select as $p) {
-                if (is_scalar($p)) {
-                    if (intval($p) > 0) {
-                        $filter_props['ID'][] = intval($p);
-                    } else {
-                        $filter_props['CODE'][] = $p;
+        if ( !in_array( '*', $select ) )
+        {
+            foreach ( $select as $p )
+            {
+                if ( is_scalar( $p ) )
+                {
+                    if ( intval( $p ) > 0 )
+                    {
+                        $filter_props[ 'ID' ][] = intval( $p );
+                    }
+                    else
+                    {
+                        $filter_props[ 'CODE' ][] = $p;
                     }
                 }
             }
         }
 
-        \CIBlockElement::GetPropertyValuesArray($arr_props, $iblock_id, $filter, $filter_props);
+        \CIBlockElement::GetPropertyValuesArray( $arr_props, $iblock_id, $filter, $filter_props );
 
-        foreach ($arr_props as $element_id => $properties) {
-            foreach ($properties as $prop) {
-                if(!isset($collections[$element_id]))
-                    $collections[$element_id] = PropertyValueCollection::create();
+        foreach ( $arr_props as $element_id => $properties )
+        {
+            foreach ( $properties as $prop )
+            {
+                if ( !isset( $collections[ $element_id ] ) )
+                {
+                    $collections[ $element_id ] = PropertyValueCollection::create();
+                }
 
-                $item = self::create($prop);
+                $item = self::create( $prop );
 
-                $item->setCollection($collections[$element_id]);
+                $item->setCollection( $collections[ $element_id ] );
 
-                $collections[$element_id]->addItem($item);
+                $collections[ $element_id ]->addItem( $item );
             }
         }
 
@@ -81,23 +96,26 @@ class PropertyValue extends CollectableEntity
 
     /**
      * Фабричный метод создания объекта элемента текущего класса
+     *
      * @param array $fields
+     *
      * @return PropertyValue
      */
-    protected static function create(array $fields = array())
+    protected static function create( array $fields = array() )
     {
-        return new self($fields);
+        return new self( $fields );
     }
 
     /**
      * PropertyValue constructor.
+     *
      * @param array $fields
      */
-    protected function __construct(array $fields = array())
+    protected function __construct( array $fields = array() )
     {
-        $this->processProperty($fields);
+        $this->processProperty( $fields );
 
-        parent::__construct($fields);
+        parent::__construct( $fields );
     }
 
     /**
@@ -141,229 +159,260 @@ class PropertyValue extends CollectableEntity
 
     /**
      * Обработать поля свойств перед созданием объекта класса
+     *
      * @param array $fields
      */
-    protected function processProperty(array &$fields)
+    protected function processProperty( array &$fields )
     {
-        Arrays::clearKeyTilda($fields);
+        Arrays::clearKeyTilda( $fields );
 
-        $fields['ID'] = (int)$fields['ID'];
-        $fields['IBLOCK_ID'] = (int)$fields['IBLOCK_ID'];
-        $fields['ROW_COUNT'] = (int)$fields['ROW_COUNT'];
-        $fields['COL_COUNT'] = (int)$fields['COL_COUNT'];
-        $fields['MULTIPLE_CNT'] = (int)$fields['MULTIPLE_CNT'];
-        $fields['LINK_IBLOCK_ID'] = (int)$fields['LINK_IBLOCK_ID'];
-        $fields['PROPERTY_VALUE_ID'] = (int)$fields['PROPERTY_VALUE_ID'];
+        $fields[ 'ID' ] = (int)$fields[ 'ID' ];
+        $fields[ 'IBLOCK_ID' ] = (int)$fields[ 'IBLOCK_ID' ];
+        $fields[ 'ROW_COUNT' ] = (int)$fields[ 'ROW_COUNT' ];
+        $fields[ 'COL_COUNT' ] = (int)$fields[ 'COL_COUNT' ];
+        $fields[ 'MULTIPLE_CNT' ] = (int)$fields[ 'MULTIPLE_CNT' ];
+        $fields[ 'LINK_IBLOCK_ID' ] = (int)$fields[ 'LINK_IBLOCK_ID' ];
+        $fields[ 'PROPERTY_VALUE_ID' ] = (int)$fields[ 'PROPERTY_VALUE_ID' ];
     }
 
     /**
      * @return null|string
      */
-    public function getId(){
-        return $this->getField('ID');
+    public function getId()
+    {
+        return $this->getField( 'ID' );
     }
 
     /**
      * @return null|string
      */
-    public function getIblockId(){
-        return $this->getField('IBLOCK_ID');
+    public function getIblockId()
+    {
+        return $this->getField( 'IBLOCK_ID' );
     }
 
     /**
      * @return null|string
      */
-    public function getName(){
-        return $this->getField('NAME');
+    public function getName()
+    {
+        return $this->getField( 'NAME' );
     }
 
     /**
      * @return bool
      */
-    public function isActive(){
-        return $this->getField('ACTIVE') == 'Y';
+    public function isActive()
+    {
+        return $this->getField( 'ACTIVE' ) == 'Y';
     }
 
     /**
      * @return null|string
      */
-    public function getSort(){
-        return $this->getField('SORT');
+    public function getSort()
+    {
+        return $this->getField( 'SORT' );
     }
 
     /**
      * @return null|string
      */
-    public function getCode(){
-        return $this->getField('CODE');
+    public function getCode()
+    {
+        return $this->getField( 'CODE' );
     }
 
     /**
      * @return null|string
      */
-    public function getDefaultValue(){
-        return $this->getField('DEFAULT_VALUE');
+    public function getDefaultValue()
+    {
+        return $this->getField( 'DEFAULT_VALUE' );
     }
 
     /**
      * @return null|string
      */
-    public function getPropertyType(){
-        return $this->getField('PROPERTY_TYPE');
+    public function getPropertyType()
+    {
+        return $this->getField( 'PROPERTY_TYPE' );
     }
 
     /**
      * @return null|string
      */
-    public function getRowCount(){
-        return $this->getField('ROW_COUNT');
+    public function getRowCount()
+    {
+        return $this->getField( 'ROW_COUNT' );
     }
 
     /**
      * @return null|string
      */
-    public function getColCount(){
-        return $this->getField('COL_COUNT');
+    public function getColCount()
+    {
+        return $this->getField( 'COL_COUNT' );
     }
 
     /**
      * @return null|string
      */
-    public function getListType(){
-        return $this->getField('LIST_TYPE');
+    public function getListType()
+    {
+        return $this->getField( 'LIST_TYPE' );
     }
 
     /**
      * @return bool
      */
-    public function isMultiple(){
-        return $this->getField('MULTIPLE') == 'Y';
+    public function isMultiple()
+    {
+        return $this->getField( 'MULTIPLE' ) == 'Y';
     }
 
     /**
      * @return null|string
      */
-    public function getXmlId(){
-        return $this->getField('XML_ID');
+    public function getXmlId()
+    {
+        return $this->getField( 'XML_ID' );
     }
 
     /**
      * @return null|string
      */
-    public function getFileType(){
-        return $this->getField('FILE_TYPE');
+    public function getFileType()
+    {
+        return $this->getField( 'FILE_TYPE' );
     }
 
     /**
      * @return null|string
      */
-    public function getMultipleCnt(){
-        return $this->getField('MULTIPLE_CNT');
+    public function getMultipleCnt()
+    {
+        return $this->getField( 'MULTIPLE_CNT' );
     }
 
     /**
      * @return null|string
      */
-    public function getLinkIblockId(){
-        return $this->getField('LINK_IBLOCK_ID');
+    public function getLinkIblockId()
+    {
+        return $this->getField( 'LINK_IBLOCK_ID' );
     }
 
     /**
      * @return null|string
      */
-    public function getWithDescription(){
-        return $this->getField('WITH_DESCRIPTION');
+    public function getWithDescription()
+    {
+        return $this->getField( 'WITH_DESCRIPTION' );
     }
 
     /**
      * @return null|string
      */
-    public function getSearchable(){
-        return $this->getField('SEARCHABLE');
+    public function getSearchable()
+    {
+        return $this->getField( 'SEARCHABLE' );
     }
 
     /**
      * @return null|string
      */
-    public function getFiltrable(){
-        return $this->getField('FILTRABLE');
+    public function getFiltrable()
+    {
+        return $this->getField( 'FILTRABLE' );
     }
 
     /**
      * @return null|string
      */
-    public function getIsRequired(){
-        return $this->getField('IS_REQUIRED');
+    public function getIsRequired()
+    {
+        return $this->getField( 'IS_REQUIRED' );
     }
 
     /**
      * @return null|string
      */
-    public function getVersion(){
-        return $this->getField('VERSION');
+    public function getVersion()
+    {
+        return $this->getField( 'VERSION' );
     }
 
     /**
      * @return null|string
      */
-    public function getUserType(){
-        return $this->getField('USER_TYPE');
+    public function getUserType()
+    {
+        return $this->getField( 'USER_TYPE' );
     }
 
     /**
      * @return null|string
      */
-    public function getUserTypeSettings(){
-        return $this->getField('USER_TYPE_SETTINGS');
+    public function getUserTypeSettings()
+    {
+        return $this->getField( 'USER_TYPE_SETTINGS' );
     }
 
     /**
      * @return null|string
      */
-    public function getHint(){
-        return $this->getField('HINT');
+    public function getHint()
+    {
+        return $this->getField( 'HINT' );
     }
 
     /**
      * @return null|string
      */
-    public function getValueEnum(){
-        return $this->getField('VALUE_ENUM');
+    public function getValueEnum()
+    {
+        return $this->getField( 'VALUE_ENUM' );
     }
 
     /**
      * @return null|string
      */
-    public function getValueXmlId(){
-        return $this->getField('VALUE_XML_ID');
+    public function getValueXmlId()
+    {
+        return $this->getField( 'VALUE_XML_ID' );
     }
 
     /**
      * @return null|string
      */
-    public function getValueSort(){
-        return $this->getField('VALUE_SORT');
+    public function getValueSort()
+    {
+        return $this->getField( 'VALUE_SORT' );
     }
 
     /**
      * @return null|string
      */
-    public function getValue(){
-        return $this->getField('VALUE');
+    public function getValue()
+    {
+        return $this->getField( 'VALUE' );
     }
 
     /**
      * @return null|string
      */
-    public function getValueId(){
-        return $this->getField('PROPERTY_VALUE_ID');
+    public function getValueId()
+    {
+        return $this->getField( 'PROPERTY_VALUE_ID' );
     }
 
     /**
      * @return null|string
      */
-    public function getDescription(){
-        return $this->getField('DESCRIPTION');
+    public function getDescription()
+    {
+        return $this->getField( 'DESCRIPTION' );
     }
 
 }

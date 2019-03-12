@@ -4,26 +4,29 @@ namespace Local\Core\Inner\Iblock\UserProperty;
 
 class Matrix
 {
-    public static function OnBeforeSave($arUserField, $value)
+    public static function OnBeforeSave( $arUserField, $value )
     {
         $arSave = null;
-        foreach ($value as $k => $v) {
-            $v = array_map('trim', $v);
-            $v = array_filter($v);
-            if (count($v) > 0) {
+        foreach ( $value as $k => $v )
+        {
+            $v = array_map( 'trim', $v );
+            $v = array_filter( $v );
+            if ( count( $v ) > 0 )
+            {
                 $arSave[] = $v;
             }
         }
 
-        $value = is_array($arSave) ? json_encode($arSave) : null;
+        $value = is_array( $arSave ) ? json_encode( $arSave ) : null;
         return $value;
 
     }
 
-    public static function GetDBColumnType($arUserField)
+    public static function GetDBColumnType( $arUserField )
     {
         global $DB;
-        switch (strtolower($DB->type)) {
+        switch ( strtolower( $DB->type ) )
+        {
             case "mysql":
                 return "text";
             case "oracle":
@@ -33,38 +36,40 @@ class Matrix
         }
     }
 
-    public static function GetFilterData($arUserField, $arHtmlControl)
+    public static function GetFilterData( $arUserField, $arHtmlControl )
     {
         return array(
-            "id" => $arHtmlControl["ID"],
-            "name" => $arHtmlControl["NAME"],
+            "id" => $arHtmlControl[ "ID" ],
+            "name" => $arHtmlControl[ "NAME" ],
             "type" => "number",
             "filterable" => ""
         );
     }
 
-    public static function OnSearchIndex($arUserField)
+    public static function OnSearchIndex( $arUserField )
     {
         return null;
     }
 
-    public static function GetFilterHTML($arUserField, $arHtmlControl)
+    public static function GetFilterHTML( $arUserField, $arHtmlControl )
     {
 
-        throw new \Exception('Add code');
+        throw new \Exception( 'Add code' );
 
     }
 
-    public static function GetAdminListViewHTML($arUserField, $arHtmlControl)
+    public static function GetAdminListViewHTML( $arUserField, $arHtmlControl )
     {
         $result = "<table data-idasf='js_radio_variants'>";
 
-        if (!empty($arHtmlControl['VALUE'])) {
-            $val = json_decode(htmlspecialcharsback($arHtmlControl['VALUE']), true);
-            foreach ($val ?? [] as $key => $value) {
+        if ( !empty( $arHtmlControl[ 'VALUE' ] ) )
+        {
+            $val = json_decode( htmlspecialcharsback( $arHtmlControl[ 'VALUE' ] ), true );
+            foreach ( $val ?? [] as $key => $value )
+            {
                 $result .= "<tr class='js-variant'>";
-                $result .= "<td>" . strip_tags($value[0]) . "</td>";
-                $result .= "<td>" . strip_tags($value[1]) . "</td>";
+                $result .= "<td>".strip_tags( $value[ 0 ] )."</td>";
+                $result .= "<td>".strip_tags( $value[ 1 ] )."</td>";
                 $result .= "</tr>";
             }
         }
@@ -74,7 +79,7 @@ class Matrix
 
     }
 
-    public static function GetEditFormHTML($arUserField, $arHtmlControl)
+    public static function GetEditFormHTML( $arUserField, $arHtmlControl )
     {
         $result = "
         <script>
@@ -102,7 +107,7 @@ class Matrix
 									BX.create('input', {
 										props: {
 											type: 'text',
-											name: '" . $arUserField['FIELD_NAME'] . "[' + (cntVariants + 1) + '][0]',
+											name: '".$arUserField[ 'FIELD_NAME' ]."[' + (cntVariants + 1) + '][0]',
 											value: ''
 										}
 									})
@@ -113,7 +118,7 @@ class Matrix
 									BX.create('input', {
 										props: {
 											type: 'text',
-											name: '" . $arUserField['FIELD_NAME'] . "[' + (cntVariants + 1) + '][1]',
+											name: '".$arUserField[ 'FIELD_NAME' ]."[' + (cntVariants + 1) + '][1]',
 											value: ''
 										}
 									})
@@ -163,16 +168,18 @@ class Matrix
         </script>
 		";
 
-        $values = self::extract($arUserField['VALUE']);
+        $values = self::extract( $arUserField[ 'VALUE' ] );
 
         $result .= "<table id='js_radio_variants'>";
 
         $lastKey = 0;
-        if (!empty($values)) {
-            foreach ($values as $key => $value) {
+        if ( !empty( $values ) )
+        {
+            foreach ( $values as $key => $value )
+            {
                 $result .= "<tr class='js-variant' data-row=\"$lastKey\">";
-                $result .= "<td><big onclick='ufFilterRulesSwitch(this, \"up\");'> ↑ </big><input type='text' name='" . $arUserField['FIELD_NAME'] . "[" . $lastKey . "][0]' value='" . htmlspecialchars($value[0]) . "'/></td>";
-                $result .= "<td><input type='text' name='" . $arUserField['FIELD_NAME'] . "[" . $lastKey . "][1]' value='" . htmlspecialchars($value[1]) . "'/><big onclick='ufFilterRulesSwitch(this, \"down\");'> ↓ </big></td>";
+                $result .= "<td><big onclick='ufFilterRulesSwitch(this, \"up\");'> ↑ </big><input type='text' name='".$arUserField[ 'FIELD_NAME' ]."[".$lastKey."][0]' value='".htmlspecialchars( $value[ 0 ] )."'/></td>";
+                $result .= "<td><input type='text' name='".$arUserField[ 'FIELD_NAME' ]."[".$lastKey."][1]' value='".htmlspecialchars( $value[ 1 ] )."'/><big onclick='ufFilterRulesSwitch(this, \"down\");'> ↓ </big></td>";
                 $result .= "</tr>";
 
                 $lastKey++;
@@ -180,8 +187,8 @@ class Matrix
         }
 
         $result .= "<tr class='js-variant'>";
-        $result .= "<td><input type='text' name='" . $arUserField['FIELD_NAME'] . "[" . $lastKey . "][0]' value=''/></td>";
-        $result .= "<td><input type='text' name='" . $arUserField['FIELD_NAME'] . "[" . $lastKey . "][1]' value=''/></td>";
+        $result .= "<td><input type='text' name='".$arUserField[ 'FIELD_NAME' ]."[".$lastKey."][0]' value=''/></td>";
+        $result .= "<td><input type='text' name='".$arUserField[ 'FIELD_NAME' ]."[".$lastKey."][1]' value=''/></td>";
         $result .= "</tr>";
 
         $result .= "</table>";
@@ -191,9 +198,9 @@ class Matrix
         return $result;
     }
 
-    public static function extract($value)
+    public static function extract( $value )
     {
-        $value = json_decode($value, true);
-        return (is_array($value)) ? $value : [];
+        $value = json_decode( $value, true );
+        return ( is_array( $value ) ) ? $value : [];
     }
 }

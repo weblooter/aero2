@@ -22,7 +22,7 @@ class Base
         $eventManager = EventManager::getInstance();
 
         /** @see \Local\Core\EventHandlers\Main\OnBuildGlobalMenu::addGlobalMenu(); */
-        $eventManager->addEventHandler('main', 'OnBuildGlobalMenu', [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']);
+        $eventManager->addEventHandler( 'main', 'OnBuildGlobalMenu', [Main\OnBuildGlobalMenu::class, 'addGlobalMenu'] );
 
     }
 }

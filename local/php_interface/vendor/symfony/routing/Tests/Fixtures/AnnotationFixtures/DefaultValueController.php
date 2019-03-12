@@ -9,7 +9,7 @@ class DefaultValueController
     /**
      * @Route("/{default}/path", name="action")
      */
-    public function action($default = 'value')
+    public function action( $default = 'value' )
     {
     }
 }

@@ -1,4 +1,5 @@
 <?
+
 namespace Local\Core\Inner\Interfaces;
 
 /**
@@ -8,5 +9,5 @@ namespace Local\Core\Inner\Interfaces;
  */
 interface UseInDb
 {
-    
+
 }

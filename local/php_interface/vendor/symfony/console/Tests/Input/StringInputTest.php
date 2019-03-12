@@ -21,25 +21,25 @@ class StringInputTest extends TestCase
     /**
      * @dataProvider getTokenizeData
      */
-    public function testTokenize($input, $tokens, $message)
+    public function testTokenize( $input, $tokens, $message )
     {
-        $input = new StringInput($input);
-        $r = new \ReflectionClass('Symfony\Component\Console\Input\ArgvInput');
-        $p = $r->getProperty('tokens');
-        $p->setAccessible(true);
-        $this->assertEquals($tokens, $p->getValue($input), $message);
+        $input = new StringInput( $input );
+        $r = new \ReflectionClass( 'Symfony\Component\Console\Input\ArgvInput' );
+        $p = $r->getProperty( 'tokens' );
+        $p->setAccessible( true );
+        $this->assertEquals( $tokens, $p->getValue( $input ), $message );
     }
 
     public function testInputOptionWithGivenString()
     {
         $definition = new InputDefinition(
-            [new InputOption('foo', null, InputOption::VALUE_REQUIRED)]
+            [new InputOption( 'foo', null, InputOption::VALUE_REQUIRED )]
         );
 
         // call to bind
-        $input = new StringInput('--foo=bar');
-        $input->bind($definition);
-        $this->assertEquals('bar', $input->getOption('foo'));
+        $input = new StringInput( '--foo=bar' );
+        $input->bind( $definition );
+        $this->assertEquals( 'bar', $input->getOption( 'foo' ) );
     }
 
     public function getTokenizeData()
@@ -65,23 +65,40 @@ class StringInputTest extends TestCase
             ['--long-option', ['--long-option'], '->tokenize() parses long options'],
             ['--long-option=foo', ['--long-option=foo'], '->tokenize() parses long options with a value'],
             ['--long-option="foo bar"', ['--long-option=foo bar'], '->tokenize() parses long options with a value'],
-            ['--long-option="foo bar""another"', ['--long-option=foo baranother'], '->tokenize() parses long options with a value'],
+            [
+                '--long-option="foo bar""another"',
+                ['--long-option=foo baranother'],
+                '->tokenize() parses long options with a value'
+            ],
             ['--long-option=\'foo bar\'', ['--long-option=foo bar'], '->tokenize() parses long options with a value'],
-            ["--long-option='foo bar''another'", ['--long-option=foo baranother'], '->tokenize() parses long options with a value'],
-            ["--long-option='foo bar'\"another\"", ['--long-option=foo baranother'], '->tokenize() parses long options with a value'],
-            ['foo -a -ffoo --long bar', ['foo', '-a', '-ffoo', '--long', 'bar'], '->tokenize() parses when several arguments and options'],
+            [
+                "--long-option='foo bar''another'",
+                ['--long-option=foo baranother'],
+                '->tokenize() parses long options with a value'
+            ],
+            [
+                "--long-option='foo bar'\"another\"",
+                ['--long-option=foo baranother'],
+                '->tokenize() parses long options with a value'
+            ],
+            [
+                'foo -a -ffoo --long bar',
+                ['foo', '-a', '-ffoo', '--long', 'bar'],
+                '->tokenize() parses when several arguments and options'
+            ],
         ];
     }
 
     public function testToString()
     {
-        $input = new StringInput('-f foo');
-        $this->assertEquals('-f foo', (string) $input);
+        $input = new StringInput( '-f foo' );
+        $this->assertEquals( '-f foo', (string)$input );
 
-        $input = new StringInput('-f --bar=foo "a b c d"');
-        $this->assertEquals('-f --bar=foo '.escapeshellarg('a b c d'), (string) $input);
+        $input = new StringInput( '-f --bar=foo "a b c d"' );
+        $this->assertEquals( '-f --bar=foo '.escapeshellarg( 'a b c d' ), (string)$input );
 
-        $input = new StringInput('-f --bar=foo \'a b c d\' '."'A\nB\\'C'");
-        $this->assertEquals('-f --bar=foo '.escapeshellarg('a b c d').' '.escapeshellarg("A\nB'C"), (string) $input);
+        $input = new StringInput( '-f --bar=foo \'a b c d\' '."'A\nB\\'C'" );
+        $this->assertEquals( '-f --bar=foo '.escapeshellarg( 'a b c d' ).' '.escapeshellarg( "A\nB'C" ),
+            (string)$input );
     }
 }

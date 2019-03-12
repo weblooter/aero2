@@ -23,58 +23,58 @@ class AutowireRequiredMethodsPassTest extends TestCase
     public function testSetterInjection()
     {
         $container = new ContainerBuilder();
-        $container->register(Foo::class);
-        $container->register(A::class);
-        $container->register(CollisionA::class);
-        $container->register(CollisionB::class);
+        $container->register( Foo::class );
+        $container->register( A::class );
+        $container->register( CollisionA::class );
+        $container->register( CollisionB::class );
 
         // manually configure *one* call, to override autowiring
         $container
-            ->register('setter_injection', SetterInjection::class)
-            ->setAutowired(true)
-            ->addMethodCall('setWithCallsConfigured', ['manual_arg1', 'manual_arg2']);
+            ->register( 'setter_injection', SetterInjection::class )
+            ->setAutowired( true )
+            ->addMethodCall( 'setWithCallsConfigured', ['manual_arg1', 'manual_arg2'] );
 
-        (new ResolveClassPass())->process($container);
-        (new AutowireRequiredMethodsPass())->process($container);
+        ( new ResolveClassPass() )->process( $container );
+        ( new AutowireRequiredMethodsPass() )->process( $container );
 
-        $methodCalls = $container->getDefinition('setter_injection')->getMethodCalls();
+        $methodCalls = $container->getDefinition( 'setter_injection' )->getMethodCalls();
 
         $this->assertEquals(
             ['setWithCallsConfigured', 'setFoo', 'setDependencies', 'setChildMethodWithoutDocBlock'],
-            array_column($methodCalls, 0)
+            array_column( $methodCalls, 0 )
         );
 
         // test setWithCallsConfigured args
         $this->assertEquals(
             ['manual_arg1', 'manual_arg2'],
-            $methodCalls[0][1]
+            $methodCalls[ 0 ][ 1 ]
         );
         // test setFoo args
-        $this->assertEquals([], $methodCalls[1][1]);
+        $this->assertEquals( [], $methodCalls[ 1 ][ 1 ] );
     }
 
     public function testExplicitMethodInjection()
     {
         $container = new ContainerBuilder();
-        $container->register(Foo::class);
-        $container->register(A::class);
-        $container->register(CollisionA::class);
-        $container->register(CollisionB::class);
+        $container->register( Foo::class );
+        $container->register( A::class );
+        $container->register( CollisionA::class );
+        $container->register( CollisionB::class );
 
         $container
-            ->register('setter_injection', SetterInjection::class)
-            ->setAutowired(true)
-            ->addMethodCall('notASetter', []);
+            ->register( 'setter_injection', SetterInjection::class )
+            ->setAutowired( true )
+            ->addMethodCall( 'notASetter', [] );
 
-        (new ResolveClassPass())->process($container);
-        (new AutowireRequiredMethodsPass())->process($container);
+        ( new ResolveClassPass() )->process( $container );
+        ( new AutowireRequiredMethodsPass() )->process( $container );
 
-        $methodCalls = $container->getDefinition('setter_injection')->getMethodCalls();
+        $methodCalls = $container->getDefinition( 'setter_injection' )->getMethodCalls();
 
         $this->assertEquals(
             ['notASetter', 'setFoo', 'setDependencies', 'setWithCallsConfigured', 'setChildMethodWithoutDocBlock'],
-            array_column($methodCalls, 0)
+            array_column( $methodCalls, 0 )
         );
-        $this->assertEquals([], $methodCalls[0][1]);
+        $this->assertEquals( [], $methodCalls[ 0 ][ 1 ] );
     }
 }

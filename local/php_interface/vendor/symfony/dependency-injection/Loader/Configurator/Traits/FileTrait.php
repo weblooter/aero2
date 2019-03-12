@@ -20,9 +20,9 @@ trait FileTrait
      *
      * @return $this
      */
-    final public function file($file)
+    final public function file( $file )
     {
-        $this->definition->setFile($file);
+        $this->definition->setFile( $file );
 
         return $this;
     }

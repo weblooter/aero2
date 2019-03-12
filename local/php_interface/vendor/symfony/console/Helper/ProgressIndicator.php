@@ -35,29 +35,32 @@ class ProgressIndicator
 
     /**
      * @param OutputInterface $output
-     * @param string|null     $format                  Indicator format
+     * @param string|null     $format Indicator format
      * @param int             $indicatorChangeInterval Change interval in milliseconds
-     * @param array|null      $indicatorValues         Animated indicator characters
+     * @param array|null      $indicatorValues Animated indicator characters
      */
-    public function __construct(OutputInterface $output, string $format = null, int $indicatorChangeInterval = 100, array $indicatorValues = null)
+    public function __construct( OutputInterface $output, string $format = null, int $indicatorChangeInterval = 100, array $indicatorValues = null )
     {
         $this->output = $output;
 
-        if (null === $format) {
+        if ( null === $format )
+        {
             $format = $this->determineBestFormat();
         }
 
-        if (null === $indicatorValues) {
+        if ( null === $indicatorValues )
+        {
             $indicatorValues = ['-', '\\', '|', '/'];
         }
 
-        $indicatorValues = array_values($indicatorValues);
+        $indicatorValues = array_values( $indicatorValues );
 
-        if (2 > \count($indicatorValues)) {
-            throw new InvalidArgumentException('Must have at least 2 indicator value characters.');
+        if ( 2 > \count( $indicatorValues ) )
+        {
+            throw new InvalidArgumentException( 'Must have at least 2 indicator value characters.' );
         }
 
-        $this->format = self::getFormatDefinition($format);
+        $this->format = self::getFormatDefinition( $format );
         $this->indicatorChangeInterval = $indicatorChangeInterval;
         $this->indicatorValues = $indicatorValues;
         $this->startTime = time();
@@ -68,7 +71,7 @@ class ProgressIndicator
      *
      * @param string|null $message
      */
-    public function setMessage($message)
+    public function setMessage( $message )
     {
         $this->message = $message;
 
@@ -80,10 +83,11 @@ class ProgressIndicator
      *
      * @param $message
      */
-    public function start($message)
+    public function start( $message )
     {
-        if ($this->started) {
-            throw new LogicException('Progress indicator already started.');
+        if ( $this->started )
+        {
+            throw new LogicException( 'Progress indicator already started.' );
         }
 
         $this->message = $message;
@@ -100,17 +104,20 @@ class ProgressIndicator
      */
     public function advance()
     {
-        if (!$this->started) {
-            throw new LogicException('Progress indicator has not yet been started.');
+        if ( !$this->started )
+        {
+            throw new LogicException( 'Progress indicator has not yet been started.' );
         }
 
-        if (!$this->output->isDecorated()) {
+        if ( !$this->output->isDecorated() )
+        {
             return;
         }
 
         $currentTime = $this->getCurrentTimeInMilliseconds();
 
-        if ($currentTime < $this->indicatorUpdateTime) {
+        if ( $currentTime < $this->indicatorUpdateTime )
+        {
             return;
         }
 
@@ -125,15 +132,16 @@ class ProgressIndicator
      *
      * @param $message
      */
-    public function finish($message)
+    public function finish( $message )
     {
-        if (!$this->started) {
-            throw new LogicException('Progress indicator has not yet been started.');
+        if ( !$this->started )
+        {
+            throw new LogicException( 'Progress indicator has not yet been started.' );
         }
 
         $this->message = $message;
         $this->display();
-        $this->output->writeln('');
+        $this->output->writeln( '' );
         $this->started = false;
     }
 
@@ -144,13 +152,14 @@ class ProgressIndicator
      *
      * @return string|null A format string
      */
-    public static function getFormatDefinition($name)
+    public static function getFormatDefinition( $name )
     {
-        if (!self::$formats) {
+        if ( !self::$formats )
+        {
             self::$formats = self::initFormats();
         }
 
-        return isset(self::$formats[$name]) ? self::$formats[$name] : null;
+        return isset( self::$formats[ $name ] ) ? self::$formats[ $name ] : null;
     }
 
     /**
@@ -158,16 +167,17 @@ class ProgressIndicator
      *
      * This method also allow you to override an existing placeholder.
      *
-     * @param string   $name     The placeholder name (including the delimiter char like %)
+     * @param string   $name The placeholder name (including the delimiter char like %)
      * @param callable $callable A PHP callable
      */
-    public static function setPlaceholderFormatterDefinition($name, $callable)
+    public static function setPlaceholderFormatterDefinition( $name, $callable )
     {
-        if (!self::$formatters) {
+        if ( !self::$formatters )
+        {
             self::$formatters = self::initPlaceholderFormatters();
         }
 
-        self::$formatters[$name] = $callable;
+        self::$formatters[ $name ] = $callable;
     }
 
     /**
@@ -177,35 +187,39 @@ class ProgressIndicator
      *
      * @return callable|null A PHP callable
      */
-    public static function getPlaceholderFormatterDefinition($name)
+    public static function getPlaceholderFormatterDefinition( $name )
     {
-        if (!self::$formatters) {
+        if ( !self::$formatters )
+        {
             self::$formatters = self::initPlaceholderFormatters();
         }
 
-        return isset(self::$formatters[$name]) ? self::$formatters[$name] : null;
+        return isset( self::$formatters[ $name ] ) ? self::$formatters[ $name ] : null;
     }
 
     private function display()
     {
-        if (OutputInterface::VERBOSITY_QUIET === $this->output->getVerbosity()) {
+        if ( OutputInterface::VERBOSITY_QUIET === $this->output->getVerbosity() )
+        {
             return;
         }
 
         $self = $this;
 
-        $this->overwrite(preg_replace_callback("{%([a-z\-_]+)(?:\:([^%]+))?%}i", function ($matches) use ($self) {
-            if ($formatter = $self::getPlaceholderFormatterDefinition($matches[1])) {
-                return $formatter($self);
+        $this->overwrite( preg_replace_callback( "{%([a-z\-_]+)(?:\:([^%]+))?%}i", function ( $matches ) use ( $self ) {
+            if ( $formatter = $self::getPlaceholderFormatterDefinition( $matches[ 1 ] ) )
+            {
+                return $formatter( $self );
             }
 
-            return $matches[0];
-        }, $this->format));
+            return $matches[ 0 ];
+        }, $this->format ) );
     }
 
     private function determineBestFormat()
     {
-        switch ($this->output->getVerbosity()) {
+        switch ( $this->output->getVerbosity() )
+        {
             // OutputInterface::VERBOSITY_QUIET: display is disabled anyway
             case OutputInterface::VERBOSITY_VERBOSE:
                 return $this->output->isDecorated() ? 'verbose' : 'verbose_no_ansi';
@@ -220,35 +234,38 @@ class ProgressIndicator
     /**
      * Overwrites a previous message to the output.
      */
-    private function overwrite(string $message)
+    private function overwrite( string $message )
     {
-        if ($this->output->isDecorated()) {
-            $this->output->write("\x0D\x1B[2K");
-            $this->output->write($message);
-        } else {
-            $this->output->writeln($message);
+        if ( $this->output->isDecorated() )
+        {
+            $this->output->write( "\x0D\x1B[2K" );
+            $this->output->write( $message );
+        }
+        else
+        {
+            $this->output->writeln( $message );
         }
     }
 
     private function getCurrentTimeInMilliseconds()
     {
-        return round(microtime(true) * 1000);
+        return round( microtime( true ) * 1000 );
     }
 
     private static function initPlaceholderFormatters()
     {
         return [
-            'indicator' => function (self $indicator) {
-                return $indicator->indicatorValues[$indicator->indicatorCurrent % \count($indicator->indicatorValues)];
+            'indicator' => function ( self $indicator ) {
+                return $indicator->indicatorValues[ $indicator->indicatorCurrent % \count( $indicator->indicatorValues ) ];
             },
-            'message' => function (self $indicator) {
+            'message' => function ( self $indicator ) {
                 return $indicator->message;
             },
-            'elapsed' => function (self $indicator) {
-                return Helper::formatTime(time() - $indicator->startTime);
+            'elapsed' => function ( self $indicator ) {
+                return Helper::formatTime( time() - $indicator->startTime );
             },
             'memory' => function () {
-                return Helper::formatMemory(memory_get_usage(true));
+                return Helper::formatMemory( memory_get_usage( true ) );
             },
         ];
     }

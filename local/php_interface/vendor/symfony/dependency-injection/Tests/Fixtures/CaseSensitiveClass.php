@@ -15,7 +15,7 @@ class CaseSensitiveClass
 {
     public $identifier;
 
-    public function __construct($identifier = null)
+    public function __construct( $identifier = null )
     {
         $this->identifier = $identifier;
     }

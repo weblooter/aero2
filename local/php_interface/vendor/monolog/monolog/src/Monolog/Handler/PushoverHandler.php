@@ -59,56 +59,77 @@ class PushoverHandler extends SocketHandler
      * @var array
      */
     private $sounds = array(
-        'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
-        'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
-        'persistent', 'echo', 'updown', 'none',
+        'pushover',
+        'bike',
+        'bugle',
+        'cashregister',
+        'classical',
+        'cosmic',
+        'falling',
+        'gamelan',
+        'incoming',
+        'intermission',
+        'magic',
+        'mechanical',
+        'pianobar',
+        'siren',
+        'spacealarm',
+        'tugboat',
+        'alien',
+        'climb',
+        'persistent',
+        'echo',
+        'updown',
+        'none',
     );
 
     /**
-     * @param string       $token             Pushover api token
-     * @param string|array $users             Pushover user id or array of ids the message will be sent to
-     * @param string       $title             Title sent to the Pushover API
-     * @param int          $level             The minimum logging level at which this handler will be triggered
-     * @param bool         $bubble            Whether the messages that are handled can bubble up the stack or not
-     * @param bool         $useSSL            Whether to connect via SSL. Required when pushing messages to users that are not
+     * @param string       $token Pushover api token
+     * @param string|array $users Pushover user id or array of ids the message will be sent to
+     * @param string       $title Title sent to the Pushover API
+     * @param int          $level The minimum logging level at which this handler will be triggered
+     * @param bool         $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param bool         $useSSL Whether to connect via SSL. Required when pushing messages to users that are not
      *                                        the pushover.net app owner. OpenSSL is required for this option.
      * @param int          $highPriorityLevel The minimum logging level at which this handler will start
      *                                        sending "high priority" requests to the Pushover API
-     * @param int          $emergencyLevel    The minimum logging level at which this handler will start
+     * @param int          $emergencyLevel The minimum logging level at which this handler will start
      *                                        sending "emergency" requests to the Pushover API
-     * @param int          $retry             The retry parameter specifies how often (in seconds) the Pushover servers will send the same notification to the user.
-     * @param int          $expire            The expire parameter specifies how many seconds your notification will continue to be retried for (every retry seconds).
+     * @param int          $retry The retry parameter specifies how often (in seconds) the Pushover servers will send
+     *     the same notification to the user.
+     * @param int          $expire The expire parameter specifies how many seconds your notification will continue to
+     *     be retried for (every retry seconds).
      */
-    public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200)
+    public function __construct( $token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200 )
     {
         $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
-        parent::__construct($connectionString, $level, $bubble);
+        parent::__construct( $connectionString, $level, $bubble );
 
         $this->token = $token;
-        $this->users = (array) $users;
-        $this->title = $title ?: gethostname();
-        $this->highPriorityLevel = Logger::toMonologLevel($highPriorityLevel);
-        $this->emergencyLevel = Logger::toMonologLevel($emergencyLevel);
+        $this->users = (array)$users;
+        $this->title = $title ? : gethostname();
+        $this->highPriorityLevel = Logger::toMonologLevel( $highPriorityLevel );
+        $this->emergencyLevel = Logger::toMonologLevel( $emergencyLevel );
         $this->retry = $retry;
         $this->expire = $expire;
     }
 
-    protected function generateDataStream($record)
+    protected function generateDataStream( $record )
     {
-        $content = $this->buildContent($record);
+        $content = $this->buildContent( $record );
 
-        return $this->buildHeader($content) . $content;
+        return $this->buildHeader( $content ).$content;
     }
 
-    private function buildContent($record)
+    private function buildContent( $record )
     {
         // Pushover has a limit of 512 characters on title and message combined.
-        $maxMessageLength = 512 - strlen($this->title);
+        $maxMessageLength = 512 - strlen( $this->title );
 
-        $message = ($this->useFormattedMessage) ? $record['formatted'] : $record['message'];
-        $message = substr($message, 0, $maxMessageLength);
+        $message = ( $this->useFormattedMessage ) ? $record[ 'formatted' ] : $record[ 'message' ];
+        $message = substr( $message, 0, $maxMessageLength );
 
-        $timestamp = $record['datetime']->getTimestamp();
+        $timestamp = $record[ 'datetime' ]->getTimestamp();
 
         $dataArray = array(
             'token' => $this->token,
@@ -118,68 +139,74 @@ class PushoverHandler extends SocketHandler
             'timestamp' => $timestamp,
         );
 
-        if (isset($record['level']) && $record['level'] >= $this->emergencyLevel) {
-            $dataArray['priority'] = 2;
-            $dataArray['retry'] = $this->retry;
-            $dataArray['expire'] = $this->expire;
-        } elseif (isset($record['level']) && $record['level'] >= $this->highPriorityLevel) {
-            $dataArray['priority'] = 1;
+        if ( isset( $record[ 'level' ] ) && $record[ 'level' ] >= $this->emergencyLevel )
+        {
+            $dataArray[ 'priority' ] = 2;
+            $dataArray[ 'retry' ] = $this->retry;
+            $dataArray[ 'expire' ] = $this->expire;
+        }
+        elseif ( isset( $record[ 'level' ] ) && $record[ 'level' ] >= $this->highPriorityLevel )
+        {
+            $dataArray[ 'priority' ] = 1;
         }
 
         // First determine the available parameters
-        $context = array_intersect_key($record['context'], $this->parameterNames);
-        $extra = array_intersect_key($record['extra'], $this->parameterNames);
+        $context = array_intersect_key( $record[ 'context' ], $this->parameterNames );
+        $extra = array_intersect_key( $record[ 'extra' ], $this->parameterNames );
 
         // Least important info should be merged with subsequent info
-        $dataArray = array_merge($extra, $context, $dataArray);
+        $dataArray = array_merge( $extra, $context, $dataArray );
 
         // Only pass sounds that are supported by the API
-        if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds)) {
-            unset($dataArray['sound']);
+        if ( isset( $dataArray[ 'sound' ] ) && !in_array( $dataArray[ 'sound' ], $this->sounds ) )
+        {
+            unset( $dataArray[ 'sound' ] );
         }
 
-        return http_build_query($dataArray);
+        return http_build_query( $dataArray );
     }
 
-    private function buildHeader($content)
+    private function buildHeader( $content )
     {
         $header = "POST /1/messages.json HTTP/1.1\r\n";
         $header .= "Host: api.pushover.net\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "Content-Length: ".strlen( $content )."\r\n";
         $header .= "\r\n";
 
         return $header;
     }
 
-    protected function write(array $record)
+    protected function write( array $record )
     {
-        foreach ($this->users as $user) {
+        foreach ( $this->users as $user )
+        {
             $this->user = $user;
 
-            parent::write($record);
+            parent::write( $record );
             $this->closeSocket();
         }
 
         $this->user = null;
     }
 
-    public function setHighPriorityLevel($value)
+    public function setHighPriorityLevel( $value )
     {
         $this->highPriorityLevel = $value;
     }
 
-    public function setEmergencyLevel($value)
+    public function setEmergencyLevel( $value )
     {
         $this->emergencyLevel = $value;
     }
 
     /**
      * Use the formatted message?
+     *
      * @param bool $value
      */
-    public function useFormattedMessage($value)
+    public function useFormattedMessage( $value )
     {
-        $this->useFormattedMessage = (bool) $value;
+        $this->useFormattedMessage = (bool)$value;
     }
 }

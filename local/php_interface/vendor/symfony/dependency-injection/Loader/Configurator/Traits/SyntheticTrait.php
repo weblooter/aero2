@@ -19,9 +19,9 @@ trait SyntheticTrait
      *
      * @return $this
      */
-    final public function synthetic(bool $synthetic = true)
+    final public function synthetic( bool $synthetic = true )
     {
-        $this->definition->setSynthetic($synthetic);
+        $this->definition->setSynthetic( $synthetic );
 
         return $this;
     }

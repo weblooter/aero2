@@ -42,28 +42,29 @@ class PrototypeConfigurator extends AbstractServiceConfigurator
     private $exclude;
     private $allowParent;
 
-    public function __construct(ServicesConfigurator $parent, PhpFileLoader $loader, Definition $defaults, string $namespace, string $resource, bool $allowParent)
+    public function __construct( ServicesConfigurator $parent, PhpFileLoader $loader, Definition $defaults, string $namespace, string $resource, bool $allowParent )
     {
         $definition = new Definition();
-        $definition->setPublic($defaults->isPublic());
-        $definition->setAutowired($defaults->isAutowired());
-        $definition->setAutoconfigured($defaults->isAutoconfigured());
-        $definition->setBindings($defaults->getBindings());
-        $definition->setChanges([]);
+        $definition->setPublic( $defaults->isPublic() );
+        $definition->setAutowired( $defaults->isAutowired() );
+        $definition->setAutoconfigured( $defaults->isAutoconfigured() );
+        $definition->setBindings( $defaults->getBindings() );
+        $definition->setChanges( [] );
 
         $this->loader = $loader;
         $this->resource = $resource;
         $this->allowParent = $allowParent;
 
-        parent::__construct($parent, $definition, $namespace, $defaults->getTags());
+        parent::__construct( $parent, $definition, $namespace, $defaults->getTags() );
     }
 
     public function __destruct()
     {
         parent::__destruct();
 
-        if ($this->loader) {
-            $this->loader->registerClasses($this->definition, $this->id, $this->resource, $this->exclude);
+        if ( $this->loader )
+        {
+            $this->loader->registerClasses( $this->definition, $this->id, $this->resource, $this->exclude );
         }
         $this->loader = null;
     }
@@ -73,7 +74,7 @@ class PrototypeConfigurator extends AbstractServiceConfigurator
      *
      * @return $this
      */
-    final public function exclude(string $exclude)
+    final public function exclude( string $exclude )
     {
         $this->exclude = $exclude;
 

@@ -24,11 +24,11 @@ class JsonFormatterTest extends TestCase
     public function testConstruct()
     {
         $formatter = new JsonFormatter();
-        $this->assertEquals(JsonFormatter::BATCH_MODE_JSON, $formatter->getBatchMode());
-        $this->assertEquals(true, $formatter->isAppendingNewlines());
-        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES, false);
-        $this->assertEquals(JsonFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode());
-        $this->assertEquals(false, $formatter->isAppendingNewlines());
+        $this->assertEquals( JsonFormatter::BATCH_MODE_JSON, $formatter->getBatchMode() );
+        $this->assertEquals( true, $formatter->isAppendingNewlines() );
+        $formatter = new JsonFormatter( JsonFormatter::BATCH_MODE_NEWLINES, false );
+        $this->assertEquals( JsonFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode() );
+        $this->assertEquals( false, $formatter->isAppendingNewlines() );
     }
 
     /**
@@ -38,11 +38,11 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $record = $this->getRecord();
-        $this->assertEquals(json_encode($record)."\n", $formatter->format($record));
+        $this->assertEquals( json_encode( $record )."\n", $formatter->format( $record ) );
 
-        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
+        $formatter = new JsonFormatter( JsonFormatter::BATCH_MODE_JSON, false );
         $record = $this->getRecord();
-        $this->assertEquals(json_encode($record), $formatter->format($record));
+        $this->assertEquals( json_encode( $record ), $formatter->format( $record ) );
     }
 
     /**
@@ -53,10 +53,10 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $records = array(
-            $this->getRecord(Logger::WARNING),
-            $this->getRecord(Logger::DEBUG),
+            $this->getRecord( Logger::WARNING ),
+            $this->getRecord( Logger::DEBUG ),
         );
-        $this->assertEquals(json_encode($records), $formatter->formatBatch($records));
+        $this->assertEquals( json_encode( $records ), $formatter->formatBatch( $records ) );
     }
 
     /**
@@ -65,53 +65,54 @@ class JsonFormatterTest extends TestCase
      */
     public function testFormatBatchNewlines()
     {
-        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES);
+        $formatter = new JsonFormatter( JsonFormatter::BATCH_MODE_NEWLINES );
         $records = $expected = array(
-            $this->getRecord(Logger::WARNING),
-            $this->getRecord(Logger::DEBUG),
+            $this->getRecord( Logger::WARNING ),
+            $this->getRecord( Logger::DEBUG ),
         );
-        array_walk($expected, function (&$value, $key) {
-            $value = json_encode($value);
-        });
-        $this->assertEquals(implode("\n", $expected), $formatter->formatBatch($records));
+        array_walk( $expected, function ( &$value, $key ) {
+            $value = json_encode( $value );
+        } );
+        $this->assertEquals( implode( "\n", $expected ), $formatter->formatBatch( $records ) );
     }
 
     public function testDefFormatWithException()
     {
         $formatter = new JsonFormatter();
-        $exception = new \RuntimeException('Foo');
-        $formattedException = $this->formatException($exception);
+        $exception = new \RuntimeException( 'Foo' );
+        $formattedException = $this->formatException( $exception );
 
-        $message = $this->formatRecordWithExceptionInContext($formatter, $exception);
+        $message = $this->formatRecordWithExceptionInContext( $formatter, $exception );
 
-        $this->assertContextContainsFormattedException($formattedException, $message);
+        $this->assertContextContainsFormattedException( $formattedException, $message );
     }
 
     public function testDefFormatWithPreviousException()
     {
         $formatter = new JsonFormatter();
-        $exception = new \RuntimeException('Foo', 0, new \LogicException('Wut?'));
-        $formattedPrevException = $this->formatException($exception->getPrevious());
-        $formattedException = $this->formatException($exception, $formattedPrevException);
+        $exception = new \RuntimeException( 'Foo', 0, new \LogicException( 'Wut?' ) );
+        $formattedPrevException = $this->formatException( $exception->getPrevious() );
+        $formattedException = $this->formatException( $exception, $formattedPrevException );
 
-        $message = $this->formatRecordWithExceptionInContext($formatter, $exception);
+        $message = $this->formatRecordWithExceptionInContext( $formatter, $exception );
 
-        $this->assertContextContainsFormattedException($formattedException, $message);
+        $this->assertContextContainsFormattedException( $formattedException, $message );
     }
 
     public function testDefFormatWithThrowable()
     {
-        if (!class_exists('Error') || !is_subclass_of('Error', 'Throwable')) {
-            $this->markTestSkipped('Requires PHP >=7');
+        if ( !class_exists( 'Error' ) || !is_subclass_of( 'Error', 'Throwable' ) )
+        {
+            $this->markTestSkipped( 'Requires PHP >=7' );
         }
 
         $formatter = new JsonFormatter();
-        $throwable = new \Error('Foo');
-        $formattedThrowable = $this->formatException($throwable);
+        $throwable = new \Error( 'Foo' );
+        $formattedThrowable = $this->formatException( $throwable );
 
-        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+        $message = $this->formatRecordWithExceptionInContext( $formatter, $throwable );
 
-        $this->assertContextContainsFormattedException($formattedThrowable, $message);
+        $this->assertContextContainsFormattedException( $formattedThrowable, $message );
     }
 
     /**
@@ -120,7 +121,7 @@ class JsonFormatterTest extends TestCase
      *
      * @internal param string $exception
      */
-    private function assertContextContainsFormattedException($expected, $actual)
+    private function assertContextContainsFormattedException( $expected, $actual )
     {
         $this->assertEquals(
             '{"level_name":"CRITICAL","channel":"core","context":{"exception":'.$expected.'},"datetime":null,"extra":[],"message":"foobar"}'."\n",
@@ -129,21 +130,21 @@ class JsonFormatterTest extends TestCase
     }
 
     /**
-     * @param JsonFormatter $formatter
+     * @param JsonFormatter         $formatter
      * @param \Exception|\Throwable $exception
      *
      * @return string
      */
-    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, $exception)
+    private function formatRecordWithExceptionInContext( JsonFormatter $formatter, $exception )
     {
-        $message = $formatter->format(array(
+        $message = $formatter->format( array(
             'level_name' => 'CRITICAL',
             'channel' => 'core',
             'context' => array('exception' => $exception),
             'datetime' => null,
             'extra' => array(),
             'message' => 'foobar',
-        ));
+        ) );
         return $message;
     }
 
@@ -152,31 +153,32 @@ class JsonFormatterTest extends TestCase
      *
      * @return string
      */
-    private function formatExceptionFilePathWithLine($exception)
+    private function formatExceptionFilePathWithLine( $exception )
     {
         $options = 0;
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+        if ( version_compare( PHP_VERSION, '5.4.0', '>=' ) )
+        {
             $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
         }
-        $path = substr(json_encode($exception->getFile(), $options), 1, -1);
-        return $path . ':' . $exception->getLine();
+        $path = substr( json_encode( $exception->getFile(), $options ), 1, -1 );
+        return $path.':'.$exception->getLine();
     }
 
     /**
      * @param \Exception|\Throwable $exception
      *
-     * @param null|string $previous
+     * @param null|string           $previous
      *
      * @return string
      */
-    private function formatException($exception, $previous = null)
+    private function formatException( $exception, $previous = null )
     {
         $formattedException =
-            '{"class":"' . get_class($exception) .
-            '","message":"' . $exception->getMessage() .
-            '","code":' . $exception->getCode() .
-            ',"file":"' . $this->formatExceptionFilePathWithLine($exception) .
-            ($previous ? '","previous":' . $previous : '"') .
+            '{"class":"'.get_class( $exception ).
+            '","message":"'.$exception->getMessage().
+            '","code":'.$exception->getCode().
+            ',"file":"'.$this->formatExceptionFilePathWithLine( $exception ).
+            ( $previous ? '","previous":'.$previous : '"' ).
             '}';
         return $formattedException;
     }
@@ -184,36 +186,36 @@ class JsonFormatterTest extends TestCase
     public function testNormalizeHandleLargeArraysWithExactly1000Items()
     {
         $formatter = new NormalizerFormatter();
-        $largeArray = range(1, 1000);
+        $largeArray = range( 1, 1000 );
 
-        $res = $formatter->format(array(
+        $res = $formatter->format( array(
             'level_name' => 'CRITICAL',
             'channel' => 'test',
             'message' => 'bar',
             'context' => array($largeArray),
             'datetime' => new \DateTime,
             'extra' => array(),
-        ));
+        ) );
 
-        $this->assertCount(1000, $res['context'][0]);
-        $this->assertArrayNotHasKey('...', $res['context'][0]);
+        $this->assertCount( 1000, $res[ 'context' ][ 0 ] );
+        $this->assertArrayNotHasKey( '...', $res[ 'context' ][ 0 ] );
     }
 
     public function testNormalizeHandleLargeArrays()
     {
         $formatter = new NormalizerFormatter();
-        $largeArray = range(1, 2000);
+        $largeArray = range( 1, 2000 );
 
-        $res = $formatter->format(array(
+        $res = $formatter->format( array(
             'level_name' => 'CRITICAL',
             'channel' => 'test',
             'message' => 'bar',
             'context' => array($largeArray),
             'datetime' => new \DateTime,
             'extra' => array(),
-        ));
+        ) );
 
-        $this->assertCount(1001, $res['context'][0]);
-        $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
+        $this->assertCount( 1001, $res[ 'context' ][ 0 ] );
+        $this->assertEquals( 'Over 1000 items (2000 total), aborting normalization', $res[ 'context' ][ 0 ][ '...' ] );
     }
 }

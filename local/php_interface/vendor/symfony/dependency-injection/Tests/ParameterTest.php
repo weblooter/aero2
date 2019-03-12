@@ -18,7 +18,8 @@ class ParameterTest extends TestCase
 {
     public function testConstructor()
     {
-        $ref = new Parameter('foo');
-        $this->assertEquals('foo', (string) $ref, '__construct() sets the id of the parameter, which is used for the __toString() method');
+        $ref = new Parameter( 'foo' );
+        $this->assertEquals( 'foo', (string)$ref,
+            '__construct() sets the id of the parameter, which is used for the __toString() method' );
     }
 }

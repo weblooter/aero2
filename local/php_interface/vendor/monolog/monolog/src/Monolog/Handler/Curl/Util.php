@@ -26,30 +26,36 @@ class Util
     /**
      * Executes a CURL request with optional retries and exception on failure
      *
-     * @param  resource          $ch curl handler
+     * @param  resource $ch curl handler
+     *
      * @throws \RuntimeException
      */
-    public static function execute($ch, $retries = 5, $closeAfterDone = true)
+    public static function execute( $ch, $retries = 5, $closeAfterDone = true )
     {
-        while ($retries--) {
-            if (curl_exec($ch) === false) {
-                $curlErrno = curl_errno($ch);
+        while ( $retries-- )
+        {
+            if ( curl_exec( $ch ) === false )
+            {
+                $curlErrno = curl_errno( $ch );
 
-                if (false === in_array($curlErrno, self::$retriableErrorCodes, true) || !$retries) {
-                    $curlError = curl_error($ch);
+                if ( false === in_array( $curlErrno, self::$retriableErrorCodes, true ) || !$retries )
+                {
+                    $curlError = curl_error( $ch );
 
-                    if ($closeAfterDone) {
-                        curl_close($ch);
+                    if ( $closeAfterDone )
+                    {
+                        curl_close( $ch );
                     }
 
-                    throw new \RuntimeException(sprintf('Curl error (code %s): %s', $curlErrno, $curlError));
+                    throw new \RuntimeException( sprintf( 'Curl error (code %s): %s', $curlErrno, $curlError ) );
                 }
 
                 continue;
             }
 
-            if ($closeAfterDone) {
-                curl_close($ch);
+            if ( $closeAfterDone )
+            {
+                curl_close( $ch );
             }
             break;
         }

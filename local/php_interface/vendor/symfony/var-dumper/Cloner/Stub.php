@@ -48,16 +48,20 @@ class Stub
     {
         $properties = [];
 
-        if (!isset(self::$defaultProperties[$c = \get_class($this)])) {
-            self::$defaultProperties[$c] = get_class_vars($c);
+        if ( !isset( self::$defaultProperties[ $c = \get_class( $this ) ] ) )
+        {
+            self::$defaultProperties[ $c ] = get_class_vars( $c );
 
-            foreach ((new \ReflectionClass($c))->getStaticProperties() as $k => $v) {
-                unset(self::$defaultProperties[$c][$k]);
+            foreach ( ( new \ReflectionClass( $c ) )->getStaticProperties() as $k => $v )
+            {
+                unset( self::$defaultProperties[ $c ][ $k ] );
             }
         }
 
-        foreach (self::$defaultProperties[$c] as $k => $v) {
-            if ($this->$k !== $v) {
+        foreach ( self::$defaultProperties[ $c ] as $k => $v )
+        {
+            if ( $this->$k !== $v )
+            {
                 $properties[] = $k;
             }
         }

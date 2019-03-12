@@ -22,19 +22,20 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
 {
     private $uid;
 
-    public function __construct($length = 7)
+    public function __construct( $length = 7 )
     {
-        if (!is_int($length) || $length > 32 || $length < 1) {
-            throw new \InvalidArgumentException('The uid length must be an integer between 1 and 32');
+        if ( !is_int( $length ) || $length > 32 || $length < 1 )
+        {
+            throw new \InvalidArgumentException( 'The uid length must be an integer between 1 and 32' );
         }
 
 
-        $this->uid = $this->generateUid($length);
+        $this->uid = $this->generateUid( $length );
     }
 
-    public function __invoke(array $record)
+    public function __invoke( array $record )
     {
-        $record['extra']['uid'] = $this->uid;
+        $record[ 'extra' ][ 'uid' ] = $this->uid;
 
         return $record;
     }
@@ -49,11 +50,11 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
 
     public function reset()
     {
-        $this->uid = $this->generateUid(strlen($this->uid));
+        $this->uid = $this->generateUid( strlen( $this->uid ) );
     }
 
-    private function generateUid($length)
+    private function generateUid( $length )
     {
-        return substr(hash('md5', uniqid('', true)), 0, $length);
+        return substr( hash( 'md5', uniqid( '', true ) ), 0, $length );
     }
 }

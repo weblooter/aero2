@@ -32,13 +32,13 @@ class ServicesConfigurator extends AbstractConfigurator
     private $anonymousHash;
     private $anonymousCount;
 
-    public function __construct(ContainerBuilder $container, PhpFileLoader $loader, array &$instanceof, string $path = null, int &$anonymousCount = 0)
+    public function __construct( ContainerBuilder $container, PhpFileLoader $loader, array &$instanceof, string $path = null, int &$anonymousCount = 0 )
     {
         $this->defaults = new Definition();
         $this->container = $container;
         $this->loader = $loader;
         $this->instanceof = &$instanceof;
-        $this->anonymousHash = ContainerBuilder::hash($path ?: mt_rand());
+        $this->anonymousHash = ContainerBuilder::hash( $path ? : mt_rand() );
         $this->anonymousCount = &$anonymousCount;
         $instanceof = [];
     }
@@ -48,73 +48,79 @@ class ServicesConfigurator extends AbstractConfigurator
      */
     final public function defaults(): DefaultsConfigurator
     {
-        return new DefaultsConfigurator($this, $this->defaults = new Definition());
+        return new DefaultsConfigurator( $this, $this->defaults = new Definition() );
     }
 
     /**
      * Defines an instanceof-conditional to be applied to following service definitions.
      */
-    final public function instanceof(string $fqcn): InstanceofConfigurator
+    final public function instanceof( string $fqcn ): InstanceofConfigurator
     {
-        $this->instanceof[$fqcn] = $definition = new ChildDefinition('');
+        $this->instanceof[ $fqcn ] = $definition = new ChildDefinition( '' );
 
-        return new InstanceofConfigurator($this, $definition, $fqcn);
+        return new InstanceofConfigurator( $this, $definition, $fqcn );
     }
 
     /**
      * Registers a service.
      *
-     * @param string|null $id    The service id, or null to create an anonymous service
+     * @param string|null $id The service id, or null to create an anonymous service
      * @param string|null $class The class of the service, or null when $id is also the class name
      */
-    final public function set(?string $id, string $class = null): ServiceConfigurator
+    final public function set( ?string $id, string $class = null ): ServiceConfigurator
     {
         $defaults = $this->defaults;
-        $allowParent = !$defaults->getChanges() && empty($this->instanceof);
+        $allowParent = !$defaults->getChanges() && empty( $this->instanceof );
 
         $definition = new Definition();
 
-        if (null === $id) {
-            if (!$class) {
-                throw new \LogicException('Anonymous services must have a class name.');
+        if ( null === $id )
+        {
+            if ( !$class )
+            {
+                throw new \LogicException( 'Anonymous services must have a class name.' );
             }
 
-            $id = sprintf('.%d_%s', ++$this->anonymousCount, preg_replace('/^.*\\\\/', '', $class).'~'.$this->anonymousHash);
-            $definition->setPublic(false);
-        } else {
-            $definition->setPublic($defaults->isPublic());
+            $id = sprintf( '.%d_%s', ++$this->anonymousCount,
+                preg_replace( '/^.*\\\\/', '', $class ).'~'.$this->anonymousHash );
+            $definition->setPublic( false );
+        }
+        else
+        {
+            $definition->setPublic( $defaults->isPublic() );
         }
 
-        $definition->setAutowired($defaults->isAutowired());
-        $definition->setAutoconfigured($defaults->isAutoconfigured());
-        $definition->setBindings($defaults->getBindings());
-        $definition->setChanges([]);
+        $definition->setAutowired( $defaults->isAutowired() );
+        $definition->setAutoconfigured( $defaults->isAutoconfigured() );
+        $definition->setBindings( $defaults->getBindings() );
+        $definition->setChanges( [] );
 
-        $configurator = new ServiceConfigurator($this->container, $this->instanceof, $allowParent, $this, $definition, $id, $defaults->getTags());
+        $configurator = new ServiceConfigurator( $this->container, $this->instanceof, $allowParent, $this, $definition,
+            $id, $defaults->getTags() );
 
-        return null !== $class ? $configurator->class($class) : $configurator;
+        return null !== $class ? $configurator->class( $class ) : $configurator;
     }
 
     /**
      * Creates an alias.
      */
-    final public function alias(string $id, string $referencedId): AliasConfigurator
+    final public function alias( string $id, string $referencedId ): AliasConfigurator
     {
-        $ref = static::processValue($referencedId, true);
-        $alias = new Alias((string) $ref, $this->defaults->isPublic());
-        $this->container->setAlias($id, $alias);
+        $ref = static::processValue( $referencedId, true );
+        $alias = new Alias( (string)$ref, $this->defaults->isPublic() );
+        $this->container->setAlias( $id, $alias );
 
-        return new AliasConfigurator($this, $alias);
+        return new AliasConfigurator( $this, $alias );
     }
 
     /**
      * Registers a PSR-4 namespace using a glob pattern.
      */
-    final public function load(string $namespace, string $resource): PrototypeConfigurator
+    final public function load( string $namespace, string $resource ): PrototypeConfigurator
     {
-        $allowParent = !$this->defaults->getChanges() && empty($this->instanceof);
+        $allowParent = !$this->defaults->getChanges() && empty( $this->instanceof );
 
-        return new PrototypeConfigurator($this, $this->loader, $this->defaults, $namespace, $resource, $allowParent);
+        return new PrototypeConfigurator( $this, $this->loader, $this->defaults, $namespace, $resource, $allowParent );
     }
 
     /**
@@ -122,19 +128,20 @@ class ServicesConfigurator extends AbstractConfigurator
      *
      * @throws ServiceNotFoundException if the service definition does not exist
      */
-    final public function get(string $id): ServiceConfigurator
+    final public function get( string $id ): ServiceConfigurator
     {
-        $allowParent = !$this->defaults->getChanges() && empty($this->instanceof);
-        $definition = $this->container->getDefinition($id);
+        $allowParent = !$this->defaults->getChanges() && empty( $this->instanceof );
+        $definition = $this->container->getDefinition( $id );
 
-        return new ServiceConfigurator($this->container, $definition->getInstanceofConditionals(), $allowParent, $this, $definition, $id, []);
+        return new ServiceConfigurator( $this->container, $definition->getInstanceofConditionals(), $allowParent, $this,
+            $definition, $id, [] );
     }
 
     /**
      * Registers a service.
      */
-    final public function __invoke(string $id, string $class = null): ServiceConfigurator
+    final public function __invoke( string $id, string $class = null ): ServiceConfigurator
     {
-        return $this->set($id, $class);
+        return $this->set( $id, $class );
     }
 }

@@ -20,9 +20,10 @@ class DemoConsole extends Command
 
     /**
      * DemoConsole constructor.
+     *
      * @param bool $requireName
      */
-    public function __construct(bool $requireName = false)
+    public function __construct( bool $requireName = false )
     {
         $this->requireName = $requireName;
 
@@ -35,20 +36,20 @@ class DemoConsole extends Command
     protected function configure(): void
     {
         $this
-            ->setName('kd:demo')
-            ->setDescription('Демострация работы консольной команды')
-            ->setHelp("Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kd:demo --help")
-            ->addArgument('username', ($this->requireName ? InputArgument :: REQUIRED : InputArgument::OPTIONAL),
-                'Ваше имя');
+            ->setName( 'kd:demo' )
+            ->setDescription( 'Демострация работы консольной команды' )
+            ->setHelp( "Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kd:demo --help" )
+            ->addArgument( 'username', ( $this->requireName ? InputArgument :: REQUIRED : InputArgument::OPTIONAL ),
+                'Ваше имя' );
     }
 
     /**
      * Бизнесс-логика
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute( InputInterface $input, OutputInterface $output ): void
     {
-        $output->writeln('Привет, ' . $input->getArgument('username') . '!');
+        $output->writeln( 'Привет, '.$input->getArgument( 'username' ).'!' );
     }
 }

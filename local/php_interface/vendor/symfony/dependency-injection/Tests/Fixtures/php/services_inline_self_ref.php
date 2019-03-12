@@ -42,7 +42,7 @@ class Symfony_DI_PhpDumper_Test_Inline_Self_Ref extends Container
 
     public function compile()
     {
-        throw new LogicException('You cannot compile a dumped container that was already compiled.');
+        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
     }
 
     public function isCompiled()
@@ -67,10 +67,10 @@ class Symfony_DI_PhpDumper_Test_Inline_Self_Ref extends Container
     {
         $a = new \App\Bar();
 
-        $b = new \App\Baz($a);
+        $b = new \App\Baz( $a );
         $b->bar = $a;
 
-        $this->services['App\Foo'] = $instance = new \App\Foo($b);
+        $this->services[ 'App\Foo' ] = $instance = new \App\Foo( $b );
 
         $a->foo = $instance;
 

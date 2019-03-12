@@ -11,12 +11,13 @@ class FooLockCommand extends Command
 
     protected function configure()
     {
-        $this->setName('foo:lock');
+        $this->setName( 'foo:lock' );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute( InputInterface $input, OutputInterface $output )
     {
-        if (!$this->lock()) {
+        if ( !$this->lock() )
+        {
             return 1;
         }
 

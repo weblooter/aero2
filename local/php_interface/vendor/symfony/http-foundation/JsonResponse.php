@@ -34,20 +34,21 @@ class JsonResponse extends Response
     protected $encodingOptions = self::DEFAULT_ENCODING_OPTIONS;
 
     /**
-     * @param mixed $data    The response data
-     * @param int   $status  The response status code
+     * @param mixed $data The response data
+     * @param int   $status The response status code
      * @param array $headers An array of response headers
-     * @param bool  $json    If the data is already a JSON string
+     * @param bool  $json If the data is already a JSON string
      */
-    public function __construct($data = null, int $status = 200, array $headers = [], bool $json = false)
+    public function __construct( $data = null, int $status = 200, array $headers = [], bool $json = false )
     {
-        parent::__construct('', $status, $headers);
+        parent::__construct( '', $status, $headers );
 
-        if (null === $data) {
+        if ( null === $data )
+        {
             $data = new \ArrayObject();
         }
 
-        $json ? $this->setJson($data) : $this->setData($data);
+        $json ? $this->setJson( $data ) : $this->setData( $data );
     }
 
     /**
@@ -58,23 +59,23 @@ class JsonResponse extends Response
      *     return JsonResponse::create($data, 200)
      *         ->setSharedMaxAge(300);
      *
-     * @param mixed $data    The json response data
-     * @param int   $status  The response status code
+     * @param mixed $data The json response data
+     * @param int   $status The response status code
      * @param array $headers An array of response headers
      *
      * @return static
      */
-    public static function create($data = null, $status = 200, $headers = [])
+    public static function create( $data = null, $status = 200, $headers = [] )
     {
-        return new static($data, $status, $headers);
+        return new static( $data, $status, $headers );
     }
 
     /**
      * Make easier the creation of JsonResponse from raw json.
      */
-    public static function fromJsonString($data = null, $status = 200, $headers = [])
+    public static function fromJsonString( $data = null, $status = 200, $headers = [] )
     {
-        return new static($data, $status, $headers, true);
+        return new static( $data, $status, $headers, true );
     }
 
     /**
@@ -86,23 +87,68 @@ class JsonResponse extends Response
      *
      * @throws \InvalidArgumentException When the callback name is not valid
      */
-    public function setCallback($callback = null)
+    public function setCallback( $callback = null )
     {
-        if (null !== $callback) {
+        if ( null !== $callback )
+        {
             // partially taken from http://www.geekality.net/2011/08/03/valid-javascript-identifier/
             // partially taken from https://github.com/willdurand/JsonpCallbackValidator
             //      JsonpCallbackValidator is released under the MIT License. See https://github.com/willdurand/JsonpCallbackValidator/blob/v1.1.0/LICENSE for details.
             //      (c) William Durand <william.durand1@gmail.com>
             $pattern = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*(?:\[(?:"(?:\\\.|[^"\\\])*"|\'(?:\\\.|[^\'\\\])*\'|\d+)\])*?$/u';
             $reserved = [
-                'break', 'do', 'instanceof', 'typeof', 'case', 'else', 'new', 'var', 'catch', 'finally', 'return', 'void', 'continue', 'for', 'switch', 'while',
-                'debugger', 'function', 'this', 'with', 'default', 'if', 'throw', 'delete', 'in', 'try', 'class', 'enum', 'extends', 'super',  'const', 'export',
-                'import', 'implements', 'let', 'private', 'public', 'yield', 'interface', 'package', 'protected', 'static', 'null', 'true', 'false',
+                'break',
+                'do',
+                'instanceof',
+                'typeof',
+                'case',
+                'else',
+                'new',
+                'var',
+                'catch',
+                'finally',
+                'return',
+                'void',
+                'continue',
+                'for',
+                'switch',
+                'while',
+                'debugger',
+                'function',
+                'this',
+                'with',
+                'default',
+                'if',
+                'throw',
+                'delete',
+                'in',
+                'try',
+                'class',
+                'enum',
+                'extends',
+                'super',
+                'const',
+                'export',
+                'import',
+                'implements',
+                'let',
+                'private',
+                'public',
+                'yield',
+                'interface',
+                'package',
+                'protected',
+                'static',
+                'null',
+                'true',
+                'false',
             ];
-            $parts = explode('.', $callback);
-            foreach ($parts as $part) {
-                if (!preg_match($pattern, $part) || \in_array($part, $reserved, true)) {
-                    throw new \InvalidArgumentException('The callback name is not valid.');
+            $parts = explode( '.', $callback );
+            foreach ( $parts as $part )
+            {
+                if ( !preg_match( $pattern, $part ) || \in_array( $part, $reserved, true ) )
+                {
+                    throw new \InvalidArgumentException( 'The callback name is not valid.' );
                 }
             }
         }
@@ -121,7 +167,7 @@ class JsonResponse extends Response
      *
      * @throws \InvalidArgumentException
      */
-    public function setJson($json)
+    public function setJson( $json )
     {
         $this->data = $json;
 
@@ -137,22 +183,27 @@ class JsonResponse extends Response
      *
      * @throws \InvalidArgumentException
      */
-    public function setData($data = [])
+    public function setData( $data = [] )
     {
-        try {
-            $data = json_encode($data, $this->encodingOptions);
-        } catch (\Exception $e) {
-            if ('Exception' === \get_class($e) && 0 === strpos($e->getMessage(), 'Failed calling ')) {
-                throw $e->getPrevious() ?: $e;
+        try
+        {
+            $data = json_encode( $data, $this->encodingOptions );
+        }
+        catch ( \Exception $e )
+        {
+            if ( 'Exception' === \get_class( $e ) && 0 === strpos( $e->getMessage(), 'Failed calling ' ) )
+            {
+                throw $e->getPrevious() ? : $e;
             }
             throw $e;
         }
 
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new \InvalidArgumentException(json_last_error_msg());
+        if ( JSON_ERROR_NONE !== json_last_error() )
+        {
+            throw new \InvalidArgumentException( json_last_error_msg() );
         }
 
-        return $this->setJson($data);
+        return $this->setJson( $data );
     }
 
     /**
@@ -172,11 +223,11 @@ class JsonResponse extends Response
      *
      * @return $this
      */
-    public function setEncodingOptions($encodingOptions)
+    public function setEncodingOptions( $encodingOptions )
     {
-        $this->encodingOptions = (int) $encodingOptions;
+        $this->encodingOptions = (int)$encodingOptions;
 
-        return $this->setData(json_decode($this->data));
+        return $this->setData( json_decode( $this->data ) );
     }
 
     /**
@@ -186,19 +237,21 @@ class JsonResponse extends Response
      */
     protected function update()
     {
-        if (null !== $this->callback) {
+        if ( null !== $this->callback )
+        {
             // Not using application/javascript for compatibility reasons with older browsers.
-            $this->headers->set('Content-Type', 'text/javascript');
+            $this->headers->set( 'Content-Type', 'text/javascript' );
 
-            return $this->setContent(sprintf('/**/%s(%s);', $this->callback, $this->data));
+            return $this->setContent( sprintf( '/**/%s(%s);', $this->callback, $this->data ) );
         }
 
         // Only set the header when there is none or when it equals 'text/javascript' (from a previous update with callback)
         // in order to not overwrite a custom definition.
-        if (!$this->headers->has('Content-Type') || 'text/javascript' === $this->headers->get('Content-Type')) {
-            $this->headers->set('Content-Type', 'application/json');
+        if ( !$this->headers->has( 'Content-Type' ) || 'text/javascript' === $this->headers->get( 'Content-Type' ) )
+        {
+            $this->headers->set( 'Content-Type', 'application/json' );
         }
 
-        return $this->setContent($this->data);
+        return $this->setContent( $this->data );
     }
 }

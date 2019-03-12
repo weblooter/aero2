@@ -32,15 +32,16 @@ Redis {
 }
 EODUMP;
 
-        $this->assertDumpMatchesFormat($xCast, $redis);
+        $this->assertDumpMatchesFormat( $xCast, $redis );
     }
 
     public function testConnected()
     {
         $redis = new \Redis();
-        if (!@$redis->connect('127.0.0.1')) {
+        if ( !@$redis->connect( '127.0.0.1' ) )
+        {
             $e = error_get_last();
-            self::markTestSkipped($e['message']);
+            self::markTestSkipped( $e[ 'message' ] );
         }
 
         $xCast = <<<'EODUMP'
@@ -65,6 +66,6 @@ Redis {%A
 }
 EODUMP;
 
-        $this->assertDumpMatchesFormat($xCast, $redis);
+        $this->assertDumpMatchesFormat( $xCast, $redis );
     }
 }

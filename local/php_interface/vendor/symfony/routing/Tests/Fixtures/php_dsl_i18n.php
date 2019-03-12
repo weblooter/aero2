@@ -2,16 +2,16 @@
 
 namespace Symfony\Component\Routing\Loader\Configurator;
 
-return function (RoutingConfigurator $routes) {
+return function ( RoutingConfigurator $routes ) {
     $routes
         ->collection()
-        ->prefix(['en' => '/glish'])
-        ->add('foo', '/foo')
-        ->add('bar', ['en' => '/bar']);
+        ->prefix( ['en' => '/glish'] )
+        ->add( 'foo', '/foo' )
+        ->add( 'bar', ['en' => '/bar'] );
 
     $routes
-        ->add('baz', ['en' => '/baz']);
+        ->add( 'baz', ['en' => '/baz'] );
 
-    $routes->import('php_dsl_sub_i18n.php')
-        ->prefix(['fr' => '/ench']);
+    $routes->import( 'php_dsl_sub_i18n.php' )
+        ->prefix( ['fr' => '/ench'] );
 };

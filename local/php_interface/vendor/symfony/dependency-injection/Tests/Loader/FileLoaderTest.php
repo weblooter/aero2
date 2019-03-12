@@ -39,23 +39,23 @@ class FileLoaderTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = realpath(__DIR__.'/../');
+        self::$fixturesPath = realpath( __DIR__.'/../' );
     }
 
     public function testImportWithGlobPattern()
     {
         $container = new ContainerBuilder();
-        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath));
+        $loader = new TestFileLoader( $container, new FileLocator( self::$fixturesPath ) );
 
-        $resolver = new LoaderResolver([
-            new IniFileLoader($container, new FileLocator(self::$fixturesPath.'/ini')),
-            new XmlFileLoader($container, new FileLocator(self::$fixturesPath.'/xml')),
-            new PhpFileLoader($container, new FileLocator(self::$fixturesPath.'/php')),
-            new YamlFileLoader($container, new FileLocator(self::$fixturesPath.'/yaml')),
-        ]);
+        $resolver = new LoaderResolver( [
+            new IniFileLoader( $container, new FileLocator( self::$fixturesPath.'/ini' ) ),
+            new XmlFileLoader( $container, new FileLocator( self::$fixturesPath.'/xml' ) ),
+            new PhpFileLoader( $container, new FileLocator( self::$fixturesPath.'/php' ) ),
+            new YamlFileLoader( $container, new FileLocator( self::$fixturesPath.'/yaml' ) ),
+        ] );
 
-        $loader->setResolver($resolver);
-        $loader->import('{F}ixtures/{xml,yaml}/services2.{yml,xml}');
+        $loader->setResolver( $resolver );
+        $loader->import( '{F}ixtures/{xml,yaml}/services2.{yml,xml}' );
 
         $actual = $container->getParameterBag()->all();
         $expected = [
@@ -79,23 +79,25 @@ class FileLoaderTest extends TestCase
             'constant' => PHP_EOL,
             'bar' => '%foo%',
             'escape' => '@escapeme',
-            'foo_bar' => new Reference('foo_bar'),
+            'foo_bar' => new Reference( 'foo_bar' ),
         ];
 
-        $this->assertEquals(array_keys($expected), array_keys($actual), '->load() imports and merges imported files');
+        $this->assertEquals( array_keys( $expected ), array_keys( $actual ),
+            '->load() imports and merges imported files' );
     }
 
     public function testRegisterClasses()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('sub_dir', 'Sub');
-        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
+        $container->setParameter( 'sub_dir', 'Sub' );
+        $loader = new TestFileLoader( $container, new FileLocator( self::$fixturesPath.'/Fixtures' ) );
 
-        $loader->registerClasses(new Definition(), 'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\Sub\\', 'Prototype/%sub_dir%/*');
+        $loader->registerClasses( new Definition(),
+            'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\Sub\\', 'Prototype/%sub_dir%/*' );
 
         $this->assertEquals(
             ['service_container', Bar::class],
-            array_keys($container->getDefinitions())
+            array_keys( $container->getDefinitions() )
         );
         $this->assertEquals(
             [
@@ -103,15 +105,15 @@ class FileLoaderTest extends TestCase
                 ContainerInterface::class,
                 BarInterface::class,
             ],
-            array_keys($container->getAliases())
+            array_keys( $container->getAliases() )
         );
     }
 
     public function testRegisterClassesWithExclude()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('other_dir', 'OtherDir');
-        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
+        $container->setParameter( 'other_dir', 'OtherDir' );
+        $loader = new TestFileLoader( $container, new FileLocator( self::$fixturesPath.'/Fixtures' ) );
 
         $loader->registerClasses(
             new Definition(),
@@ -121,10 +123,10 @@ class FileLoaderTest extends TestCase
             'Prototype/{%other_dir%/AnotherSub,Foo.php}'
         );
 
-        $this->assertTrue($container->has(Bar::class));
-        $this->assertTrue($container->has(Baz::class));
-        $this->assertFalse($container->has(Foo::class));
-        $this->assertFalse($container->has(DeeperBaz::class));
+        $this->assertTrue( $container->has( Bar::class ) );
+        $this->assertTrue( $container->has( Baz::class ) );
+        $this->assertFalse( $container->has( Foo::class ) );
+        $this->assertFalse( $container->has( DeeperBaz::class ) );
 
         $this->assertEquals(
             [
@@ -132,22 +134,23 @@ class FileLoaderTest extends TestCase
                 ContainerInterface::class,
                 BarInterface::class,
             ],
-            array_keys($container->getAliases())
+            array_keys( $container->getAliases() )
         );
     }
 
     public function testNestedRegisterClasses()
     {
         $container = new ContainerBuilder();
-        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
+        $loader = new TestFileLoader( $container, new FileLocator( self::$fixturesPath.'/Fixtures' ) );
 
         $prototype = new Definition();
-        $prototype->setPublic(true)->setPrivate(true);
-        $loader->registerClasses($prototype, 'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\\', 'Prototype/*');
+        $prototype->setPublic( true )->setPrivate( true );
+        $loader->registerClasses( $prototype, 'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\\',
+            'Prototype/*' );
 
-        $this->assertTrue($container->has(Bar::class));
-        $this->assertTrue($container->has(Baz::class));
-        $this->assertTrue($container->has(Foo::class));
+        $this->assertTrue( $container->has( Bar::class ) );
+        $this->assertTrue( $container->has( Baz::class ) );
+        $this->assertTrue( $container->has( Foo::class ) );
 
         $this->assertEquals(
             [
@@ -155,66 +158,74 @@ class FileLoaderTest extends TestCase
                 ContainerInterface::class,
                 FooInterface::class,
             ],
-            array_keys($container->getAliases())
+            array_keys( $container->getAliases() )
         );
 
-        $alias = $container->getAlias(FooInterface::class);
-        $this->assertSame(Foo::class, (string) $alias);
-        $this->assertFalse($alias->isPublic());
-        $this->assertFalse($alias->isPrivate());
+        $alias = $container->getAlias( FooInterface::class );
+        $this->assertSame( Foo::class, (string)$alias );
+        $this->assertFalse( $alias->isPublic() );
+        $this->assertFalse( $alias->isPrivate() );
     }
 
     public function testMissingParentClass()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('bad_classes_dir', 'BadClasses');
-        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
+        $container->setParameter( 'bad_classes_dir', 'BadClasses' );
+        $loader = new TestFileLoader( $container, new FileLocator( self::$fixturesPath.'/Fixtures' ) );
 
         $loader->registerClasses(
-            (new Definition())->setPublic(false),
+            ( new Definition() )->setPublic( false ),
             'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\BadClasses\\',
             'Prototype/%bad_classes_dir%/*'
         );
 
-        $this->assertTrue($container->has(MissingParent::class));
+        $this->assertTrue( $container->has( MissingParent::class ) );
 
         $this->assertSame(
             ['While discovering services from namespace "Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\BadClasses\", an error was thrown when processing the class "Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\BadClasses\MissingParent": "Class Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\BadClasses\MissingClass not found".'],
-            $container->getDefinition(MissingParent::class)->getErrors()
+            $container->getDefinition( MissingParent::class )->getErrors()
         );
     }
 
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Expected to find class "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\Prototype\\Bar" in file ".+" while importing services from resource "Prototype\/Sub\/\*", but it was not found\! Check the namespace prefix used with the resource/
+     * @expectedExceptionMessageRegExp /Expected to find class
+     *     "Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\Prototype\\Bar" in file ".+" while importing
+     *     services from resource "Prototype\/Sub\/\*", but it was not found\! Check the namespace prefix used with the
+     *     resource/
      */
     public function testRegisterClassesWithBadPrefix()
     {
         $container = new ContainerBuilder();
-        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
+        $loader = new TestFileLoader( $container, new FileLocator( self::$fixturesPath.'/Fixtures' ) );
 
         // the Sub is missing from namespace prefix
-        $loader->registerClasses(new Definition(), 'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\\', 'Prototype/Sub/*');
+        $loader->registerClasses( new Definition(), 'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\\',
+            'Prototype/Sub/*' );
     }
 
     /**
      * @dataProvider getIncompatibleExcludeTests
      */
-    public function testRegisterClassesWithIncompatibleExclude($resourcePattern, $excludePattern)
+    public function testRegisterClassesWithIncompatibleExclude( $resourcePattern, $excludePattern )
     {
         $container = new ContainerBuilder();
-        $loader = new TestFileLoader($container, new FileLocator(self::$fixturesPath.'/Fixtures'));
+        $loader = new TestFileLoader( $container, new FileLocator( self::$fixturesPath.'/Fixtures' ) );
 
-        try {
+        try
+        {
             $loader->registerClasses(
                 new Definition(),
                 'Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\\',
                 $resourcePattern,
                 $excludePattern
             );
-        } catch (InvalidArgumentException $e) {
+        }
+        catch ( InvalidArgumentException $e )
+        {
             $this->assertEquals(
-                sprintf('Invalid "exclude" pattern when importing classes for "Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\": make sure your "exclude" pattern (%s) is a subset of the "resource" pattern (%s)', $excludePattern, $resourcePattern),
+                sprintf( 'Invalid "exclude" pattern when importing classes for "Symfony\Component\DependencyInjection\Tests\Fixtures\Prototype\": make sure your "exclude" pattern (%s) is a subset of the "resource" pattern (%s)',
+                    $excludePattern, $resourcePattern ),
                 $e->getMessage()
             );
         }
@@ -229,12 +240,12 @@ class FileLoaderTest extends TestCase
 
 class TestFileLoader extends FileLoader
 {
-    public function load($resource, $type = null)
+    public function load( $resource, $type = null )
     {
         return $resource;
     }
 
-    public function supports($resource, $type = null)
+    public function supports( $resource, $type = null )
     {
         return false;
     }

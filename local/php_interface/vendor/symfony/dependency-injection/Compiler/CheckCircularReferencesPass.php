@@ -32,15 +32,16 @@ class CheckCircularReferencesPass implements CompilerPassInterface
     /**
      * Checks the ContainerBuilder object for circular references.
      */
-    public function process(ContainerBuilder $container)
+    public function process( ContainerBuilder $container )
     {
         $graph = $container->getCompiler()->getServiceReferenceGraph();
 
         $this->checkedNodes = [];
-        foreach ($graph->getNodes() as $id => $node) {
+        foreach ( $graph->getNodes() as $id => $node )
+        {
             $this->currentPath = [$id];
 
-            $this->checkOutEdges($node->getOutEdges());
+            $this->checkOutEdges( $node->getOutEdges() );
         }
     }
 
@@ -51,27 +52,32 @@ class CheckCircularReferencesPass implements CompilerPassInterface
      *
      * @throws ServiceCircularReferenceException when a circular reference is found
      */
-    private function checkOutEdges(array $edges)
+    private function checkOutEdges( array $edges )
     {
-        foreach ($edges as $edge) {
+        foreach ( $edges as $edge )
+        {
             $node = $edge->getDestNode();
             $id = $node->getId();
 
-            if (empty($this->checkedNodes[$id])) {
+            if ( empty( $this->checkedNodes[ $id ] ) )
+            {
                 // Don't check circular references for lazy edges
-                if (!$node->getValue() || (!$edge->isLazy() && !$edge->isWeak())) {
-                    $searchKey = array_search($id, $this->currentPath);
+                if ( !$node->getValue() || ( !$edge->isLazy() && !$edge->isWeak() ) )
+                {
+                    $searchKey = array_search( $id, $this->currentPath );
                     $this->currentPath[] = $id;
 
-                    if (false !== $searchKey) {
-                        throw new ServiceCircularReferenceException($id, \array_slice($this->currentPath, $searchKey));
+                    if ( false !== $searchKey )
+                    {
+                        throw new ServiceCircularReferenceException( $id,
+                            \array_slice( $this->currentPath, $searchKey ) );
                     }
 
-                    $this->checkOutEdges($node->getOutEdges());
+                    $this->checkOutEdges( $node->getOutEdges() );
                 }
 
-                $this->checkedNodes[$id] = true;
-                array_pop($this->currentPath);
+                $this->checkedNodes[ $id ] = true;
+                array_pop( $this->currentPath );
             }
         }
     }

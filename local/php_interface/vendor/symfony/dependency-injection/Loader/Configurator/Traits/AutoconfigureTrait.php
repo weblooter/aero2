@@ -23,12 +23,14 @@ trait AutoconfigureTrait
      *
      * @throws InvalidArgumentException when a parent is already set
      */
-    final public function autoconfigure(bool $autoconfigured = true)
+    final public function autoconfigure( bool $autoconfigured = true )
     {
-        if ($autoconfigured && $this->definition instanceof ChildDefinition) {
-            throw new InvalidArgumentException(sprintf('The service "%s" cannot have a "parent" and also have "autoconfigure". Try disabling autoconfiguration for the service.', $this->id));
+        if ( $autoconfigured && $this->definition instanceof ChildDefinition )
+        {
+            throw new InvalidArgumentException( sprintf( 'The service "%s" cannot have a "parent" and also have "autoconfigure". Try disabling autoconfiguration for the service.',
+                $this->id ) );
         }
-        $this->definition->setAutoconfigured($autoconfigured);
+        $this->definition->setAutoconfigured( $autoconfigured );
 
         return $this;
     }

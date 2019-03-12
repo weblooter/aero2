@@ -17,7 +17,7 @@ class Alias
     private $public;
     private $private;
 
-    public function __construct(string $id, bool $public = true)
+    public function __construct( string $id, bool $public = true )
     {
         $this->id = $id;
         $this->public = $public;
@@ -41,9 +41,9 @@ class Alias
      *
      * @return $this
      */
-    public function setPublic($boolean)
+    public function setPublic( $boolean )
     {
-        $this->public = (bool) $boolean;
+        $this->public = (bool)$boolean;
         $this->private = false;
 
         return $this;
@@ -61,9 +61,9 @@ class Alias
      *
      * @return $this
      */
-    public function setPrivate($boolean)
+    public function setPrivate( $boolean )
     {
-        $this->private = (bool) $boolean;
+        $this->private = (bool)$boolean;
 
         return $this;
     }

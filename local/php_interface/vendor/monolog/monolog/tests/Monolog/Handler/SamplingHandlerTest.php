@@ -21,13 +21,14 @@ class SamplingHandlerTest extends TestCase
     public function testHandle()
     {
         $testHandler = new TestHandler();
-        $handler = new SamplingHandler($testHandler, 2);
-        for ($i = 0; $i < 10000; $i++) {
-            $handler->handle($this->getRecord());
+        $handler = new SamplingHandler( $testHandler, 2 );
+        for ( $i = 0; $i < 10000; $i++ )
+        {
+            $handler->handle( $this->getRecord() );
         }
-        $count = count($testHandler->getRecords());
+        $count = count( $testHandler->getRecords() );
         // $count should be half of 10k, so between 4k and 6k
-        $this->assertLessThan(6000, $count);
-        $this->assertGreaterThan(4000, $count);
+        $this->assertLessThan( 6000, $count );
+        $this->assertGreaterThan( 4000, $count );
     }
 }

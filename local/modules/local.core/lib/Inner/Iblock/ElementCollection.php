@@ -38,37 +38,41 @@ class ElementCollection extends EntityCollection
 
     /**
      * Добавить элемент в колекцию
+     *
      * @param Element $item
+     *
      * @return \Local\Core\Inner\CollectableEntity
      * @throws \Bitrix\Main\ArgumentTypeException
      */
-    public function addItem(Element $item)
+    public function addItem( Element $item )
     {
-        return parent::addItem($item);
+        return parent::addItem( $item );
     }
 
     /**
      * Установить параметры постраничной навигации
+     *
      * @param \CDBResult $result
      */
-    public function setPageNavParams(\CDBResult $result)
+    public function setPageNavParams( \CDBResult $result )
     {
-        if((int)$result->NavPageNomer)
+        if ( (int)$result->NavPageNomer )
         {
-            $this->setNavPageCount($result->NavPageCount);
-            $this->setNavPageNomer($result->NavPageNomer);
-            $this->setNavPageSize($result->NavPageSize);
-            $this->setNavShowAll($result->NavShowAll);
-            $this->setNavRecordCount($result->NavRecordCount);
+            $this->setNavPageCount( $result->NavPageCount );
+            $this->setNavPageNomer( $result->NavPageNomer );
+            $this->setNavPageSize( $result->NavPageSize );
+            $this->setNavShowAll( $result->NavShowAll );
+            $this->setNavRecordCount( $result->NavRecordCount );
         }
     }
 
     /**
      * Установить количество страниц для текущх параметров постаричной навигации
      * @internal
+     *
      * @param $nav_page_count
      */
-    protected function setNavPageCount($nav_page_count)
+    protected function setNavPageCount( $nav_page_count )
     {
         $this->navPageCount = (int)$nav_page_count;
     }
@@ -76,9 +80,10 @@ class ElementCollection extends EntityCollection
     /**
      * Установить номер текущей станицы
      * @internal
+     *
      * @param $nav_page_nomer
      */
-    protected function setNavPageNomer($nav_page_nomer)
+    protected function setNavPageNomer( $nav_page_nomer )
     {
         $this->navPageNomer = (int)$nav_page_nomer;
     }
@@ -86,9 +91,10 @@ class ElementCollection extends EntityCollection
     /**
      * Установить количество элементов на странице
      * @internal
+     *
      * @param $nav_page_size
      */
-    protected function setNavPageSize($nav_page_size)
+    protected function setNavPageSize( $nav_page_size )
     {
         $this->navPageSize = (int)$nav_page_size;
     }
@@ -96,9 +102,10 @@ class ElementCollection extends EntityCollection
     /**
      * Установить флаг отображения всех элементов
      * @internal
+     *
      * @param $nav_show_all
      */
-    protected function setNavShowAll($nav_show_all)
+    protected function setNavShowAll( $nav_show_all )
     {
         $this->navShowAll = (bool)$nav_show_all;
     }
@@ -106,9 +113,10 @@ class ElementCollection extends EntityCollection
     /**
      * Установить общее количсетво элементов
      * @internal
+     *
      * @param $nav_record_count
      */
-    protected function setNavRecordCount($nav_record_count)
+    protected function setNavRecordCount( $nav_record_count )
     {
         $this->navRecordCount = (int)$nav_record_count;
     }

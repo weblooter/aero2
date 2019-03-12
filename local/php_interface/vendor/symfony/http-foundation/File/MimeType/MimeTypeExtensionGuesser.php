@@ -806,8 +806,8 @@ class MimeTypeExtensionGuesser implements ExtensionGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guess($mimeType)
+    public function guess( $mimeType )
     {
-        return isset($this->defaultExtensions[$mimeType]) ? $this->defaultExtensions[$mimeType] : null;
+        return isset( $this->defaultExtensions[ $mimeType ] ) ? $this->defaultExtensions[ $mimeType ] : null;
     }
 }

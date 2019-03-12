@@ -22,12 +22,12 @@ class NullHandlerTest extends TestCase
     public function testHandle()
     {
         $handler = new NullHandler();
-        $this->assertTrue($handler->handle($this->getRecord()));
+        $this->assertTrue( $handler->handle( $this->getRecord() ) );
     }
 
     public function testHandleLowerLevelRecord()
     {
-        $handler = new NullHandler(Logger::WARNING);
-        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+        $handler = new NullHandler( Logger::WARNING );
+        $this->assertFalse( $handler->handle( $this->getRecord( Logger::DEBUG ) ) );
     }
 }

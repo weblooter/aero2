@@ -22,10 +22,11 @@ class ScalarFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format( array $record )
     {
-        foreach ($record as $key => $value) {
-            $record[$key] = $this->normalizeValue($value);
+        foreach ( $record as $key => $value )
+        {
+            $record[ $key ] = $this->normalizeValue( $value );
         }
 
         return $record;
@@ -33,14 +34,16 @@ class ScalarFormatter extends NormalizerFormatter
 
     /**
      * @param  mixed $value
+     *
      * @return mixed
      */
-    protected function normalizeValue($value)
+    protected function normalizeValue( $value )
     {
-        $normalized = $this->normalize($value);
+        $normalized = $this->normalize( $value );
 
-        if (is_array($normalized) || is_object($normalized)) {
-            return $this->toJson($normalized, true);
+        if ( is_array( $normalized ) || is_object( $normalized ) )
+        {
+            return $this->toJson( $normalized, true );
         }
 
         return $normalized;

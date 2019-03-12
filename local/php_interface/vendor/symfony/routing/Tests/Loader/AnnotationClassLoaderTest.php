@@ -45,20 +45,22 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
     protected function setUp()
     {
         $reader = new AnnotationReader();
-        $this->loader = new class($reader) extends AnnotationClassLoader {
-            protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot)
+        $this->loader = new class( $reader ) extends AnnotationClassLoader
+        {
+            protected function configureRoute( Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot )
             {
             }
         };
-        AnnotationRegistry::registerLoader('class_exists');
+        AnnotationRegistry::registerLoader( 'class_exists' );
     }
 
     /**
      * @dataProvider provideTestSupportsChecksResource
      */
-    public function testSupportsChecksResource($resource, $expectedSupports)
+    public function testSupportsChecksResource( $resource, $expectedSupports )
     {
-        $this->assertSame($expectedSupports, $this->loader->supports($resource), '->supports() returns true if the resource is loadable');
+        $this->assertSame( $expectedSupports, $this->loader->supports( $resource ),
+            '->supports() returns true if the resource is loadable' );
     }
 
     public function provideTestSupportsChecksResource()
@@ -76,98 +78,100 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
 
     public function testSupportsChecksTypeIfSpecified()
     {
-        $this->assertTrue($this->loader->supports('class', 'annotation'), '->supports() checks the resource type if specified');
-        $this->assertFalse($this->loader->supports('class', 'foo'), '->supports() checks the resource type if specified');
+        $this->assertTrue( $this->loader->supports( 'class', 'annotation' ),
+            '->supports() checks the resource type if specified' );
+        $this->assertFalse( $this->loader->supports( 'class', 'foo' ),
+            '->supports() checks the resource type if specified' );
     }
 
     public function testSimplePathRoute()
     {
-        $routes = $this->loader->load(ActionPathController::class);
-        $this->assertCount(1, $routes);
-        $this->assertEquals('/path', $routes->get('action')->getPath());
+        $routes = $this->loader->load( ActionPathController::class );
+        $this->assertCount( 1, $routes );
+        $this->assertEquals( '/path', $routes->get( 'action' )->getPath() );
     }
 
     public function testInvokableControllerLoader()
     {
-        $routes = $this->loader->load(InvokableController::class);
-        $this->assertCount(1, $routes);
-        $this->assertEquals('/here', $routes->get('lol')->getPath());
-        $this->assertEquals(['GET', 'POST'], $routes->get('lol')->getMethods());
-        $this->assertEquals(['https'], $routes->get('lol')->getSchemes());
+        $routes = $this->loader->load( InvokableController::class );
+        $this->assertCount( 1, $routes );
+        $this->assertEquals( '/here', $routes->get( 'lol' )->getPath() );
+        $this->assertEquals( ['GET', 'POST'], $routes->get( 'lol' )->getMethods() );
+        $this->assertEquals( ['https'], $routes->get( 'lol' )->getSchemes() );
     }
 
     public function testInvokableLocalizedControllerLoading()
     {
-        $routes = $this->loader->load(InvokableLocalizedController::class);
-        $this->assertCount(2, $routes);
-        $this->assertEquals('/here', $routes->get('action.en')->getPath());
-        $this->assertEquals('/hier', $routes->get('action.nl')->getPath());
+        $routes = $this->loader->load( InvokableLocalizedController::class );
+        $this->assertCount( 2, $routes );
+        $this->assertEquals( '/here', $routes->get( 'action.en' )->getPath() );
+        $this->assertEquals( '/hier', $routes->get( 'action.nl' )->getPath() );
     }
 
     public function testLocalizedPathRoutes()
     {
-        $routes = $this->loader->load(LocalizedActionPathController::class);
-        $this->assertCount(2, $routes);
-        $this->assertEquals('/path', $routes->get('action.en')->getPath());
-        $this->assertEquals('/pad', $routes->get('action.nl')->getPath());
+        $routes = $this->loader->load( LocalizedActionPathController::class );
+        $this->assertCount( 2, $routes );
+        $this->assertEquals( '/path', $routes->get( 'action.en' )->getPath() );
+        $this->assertEquals( '/pad', $routes->get( 'action.nl' )->getPath() );
     }
 
     public function testLocalizedPathRoutesWithExplicitPathPropety()
     {
-        $routes = $this->loader->load(ExplicitLocalizedActionPathController::class);
-        $this->assertCount(2, $routes);
-        $this->assertEquals('/path', $routes->get('action.en')->getPath());
-        $this->assertEquals('/pad', $routes->get('action.nl')->getPath());
+        $routes = $this->loader->load( ExplicitLocalizedActionPathController::class );
+        $this->assertCount( 2, $routes );
+        $this->assertEquals( '/path', $routes->get( 'action.en' )->getPath() );
+        $this->assertEquals( '/pad', $routes->get( 'action.nl' )->getPath() );
     }
 
     public function testDefaultValuesForMethods()
     {
-        $routes = $this->loader->load(DefaultValueController::class);
-        $this->assertCount(1, $routes);
-        $this->assertEquals('/{default}/path', $routes->get('action')->getPath());
-        $this->assertEquals('value', $routes->get('action')->getDefault('default'));
+        $routes = $this->loader->load( DefaultValueController::class );
+        $this->assertCount( 1, $routes );
+        $this->assertEquals( '/{default}/path', $routes->get( 'action' )->getPath() );
+        $this->assertEquals( 'value', $routes->get( 'action' )->getDefault( 'default' ) );
     }
 
     public function testMethodActionControllers()
     {
-        $routes = $this->loader->load(MethodActionControllers::class);
-        $this->assertCount(2, $routes);
-        $this->assertEquals('/the/path', $routes->get('put')->getPath());
-        $this->assertEquals('/the/path', $routes->get('post')->getPath());
+        $routes = $this->loader->load( MethodActionControllers::class );
+        $this->assertCount( 2, $routes );
+        $this->assertEquals( '/the/path', $routes->get( 'put' )->getPath() );
+        $this->assertEquals( '/the/path', $routes->get( 'post' )->getPath() );
     }
 
     public function testInvokableClassRouteLoadWithMethodAnnotation()
     {
-        $routes = $this->loader->load(LocalizedMethodActionControllers::class);
-        $this->assertCount(4, $routes);
-        $this->assertEquals('/the/path', $routes->get('put.en')->getPath());
-        $this->assertEquals('/the/path', $routes->get('post.en')->getPath());
+        $routes = $this->loader->load( LocalizedMethodActionControllers::class );
+        $this->assertCount( 4, $routes );
+        $this->assertEquals( '/the/path', $routes->get( 'put.en' )->getPath() );
+        $this->assertEquals( '/the/path', $routes->get( 'post.en' )->getPath() );
     }
 
     public function testRouteWithPathWithPrefix()
     {
-        $routes = $this->loader->load(PrefixedActionPathController::class);
-        $this->assertCount(1, $routes);
-        $route = $routes->get('action');
-        $this->assertEquals('/prefix/path', $route->getPath());
-        $this->assertEquals('lol=fun', $route->getCondition());
-        $this->assertEquals('frankdejonge.nl', $route->getHost());
+        $routes = $this->loader->load( PrefixedActionPathController::class );
+        $this->assertCount( 1, $routes );
+        $route = $routes->get( 'action' );
+        $this->assertEquals( '/prefix/path', $route->getPath() );
+        $this->assertEquals( 'lol=fun', $route->getCondition() );
+        $this->assertEquals( 'frankdejonge.nl', $route->getHost() );
     }
 
     public function testLocalizedRouteWithPathWithPrefix()
     {
-        $routes = $this->loader->load(PrefixedActionLocalizedRouteController::class);
-        $this->assertCount(2, $routes);
-        $this->assertEquals('/prefix/path', $routes->get('action.en')->getPath());
-        $this->assertEquals('/prefix/pad', $routes->get('action.nl')->getPath());
+        $routes = $this->loader->load( PrefixedActionLocalizedRouteController::class );
+        $this->assertCount( 2, $routes );
+        $this->assertEquals( '/prefix/path', $routes->get( 'action.en' )->getPath() );
+        $this->assertEquals( '/prefix/pad', $routes->get( 'action.nl' )->getPath() );
     }
 
     public function testLocalizedPrefixLocalizedRoute()
     {
-        $routes = $this->loader->load(LocalizedPrefixLocalizedActionController::class);
-        $this->assertCount(2, $routes);
-        $this->assertEquals('/nl/actie', $routes->get('action.nl')->getPath());
-        $this->assertEquals('/en/action', $routes->get('action.en')->getPath());
+        $routes = $this->loader->load( LocalizedPrefixLocalizedActionController::class );
+        $this->assertCount( 2, $routes );
+        $this->assertEquals( '/nl/actie', $routes->get( 'action.nl' )->getPath() );
+        $this->assertEquals( '/en/action', $routes->get( 'action.en' )->getPath() );
     }
 
     public function testInvokableClassMultipleRouteLoad()
@@ -188,85 +192,91 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
 
         $reader = $this->getReader();
         $reader
-            ->expects($this->exactly(1))
-            ->method('getClassAnnotations')
-            ->will($this->returnValue([new RouteAnnotation($classRouteData1), new RouteAnnotation($classRouteData2)]))
-        ;
+            ->expects( $this->exactly( 1 ) )
+            ->method( 'getClassAnnotations' )
+            ->will( $this->returnValue( [
+                new RouteAnnotation( $classRouteData1 ),
+                new RouteAnnotation( $classRouteData2 )
+            ] ) );
         $reader
-            ->expects($this->once())
-            ->method('getMethodAnnotations')
-            ->will($this->returnValue([]))
-        ;
-        $loader = new class($reader) extends AnnotationClassLoader {
-            protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot)
+            ->expects( $this->once() )
+            ->method( 'getMethodAnnotations' )
+            ->will( $this->returnValue( [] ) );
+        $loader = new class( $reader ) extends AnnotationClassLoader
+        {
+            protected function configureRoute( Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot )
             {
             }
         };
 
-        $routeCollection = $loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BazClass');
-        $route = $routeCollection->get($classRouteData1['name']);
+        $routeCollection = $loader->load( 'Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BazClass' );
+        $route = $routeCollection->get( $classRouteData1[ 'name' ] );
 
-        $this->assertSame($classRouteData1['path'], $route->getPath(), '->load preserves class route path');
-        $this->assertEquals($classRouteData1['schemes'], $route->getSchemes(), '->load preserves class route schemes');
-        $this->assertEquals($classRouteData1['methods'], $route->getMethods(), '->load preserves class route methods');
+        $this->assertSame( $classRouteData1[ 'path' ], $route->getPath(), '->load preserves class route path' );
+        $this->assertEquals( $classRouteData1[ 'schemes' ], $route->getSchemes(),
+            '->load preserves class route schemes' );
+        $this->assertEquals( $classRouteData1[ 'methods' ], $route->getMethods(),
+            '->load preserves class route methods' );
 
-        $route = $routeCollection->get($classRouteData2['name']);
+        $route = $routeCollection->get( $classRouteData2[ 'name' ] );
 
-        $this->assertSame($classRouteData2['path'], $route->getPath(), '->load preserves class route path');
-        $this->assertEquals($classRouteData2['schemes'], $route->getSchemes(), '->load preserves class route schemes');
-        $this->assertEquals($classRouteData2['methods'], $route->getMethods(), '->load preserves class route methods');
+        $this->assertSame( $classRouteData2[ 'path' ], $route->getPath(), '->load preserves class route path' );
+        $this->assertEquals( $classRouteData2[ 'schemes' ], $route->getSchemes(),
+            '->load preserves class route schemes' );
+        $this->assertEquals( $classRouteData2[ 'methods' ], $route->getMethods(),
+            '->load preserves class route methods' );
     }
 
     public function testMissingPrefixLocale()
     {
-        $this->expectException(\LogicException::class);
-        $this->loader->load(LocalizedPrefixMissingLocaleActionController::class);
+        $this->expectException( \LogicException::class );
+        $this->loader->load( LocalizedPrefixMissingLocaleActionController::class );
     }
 
     public function testMissingRouteLocale()
     {
-        $this->expectException(\LogicException::class);
-        $this->loader->load(LocalizedPrefixMissingRouteLocaleActionController::class);
+        $this->expectException( \LogicException::class );
+        $this->loader->load( LocalizedPrefixMissingRouteLocaleActionController::class );
     }
 
     public function testRouteWithoutName()
     {
-        $routes = $this->loader->load(MissingRouteNameController::class)->all();
-        $this->assertCount(1, $routes);
-        $this->assertEquals('/path', reset($routes)->getPath());
+        $routes = $this->loader->load( MissingRouteNameController::class )->all();
+        $this->assertCount( 1, $routes );
+        $this->assertEquals( '/path', reset( $routes )->getPath() );
     }
 
     public function testNothingButName()
     {
-        $routes = $this->loader->load(NothingButNameController::class)->all();
-        $this->assertCount(1, $routes);
-        $this->assertEquals('/', reset($routes)->getPath());
+        $routes = $this->loader->load( NothingButNameController::class )->all();
+        $this->assertCount( 1, $routes );
+        $this->assertEquals( '/', reset( $routes )->getPath() );
     }
 
     public function testNonExistingClass()
     {
-        $this->expectException(\LogicException::class);
-        $this->loader->load('ClassThatDoesNotExist');
+        $this->expectException( \LogicException::class );
+        $this->loader->load( 'ClassThatDoesNotExist' );
     }
 
     public function testLoadingAbstractClass()
     {
-        $this->expectException(\LogicException::class);
-        $this->loader->load(AbstractClassController::class);
+        $this->expectException( \LogicException::class );
+        $this->loader->load( AbstractClassController::class );
     }
 
     public function testLocalizedPrefixWithoutRouteLocale()
     {
-        $routes = $this->loader->load(LocalizedPrefixWithRouteWithoutLocale::class);
-        $this->assertCount(2, $routes);
-        $this->assertEquals('/en/suffix', $routes->get('action.en')->getPath());
-        $this->assertEquals('/nl/suffix', $routes->get('action.nl')->getPath());
+        $routes = $this->loader->load( LocalizedPrefixWithRouteWithoutLocale::class );
+        $this->assertCount( 2, $routes );
+        $this->assertEquals( '/en/suffix', $routes->get( 'action.en' )->getPath() );
+        $this->assertEquals( '/nl/suffix', $routes->get( 'action.nl' )->getPath() );
     }
 
     public function testLoadingRouteWithPrefix()
     {
-        $routes = $this->loader->load(RouteWithPrefixController::class);
-        $this->assertCount(1, $routes);
-        $this->assertEquals('/prefix/path', $routes->get('action')->getPath());
+        $routes = $this->loader->load( RouteWithPrefixController::class );
+        $this->assertCount( 1, $routes );
+        $this->assertEquals( '/prefix/path', $routes->get( 'action' )->getPath() );
     }
 }

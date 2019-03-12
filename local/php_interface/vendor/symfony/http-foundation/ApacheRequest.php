@@ -23,7 +23,7 @@ class ApacheRequest extends Request
      */
     protected function prepareRequestUri()
     {
-        return $this->server->get('REQUEST_URI');
+        return $this->server->get( 'REQUEST_URI' );
     }
 
     /**
@@ -31,11 +31,12 @@ class ApacheRequest extends Request
      */
     protected function prepareBaseUrl()
     {
-        $baseUrl = $this->server->get('SCRIPT_NAME');
+        $baseUrl = $this->server->get( 'SCRIPT_NAME' );
 
-        if (false === strpos($this->server->get('REQUEST_URI'), $baseUrl)) {
+        if ( false === strpos( $this->server->get( 'REQUEST_URI' ), $baseUrl ) )
+        {
             // assume mod_rewrite
-            return rtrim(\dirname($baseUrl), '/\\');
+            return rtrim( \dirname( $baseUrl ), '/\\' );
         }
 
         return $baseUrl;

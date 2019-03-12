@@ -20,25 +20,33 @@ class ContainerCommandLoaderTest extends TestCase
 {
     public function testHas()
     {
-        $loader = new ContainerCommandLoader(new ServiceLocator([
-            'foo-service' => function () { return new Command('foo'); },
-            'bar-service' => function () { return new Command('bar'); },
-        ]), ['foo' => 'foo-service', 'bar' => 'bar-service']);
+        $loader = new ContainerCommandLoader( new ServiceLocator( [
+            'foo-service' => function () {
+                return new Command( 'foo' );
+            },
+            'bar-service' => function () {
+                return new Command( 'bar' );
+            },
+        ] ), ['foo' => 'foo-service', 'bar' => 'bar-service'] );
 
-        $this->assertTrue($loader->has('foo'));
-        $this->assertTrue($loader->has('bar'));
-        $this->assertFalse($loader->has('baz'));
+        $this->assertTrue( $loader->has( 'foo' ) );
+        $this->assertTrue( $loader->has( 'bar' ) );
+        $this->assertFalse( $loader->has( 'baz' ) );
     }
 
     public function testGet()
     {
-        $loader = new ContainerCommandLoader(new ServiceLocator([
-            'foo-service' => function () { return new Command('foo'); },
-            'bar-service' => function () { return new Command('bar'); },
-        ]), ['foo' => 'foo-service', 'bar' => 'bar-service']);
+        $loader = new ContainerCommandLoader( new ServiceLocator( [
+            'foo-service' => function () {
+                return new Command( 'foo' );
+            },
+            'bar-service' => function () {
+                return new Command( 'bar' );
+            },
+        ] ), ['foo' => 'foo-service', 'bar' => 'bar-service'] );
 
-        $this->assertInstanceOf(Command::class, $loader->get('foo'));
-        $this->assertInstanceOf(Command::class, $loader->get('bar'));
+        $this->assertInstanceOf( Command::class, $loader->get( 'foo' ) );
+        $this->assertInstanceOf( Command::class, $loader->get( 'bar' ) );
     }
 
     /**
@@ -46,16 +54,20 @@ class ContainerCommandLoaderTest extends TestCase
      */
     public function testGetUnknownCommandThrows()
     {
-        (new ContainerCommandLoader(new ServiceLocator([]), []))->get('unknown');
+        ( new ContainerCommandLoader( new ServiceLocator( [] ), [] ) )->get( 'unknown' );
     }
 
     public function testGetCommandNames()
     {
-        $loader = new ContainerCommandLoader(new ServiceLocator([
-            'foo-service' => function () { return new Command('foo'); },
-            'bar-service' => function () { return new Command('bar'); },
-        ]), ['foo' => 'foo-service', 'bar' => 'bar-service']);
+        $loader = new ContainerCommandLoader( new ServiceLocator( [
+            'foo-service' => function () {
+                return new Command( 'foo' );
+            },
+            'bar-service' => function () {
+                return new Command( 'bar' );
+            },
+        ] ), ['foo' => 'foo-service', 'bar' => 'bar-service'] );
 
-        $this->assertSame(['foo', 'bar'], $loader->getNames());
+        $this->assertSame( ['foo', 'bar'], $loader->getNames() );
     }
 }

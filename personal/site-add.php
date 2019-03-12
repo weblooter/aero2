@@ -8,14 +8,20 @@ $intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getReques
 
         <div class="col-12">
             <?
-            $GLOBALS['APPLICATION']->IncludeComponent(
-                'local.core:personal.site.add',
-                '.default',
-                [
-                    'COMPANY_ID' => $intCompanyId,
-                    'AJAX_MODE' => 'Y',
-                ]
-            );
+            $APPLICATION->IncludeComponent(
+	"local.core:personal.site.add", 
+	".default", 
+	array(
+		"COMPANY_ID" => $intCompanyId,
+		"AJAX_MODE" => "Y",
+		"COMPONENT_TEMPLATE" => ".default",
+		"AJAX_OPTION_JUMP" => "N",
+		"AJAX_OPTION_STYLE" => "N",
+		"AJAX_OPTION_HISTORY" => "N",
+		"AJAX_OPTION_ADDITIONAL" => ""
+	),
+	false
+);
             ?>
         </div>
 

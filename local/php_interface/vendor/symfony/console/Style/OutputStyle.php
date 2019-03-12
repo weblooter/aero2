@@ -25,7 +25,7 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
 {
     private $output;
 
-    public function __construct(OutputInterface $output)
+    public function __construct( OutputInterface $output )
     {
         $this->output = $output;
     }
@@ -33,9 +33,9 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
     /**
      * {@inheritdoc}
      */
-    public function newLine($count = 1)
+    public function newLine( $count = 1 )
     {
-        $this->output->write(str_repeat(PHP_EOL, $count));
+        $this->output->write( str_repeat( PHP_EOL, $count ) );
     }
 
     /**
@@ -43,33 +43,33 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
      *
      * @return ProgressBar
      */
-    public function createProgressBar($max = 0)
+    public function createProgressBar( $max = 0 )
     {
-        return new ProgressBar($this->output, $max);
+        return new ProgressBar( $this->output, $max );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function write($messages, $newline = false, $type = self::OUTPUT_NORMAL)
+    public function write( $messages, $newline = false, $type = self::OUTPUT_NORMAL )
     {
-        $this->output->write($messages, $newline, $type);
+        $this->output->write( $messages, $newline, $type );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function writeln($messages, $type = self::OUTPUT_NORMAL)
+    public function writeln( $messages, $type = self::OUTPUT_NORMAL )
     {
-        $this->output->writeln($messages, $type);
+        $this->output->writeln( $messages, $type );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setVerbosity($level)
+    public function setVerbosity( $level )
     {
-        $this->output->setVerbosity($level);
+        $this->output->setVerbosity( $level );
     }
 
     /**
@@ -83,9 +83,9 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
     /**
      * {@inheritdoc}
      */
-    public function setDecorated($decorated)
+    public function setDecorated( $decorated )
     {
-        $this->output->setDecorated($decorated);
+        $this->output->setDecorated( $decorated );
     }
 
     /**
@@ -99,9 +99,9 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(OutputFormatterInterface $formatter)
+    public function setFormatter( OutputFormatterInterface $formatter )
     {
-        $this->output->setFormatter($formatter);
+        $this->output->setFormatter( $formatter );
     }
 
     /**
@@ -146,7 +146,8 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
 
     protected function getErrorOutput()
     {
-        if (!$this->output instanceof ConsoleOutputInterface) {
+        if ( !$this->output instanceof ConsoleOutputInterface )
+        {
             return $this->output;
         }
 

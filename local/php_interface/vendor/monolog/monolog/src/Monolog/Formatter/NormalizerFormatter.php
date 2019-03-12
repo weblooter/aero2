@@ -28,46 +28,53 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct($dateFormat = null)
+    public function __construct( $dateFormat = null )
     {
-        $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
-        if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s NormalizerFormatter');
+        $this->dateFormat = $dateFormat ? : static::SIMPLE_DATE;
+        if ( !function_exists( 'json_encode' ) )
+        {
+            throw new \RuntimeException( 'PHP\'s json extension is required to use Monolog\'s NormalizerFormatter' );
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format( array $record )
     {
-        return $this->normalize($record);
+        return $this->normalize( $record );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records)
+    public function formatBatch( array $records )
     {
-        foreach ($records as $key => $record) {
-            $records[$key] = $this->format($record);
+        foreach ( $records as $key => $record )
+        {
+            $records[ $key ] = $this->format( $record );
         }
 
         return $records;
     }
 
-    protected function normalize($data, $depth = 0)
+    protected function normalize( $data, $depth = 0 )
     {
-        if ($depth > 9) {
+        if ( $depth > 9 )
+        {
             return 'Over 9 levels deep, aborting normalization';
         }
 
-        if (null === $data || is_scalar($data)) {
-            if (is_float($data)) {
-                if (is_infinite($data)) {
-                    return ($data > 0 ? '' : '-') . 'INF';
+        if ( null === $data || is_scalar( $data ) )
+        {
+            if ( is_float( $data ) )
+            {
+                if ( is_infinite( $data ) )
+                {
+                    return ( $data > 0 ? '' : '-' ).'INF';
                 }
-                if (is_nan($data)) {
+                if ( is_nan( $data ) )
+                {
                     return 'NaN';
                 }
             }
@@ -75,104 +82,128 @@ class NormalizerFormatter implements FormatterInterface
             return $data;
         }
 
-        if (is_array($data)) {
+        if ( is_array( $data ) )
+        {
             $normalized = array();
 
             $count = 1;
-            foreach ($data as $key => $value) {
-                if ($count++ > 1000) {
-                    $normalized['...'] = 'Over 1000 items ('.count($data).' total), aborting normalization';
+            foreach ( $data as $key => $value )
+            {
+                if ( $count++ > 1000 )
+                {
+                    $normalized[ '...' ] = 'Over 1000 items ('.count( $data ).' total), aborting normalization';
                     break;
                 }
 
-                $normalized[$key] = $this->normalize($value, $depth+1);
+                $normalized[ $key ] = $this->normalize( $value, $depth + 1 );
             }
 
             return $normalized;
         }
 
-        if ($data instanceof \DateTime) {
-            return $data->format($this->dateFormat);
+        if ( $data instanceof \DateTime )
+        {
+            return $data->format( $this->dateFormat );
         }
 
-        if (is_object($data)) {
+        if ( is_object( $data ) )
+        {
             // TODO 2.0 only check for Throwable
-            if ($data instanceof Exception || (PHP_VERSION_ID > 70000 && $data instanceof \Throwable)) {
-                return $this->normalizeException($data);
+            if ( $data instanceof Exception || ( PHP_VERSION_ID > 70000 && $data instanceof \Throwable ) )
+            {
+                return $this->normalizeException( $data );
             }
 
             // non-serializable objects that implement __toString stringified
-            if (method_exists($data, '__toString') && !$data instanceof \JsonSerializable) {
+            if ( method_exists( $data, '__toString' ) && !$data instanceof \JsonSerializable )
+            {
                 $value = $data->__toString();
-            } else {
+            }
+            else
+            {
                 // the rest is json-serialized in some way
-                $value = $this->toJson($data, true);
+                $value = $this->toJson( $data, true );
             }
 
-            return sprintf("[object] (%s: %s)", Utils::getClass($data), $value);
+            return sprintf( "[object] (%s: %s)", Utils::getClass( $data ), $value );
         }
 
-        if (is_resource($data)) {
-            return sprintf('[resource] (%s)', get_resource_type($data));
+        if ( is_resource( $data ) )
+        {
+            return sprintf( '[resource] (%s)', get_resource_type( $data ) );
         }
 
-        return '[unknown('.gettype($data).')]';
+        return '[unknown('.gettype( $data ).')]';
     }
 
-    protected function normalizeException($e)
+    protected function normalizeException( $e )
     {
         // TODO 2.0 only check for Throwable
-        if (!$e instanceof Exception && !$e instanceof \Throwable) {
-            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.Utils::getClass($e));
+        if ( !$e instanceof Exception && !$e instanceof \Throwable )
+        {
+            throw new \InvalidArgumentException( 'Exception/Throwable expected, got '.gettype( $e ).' / '.Utils::getClass( $e ) );
         }
 
         $data = array(
-            'class' => Utils::getClass($e),
+            'class' => Utils::getClass( $e ),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
         );
 
-        if ($e instanceof \SoapFault) {
-            if (isset($e->faultcode)) {
-                $data['faultcode'] = $e->faultcode;
+        if ( $e instanceof \SoapFault )
+        {
+            if ( isset( $e->faultcode ) )
+            {
+                $data[ 'faultcode' ] = $e->faultcode;
             }
 
-            if (isset($e->faultactor)) {
-                $data['faultactor'] = $e->faultactor;
+            if ( isset( $e->faultactor ) )
+            {
+                $data[ 'faultactor' ] = $e->faultactor;
             }
 
-            if (isset($e->detail)) {
-                $data['detail'] = $e->detail;
+            if ( isset( $e->detail ) )
+            {
+                $data[ 'detail' ] = $e->detail;
             }
         }
 
         $trace = $e->getTrace();
-        foreach ($trace as $frame) {
-            if (isset($frame['file'])) {
-                $data['trace'][] = $frame['file'].':'.$frame['line'];
-            } elseif (isset($frame['function']) && $frame['function'] === '{closure}') {
+        foreach ( $trace as $frame )
+        {
+            if ( isset( $frame[ 'file' ] ) )
+            {
+                $data[ 'trace' ][] = $frame[ 'file' ].':'.$frame[ 'line' ];
+            }
+            elseif ( isset( $frame[ 'function' ] ) && $frame[ 'function' ] === '{closure}' )
+            {
                 // Simplify closures handling
-                $data['trace'][] = $frame['function'];
-            } else {
-                if (isset($frame['args'])) {
+                $data[ 'trace' ][] = $frame[ 'function' ];
+            }
+            else
+            {
+                if ( isset( $frame[ 'args' ] ) )
+                {
                     // Make sure that objects present as arguments are not serialized nicely but rather only
                     // as a class name to avoid any unexpected leak of sensitive information
-                    $frame['args'] = array_map(function ($arg) {
-                        if (is_object($arg) && !($arg instanceof \DateTime || $arg instanceof \DateTimeInterface)) {
-                            return sprintf("[object] (%s)", Utils::getClass($arg));
+                    $frame[ 'args' ] = array_map( function ( $arg ) {
+                        if ( is_object( $arg ) && !( $arg instanceof \DateTime || $arg instanceof \DateTimeInterface ) )
+                        {
+                            return sprintf( "[object] (%s)", Utils::getClass( $arg ) );
                         }
 
                         return $arg;
-                    }, $frame['args']);
+                    }, $frame[ 'args' ] );
                 }
                 // We should again normalize the frames, because it might contain invalid items
-                $data['trace'][] = $this->toJson($this->normalize($frame), true);
+                $data[ 'trace' ][] = $this->toJson( $this->normalize( $frame ), true );
             }
         }
 
-        if ($previous = $e->getPrevious()) {
-            $data['previous'] = $this->normalizeException($previous);
+        if ( $previous = $e->getPrevious() )
+        {
+            $data[ 'previous' ] = $this->normalizeException( $previous );
         }
 
         return $data;
@@ -181,38 +212,43 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * Return the JSON representation of a value
      *
-     * @param  mixed             $data
-     * @param  bool              $ignoreErrors
+     * @param  mixed $data
+     * @param  bool  $ignoreErrors
+     *
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string
      */
-    protected function toJson($data, $ignoreErrors = false)
+    protected function toJson( $data, $ignoreErrors = false )
     {
         // suppress json_encode errors since it's twitchy with some inputs
-        if ($ignoreErrors) {
-            return @$this->jsonEncode($data);
+        if ( $ignoreErrors )
+        {
+            return @$this->jsonEncode( $data );
         }
 
-        $json = $this->jsonEncode($data);
+        $json = $this->jsonEncode( $data );
 
-        if ($json === false) {
-            $json = $this->handleJsonError(json_last_error(), $data);
+        if ( $json === false )
+        {
+            $json = $this->handleJsonError( json_last_error(), $data );
         }
 
         return $json;
     }
 
     /**
-     * @param  mixed  $data
+     * @param  mixed $data
+     *
      * @return string JSON encoded data or null on failure
      */
-    private function jsonEncode($data)
+    private function jsonEncode( $data )
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        if ( version_compare( PHP_VERSION, '5.4.0', '>=' ) )
+        {
+            return json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
         }
 
-        return json_encode($data);
+        return json_encode( $data );
     }
 
     /**
@@ -223,29 +259,37 @@ class NormalizerFormatter implements FormatterInterface
      * inital error is not encoding related or the input can't be cleaned then
      * raise a descriptive exception.
      *
-     * @param  int               $code return code of json_last_error function
-     * @param  mixed             $data data that was meant to be encoded
+     * @param  int   $code return code of json_last_error function
+     * @param  mixed $data data that was meant to be encoded
+     *
      * @throws \RuntimeException if failure can't be corrected
      * @return string            JSON encoded data after error correction
      */
-    private function handleJsonError($code, $data)
+    private function handleJsonError( $code, $data )
     {
-        if ($code !== JSON_ERROR_UTF8) {
-            $this->throwEncodeError($code, $data);
+        if ( $code !== JSON_ERROR_UTF8 )
+        {
+            $this->throwEncodeError( $code, $data );
         }
 
-        if (is_string($data)) {
-            $this->detectAndCleanUtf8($data);
-        } elseif (is_array($data)) {
-            array_walk_recursive($data, array($this, 'detectAndCleanUtf8'));
-        } else {
-            $this->throwEncodeError($code, $data);
+        if ( is_string( $data ) )
+        {
+            $this->detectAndCleanUtf8( $data );
+        }
+        elseif ( is_array( $data ) )
+        {
+            array_walk_recursive( $data, array($this, 'detectAndCleanUtf8') );
+        }
+        else
+        {
+            $this->throwEncodeError( $code, $data );
         }
 
-        $json = $this->jsonEncode($data);
+        $json = $this->jsonEncode( $data );
 
-        if ($json === false) {
-            $this->throwEncodeError(json_last_error(), $data);
+        if ( $json === false )
+        {
+            $this->throwEncodeError( json_last_error(), $data );
         }
 
         return $json;
@@ -254,13 +298,15 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * Throws an exception according to a given code with a customized message
      *
-     * @param  int               $code return code of json_last_error function
-     * @param  mixed             $data data that was meant to be encoded
+     * @param  int   $code return code of json_last_error function
+     * @param  mixed $data data that was meant to be encoded
+     *
      * @throws \RuntimeException
      */
-    private function throwEncodeError($code, $data)
+    private function throwEncodeError( $code, $data )
     {
-        switch ($code) {
+        switch ( $code )
+        {
             case JSON_ERROR_DEPTH:
                 $msg = 'Maximum stack depth exceeded';
                 break;
@@ -277,7 +323,7 @@ class NormalizerFormatter implements FormatterInterface
                 $msg = 'Unknown error';
         }
 
-        throw new \RuntimeException('JSON encoding failed: '.$msg.'. Encoding: '.var_export($data, true));
+        throw new \RuntimeException( 'JSON encoding failed: '.$msg.'. Encoding: '.var_export( $data, true ) );
     }
 
     /**
@@ -294,14 +340,18 @@ class NormalizerFormatter implements FormatterInterface
      * can be used as a callback for array_walk_recursive.
      *
      * @param mixed &$data Input to check and convert if needed
+     *
      * @private
      */
-    public function detectAndCleanUtf8(&$data)
+    public function detectAndCleanUtf8( &$data )
     {
-        if (is_string($data) && !preg_match('//u', $data)) {
+        if ( is_string( $data ) && !preg_match( '//u', $data ) )
+        {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
-                function ($m) { return utf8_encode($m[0]); },
+                function ( $m ) {
+                    return utf8_encode( $m[ 0 ] );
+                },
                 $data
             );
             $data = str_replace(

@@ -35,31 +35,33 @@ class FlowdockHandler extends SocketHandler
 
     /**
      * @param string   $apiToken
-     * @param bool|int $level    The minimum logging level at which this handler will be triggered
-     * @param bool     $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param bool|int $level The minimum logging level at which this handler will be triggered
+     * @param bool     $bubble Whether the messages that are handled can bubble up the stack or not
      *
      * @throws MissingExtensionException if OpenSSL is missing
      */
-    public function __construct($apiToken, $level = Logger::DEBUG, $bubble = true)
+    public function __construct( $apiToken, $level = Logger::DEBUG, $bubble = true )
     {
-        if (!extension_loaded('openssl')) {
-            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FlowdockHandler');
+        if ( !extension_loaded( 'openssl' ) )
+        {
+            throw new MissingExtensionException( 'The OpenSSL PHP extension is required to use the FlowdockHandler' );
         }
 
-        parent::__construct('ssl://api.flowdock.com:443', $level, $bubble);
+        parent::__construct( 'ssl://api.flowdock.com:443', $level, $bubble );
         $this->apiToken = $apiToken;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter( FormatterInterface $formatter )
     {
-        if (!$formatter instanceof FlowdockFormatter) {
-            throw new \InvalidArgumentException('The FlowdockHandler requires an instance of Monolog\Formatter\FlowdockFormatter to function correctly');
+        if ( !$formatter instanceof FlowdockFormatter )
+        {
+            throw new \InvalidArgumentException( 'The FlowdockHandler requires an instance of Monolog\Formatter\FlowdockFormatter to function correctly' );
         }
 
-        return parent::setFormatter($formatter);
+        return parent::setFormatter( $formatter );
     }
 
     /**
@@ -69,7 +71,7 @@ class FlowdockHandler extends SocketHandler
      */
     protected function getDefaultFormatter()
     {
-        throw new \InvalidArgumentException('The FlowdockHandler must be configured (via setFormatter) with an instance of Monolog\Formatter\FlowdockFormatter to function correctly');
+        throw new \InvalidArgumentException( 'The FlowdockHandler must be configured (via setFormatter) with an instance of Monolog\Formatter\FlowdockFormatter to function correctly' );
     }
 
     /**
@@ -77,9 +79,9 @@ class FlowdockHandler extends SocketHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
-        parent::write($record);
+        parent::write( $record );
 
         $this->closeSocket();
     }
@@ -87,39 +89,42 @@ class FlowdockHandler extends SocketHandler
     /**
      * {@inheritdoc}
      *
-     * @param  array  $record
+     * @param  array $record
+     *
      * @return string
      */
-    protected function generateDataStream($record)
+    protected function generateDataStream( $record )
     {
-        $content = $this->buildContent($record);
+        $content = $this->buildContent( $record );
 
-        return $this->buildHeader($content) . $content;
+        return $this->buildHeader( $content ).$content;
     }
 
     /**
      * Builds the body of API call
      *
-     * @param  array  $record
+     * @param  array $record
+     *
      * @return string
      */
-    private function buildContent($record)
+    private function buildContent( $record )
     {
-        return json_encode($record['formatted']['flowdock']);
+        return json_encode( $record[ 'formatted' ][ 'flowdock' ] );
     }
 
     /**
      * Builds the header of the API Call
      *
      * @param  string $content
+     *
      * @return string
      */
-    private function buildHeader($content)
+    private function buildHeader( $content )
     {
-        $header = "POST /v1/messages/team_inbox/" . $this->apiToken . " HTTP/1.1\r\n";
+        $header = "POST /v1/messages/team_inbox/".$this->apiToken." HTTP/1.1\r\n";
         $header .= "Host: api.flowdock.com\r\n";
         $header .= "Content-Type: application/json\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "Content-Length: ".strlen( $content )."\r\n";
         $header .= "\r\n";
 
         return $header;

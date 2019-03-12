@@ -39,57 +39,65 @@ class UrlPackage extends Package
     private $sslPackage;
 
     /**
-     * @param string|string[]          $baseUrls        Base asset URLs
+     * @param string|string[]          $baseUrls Base asset URLs
      * @param VersionStrategyInterface $versionStrategy The version strategy
-     * @param ContextInterface|null    $context         Context
+     * @param ContextInterface|null    $context Context
      */
-    public function __construct($baseUrls, VersionStrategyInterface $versionStrategy, ContextInterface $context = null)
+    public function __construct( $baseUrls, VersionStrategyInterface $versionStrategy, ContextInterface $context = null )
     {
-        parent::__construct($versionStrategy, $context);
+        parent::__construct( $versionStrategy, $context );
 
-        if (!\is_array($baseUrls)) {
-            $baseUrls = (array) $baseUrls;
+        if ( !\is_array( $baseUrls ) )
+        {
+            $baseUrls = (array)$baseUrls;
         }
 
-        if (!$baseUrls) {
-            throw new LogicException('You must provide at least one base URL.');
+        if ( !$baseUrls )
+        {
+            throw new LogicException( 'You must provide at least one base URL.' );
         }
 
-        foreach ($baseUrls as $baseUrl) {
-            $this->baseUrls[] = rtrim($baseUrl, '/');
+        foreach ( $baseUrls as $baseUrl )
+        {
+            $this->baseUrls[] = rtrim( $baseUrl, '/' );
         }
 
-        $sslUrls = $this->getSslUrls($baseUrls);
+        $sslUrls = $this->getSslUrls( $baseUrls );
 
-        if ($sslUrls && $baseUrls !== $sslUrls) {
-            $this->sslPackage = new self($sslUrls, $versionStrategy);
+        if ( $sslUrls && $baseUrls !== $sslUrls )
+        {
+            $this->sslPackage = new self( $sslUrls, $versionStrategy );
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getUrl($path)
+    public function getUrl( $path )
     {
-        if ($this->isAbsoluteUrl($path)) {
+        if ( $this->isAbsoluteUrl( $path ) )
+        {
             return $path;
         }
 
-        if (null !== $this->sslPackage && $this->getContext()->isSecure()) {
-            return $this->sslPackage->getUrl($path);
+        if ( null !== $this->sslPackage && $this->getContext()->isSecure() )
+        {
+            return $this->sslPackage->getUrl( $path );
         }
 
-        $url = $this->getVersionStrategy()->applyVersion($path);
+        $url = $this->getVersionStrategy()->applyVersion( $path );
 
-        if ($this->isAbsoluteUrl($url)) {
+        if ( $this->isAbsoluteUrl( $url ) )
+        {
             return $url;
         }
 
-        if ($url && '/' != $url[0]) {
+        if ( $url && '/' != $url[ 0 ] )
+        {
             $url = '/'.$url;
         }
 
-        return $this->getBaseUrl($path).$url;
+        return $this->getBaseUrl( $path ).$url;
     }
 
     /**
@@ -99,13 +107,14 @@ class UrlPackage extends Package
      *
      * @return string The base URL
      */
-    public function getBaseUrl($path)
+    public function getBaseUrl( $path )
     {
-        if (1 === \count($this->baseUrls)) {
-            return $this->baseUrls[0];
+        if ( 1 === \count( $this->baseUrls ) )
+        {
+            return $this->baseUrls[ 0 ];
         }
 
-        return $this->baseUrls[$this->chooseBaseUrl($path)];
+        return $this->baseUrls[ $this->chooseBaseUrl( $path ) ];
     }
 
     /**
@@ -118,19 +127,23 @@ class UrlPackage extends Package
      *
      * @return int The base URL index for the given path
      */
-    protected function chooseBaseUrl($path)
+    protected function chooseBaseUrl( $path )
     {
-        return (int) fmod(hexdec(substr(hash('sha256', $path), 0, 10)), \count($this->baseUrls));
+        return (int)fmod( hexdec( substr( hash( 'sha256', $path ), 0, 10 ) ), \count( $this->baseUrls ) );
     }
 
-    private function getSslUrls($urls)
+    private function getSslUrls( $urls )
     {
         $sslUrls = [];
-        foreach ($urls as $url) {
-            if ('https://' === substr($url, 0, 8) || '//' === substr($url, 0, 2)) {
+        foreach ( $urls as $url )
+        {
+            if ( 'https://' === substr( $url, 0, 8 ) || '//' === substr( $url, 0, 2 ) )
+            {
                 $sslUrls[] = $url;
-            } elseif (null === parse_url($url, PHP_URL_SCHEME)) {
-                throw new InvalidArgumentException(sprintf('"%s" is not a valid URL', $url));
+            }
+            elseif ( null === parse_url( $url, PHP_URL_SCHEME ) )
+            {
+                throw new InvalidArgumentException( sprintf( '"%s" is not a valid URL', $url ) );
             }
         }
 

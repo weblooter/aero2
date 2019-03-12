@@ -21,19 +21,22 @@ abstract class MailHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch( array $records )
     {
         $messages = array();
 
-        foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+        foreach ( $records as $record )
+        {
+            if ( $record[ 'level' ] < $this->level )
+            {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+            $messages[] = $this->processRecord( $record );
         }
 
-        if (!empty($messages)) {
-            $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
+        if ( !empty( $messages ) )
+        {
+            $this->send( (string)$this->getFormatter()->formatBatch( $messages ), $messages );
         }
     }
 
@@ -43,21 +46,23 @@ abstract class MailHandler extends AbstractProcessingHandler
      * @param string $content formatted email body to be sent
      * @param array  $records the array of log records that formed this content
      */
-    abstract protected function send($content, array $records);
+    abstract protected function send( $content, array $records );
 
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write( array $record )
     {
-        $this->send((string) $record['formatted'], array($record));
+        $this->send( (string)$record[ 'formatted' ], array($record) );
     }
 
-    protected function getHighestRecord(array $records)
+    protected function getHighestRecord( array $records )
     {
         $highestRecord = null;
-        foreach ($records as $record) {
-            if ($highestRecord === null || $highestRecord['level'] < $record['level']) {
+        foreach ( $records as $record )
+        {
+            if ( $highestRecord === null || $highestRecord[ 'level' ] < $record[ 'level' ] )
+            {
                 $highestRecord = $record;
             }
         }

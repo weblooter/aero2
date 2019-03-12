@@ -28,11 +28,12 @@ class FileCollection extends EntityCollection
 
     /**
      * @param File $item
+     *
      * @return CollectableEntity
      * @throws \Bitrix\Main\ArgumentTypeException
      */
-    public function addItem(File $item)
+    public function addItem( File $item )
     {
-        return parent::addItem($item);
+        return parent::addItem( $item );
     }
 }

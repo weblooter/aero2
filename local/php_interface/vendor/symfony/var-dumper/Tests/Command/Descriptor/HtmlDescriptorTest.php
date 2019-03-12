@@ -24,43 +24,46 @@ class HtmlDescriptorTest extends TestCase
     public static function setUpBeforeClass()
     {
         self::$timezone = date_default_timezone_get();
-        date_default_timezone_set('UTC');
+        date_default_timezone_set( 'UTC' );
     }
 
     public static function tearDownAfterClass()
     {
-        date_default_timezone_set(self::$timezone);
+        date_default_timezone_set( self::$timezone );
     }
 
     public function testItOutputsStylesAndScriptsOnFirstDescribeCall()
     {
         $output = new BufferedOutput();
-        $dumper = $this->createMock(HtmlDumper::class);
-        $dumper->method('dump')->willReturn('[DUMPED]');
-        $descriptor = new HtmlDescriptor($dumper);
+        $dumper = $this->createMock( HtmlDumper::class );
+        $dumper->method( 'dump' )->willReturn( '[DUMPED]' );
+        $descriptor = new HtmlDescriptor( $dumper );
 
-        $descriptor->describe($output, new Data([[123]]), ['timestamp' => 1544804268.3668], 1);
+        $descriptor->describe( $output, new Data( [[123]] ), ['timestamp' => 1544804268.3668], 1 );
 
-        $this->assertStringMatchesFormat('<style>%A</style><script>%A</script>%A', $output->fetch(), 'styles & scripts are output');
+        $this->assertStringMatchesFormat( '<style>%A</style><script>%A</script>%A', $output->fetch(),
+            'styles & scripts are output' );
 
-        $descriptor->describe($output, new Data([[123]]), ['timestamp' => 1544804268.3668], 1);
+        $descriptor->describe( $output, new Data( [[123]] ), ['timestamp' => 1544804268.3668], 1 );
 
-        $this->assertStringNotMatchesFormat('<style>%A</style><script>%A</script>%A', $output->fetch(), 'styles & scripts are output only once');
+        $this->assertStringNotMatchesFormat( '<style>%A</style><script>%A</script>%A', $output->fetch(),
+            'styles & scripts are output only once' );
     }
 
     /**
      * @dataProvider provideContext
      */
-    public function testDescribe(array $context, string $expectedOutput)
+    public function testDescribe( array $context, string $expectedOutput )
     {
         $output = new BufferedOutput();
-        $dumper = $this->createMock(HtmlDumper::class);
-        $dumper->method('dump')->willReturn('[DUMPED]');
-        $descriptor = new HtmlDescriptor($dumper);
+        $dumper = $this->createMock( HtmlDumper::class );
+        $dumper->method( 'dump' )->willReturn( '[DUMPED]' );
+        $descriptor = new HtmlDescriptor( $dumper );
 
-        $descriptor->describe($output, new Data([[123]]), $context + ['timestamp' => 1544804268.3668], 1);
+        $descriptor->describe( $output, new Data( [[123]] ), $context + ['timestamp' => 1544804268.3668], 1 );
 
-        $this->assertStringMatchesFormat(trim($expectedOutput), trim(preg_replace('@<style>.*</style><script>.*</script>@s', '', $output->fetch())));
+        $this->assertStringMatchesFormat( trim( $expectedOutput ),
+            trim( preg_replace( '@<style>.*</style><script>.*</script>@s', '', $output->fetch() ) ) );
     }
 
     public function provideContext()
@@ -162,7 +165,7 @@ TXT
             [
                 'request' => [
                     'identifier' => 'd8bece1c',
-                    'controller' => new Data([['FooController.php']]),
+                    'controller' => new Data( [['FooController.php']] ),
                     'method' => 'GET',
                     'uri' => 'http://localhost/foo',
                 ],

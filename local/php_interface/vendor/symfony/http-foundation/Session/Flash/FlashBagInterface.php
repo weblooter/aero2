@@ -26,7 +26,7 @@ interface FlashBagInterface extends SessionBagInterface
      * @param string $type
      * @param mixed  $message
      */
-    public function add($type, $message);
+    public function add( $type, $message );
 
     /**
      * Registers a message for a given type.
@@ -34,17 +34,17 @@ interface FlashBagInterface extends SessionBagInterface
      * @param string       $type
      * @param string|array $message
      */
-    public function set($type, $message);
+    public function set( $type, $message );
 
     /**
      * Gets flash messages for a given type.
      *
-     * @param string $type    Message category type
+     * @param string $type Message category type
      * @param array  $default Default value if $type does not exist
      *
      * @return array
      */
-    public function peek($type, array $default = []);
+    public function peek( $type, array $default = [] );
 
     /**
      * Gets all flash messages.
@@ -61,7 +61,7 @@ interface FlashBagInterface extends SessionBagInterface
      *
      * @return array
      */
-    public function get($type, array $default = []);
+    public function get( $type, array $default = [] );
 
     /**
      * Gets and clears flashes from the stack.
@@ -73,7 +73,7 @@ interface FlashBagInterface extends SessionBagInterface
     /**
      * Sets all flash messages.
      */
-    public function setAll(array $messages);
+    public function setAll( array $messages );
 
     /**
      * Has flash messages for a given type?
@@ -82,7 +82,7 @@ interface FlashBagInterface extends SessionBagInterface
      *
      * @return bool
      */
-    public function has($type);
+    public function has( $type );
 
     /**
      * Returns a list of all defined types.

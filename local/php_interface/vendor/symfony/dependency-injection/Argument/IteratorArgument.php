@@ -26,9 +26,9 @@ class IteratorArgument implements ArgumentInterface
     /**
      * @param Reference[] $values
      */
-    public function __construct(array $values)
+    public function __construct( array $values )
     {
-        $this->setValues($values);
+        $this->setValues( $values );
     }
 
     /**
@@ -42,11 +42,14 @@ class IteratorArgument implements ArgumentInterface
     /**
      * @param Reference[] $values The service references to lazily iterate over
      */
-    public function setValues(array $values)
+    public function setValues( array $values )
     {
-        foreach ($values as $k => $v) {
-            if (null !== $v && !$v instanceof Reference) {
-                throw new InvalidArgumentException(sprintf('An IteratorArgument must hold only Reference instances, "%s" given.', \is_object($v) ? \get_class($v) : \gettype($v)));
+        foreach ( $values as $k => $v )
+        {
+            if ( null !== $v && !$v instanceof Reference )
+            {
+                throw new InvalidArgumentException( sprintf( 'An IteratorArgument must hold only Reference instances, "%s" given.',
+                    \is_object( $v ) ? \get_class( $v ) : \gettype( $v ) ) );
             }
         }
 

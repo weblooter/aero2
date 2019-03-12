@@ -19,9 +19,9 @@ class IpUtilsTest extends TestCase
     /**
      * @dataProvider getIpv4Data
      */
-    public function testIpv4($matches, $remoteAddr, $cidr)
+    public function testIpv4( $matches, $remoteAddr, $cidr )
     {
-        $this->assertSame($matches, IpUtils::checkIp($remoteAddr, $cidr));
+        $this->assertSame( $matches, IpUtils::checkIp( $remoteAddr, $cidr ) );
     }
 
     public function getIpv4Data()
@@ -45,13 +45,14 @@ class IpUtilsTest extends TestCase
     /**
      * @dataProvider getIpv6Data
      */
-    public function testIpv6($matches, $remoteAddr, $cidr)
+    public function testIpv6( $matches, $remoteAddr, $cidr )
     {
-        if (!\defined('AF_INET6')) {
-            $this->markTestSkipped('Only works when PHP is compiled without the option "disable-ipv6".');
+        if ( !\defined( 'AF_INET6' ) )
+        {
+            $this->markTestSkipped( 'Only works when PHP is compiled without the option "disable-ipv6".' );
         }
 
-        $this->assertSame($matches, IpUtils::checkIp($remoteAddr, $cidr));
+        $this->assertSame( $matches, IpUtils::checkIp( $remoteAddr, $cidr ) );
     }
 
     public function getIpv6Data()
@@ -78,19 +79,20 @@ class IpUtilsTest extends TestCase
      */
     public function testAnIpv6WithOptionDisabledIpv6()
     {
-        if (\defined('AF_INET6')) {
-            $this->markTestSkipped('Only works when PHP is compiled with the option "disable-ipv6".');
+        if ( \defined( 'AF_INET6' ) )
+        {
+            $this->markTestSkipped( 'Only works when PHP is compiled with the option "disable-ipv6".' );
         }
 
-        IpUtils::checkIp('2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65');
+        IpUtils::checkIp( '2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65' );
     }
 
     /**
      * @dataProvider invalidIpAddressData
      */
-    public function testInvalidIpAddressesDoNotMatch($requestIp, $proxyIp)
+    public function testInvalidIpAddressesDoNotMatch( $requestIp, $proxyIp )
     {
-        $this->assertFalse(IpUtils::checkIp4($requestIp, $proxyIp));
+        $this->assertFalse( IpUtils::checkIp4( $requestIp, $proxyIp ) );
     }
 
     public function invalidIpAddressData()

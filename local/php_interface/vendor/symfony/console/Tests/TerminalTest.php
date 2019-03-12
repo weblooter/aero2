@@ -18,27 +18,27 @@ class TerminalTest extends TestCase
 {
     public function test()
     {
-        putenv('COLUMNS=100');
-        putenv('LINES=50');
+        putenv( 'COLUMNS=100' );
+        putenv( 'LINES=50' );
         $terminal = new Terminal();
-        $this->assertSame(100, $terminal->getWidth());
-        $this->assertSame(50, $terminal->getHeight());
+        $this->assertSame( 100, $terminal->getWidth() );
+        $this->assertSame( 50, $terminal->getHeight() );
 
-        putenv('COLUMNS=120');
-        putenv('LINES=60');
+        putenv( 'COLUMNS=120' );
+        putenv( 'LINES=60' );
         $terminal = new Terminal();
-        $this->assertSame(120, $terminal->getWidth());
-        $this->assertSame(60, $terminal->getHeight());
+        $this->assertSame( 120, $terminal->getWidth() );
+        $this->assertSame( 60, $terminal->getHeight() );
     }
 
     public function test_zero_values()
     {
-        putenv('COLUMNS=0');
-        putenv('LINES=0');
+        putenv( 'COLUMNS=0' );
+        putenv( 'LINES=0' );
 
         $terminal = new Terminal();
 
-        $this->assertSame(0, $terminal->getWidth());
-        $this->assertSame(0, $terminal->getHeight());
+        $this->assertSame( 0, $terminal->getWidth() );
+        $this->assertSame( 0, $terminal->getHeight() );
     }
 }

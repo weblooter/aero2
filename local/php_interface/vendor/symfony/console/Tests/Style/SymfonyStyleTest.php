@@ -29,14 +29,14 @@ class SymfonyStyleTest extends TestCase
 
     protected function setUp()
     {
-        putenv('COLUMNS=121');
-        $this->command = new Command('sfstyle');
-        $this->tester = new CommandTester($this->command);
+        putenv( 'COLUMNS=121' );
+        $this->command = new Command( 'sfstyle' );
+        $this->tester = new CommandTester( $this->command );
     }
 
     protected function tearDown()
     {
-        putenv('COLUMNS');
+        putenv( 'COLUMNS' );
         $this->command = null;
         $this->tester = null;
     }
@@ -44,73 +44,74 @@ class SymfonyStyleTest extends TestCase
     /**
      * @dataProvider inputCommandToOutputFilesProvider
      */
-    public function testOutputs($inputCommandFilepath, $outputFilepath)
+    public function testOutputs( $inputCommandFilepath, $outputFilepath )
     {
         $code = require $inputCommandFilepath;
-        $this->command->setCode($code);
-        $this->tester->execute([], ['interactive' => false, 'decorated' => false]);
-        $this->assertStringEqualsFile($outputFilepath, $this->tester->getDisplay(true));
+        $this->command->setCode( $code );
+        $this->tester->execute( [], ['interactive' => false, 'decorated' => false] );
+        $this->assertStringEqualsFile( $outputFilepath, $this->tester->getDisplay( true ) );
     }
 
     /**
      * @dataProvider inputInteractiveCommandToOutputFilesProvider
      */
-    public function testInteractiveOutputs($inputCommandFilepath, $outputFilepath)
+    public function testInteractiveOutputs( $inputCommandFilepath, $outputFilepath )
     {
         $code = require $inputCommandFilepath;
-        $this->command->setCode($code);
-        $this->tester->execute([], ['interactive' => true, 'decorated' => false]);
-        $this->assertStringEqualsFile($outputFilepath, $this->tester->getDisplay(true));
+        $this->command->setCode( $code );
+        $this->tester->execute( [], ['interactive' => true, 'decorated' => false] );
+        $this->assertStringEqualsFile( $outputFilepath, $this->tester->getDisplay( true ) );
     }
 
     public function inputInteractiveCommandToOutputFilesProvider()
     {
         $baseDir = __DIR__.'/../Fixtures/Style/SymfonyStyle';
 
-        return array_map(null, glob($baseDir.'/command/interactive_command_*.php'), glob($baseDir.'/output/interactive_output_*.txt'));
+        return array_map( null, glob( $baseDir.'/command/interactive_command_*.php' ),
+            glob( $baseDir.'/output/interactive_output_*.txt' ) );
     }
 
     public function inputCommandToOutputFilesProvider()
     {
         $baseDir = __DIR__.'/../Fixtures/Style/SymfonyStyle';
 
-        return array_map(null, glob($baseDir.'/command/command_*.php'), glob($baseDir.'/output/output_*.txt'));
+        return array_map( null, glob( $baseDir.'/command/command_*.php' ), glob( $baseDir.'/output/output_*.txt' ) );
     }
 
     public function testGetErrorStyle()
     {
-        $input = $this->getMockBuilder(InputInterface::class)->getMock();
+        $input = $this->getMockBuilder( InputInterface::class )->getMock();
 
-        $errorOutput = $this->getMockBuilder(OutputInterface::class)->getMock();
+        $errorOutput = $this->getMockBuilder( OutputInterface::class )->getMock();
         $errorOutput
-            ->method('getFormatter')
-            ->willReturn(new OutputFormatter());
+            ->method( 'getFormatter' )
+            ->willReturn( new OutputFormatter() );
         $errorOutput
-            ->expects($this->once())
-            ->method('write');
+            ->expects( $this->once() )
+            ->method( 'write' );
 
-        $output = $this->getMockBuilder(ConsoleOutputInterface::class)->getMock();
+        $output = $this->getMockBuilder( ConsoleOutputInterface::class )->getMock();
         $output
-            ->method('getFormatter')
-            ->willReturn(new OutputFormatter());
+            ->method( 'getFormatter' )
+            ->willReturn( new OutputFormatter() );
         $output
-            ->expects($this->once())
-            ->method('getErrorOutput')
-            ->willReturn($errorOutput);
+            ->expects( $this->once() )
+            ->method( 'getErrorOutput' )
+            ->willReturn( $errorOutput );
 
-        $io = new SymfonyStyle($input, $output);
-        $io->getErrorStyle()->write('');
+        $io = new SymfonyStyle( $input, $output );
+        $io->getErrorStyle()->write( '' );
     }
 
     public function testGetErrorStyleUsesTheCurrentOutputIfNoErrorOutputIsAvailable()
     {
-        $output = $this->getMockBuilder(OutputInterface::class)->getMock();
+        $output = $this->getMockBuilder( OutputInterface::class )->getMock();
         $output
-            ->method('getFormatter')
-            ->willReturn(new OutputFormatter());
+            ->method( 'getFormatter' )
+            ->willReturn( new OutputFormatter() );
 
-        $style = new SymfonyStyle($this->getMockBuilder(InputInterface::class)->getMock(), $output);
+        $style = new SymfonyStyle( $this->getMockBuilder( InputInterface::class )->getMock(), $output );
 
-        $this->assertInstanceOf(SymfonyStyle::class, $style->getErrorStyle());
+        $this->assertInstanceOf( SymfonyStyle::class, $style->getErrorStyle() );
     }
 }

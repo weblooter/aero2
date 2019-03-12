@@ -21,10 +21,11 @@ class PackageTest extends TestCase
     /**
      * @dataProvider getConfigs
      */
-    public function testGetUrl($version, $format, $path, $expected)
+    public function testGetUrl( $version, $format, $path, $expected )
     {
-        $package = new Package($version ? new StaticVersionStrategy($version, $format) : new EmptyVersionStrategy());
-        $this->assertEquals($expected, $package->getUrl($path));
+        $package = new Package( $version ? new StaticVersionStrategy( $version,
+            $format ) : new EmptyVersionStrategy() );
+        $this->assertEquals( $expected, $package->getUrl( $path ) );
     }
 
     public function getConfigs()
@@ -49,7 +50,7 @@ class PackageTest extends TestCase
 
     public function testGetVersion()
     {
-        $package = new Package(new StaticVersionStrategy('v1'));
-        $this->assertEquals('v1', $package->getVersion('/foo'));
+        $package = new Package( new StaticVersionStrategy( 'v1' ) );
+        $this->assertEquals( 'v1', $package->getVersion( '/foo' ) );
     }
 }

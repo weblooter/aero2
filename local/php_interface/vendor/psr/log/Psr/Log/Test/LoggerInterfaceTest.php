@@ -31,23 +31,23 @@ abstract class LoggerInterfaceTest extends \PHPUnit_Framework_TestCase
 
     public function testImplements()
     {
-        $this->assertInstanceOf('Psr\Log\LoggerInterface', $this->getLogger());
+        $this->assertInstanceOf( 'Psr\Log\LoggerInterface', $this->getLogger() );
     }
 
     /**
      * @dataProvider provideLevelsAndMessages
      */
-    public function testLogsAtAllLevels($level, $message)
+    public function testLogsAtAllLevels( $level, $message )
     {
         $logger = $this->getLogger();
-        $logger->{$level}($message, array('user' => 'Bob'));
-        $logger->log($level, $message, array('user' => 'Bob'));
+        $logger->{$level}( $message, array('user' => 'Bob') );
+        $logger->log( $level, $message, array('user' => 'Bob') );
 
         $expected = array(
             $level.' message of level '.$level.' with context: Bob',
             $level.' message of level '.$level.' with context: Bob',
         );
-        $this->assertEquals($expected, $this->getLogs());
+        $this->assertEquals( $expected, $this->getLogs() );
     }
 
     public function provideLevelsAndMessages()
@@ -70,39 +70,42 @@ abstract class LoggerInterfaceTest extends \PHPUnit_Framework_TestCase
     public function testThrowsOnInvalidLevel()
     {
         $logger = $this->getLogger();
-        $logger->log('invalid level', 'Foo');
+        $logger->log( 'invalid level', 'Foo' );
     }
 
     public function testContextReplacement()
     {
         $logger = $this->getLogger();
-        $logger->info('{Message {nothing} {user} {foo.bar} a}', array('user' => 'Bob', 'foo.bar' => 'Bar'));
+        $logger->info( '{Message {nothing} {user} {foo.bar} a}', array('user' => 'Bob', 'foo.bar' => 'Bar') );
 
         $expected = array('info {Message {nothing} Bob Bar a}');
-        $this->assertEquals($expected, $this->getLogs());
+        $this->assertEquals( $expected, $this->getLogs() );
     }
 
     public function testObjectCastToString()
     {
-        if (method_exists($this, 'createPartialMock')) {
-            $dummy = $this->createPartialMock('Psr\Log\Test\DummyTest', array('__toString'));
-        } else {
-            $dummy = $this->getMock('Psr\Log\Test\DummyTest', array('__toString'));
+        if ( method_exists( $this, 'createPartialMock' ) )
+        {
+            $dummy = $this->createPartialMock( 'Psr\Log\Test\DummyTest', array('__toString') );
         }
-        $dummy->expects($this->once())
-            ->method('__toString')
-            ->will($this->returnValue('DUMMY'));
+        else
+        {
+            $dummy = $this->getMock( 'Psr\Log\Test\DummyTest', array('__toString') );
+        }
+        $dummy->expects( $this->once() )
+            ->method( '__toString' )
+            ->will( $this->returnValue( 'DUMMY' ) );
 
-        $this->getLogger()->warning($dummy);
+        $this->getLogger()->warning( $dummy );
 
         $expected = array('warning DUMMY');
-        $this->assertEquals($expected, $this->getLogs());
+        $this->assertEquals( $expected, $this->getLogs() );
     }
 
     public function testContextCanContainAnything()
     {
-        $closed = fopen('php://memory', 'r');
-        fclose($closed);
+        $closed = fopen( 'php://memory', 'r' );
+        fclose( $closed );
 
         $context = array(
             'bool' => true,
@@ -112,27 +115,27 @@ abstract class LoggerInterfaceTest extends \PHPUnit_Framework_TestCase
             'float' => 0.5,
             'nested' => array('with object' => new DummyTest),
             'object' => new \DateTime,
-            'resource' => fopen('php://memory', 'r'),
+            'resource' => fopen( 'php://memory', 'r' ),
             'closed' => $closed,
         );
 
-        $this->getLogger()->warning('Crazy context data', $context);
+        $this->getLogger()->warning( 'Crazy context data', $context );
 
         $expected = array('warning Crazy context data');
-        $this->assertEquals($expected, $this->getLogs());
+        $this->assertEquals( $expected, $this->getLogs() );
     }
 
     public function testContextExceptionKeyCanBeExceptionOrOtherValues()
     {
         $logger = $this->getLogger();
-        $logger->warning('Random message', array('exception' => 'oops'));
-        $logger->critical('Uncaught Exception!', array('exception' => new \LogicException('Fail')));
+        $logger->warning( 'Random message', array('exception' => 'oops') );
+        $logger->critical( 'Uncaught Exception!', array('exception' => new \LogicException( 'Fail' )) );
 
         $expected = array(
             'warning Random message',
             'critical Uncaught Exception!'
         );
-        $this->assertEquals($expected, $this->getLogs());
+        $this->assertEquals( $expected, $this->getLogs() );
     }
 }
 

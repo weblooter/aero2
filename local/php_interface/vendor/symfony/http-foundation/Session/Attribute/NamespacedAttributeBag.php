@@ -22,68 +22,71 @@ class NamespacedAttributeBag extends AttributeBag
     private $namespaceCharacter;
 
     /**
-     * @param string $storageKey         Session storage key
+     * @param string $storageKey Session storage key
      * @param string $namespaceCharacter Namespace character to use in keys
      */
-    public function __construct(string $storageKey = '_sf2_attributes', string $namespaceCharacter = '/')
+    public function __construct( string $storageKey = '_sf2_attributes', string $namespaceCharacter = '/' )
     {
         $this->namespaceCharacter = $namespaceCharacter;
-        parent::__construct($storageKey);
+        parent::__construct( $storageKey );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function has($name)
+    public function has( $name )
     {
         // reference mismatch: if fixed, re-introduced in array_key_exists; keep as it is
-        $attributes = $this->resolveAttributePath($name);
-        $name = $this->resolveKey($name);
+        $attributes = $this->resolveAttributePath( $name );
+        $name = $this->resolveKey( $name );
 
-        if (null === $attributes) {
+        if ( null === $attributes )
+        {
             return false;
         }
 
-        return \array_key_exists($name, $attributes);
+        return \array_key_exists( $name, $attributes );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($name, $default = null)
+    public function get( $name, $default = null )
     {
         // reference mismatch: if fixed, re-introduced in array_key_exists; keep as it is
-        $attributes = $this->resolveAttributePath($name);
-        $name = $this->resolveKey($name);
+        $attributes = $this->resolveAttributePath( $name );
+        $name = $this->resolveKey( $name );
 
-        if (null === $attributes) {
+        if ( null === $attributes )
+        {
             return $default;
         }
 
-        return \array_key_exists($name, $attributes) ? $attributes[$name] : $default;
+        return \array_key_exists( $name, $attributes ) ? $attributes[ $name ] : $default;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($name, $value)
+    public function set( $name, $value )
     {
-        $attributes = &$this->resolveAttributePath($name, true);
-        $name = $this->resolveKey($name);
-        $attributes[$name] = $value;
+        $attributes = &$this->resolveAttributePath( $name, true );
+        $name = $this->resolveKey( $name );
+        $attributes[ $name ] = $value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove($name)
+    public function remove( $name )
     {
         $retval = null;
-        $attributes = &$this->resolveAttributePath($name);
-        $name = $this->resolveKey($name);
-        if (null !== $attributes && \array_key_exists($name, $attributes)) {
-            $retval = $attributes[$name];
-            unset($attributes[$name]);
+        $attributes = &$this->resolveAttributePath( $name );
+        $name = $this->resolveKey( $name );
+        if ( null !== $attributes && \array_key_exists( $name, $attributes ) )
+        {
+            $retval = $attributes[ $name ];
+            unset( $attributes[ $name ] );
         }
 
         return $retval;
@@ -94,46 +97,52 @@ class NamespacedAttributeBag extends AttributeBag
      *
      * This method allows structured namespacing of session attributes.
      *
-     * @param string $name         Key name
+     * @param string $name Key name
      * @param bool   $writeContext Write context, default false
      *
      * @return array
      */
-    protected function &resolveAttributePath($name, $writeContext = false)
+    protected function &resolveAttributePath( $name, $writeContext = false )
     {
         $array = &$this->attributes;
-        $name = (0 === strpos($name, $this->namespaceCharacter)) ? substr($name, 1) : $name;
+        $name = ( 0 === strpos( $name, $this->namespaceCharacter ) ) ? substr( $name, 1 ) : $name;
 
         // Check if there is anything to do, else return
-        if (!$name) {
+        if ( !$name )
+        {
             return $array;
         }
 
-        $parts = explode($this->namespaceCharacter, $name);
-        if (\count($parts) < 2) {
-            if (!$writeContext) {
+        $parts = explode( $this->namespaceCharacter, $name );
+        if ( \count( $parts ) < 2 )
+        {
+            if ( !$writeContext )
+            {
                 return $array;
             }
 
-            $array[$parts[0]] = [];
+            $array[ $parts[ 0 ] ] = [];
 
             return $array;
         }
 
-        unset($parts[\count($parts) - 1]);
+        unset( $parts[ \count( $parts ) - 1 ] );
 
-        foreach ($parts as $part) {
-            if (null !== $array && !\array_key_exists($part, $array)) {
-                if (!$writeContext) {
+        foreach ( $parts as $part )
+        {
+            if ( null !== $array && !\array_key_exists( $part, $array ) )
+            {
+                if ( !$writeContext )
+                {
                     $null = null;
 
                     return $null;
                 }
 
-                $array[$part] = [];
+                $array[ $part ] = [];
             }
 
-            $array = &$array[$part];
+            $array = &$array[ $part ];
         }
 
         return $array;
@@ -148,10 +157,11 @@ class NamespacedAttributeBag extends AttributeBag
      *
      * @return string
      */
-    protected function resolveKey($name)
+    protected function resolveKey( $name )
     {
-        if (false !== $pos = strrpos($name, $this->namespaceCharacter)) {
-            $name = substr($name, $pos + 1);
+        if ( false !== $pos = strrpos( $name, $this->namespaceCharacter ) )
+        {
+            $name = substr( $name, $pos + 1 );
         }
 
         return $name;

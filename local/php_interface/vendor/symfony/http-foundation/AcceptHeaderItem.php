@@ -23,11 +23,12 @@ class AcceptHeaderItem
     private $index = 0;
     private $attributes = [];
 
-    public function __construct(string $value, array $attributes = [])
+    public function __construct( string $value, array $attributes = [] )
     {
         $this->value = $value;
-        foreach ($attributes as $name => $value) {
-            $this->setAttribute($name, $value);
+        foreach ( $attributes as $name => $value )
+        {
+            $this->setAttribute( $name, $value );
         }
     }
 
@@ -38,14 +39,14 @@ class AcceptHeaderItem
      *
      * @return self
      */
-    public static function fromString($itemValue)
+    public static function fromString( $itemValue )
     {
-        $parts = HeaderUtils::split($itemValue, ';=');
+        $parts = HeaderUtils::split( $itemValue, ';=' );
 
-        $part = array_shift($parts);
-        $attributes = HeaderUtils::combine($parts);
+        $part = array_shift( $parts );
+        $attributes = HeaderUtils::combine( $parts );
 
-        return new self($part[0], $attributes);
+        return new self( $part[ 0 ], $attributes );
     }
 
     /**
@@ -55,9 +56,10 @@ class AcceptHeaderItem
      */
     public function __toString()
     {
-        $string = $this->value.($this->quality < 1 ? ';q='.$this->quality : '');
-        if (\count($this->attributes) > 0) {
-            $string .= '; '.HeaderUtils::toString($this->attributes, ';');
+        $string = $this->value.( $this->quality < 1 ? ';q='.$this->quality : '' );
+        if ( \count( $this->attributes ) > 0 )
+        {
+            $string .= '; '.HeaderUtils::toString( $this->attributes, ';' );
         }
 
         return $string;
@@ -70,7 +72,7 @@ class AcceptHeaderItem
      *
      * @return $this
      */
-    public function setValue($value)
+    public function setValue( $value )
     {
         $this->value = $value;
 
@@ -94,7 +96,7 @@ class AcceptHeaderItem
      *
      * @return $this
      */
-    public function setQuality($quality)
+    public function setQuality( $quality )
     {
         $this->quality = $quality;
 
@@ -118,7 +120,7 @@ class AcceptHeaderItem
      *
      * @return $this
      */
-    public function setIndex($index)
+    public function setIndex( $index )
     {
         $this->index = $index;
 
@@ -142,9 +144,9 @@ class AcceptHeaderItem
      *
      * @return bool
      */
-    public function hasAttribute($name)
+    public function hasAttribute( $name )
     {
-        return isset($this->attributes[$name]);
+        return isset( $this->attributes[ $name ] );
     }
 
     /**
@@ -155,9 +157,9 @@ class AcceptHeaderItem
      *
      * @return mixed
      */
-    public function getAttribute($name, $default = null)
+    public function getAttribute( $name, $default = null )
     {
-        return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
+        return isset( $this->attributes[ $name ] ) ? $this->attributes[ $name ] : $default;
     }
 
     /**
@@ -178,12 +180,15 @@ class AcceptHeaderItem
      *
      * @return $this
      */
-    public function setAttribute($name, $value)
+    public function setAttribute( $name, $value )
     {
-        if ('q' === $name) {
-            $this->quality = (float) $value;
-        } else {
-            $this->attributes[$name] = (string) $value;
+        if ( 'q' === $name )
+        {
+            $this->quality = (float)$value;
+        }
+        else
+        {
+            $this->attributes[ $name ] = (string)$value;
         }
 
         return $this;

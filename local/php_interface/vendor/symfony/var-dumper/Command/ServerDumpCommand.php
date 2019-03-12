@@ -41,25 +41,26 @@ class ServerDumpCommand extends Command
     /** @var DumpDescriptorInterface[] */
     private $descriptors;
 
-    public function __construct(DumpServer $server, array $descriptors = [])
+    public function __construct( DumpServer $server, array $descriptors = [] )
     {
         $this->server = $server;
         $this->descriptors = $descriptors + [
-            'cli' => new CliDescriptor(new CliDumper()),
-            'html' => new HtmlDescriptor(new HtmlDumper()),
-        ];
+                'cli' => new CliDescriptor( new CliDumper() ),
+                'html' => new HtmlDescriptor( new HtmlDumper() ),
+            ];
 
         parent::__construct();
     }
 
     protected function configure()
     {
-        $availableFormats = implode(', ', array_keys($this->descriptors));
+        $availableFormats = implode( ', ', array_keys( $this->descriptors ) );
 
         $this
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, sprintf('The output format (%s)', $availableFormats), 'cli')
-            ->setDescription('Starts a dump server that collects and displays dumps in a single place')
-            ->setHelp(<<<'EOF'
+            ->addOption( 'format', null, InputOption::VALUE_REQUIRED,
+                sprintf( 'The output format (%s)', $availableFormats ), 'cli' )
+            ->setDescription( 'Starts a dump server that collects and displays dumps in a single place' )
+            ->setHelp( <<<'EOF'
 <info>%command.name%</info> starts a dump server that collects and displays
 dumps in a single place for debugging you application:
 
@@ -71,29 +72,29 @@ and redirecting the output to a file:
   <info>php %command.full_name% --format="html" > dump.html</info>
 
 EOF
-            )
-        ;
+            );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute( InputInterface $input, OutputInterface $output )
     {
-        $io = new SymfonyStyle($input, $output);
-        $format = $input->getOption('format');
+        $io = new SymfonyStyle( $input, $output );
+        $format = $input->getOption( 'format' );
 
-        if (!$descriptor = $this->descriptors[$format] ?? null) {
-            throw new InvalidArgumentException(sprintf('Unsupported format "%s".', $format));
+        if ( !$descriptor = $this->descriptors[ $format ] ?? null )
+        {
+            throw new InvalidArgumentException( sprintf( 'Unsupported format "%s".', $format ) );
         }
 
         $errorIo = $io->getErrorStyle();
-        $errorIo->title('Symfony Var Dumper Server');
+        $errorIo->title( 'Symfony Var Dumper Server' );
 
         $this->server->start();
 
-        $errorIo->success(sprintf('Server listening on %s', $this->server->getHost()));
-        $errorIo->comment('Quit the server with CONTROL-C.');
+        $errorIo->success( sprintf( 'Server listening on %s', $this->server->getHost() ) );
+        $errorIo->comment( 'Quit the server with CONTROL-C.' );
 
-        $this->server->listen(function (Data $data, array $context, int $clientId) use ($descriptor, $io) {
-            $descriptor->describe($io, $data, $context, $clientId);
-        });
+        $this->server->listen( function ( Data $data, array $context, int $clientId ) use ( $descriptor, $io ) {
+            $descriptor->describe( $io, $data, $context, $clientId );
+        } );
     }
 }

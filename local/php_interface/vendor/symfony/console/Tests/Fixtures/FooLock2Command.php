@@ -11,15 +11,18 @@ class FooLock2Command extends Command
 
     protected function configure()
     {
-        $this->setName('foo:lock2');
+        $this->setName( 'foo:lock2' );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute( InputInterface $input, OutputInterface $output )
     {
-        try {
+        try
+        {
             $this->lock();
             $this->lock();
-        } catch (LogicException $e) {
+        }
+        catch ( LogicException $e )
+        {
             return 1;
         }
 

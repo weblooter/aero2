@@ -34,11 +34,12 @@ class BufferedOutput extends Output
     /**
      * {@inheritdoc}
      */
-    protected function doWrite($message, $newline)
+    protected function doWrite( $message, $newline )
     {
         $this->buffer .= $message;
 
-        if ($newline) {
+        if ( $newline )
+        {
             $this->buffer .= PHP_EOL;
         }
     }

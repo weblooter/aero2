@@ -23,7 +23,7 @@ class SyslogUdpHandlerTest extends TestCase
      */
     public function testWeValidateFacilities()
     {
-        $handler = new SyslogUdpHandler("ip", null, "invalidFacility");
+        $handler = new SyslogUdpHandler( "ip", null, "invalidFacility" );
     }
 
     public function testWeSplitIntoLines()
@@ -32,45 +32,51 @@ class SyslogUdpHandlerTest extends TestCase
         $pid = getmypid();
         $host = gethostname();
 
-        $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
-            ->setConstructorArgs(array("127.0.0.1", 514, "authpriv"))
-            ->setMethods(array('getDateTime'))
+        $handler = $this->getMockBuilder( '\Monolog\Handler\SyslogUdpHandler' )
+            ->setConstructorArgs( array("127.0.0.1", 514, "authpriv") )
+            ->setMethods( array('getDateTime') )
             ->getMock();
 
-        $handler->method('getDateTime')
-            ->willReturn($time);
+        $handler->method( 'getDateTime' )
+            ->willReturn( $time );
 
-        $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
+        $handler->setFormatter( new \Monolog\Formatter\ChromePHPFormatter() );
 
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
-        $socket->expects($this->at(0))
-            ->method('write')
-            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ");
-        $socket->expects($this->at(1))
-            ->method('write')
-            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ");
+        $socket = $this->getMock( '\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol') );
+        $socket->expects( $this->at( 0 ) )
+            ->method( 'write' )
+            ->with( "lol", "<".( LOG_AUTHPRIV + LOG_WARNING ).">1 $time $host php $pid - - " );
+        $socket->expects( $this->at( 1 ) )
+            ->method( 'write' )
+            ->with( "hej", "<".( LOG_AUTHPRIV + LOG_WARNING ).">1 $time $host php $pid - - " );
 
-        $handler->setSocket($socket);
+        $handler->setSocket( $socket );
 
-        $handler->handle($this->getRecordWithMessage("hej\nlol"));
+        $handler->handle( $this->getRecordWithMessage( "hej\nlol" ) );
     }
 
     public function testSplitWorksOnEmptyMsg()
     {
-        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
-        $handler->setFormatter($this->getIdentityFormatter());
+        $handler = new SyslogUdpHandler( "127.0.0.1", 514, "authpriv" );
+        $handler->setFormatter( $this->getIdentityFormatter() );
 
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
-        $socket->expects($this->never())
-            ->method('write');
+        $socket = $this->getMock( '\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol') );
+        $socket->expects( $this->never() )
+            ->method( 'write' );
 
-        $handler->setSocket($socket);
+        $handler->setSocket( $socket );
 
-        $handler->handle($this->getRecordWithMessage(null));
+        $handler->handle( $this->getRecordWithMessage( null ) );
     }
 
-    protected function getRecordWithMessage($msg)
+    protected function getRecordWithMessage( $msg )
     {
-        return array('message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => array(), 'channel' => 'lol');
+        return array(
+            'message' => $msg,
+            'level' => \Monolog\Logger::WARNING,
+            'context' => null,
+            'extra' => array(),
+            'channel' => 'lol'
+        );
     }
 }

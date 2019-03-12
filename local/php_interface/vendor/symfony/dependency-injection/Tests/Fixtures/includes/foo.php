@@ -13,14 +13,14 @@ class FooClass
     public $called = false;
     public $arguments = [];
 
-    public function __construct($arguments = [])
+    public function __construct( $arguments = [] )
     {
         $this->arguments = $arguments;
     }
 
-    public static function getInstance($arguments = [])
+    public static function getInstance( $arguments = [] )
     {
-        $obj = new self($arguments);
+        $obj = new self( $arguments );
         $obj->called = true;
 
         return $obj;
@@ -36,7 +36,7 @@ class FooClass
         $this->configured = true;
     }
 
-    public function setBar($value = null)
+    public function setBar( $value = null )
     {
         $this->bar = $value;
     }

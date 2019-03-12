@@ -23,13 +23,14 @@ class MemcachedCasterTest extends TestCase
 
     public function testCastMemcachedWithDefaultOptions()
     {
-        if (!class_exists('Memcached')) {
-            $this->markTestSkipped('Memcached not available');
+        if ( !class_exists( 'Memcached' ) )
+        {
+            $this->markTestSkipped( 'Memcached not available' );
         }
 
         $var = new \Memcached();
-        $var->addServer('127.0.0.1', 11211);
-        $var->addServer('127.0.0.2', 11212);
+        $var->addServer( '127.0.0.1', 11211 );
+        $var->addServer( '127.0.0.2', 11212 );
 
         $expected = <<<EOTXT
 Memcached {
@@ -48,23 +49,24 @@ Memcached {
   options: {}
 }
 EOTXT;
-        $this->assertDumpEquals($expected, $var);
+        $this->assertDumpEquals( $expected, $var );
     }
 
     public function testCastMemcachedWithCustomOptions()
     {
-        if (!class_exists('Memcached')) {
-            $this->markTestSkipped('Memcached not available');
+        if ( !class_exists( 'Memcached' ) )
+        {
+            $this->markTestSkipped( 'Memcached not available' );
         }
 
         $var = new \Memcached();
-        $var->addServer('127.0.0.1', 11211);
-        $var->addServer('127.0.0.2', 11212);
+        $var->addServer( '127.0.0.1', 11211 );
+        $var->addServer( '127.0.0.2', 11212 );
 
         // set a subset of non default options to test boolean, string and integer output
-        $var->setOption(\Memcached::OPT_COMPRESSION, false);
-        $var->setOption(\Memcached::OPT_PREFIX_KEY, 'pre');
-        $var->setOption(\Memcached::OPT_DISTRIBUTION, \Memcached::DISTRIBUTION_CONSISTENT);
+        $var->setOption( \Memcached::OPT_COMPRESSION, false );
+        $var->setOption( \Memcached::OPT_PREFIX_KEY, 'pre' );
+        $var->setOption( \Memcached::OPT_DISTRIBUTION, \Memcached::DISTRIBUTION_CONSISTENT );
 
         $expected = <<<'EOTXT'
 Memcached {
@@ -88,6 +90,6 @@ Memcached {
 }
 EOTXT;
 
-        $this->assertDumpEquals($expected, $var);
+        $this->assertDumpEquals( $expected, $var );
     }
 }

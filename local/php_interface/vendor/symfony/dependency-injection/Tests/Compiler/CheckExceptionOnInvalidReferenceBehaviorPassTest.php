@@ -25,14 +25,13 @@ class CheckExceptionOnInvalidReferenceBehaviorPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $container
-            ->register('a', '\stdClass')
-            ->addArgument(new Reference('b'))
-        ;
-        $container->register('b', '\stdClass');
+            ->register( 'a', '\stdClass' )
+            ->addArgument( new Reference( 'b' ) );
+        $container->register( 'b', '\stdClass' );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->addToAssertionCount(1);
+        $this->addToAssertionCount( 1 );
     }
 
     /**
@@ -43,11 +42,10 @@ class CheckExceptionOnInvalidReferenceBehaviorPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $container
-            ->register('a', '\stdClass')
-            ->addArgument(new Reference('b'))
-        ;
+            ->register( 'a', '\stdClass' )
+            ->addArgument( new Reference( 'b' ) );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     /**
@@ -58,14 +56,13 @@ class CheckExceptionOnInvalidReferenceBehaviorPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $def = new Definition();
-        $def->addArgument(new Reference('b'));
+        $def->addArgument( new Reference( 'b' ) );
 
         $container
-            ->register('a', '\stdClass')
-            ->addArgument($def)
-        ;
+            ->register( 'a', '\stdClass' )
+            ->addArgument( $def );
 
-        $this->process($container);
+        $this->process( $container );
     }
 
     public function testProcessDefinitionWithBindings()
@@ -73,18 +70,17 @@ class CheckExceptionOnInvalidReferenceBehaviorPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $container
-            ->register('b')
-            ->setBindings([new BoundArgument(new Reference('a'))])
-        ;
+            ->register( 'b' )
+            ->setBindings( [new BoundArgument( new Reference( 'a' ) )] );
 
-        $this->process($container);
+        $this->process( $container );
 
-        $this->addToAssertionCount(1);
+        $this->addToAssertionCount( 1 );
     }
 
-    private function process(ContainerBuilder $container)
+    private function process( ContainerBuilder $container )
     {
         $pass = new CheckExceptionOnInvalidReferenceBehaviorPass();
-        $pass->process($container);
+        $pass->process( $container );
     }
 }
