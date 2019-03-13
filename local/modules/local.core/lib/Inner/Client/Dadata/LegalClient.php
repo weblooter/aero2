@@ -28,26 +28,26 @@ class LegalClient extends BaseClient
      *
      * @return \Bitrix\Main\Result
      */
-    public function suggest( Interfaces\QueryInterface $query )
+    public function suggest(Interfaces\QueryInterface $query)
     {
 
-        return parent::suggest( $this->resource, $query );
+        return parent::suggest($this->resource, $query);
     }
 
-    protected function signHash( &$response )
+    protected function signHash(&$response)
     {
-        foreach ( $response[ 'suggestions' ] as &$suggestion )
+        foreach( $response['suggestions'] as &$suggestion )
         {
             $ar_data = [
-                $suggestion[ 'unrestricted_value' ],
-                $suggestion[ 'data' ][ 'kpp' ],
-                $suggestion[ 'data' ][ 'inn' ],
-                $suggestion[ 'data' ][ 'management' ][ 'name' ],
-                $suggestion[ 'data' ][ 'management' ][ 'post' ],
-                $suggestion[ 'data' ][ 'address' ][ 'unrestricted_value' ],
+                $suggestion['unrestricted_value'],
+                $suggestion['data']['kpp'],
+                $suggestion['data']['inn'],
+                $suggestion['data']['management']['name'],
+                $suggestion['data']['management']['post'],
+                $suggestion['data']['address']['unrestricted_value'],
             ];
 
-            $suggestion[ 'hash' ] = self::hash( $ar_data );
+            $suggestion['hash'] = self::hash($ar_data);
         }
     }
 }

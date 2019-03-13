@@ -46,8 +46,8 @@ abstract class EditBase
 
     public function __construct()
     {
-        $this->app = &$GLOBALS[ "APPLICATION" ];
-        $this->user = &$GLOBALS[ "USER" ];
+        $this->app = &$GLOBALS["APPLICATION"];
+        $this->user = &$GLOBALS["USER"];
         $this->resultAction = new \Bitrix\Main\Result();
     }
 
@@ -58,7 +58,7 @@ abstract class EditBase
      *
      * @return \Bitrix\Main\Result
      */
-    abstract protected function checkRights( $operation = "" ): \Bitrix\Main\Result;
+    abstract protected function checkRights($operation = ""): \Bitrix\Main\Result;
 
     /**
      * Устанавливает данные текущего элемента в this->id и this->data
@@ -149,7 +149,7 @@ abstract class EditBase
      *
      * @return \Bitrix\Main\Result
      */
-    abstract protected function editAction( \Bitrix\Main\HttpRequest $request );
+    abstract protected function editAction(\Bitrix\Main\HttpRequest $request);
 
 
     /**
@@ -159,13 +159,13 @@ abstract class EditBase
      *
      * @return string
      */
-    protected function getEditLink( $fields = [] )
+    protected function getEditLink($fields = [])
     {
-        $editLink = new \Bitrix\Main\Web\Uri( $this->app->GetCurPage() );
-        $editLink->addParams( array_merge( [
+        $editLink = new \Bitrix\Main\Web\Uri($this->app->GetCurPage());
+        $editLink->addParams(array_merge([
             "id" => $this->id,
             "lang" => LANGUAGE_ID,
-        ], $fields ) );
+        ], $fields));
 
         return $editLink->getUri();
     }
@@ -177,48 +177,48 @@ abstract class EditBase
     {
         $request = \Bitrix\Main\Context::getCurrent()->getRequest();
 
-        if ( ( !$request->isPost() && $request->get( "action" ) === null ) || !check_bitrix_sessid() )
+        if( ( !$request->isPost() && $request->get("action") === null ) || !check_bitrix_sessid() )
         {
             return;
         }
 
-        if ( $request->get( "save" ) || $request->get( "apply" ) && $this->checkRights( "editAction" ) )
+        if( $request->get("save") || $request->get("apply") && $this->checkRights("editAction") )
         {
 
-            $result = $this->editAction( $request );
+            $result = $this->editAction($request);
 
-            if ( $result->isSuccess() )
+            if( $result->isSuccess() )
             {
-                if ( $request->get( "apply" ) !== null )
+                if( $request->get("apply") !== null )
                 {
-                    LocalRedirect( $this->getEditLink( ["tabControl_active_tab" => $this->CAdminTabControl->GetSelectedTab()] ) );
+                    LocalRedirect($this->getEditLink(["tabControl_active_tab" => $this->CAdminTabControl->GetSelectedTab()]));
                 }
                 else
                 {
-                    LocalRedirect( $this->getListLink() );
+                    LocalRedirect($this->getListLink());
                 }
             }
             else
             {
-                $this->resultAction->addErrors( $result->getErrors() );
+                $this->resultAction->addErrors($result->getErrors());
             }
 
         }
-        elseif ( $request->get( "action" ) )
+        else if( $request->get("action") )
         {
 
-            $methodName = $request->get( "action" )."Action";
-            if ( $this->checkRights( $methodName ) && method_exists( $this, $methodName ) )
+            $methodName = $request->get("action")."Action";
+            if( $this->checkRights($methodName) && method_exists($this, $methodName) )
             {
 
-                $resAction = call_user_func( [$this, $methodName], $request );
-                if ( $resAction->isSuccess() )
+                $resAction = call_user_func([$this, $methodName], $request);
+                if( $resAction->isSuccess() )
                 {
-                    LocalRedirect( $this->getListLink() );
+                    LocalRedirect($this->getListLink());
                 }
                 else
                 {
-                    $this->resultAction->addErrors( $resAction->getErrors() );
+                    $this->resultAction->addErrors($resAction->getErrors());
                 }
 
             }
@@ -233,52 +233,52 @@ abstract class EditBase
     {
         global $USER, $APPLICATION, $adminPage, $adminMenu, $adminChain, $SiteExpireDate;
 
-        if ( !$this->checkRights( "render" ) )
+        if( !$this->checkRights("render") )
         {
-            $this->app->AuthForm( "Недостаточно прав доступа" );
+            $this->app->AuthForm("Недостаточно прав доступа");
 
             return;
         }
 
-        require( $_SERVER[ "DOCUMENT_ROOT" ]."/bitrix/modules/main/include/prolog_admin_after.php" );
+        require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php" );
 
         $setDataResult = $this->setData();
-        if ( !$setDataResult->isSuccess() )
+        if( !$setDataResult->isSuccess() )
         {
-            echo ( new \CAdminMessage( implode( "\n", $setDataResult->getErrorMessages() ) ) )->Show();
-            require( $_SERVER[ "DOCUMENT_ROOT" ]."/bitrix/modules/main/include/epilog_admin.php" );
+            echo ( new \CAdminMessage(implode("\n", $setDataResult->getErrorMessages())) )->Show();
+            require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php" );
 
             return;
         }
 
-        ( new \CAdminContextMenu( $this->getUpperButtons() ) )->Show();
-        $this->CAdminTabControl = new \CAdminTabControl( "tabControl", $this->getTabsList() );
+        ( new \CAdminContextMenu($this->getUpperButtons()) )->Show();
+        $this->CAdminTabControl = new \CAdminTabControl("tabControl", $this->getTabsList());
 
         $this->executeAction();
-        if ( !$this->resultAction->isSuccess() )
+        if( !$this->resultAction->isSuccess() )
         {
-            echo ( new \CAdminMessage( implode( "\n", $this->resultAction->getErrorMessages() ) ) )->Show();
+            echo ( new \CAdminMessage(implode("\n", $this->resultAction->getErrorMessages())) )->Show();
         }
 
         ?>
-        <form method="POST" action="<?= $this->getEditLink() ?>" enctype="multipart/form-data" name="post_form" id="post_form"><?
+        <form method="POST" action="<?=$this->getEditLink()?>" enctype="multipart/form-data" name="post_form" id="post_form"><?
         echo bitrix_sessid_post();
         $this->CAdminTabControl->Begin();
 
         $fields = $this->getTabsContent();
-        if ( !empty( $fields ) )
+        if( !empty($fields) )
         {
-            foreach ( $fields as $tab )
+            foreach( $fields as $tab )
             {
                 $this->CAdminTabControl->BeginNextTab();
 
                 /** @var $field \Local\Core\Inner\AdminHelper\EditField\Base */
-                foreach ( $tab as $field )
+                foreach( $tab as $field )
                 {
-                    if ( $field instanceof \Local\Core\Inner\AdminHelper\EditField\Base )
+                    if( $field instanceof \Local\Core\Inner\AdminHelper\EditField\Base )
                     {
 
-                        $field->setElementData( $this->data );
+                        $field->setElementData($this->data);
                         echo $field->getRowHtml();
 
                     }
@@ -286,20 +286,20 @@ abstract class EditBase
             }
         }
 
-        $this->CAdminTabControl->Buttons( [
+        $this->CAdminTabControl->Buttons([
             "disabled" => false,
             "back_url" => $this->getListLink(),
-        ] );
+        ]);
         $this->CAdminTabControl->End();
 
-        if ( !empty( $this->getNote() ) )
+        if( !empty($this->getNote()) )
         {
             echo BeginNote();
             echo $this->getNote();
             echo EndNote();
         }
 
-        require( $_SERVER[ "DOCUMENT_ROOT" ]."/bitrix/modules/main/include/epilog_admin.php" );
+        require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php" );
     }
 
 }

@@ -38,7 +38,7 @@ $arUrlRewrite = array(
     ),
 
     array(
-        "CONDITION" => "#^/personal/company/([0-9]+)/site/([0-9])/edit/(\?.*)?$#",
+        "CONDITION" => "#^/personal/company/([0-9]+)/site/([0-9]+)/edit/(\?.*)?$#",
         "RULE" => "COMPANY_ID=$1&SITE_ID=$2&TMP=$3",
         "ID" => "",
         "PATH" => "/personal/site-edit.php",
@@ -52,7 +52,7 @@ $arUrlRewrite = array(
         "SORT" => "220",
     ),
     array(
-        "CONDITION" => "#^/personal/company/([0-9]+)/site/([0-9])/(\?.*)?$#",
+        "CONDITION" => "#^/personal/company/([0-9]+)/site/([0-9]+)/(\?.*)?$#",
         "RULE" => "COMPANY_ID=$1&SITE_ID=$2&TMP=$3",
         "ID" => "",
         "PATH" => "/personal/site-detail.php",

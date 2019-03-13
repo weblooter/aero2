@@ -21,16 +21,16 @@ class Iblock
      *
      * @return int|null
      */
-    public static function getIdByCode( string $iblockTypeId, string $iblockCode )
+    public static function getIdByCode(string $iblockTypeId, string $iblockCode)
     {
-        $iblockTypeId = trim( $iblockTypeId );
-        $iblockCode = trim( $iblockCode );
+        $iblockTypeId = trim($iblockTypeId);
+        $iblockCode = trim($iblockCode);
 
         static $arStorage = [];
 
-        if ( !isset( $arStorage[ $iblockTypeId ][ $iblockCode ] ) )
+        if( !isset($arStorage[$iblockTypeId][$iblockCode]) )
         {
-            $data = IblockTable::getList( [
+            $data = IblockTable::getList([
                 "select" => ["ID"],
                 "filter" => [
                     "=IBLOCK_TYPE_ID" => $iblockTypeId,
@@ -38,11 +38,11 @@ class Iblock
                 ],
                 "limit" => 1,
                 "cache" => ["ttl" => 86400]
-            ] )->fetch();
+            ])->fetch();
 
-            $arStorage[ $iblockTypeId ][ $iblockCode ] = $data[ "ID" ] ?? null;
+            $arStorage[$iblockTypeId][$iblockCode] = $data["ID"] ?? null;
         }
 
-        return $arStorage[ $iblockTypeId ][ $iblockCode ];
+        return $arStorage[$iblockTypeId][$iblockCode];
     }
 }

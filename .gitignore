@@ -17,6 +17,9 @@
 /bitrix/php_interface/.htaccess
 !/bitrix/modules/
 /bitrix/modules/*
+!/bitrix/modules/sprint.migration/
+!/bitrix/modules/asd.tplvars/
+!/bitrix/modules/bitrix.xscan/
 *.txt
 *.log
 *.json

@@ -7,7 +7,7 @@ use Bitrix\Main;
 use Local\Core\Assistant\Arrays;
 use Local\Core\Inner\CollectableEntity;
 
-Loc::loadMessages( __FILE__ );
+Loc::loadMessages(__FILE__);
 
 class PropertyValue extends CollectableEntity
 {
@@ -19,9 +19,9 @@ class PropertyValue extends CollectableEntity
      *
      * @return array
      */
-    public static function getCollectionArrayByIblockElementCollection( ElementCollection $collection, $select = false )
+    public static function getCollectionArrayByIblockElementCollection(ElementCollection $collection, $select = false)
     {
-        if ( !$select )
+        if( !$select )
         {
             return [];
         }
@@ -33,14 +33,14 @@ class PropertyValue extends CollectableEntity
         $collections = [];
 
         /** @var $item IblockElement */
-        foreach ( $collection as $item )
+        foreach( $collection as $item )
         {
-            if ( !$iblock_id )
+            if( !$iblock_id )
             {
                 $iblock_id = $item->getIblockId();
             }
 
-            $arr_props[ $item->getId() ] = false;
+            $arr_props[$item->getId()] = false;
         }
 
         $filter = array(
@@ -54,40 +54,40 @@ class PropertyValue extends CollectableEntity
             'ACTIVE' => 'Y'
         ];
 
-        if ( !in_array( '*', $select ) )
+        if( !in_array('*', $select) )
         {
-            foreach ( $select as $p )
+            foreach( $select as $p )
             {
-                if ( is_scalar( $p ) )
+                if( is_scalar($p) )
                 {
-                    if ( intval( $p ) > 0 )
+                    if( intval($p) > 0 )
                     {
-                        $filter_props[ 'ID' ][] = intval( $p );
+                        $filter_props['ID'][] = intval($p);
                     }
                     else
                     {
-                        $filter_props[ 'CODE' ][] = $p;
+                        $filter_props['CODE'][] = $p;
                     }
                 }
             }
         }
 
-        \CIBlockElement::GetPropertyValuesArray( $arr_props, $iblock_id, $filter, $filter_props );
+        \CIBlockElement::GetPropertyValuesArray($arr_props, $iblock_id, $filter, $filter_props);
 
-        foreach ( $arr_props as $element_id => $properties )
+        foreach( $arr_props as $element_id => $properties )
         {
-            foreach ( $properties as $prop )
+            foreach( $properties as $prop )
             {
-                if ( !isset( $collections[ $element_id ] ) )
+                if( !isset($collections[$element_id]) )
                 {
-                    $collections[ $element_id ] = PropertyValueCollection::create();
+                    $collections[$element_id] = PropertyValueCollection::create();
                 }
 
-                $item = self::create( $prop );
+                $item = self::create($prop);
 
-                $item->setCollection( $collections[ $element_id ] );
+                $item->setCollection($collections[$element_id]);
 
-                $collections[ $element_id ]->addItem( $item );
+                $collections[$element_id]->addItem($item);
             }
         }
 
@@ -101,9 +101,9 @@ class PropertyValue extends CollectableEntity
      *
      * @return PropertyValue
      */
-    protected static function create( array $fields = array() )
+    protected static function create(array $fields = array())
     {
-        return new self( $fields );
+        return new self($fields);
     }
 
     /**
@@ -111,11 +111,11 @@ class PropertyValue extends CollectableEntity
      *
      * @param array $fields
      */
-    protected function __construct( array $fields = array() )
+    protected function __construct(array $fields = array())
     {
-        $this->processProperty( $fields );
+        $this->processProperty($fields);
 
-        parent::__construct( $fields );
+        parent::__construct($fields);
     }
 
     /**
@@ -162,17 +162,17 @@ class PropertyValue extends CollectableEntity
      *
      * @param array $fields
      */
-    protected function processProperty( array &$fields )
+    protected function processProperty(array &$fields)
     {
-        Arrays::clearKeyTilda( $fields );
+        Arrays::clearKeyTilda($fields);
 
-        $fields[ 'ID' ] = (int)$fields[ 'ID' ];
-        $fields[ 'IBLOCK_ID' ] = (int)$fields[ 'IBLOCK_ID' ];
-        $fields[ 'ROW_COUNT' ] = (int)$fields[ 'ROW_COUNT' ];
-        $fields[ 'COL_COUNT' ] = (int)$fields[ 'COL_COUNT' ];
-        $fields[ 'MULTIPLE_CNT' ] = (int)$fields[ 'MULTIPLE_CNT' ];
-        $fields[ 'LINK_IBLOCK_ID' ] = (int)$fields[ 'LINK_IBLOCK_ID' ];
-        $fields[ 'PROPERTY_VALUE_ID' ] = (int)$fields[ 'PROPERTY_VALUE_ID' ];
+        $fields['ID'] = (int)$fields['ID'];
+        $fields['IBLOCK_ID'] = (int)$fields['IBLOCK_ID'];
+        $fields['ROW_COUNT'] = (int)$fields['ROW_COUNT'];
+        $fields['COL_COUNT'] = (int)$fields['COL_COUNT'];
+        $fields['MULTIPLE_CNT'] = (int)$fields['MULTIPLE_CNT'];
+        $fields['LINK_IBLOCK_ID'] = (int)$fields['LINK_IBLOCK_ID'];
+        $fields['PROPERTY_VALUE_ID'] = (int)$fields['PROPERTY_VALUE_ID'];
     }
 
     /**
@@ -180,7 +180,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getId()
     {
-        return $this->getField( 'ID' );
+        return $this->getField('ID');
     }
 
     /**
@@ -188,7 +188,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getIblockId()
     {
-        return $this->getField( 'IBLOCK_ID' );
+        return $this->getField('IBLOCK_ID');
     }
 
     /**
@@ -196,7 +196,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getName()
     {
-        return $this->getField( 'NAME' );
+        return $this->getField('NAME');
     }
 
     /**
@@ -204,7 +204,7 @@ class PropertyValue extends CollectableEntity
      */
     public function isActive()
     {
-        return $this->getField( 'ACTIVE' ) == 'Y';
+        return $this->getField('ACTIVE') == 'Y';
     }
 
     /**
@@ -212,7 +212,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getSort()
     {
-        return $this->getField( 'SORT' );
+        return $this->getField('SORT');
     }
 
     /**
@@ -220,7 +220,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getCode()
     {
-        return $this->getField( 'CODE' );
+        return $this->getField('CODE');
     }
 
     /**
@@ -228,7 +228,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getDefaultValue()
     {
-        return $this->getField( 'DEFAULT_VALUE' );
+        return $this->getField('DEFAULT_VALUE');
     }
 
     /**
@@ -236,7 +236,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getPropertyType()
     {
-        return $this->getField( 'PROPERTY_TYPE' );
+        return $this->getField('PROPERTY_TYPE');
     }
 
     /**
@@ -244,7 +244,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getRowCount()
     {
-        return $this->getField( 'ROW_COUNT' );
+        return $this->getField('ROW_COUNT');
     }
 
     /**
@@ -252,7 +252,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getColCount()
     {
-        return $this->getField( 'COL_COUNT' );
+        return $this->getField('COL_COUNT');
     }
 
     /**
@@ -260,7 +260,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getListType()
     {
-        return $this->getField( 'LIST_TYPE' );
+        return $this->getField('LIST_TYPE');
     }
 
     /**
@@ -268,7 +268,7 @@ class PropertyValue extends CollectableEntity
      */
     public function isMultiple()
     {
-        return $this->getField( 'MULTIPLE' ) == 'Y';
+        return $this->getField('MULTIPLE') == 'Y';
     }
 
     /**
@@ -276,7 +276,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getXmlId()
     {
-        return $this->getField( 'XML_ID' );
+        return $this->getField('XML_ID');
     }
 
     /**
@@ -284,7 +284,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getFileType()
     {
-        return $this->getField( 'FILE_TYPE' );
+        return $this->getField('FILE_TYPE');
     }
 
     /**
@@ -292,7 +292,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getMultipleCnt()
     {
-        return $this->getField( 'MULTIPLE_CNT' );
+        return $this->getField('MULTIPLE_CNT');
     }
 
     /**
@@ -300,7 +300,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getLinkIblockId()
     {
-        return $this->getField( 'LINK_IBLOCK_ID' );
+        return $this->getField('LINK_IBLOCK_ID');
     }
 
     /**
@@ -308,7 +308,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getWithDescription()
     {
-        return $this->getField( 'WITH_DESCRIPTION' );
+        return $this->getField('WITH_DESCRIPTION');
     }
 
     /**
@@ -316,7 +316,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getSearchable()
     {
-        return $this->getField( 'SEARCHABLE' );
+        return $this->getField('SEARCHABLE');
     }
 
     /**
@@ -324,7 +324,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getFiltrable()
     {
-        return $this->getField( 'FILTRABLE' );
+        return $this->getField('FILTRABLE');
     }
 
     /**
@@ -332,7 +332,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getIsRequired()
     {
-        return $this->getField( 'IS_REQUIRED' );
+        return $this->getField('IS_REQUIRED');
     }
 
     /**
@@ -340,7 +340,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getVersion()
     {
-        return $this->getField( 'VERSION' );
+        return $this->getField('VERSION');
     }
 
     /**
@@ -348,7 +348,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getUserType()
     {
-        return $this->getField( 'USER_TYPE' );
+        return $this->getField('USER_TYPE');
     }
 
     /**
@@ -356,7 +356,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getUserTypeSettings()
     {
-        return $this->getField( 'USER_TYPE_SETTINGS' );
+        return $this->getField('USER_TYPE_SETTINGS');
     }
 
     /**
@@ -364,7 +364,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getHint()
     {
-        return $this->getField( 'HINT' );
+        return $this->getField('HINT');
     }
 
     /**
@@ -372,7 +372,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getValueEnum()
     {
-        return $this->getField( 'VALUE_ENUM' );
+        return $this->getField('VALUE_ENUM');
     }
 
     /**
@@ -380,7 +380,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getValueXmlId()
     {
-        return $this->getField( 'VALUE_XML_ID' );
+        return $this->getField('VALUE_XML_ID');
     }
 
     /**
@@ -388,7 +388,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getValueSort()
     {
-        return $this->getField( 'VALUE_SORT' );
+        return $this->getField('VALUE_SORT');
     }
 
     /**
@@ -396,7 +396,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getValue()
     {
-        return $this->getField( 'VALUE' );
+        return $this->getField('VALUE');
     }
 
     /**
@@ -404,7 +404,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getValueId()
     {
-        return $this->getField( 'PROPERTY_VALUE_ID' );
+        return $this->getField('PROPERTY_VALUE_ID');
     }
 
     /**
@@ -412,7 +412,7 @@ class PropertyValue extends CollectableEntity
      */
     public function getDescription()
     {
-        return $this->getField( 'DESCRIPTION' );
+        return $this->getField('DESCRIPTION');
     }
 
 }

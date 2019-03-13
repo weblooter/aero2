@@ -41,10 +41,10 @@ class Example extends Inner\JobQueue\Abstracts\Worker implements Inner\Interface
     /**
      * @inheritdoc
      */
-    public function getNextExecuteAt( int $addSecond = 120 ): Main\Type\DateTime
+    public function getNextExecuteAt(int $addSecond = 120): Main\Type\DateTime
     {
         //Some Another logic
-        return parent::getNextExecuteAt( $addSecond );
+        return parent::getNextExecuteAt($addSecond);
     }
 
 }

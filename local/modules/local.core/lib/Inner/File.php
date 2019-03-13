@@ -6,7 +6,7 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main;
 use Local\Core\Inner\Iblock\ElementCollection;
 
-Loc::loadMessages( __FILE__ );
+Loc::loadMessages(__FILE__);
 
 /**
  * Class File
@@ -27,43 +27,42 @@ class File extends CollectableEntity
      * @throws Main\ObjectPropertyException
      * @throws Main\SystemException
      */
-    public static function getCollectionByElementCollection( ElementCollection $collection )
+    public static function getCollectionByElementCollection(ElementCollection $collection)
     {
         $file_ids = [];
         /** @var $item Iblock\Element */
-        foreach ( $collection as $item )
+        foreach( $collection as $item )
         {
-            if ( $file_id = (int)$item->getField( 'DETAIL_PICTURE' ) )
+            if( $file_id = (int)$item->getField('DETAIL_PICTURE') )
             {
                 $file_ids[] = $file_id;
             }
 
-            if ( $file_id = (int)$item->getField( 'PREVIEW_PICTURE' ) )
+            if( $file_id = (int)$item->getField('PREVIEW_PICTURE') )
             {
                 $file_ids[] = $file_id;
             }
 
-            if ( $prop_collection = $item->getPropertyCollection() )
+            if( $prop_collection = $item->getPropertyCollection() )
             {
                 /** @var $property IblockPropertyValue */
-                foreach ( $prop_collection as $property )
+                foreach( $prop_collection as $property )
                 {
-                    if ( $property->getPropertyType() == 'F' )
+                    if( $property->getPropertyType() == 'F' )
                     {
-                        if ( $property->isMultiple() )
+                        if( $property->isMultiple() )
                         {
-                            $values = array_filter(
-                                array_map( function ( $v ) {
-                                    return (int)$v;
-                                }, (array)$property->getField( 'VALUE' ) )
-                            );
+                            $values = array_filter(array_map(function($v)
+                                    {
+                                        return (int)$v;
+                                    }, (array)$property->getField('VALUE')));
 
-                            if ( $values )
+                            if( $values )
                             {
-                                $file_ids = array_merge( $file_ids, $values );
+                                $file_ids = array_merge($file_ids, $values);
                             }
                         }
-                        elseif ( $value = (int)$property->getField( 'VALUE' ) )
+                        else if( $value = (int)$property->getField('VALUE') )
                         {
                             $file_ids[] = $value;
                         }
@@ -72,18 +71,18 @@ class File extends CollectableEntity
             }
         }
 
-        return self::getList( ['ID' => $file_ids] );
+        return self::getList(['ID' => $file_ids]);
     }
 
-    public static function getById( int $id )
+    public static function getById(int $id)
     {
         $id = (int)$id;
-        if ( $id <= 0 )
+        if( $id <= 0 )
         {
-            throw new Main\ArgumentNullException( 'Не указан ID элемента' );
+            throw new Main\ArgumentNullException('Не указан ID элемента');
         }
 
-        return self::getList( ['ID' => $id] );
+        return self::getList(['ID' => $id]);
     }
 
     /**
@@ -95,10 +94,10 @@ class File extends CollectableEntity
      * @throws Main\ObjectPropertyException
      * @throws Main\SystemException
      */
-    public static function getList( array $filter = [] )
+    public static function getList(array $filter = [])
     {
         $params = [];
-        if ( !empty( $filter ) )
+        if( !empty($filter) )
         {
             $params = ['filter' => $filter];
         }
@@ -106,16 +105,16 @@ class File extends CollectableEntity
         /** @var $collection FileCollection */
         $collection = FileCollection::create();
 
-        $rows = Main\FileTable::getList( $params );
+        $rows = Main\FileTable::getList($params);
 
-        while ( $row = $rows->fetch() )
+        while( $row = $rows->fetch() )
         {
             /** @var $item IblockElement */
-            $item = self::create( $row );
+            $item = self::create($row);
 
-            $item->setCollection( $collection );
+            $item->setCollection($collection);
 
-            $collection->addItem( $item );
+            $collection->addItem($item);
         }
 
         return $collection;
@@ -128,16 +127,16 @@ class File extends CollectableEntity
      *
      * @return File|Image
      */
-    protected static function create( array $fields = array() )
+    protected static function create(array $fields = array())
     {
-        $arContentType = substr( $fields[ 'CONTENT_TYPE' ], 0, 5 );
+        $arContentType = substr($fields['CONTENT_TYPE'], 0, 5);
 
-        if ( $arContentType === 'image' )
+        if( $arContentType === 'image' )
         {
-            return new Image( $fields );
+            return new Image($fields);
         }
 
-        return new self( $fields );
+        return new self($fields);
     }
 
     /**
@@ -145,11 +144,11 @@ class File extends CollectableEntity
      *
      * @param array $fields
      */
-    protected function __construct( array $fields = array() )
+    protected function __construct(array $fields = array())
     {
-        $this->uploadDir = Main\Config\Option::get( 'main', 'upload_dir', 'upload' );
+        $this->uploadDir = Main\Config\Option::get('main', 'upload_dir', 'upload');
 
-        parent::__construct( $fields );
+        parent::__construct($fields);
     }
 
     /**
@@ -179,62 +178,62 @@ class File extends CollectableEntity
      */
     public function getId()
     {
-        return $this->getField( 'ID' );
+        return $this->getField('ID');
     }
 
     public function getModule()
     {
-        return $this->getField( 'MODULE_ID' );
+        return $this->getField('MODULE_ID');
     }
 
     public function getTimestamp()
     {
-        return $this->getField( 'TIMESTAMP_X' );
+        return $this->getField('TIMESTAMP_X');
     }
 
     public function getHeight()
     {
-        return $this->getField( 'HEIGHT' );
+        return $this->getField('HEIGHT');
     }
 
     public function getWidth()
     {
-        return $this->getField( 'WIDTH' );
+        return $this->getField('WIDTH');
     }
 
     public function getFileSize()
     {
-        return $this->getField( 'FILE_SIZE' );
+        return $this->getField('FILE_SIZE');
     }
 
     public function getContentType()
     {
-        return $this->getField( 'CONTENT_TYPE' );
+        return $this->getField('CONTENT_TYPE');
     }
 
     public function getSubDir()
     {
-        return $this->getField( 'SUBDIR' );
+        return $this->getField('SUBDIR');
     }
 
     public function getFileName()
     {
-        return $this->getField( 'FILE_NAME' );
+        return $this->getField('FILE_NAME');
     }
 
     public function getOriginalName()
     {
-        return $this->getField( 'ORIGINAL_NAME' );
+        return $this->getField('ORIGINAL_NAME');
     }
 
     public function getHandler()
     {
-        return $this->getField( 'HANDLER_ID' );
+        return $this->getField('HANDLER_ID');
     }
 
     public function getExternalID()
     {
-        return $this->getField( 'EXTERANAL_ID' );
+        return $this->getField('EXTERANAL_ID');
     }
 
     public function getSrc()
@@ -244,6 +243,6 @@ class File extends CollectableEntity
 
     public function getHash()
     {
-        return md5( $this->getId() );
+        return md5($this->getId());
     }
 }

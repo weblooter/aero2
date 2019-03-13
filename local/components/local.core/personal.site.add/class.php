@@ -17,6 +17,16 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
         $this->includeComponentTemplate();
     }
 
+    public function onPrepareComponentParams( $arParams )
+    {
+        if ( $arParams[ 'COMPANY_ID' ] < 1 )
+        {
+            $this->_show404Page();
+        }
+
+        return $arParams;
+    }
+
     private function __tryAdd()
     {
         if ( !empty( \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getPost( 'SITE_FIELD' ) ) && check_bitrix_sessid() )
@@ -59,7 +69,7 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                                 'FILE' )
                         );
 
-                        if ( !\Local\Core\Inner\BxModified\CFile::checkExtension($arFile, '.xml') )
+                        if ( !\Local\Core\Inner\BxModified\CFile::checkExtension( $arFile, '.xml' ) )
                         {
                             throw new \Exception( 'Файл должен быть XML' );
                         }

@@ -4,7 +4,7 @@ namespace Local\Core\Inner;
 
 use Bitrix\Main\Localization\Loc;
 
-Loc::loadMessages( __FILE__ );
+Loc::loadMessages(__FILE__);
 
 abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -15,26 +15,26 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function getIterator()
     {
-        return new \ArrayIterator( $this->collection );
+        return new \ArrayIterator($this->collection);
     }
 
 
     /**
      * Whether a offset exists
      */
-    public function offsetExists( $offset )
+    public function offsetExists($offset)
     {
-        return isset( $this->collection[ $offset ] ) || array_key_exists( $offset, $this->collection );
+        return isset($this->collection[$offset]) || array_key_exists($offset, $this->collection);
     }
 
     /**
      * Offset to retrieve
      */
-    public function offsetGet( $offset )
+    public function offsetGet($offset)
     {
-        if ( isset( $this->collection[ $offset ] ) || array_key_exists( $offset, $this->collection ) )
+        if( isset($this->collection[$offset]) || array_key_exists($offset, $this->collection) )
         {
-            return $this->collection[ $offset ];
+            return $this->collection[$offset];
         }
 
         return null;
@@ -43,24 +43,24 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
     /**
      * Offset to set
      */
-    public function offsetSet( $offset, $value )
+    public function offsetSet($offset, $value)
     {
-        if ( $offset === null )
+        if( $offset === null )
         {
             $this->collection[] = $value;
         }
         else
         {
-            $this->collection[ $offset ] = $value;
+            $this->collection[$offset] = $value;
         }
     }
 
     /**
      * Offset to unset
      */
-    public function offsetUnset( $offset )
+    public function offsetUnset($offset)
     {
-        unset( $this->collection[ $offset ] );
+        unset($this->collection[$offset]);
     }
 
     /**
@@ -68,7 +68,7 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function count()
     {
-        return count( $this->collection );
+        return count($this->collection);
     }
 
     /**
@@ -76,7 +76,7 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function current()
     {
-        return current( $this->collection );
+        return current($this->collection);
     }
 
     /**
@@ -84,7 +84,7 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function next()
     {
-        return next( $this->collection );
+        return next($this->collection);
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function key()
     {
-        return key( $this->collection );
+        return key($this->collection);
     }
 
     /**
@@ -109,7 +109,7 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function rewind()
     {
-        return reset( $this->collection );
+        return reset($this->collection);
     }
 
     /**
@@ -119,6 +119,6 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function isEmpty()
     {
-        return empty( $this->collection );
+        return empty($this->collection);
     }
 }

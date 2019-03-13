@@ -30,11 +30,23 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
             ->initFromUri();
 
         if (
-            $obCache->startDataCache(
-                ( 60 * 60 * 24 * 7 ),
-                md5( __METHOD__.'_user_id='.$GLOBALS[ 'USER' ]->GetID().'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset() ),
-                \Local\Core\Inner\Cache::getComponentCachePath( ['personal.company.list'], ['user_id='.$GLOBALS[ 'USER' ]->GetID(), 'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()] )
+        $obCache->startDataCache(
+            ( 60 * 60 * 24 * 7 ),
+            md5(
+                __METHOD__.'_user_id='.$GLOBALS[ 'USER' ]->GetID()
+                .'_elem_count='.$this->arParams[ 'ELEM_COUNT' ]
+                .'_page='.$nav->getCurrentPage()
+                .'&offset='.$nav->getOffset()
+            ),
+            \Local\Core\Inner\Cache::getComponentCachePath(
+                ['personal.company.list'],
+                [
+                    'user_id='.$GLOBALS[ 'USER' ]->GetID(),
+                    'elem_count='.$this->arParams[ 'ELEM_COUNT' ],
+                    'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
+                ]
             )
+        )
         )
         {
 

@@ -11,10 +11,7 @@ class Location extends Base
     public function getEditFieldHtml()
     {
         ob_start();
-        $GLOBALS[ "APPLICATION" ]->IncludeComponent(
-            "bitrix:sale.location.selector.search",
-            "",
-            Array(
+        $GLOBALS["APPLICATION"]->IncludeComponent("bitrix:sale.location.selector.search", "", Array(
                 "COMPONENT_TEMPLATE" => ".default",
                 "ID" => '',
                 "CODE" => $this->getValue(),
@@ -29,8 +26,7 @@ class Location extends Base
                 "FILTER_SITE_ID" => "s1",
                 "INITIALIZE_BY_GLOBAL_EVENT" => "",
                 "SUPPRESS_ERRORS" => "N"
-            )
-        );
+            ));
         $data = ob_get_contents();
         ob_end_clean();
 
@@ -44,12 +40,12 @@ class Location extends Base
     {
         $location = [];
 
-        if ( !empty( $this->getValue() ) )
+        if( !empty($this->getValue()) )
         {
 
             try
             {
-                $resLocation = \Bitrix\Sale\Location\LocationTable::getList( [
+                $resLocation = \Bitrix\Sale\Location\LocationTable::getList([
                     'filter' => [
                         '=CODE' => $this->getValue(),
                         '=PARENTS.NAME.LANGUAGE_ID' => LANGUAGE_ID,
@@ -61,19 +57,19 @@ class Location extends Base
                     'order' => [
                         'PARENTS.DEPTH_LEVEL' => 'asc'
                     ]
-                ] );
+                ]);
 
-                while ( $locationItem = $resLocation->fetch() )
+                while( $locationItem = $resLocation->fetch() )
                 {
-                    $location[] = $locationItem[ "I_NAME_RU" ];
+                    $location[] = $locationItem["I_NAME_RU"];
                 }
             }
-            catch ( \Exception $e )
+            catch( \Exception $e )
             {
 
             }
         }
 
-        return implode( " / ", $location );
+        return implode(" / ", $location);
     }
 }

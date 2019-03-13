@@ -42,8 +42,8 @@ class PropertyValueCollection extends EntityCollection
      * @return \Local\Core\Inner\CollectableEntity
      * @throws \Bitrix\Main\ArgumentTypeException
      */
-    public function addItem( PropertyValue $item )
+    public function addItem(PropertyValue $item)
     {
-        return parent::addItem( $item );
+        return parent::addItem($item);
     }
 }

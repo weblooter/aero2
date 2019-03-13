@@ -9,12 +9,12 @@ class CLocalCore
      *
      * @throws \Bitrix\Main\Db\SqlQueryException
      */
-    public static function initDBTable( $ormClassTable )
+    public static function initDBTable($ormClassTable)
     {
-        $sqlString = str_replace( ' NOT NULL ', ' ', $ormClassTable::getEntity()->compileDbTableStructureDump()[ 0 ] );
-        if ( !empty( $sqlString ) )
+        $sqlString = str_replace(' NOT NULL ', ' ', $ormClassTable::getEntity()->compileDbTableStructureDump()[0]);
+        if( !empty($sqlString) )
         {
-            \Bitrix\Main\Application::getConnection()->query( $sqlString );
+            \Bitrix\Main\Application::getConnection()->query($sqlString);
         }
     }
 
@@ -25,12 +25,12 @@ class CLocalCore
      *
      * @throws \Bitrix\Main\Db\SqlQueryException
      */
-    public static function dropDBTable( $ormClassTable )
+    public static function dropDBTable($ormClassTable)
     {
         $sqlString = $ormClassTable::getTableName();
-        if ( !empty( $sqlString ) )
+        if( !empty($sqlString) )
         {
-            \Bitrix\Main\Application::getConnection()->dropTable( $sqlString );
+            \Bitrix\Main\Application::getConnection()->dropTable($sqlString);
         }
     }
 
@@ -41,29 +41,20 @@ class CLocalCore
      *
      * @throws \Bitrix\Main\Db\SqlQueryException
      */
-    public static function resetDBTable( $ormClassTable )
+    public static function resetDBTable($ormClassTable)
     {
-        static::dropDBTable( $ormClassTable );
-        static::initDBTable( $ormClassTable );
+        static::dropDBTable($ormClassTable);
+        static::initDBTable($ormClassTable);
     }
 
     /**
      * Добавить класс агента
      *
      * @param string $strAgentClassName Класс агента
-     * @param int $intPeriod Период запуска в секундах
+     * @param int    $intPeriod         Период запуска в секундах
      */
     public static function addAgent($strAgentClassName, $intPeriod = 3600)
     {
-        \CAgent::AddAgent(
-            $strAgentClassName.'::init()',
-            'local.core',
-            'N',
-            $intPeriod,
-            date('d.m.Y H:i:00' ),
-            'N',
-            null,
-            100
-        );
+        \CAgent::AddAgent($strAgentClassName.'::init()', 'local.core', 'N', $intPeriod, date('d.m.Y H:i:00'), 'N', null, 100);
     }
 }

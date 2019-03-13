@@ -25,10 +25,10 @@ class AddressClient extends BaseClient
      *
      * @return \Bitrix\Main\Result
      */
-    public function suggest( Interfaces\QueryInterface $query )
+    public function suggest(Interfaces\QueryInterface $query)
     {
 
-        return parent::suggest( $this->resource, $query );
+        return parent::suggest($this->resource, $query);
     }
 }
 

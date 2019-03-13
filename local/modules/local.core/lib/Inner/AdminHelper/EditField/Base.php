@@ -12,13 +12,13 @@ abstract class Base
 {
     protected $elementData;
     protected $fields;
-    private $required;
+    private   $required;
     protected $isEditable = true;
 
     /**
-     * @param         $title - Заголовок поля
-     * @param         $code - Код поля
-     * @param null    $value - Значение. По умолчанию данные берутся:
+     * @param         $title  - Заголовок поля
+     * @param         $code   - Код поля
+     * @param null    $value  - Значение. По умолчанию данные берутся:
      *                        1. из _POST (основываясь на $code),
      *                        2. из данных элемента (основываясь на $code),
      *                        3. из getDefaultValue
@@ -26,18 +26,18 @@ abstract class Base
      *
      * @return $this
      */
-    public function __construct( $title, $code, $value = null )
+    public function __construct($title, $code, $value = null)
     {
-        $this->fields[ "TITLE" ] = $title;
-        $this->fields[ "CODE" ] = $code;
-        $this->fields[ "VALUE" ] = $value;
+        $this->fields["TITLE"] = $title;
+        $this->fields["CODE"] = $code;
+        $this->fields["VALUE"] = $value;
 
         return $this;
     }
 
-    public function setValue( $val )
+    public function setValue($val)
     {
-        $this->fields[ "VALUE" ] = $val;
+        $this->fields["VALUE"] = $val;
         return $this;
     }
 
@@ -90,7 +90,7 @@ abstract class Base
      */
     public function getCode()
     {
-        return $this->fields[ "CODE" ] ?? "";
+        return $this->fields["CODE"] ?? "";
     }
 
     /**
@@ -100,19 +100,19 @@ abstract class Base
      */
     public function getValue()
     {
-        $value = $this->fields[ "VALUE" ];
-        if ( $value === null )
+        $value = $this->fields["VALUE"];
+        if( $value === null )
         {
 
             $request = \Bitrix\Main\Context::getCurrent()->getRequest();
 
-            if ( $request->isPost() )
+            if( $request->isPost() )
             {
-                $value = $request->get( $this->getCode() );
+                $value = $request->get($this->getCode());
             }
-            elseif ( !empty( $this->elementData ) && is_array( $this->elementData ) )
+            else if( !empty($this->elementData) && is_array($this->elementData) )
             {
-                $value = $this->elementData[ $this->getCode() ];
+                $value = $this->elementData[$this->getCode()];
             }
             else
             {
@@ -130,7 +130,7 @@ abstract class Base
      */
     public function getTitle()
     {
-        return $this->fields[ "TITLE" ] ?? "";
+        return $this->fields["TITLE"] ?? "";
     }
 
     /**
@@ -140,7 +140,7 @@ abstract class Base
      *
      * @return $this
      */
-    public function setEditable( $value )
+    public function setEditable($value)
     {
         $this->isEditable = $value === true;
 
@@ -154,7 +154,7 @@ abstract class Base
      *
      * @return $this
      */
-    public function setRequired( $value )
+    public function setRequired($value)
     {
         $this->required = ( $value === true || $value === "Y" ) ? true : false;
 
@@ -176,7 +176,7 @@ abstract class Base
      *
      * @return $this
      */
-    public function setElementData( $data )
+    public function setElementData($data)
     {
         $this->elementData = $data;
 
@@ -190,9 +190,9 @@ abstract class Base
      *
      * @return $this
      */
-    public function setNote( $value )
+    public function setNote($value)
     {
-        $this->fields[ "NOTE" ] = $value;
+        $this->fields["NOTE"] = $value;
 
         return $this;
     }
@@ -204,7 +204,7 @@ abstract class Base
      */
     public function getNote()
     {
-        return $this->fields[ "NOTE" ] ?? "";
+        return $this->fields["NOTE"] ?? "";
     }
 
 }

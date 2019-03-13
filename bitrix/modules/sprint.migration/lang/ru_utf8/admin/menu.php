@@ -1,0 +1,3 @@
+<?
+$MESS["SPRINT_MIGRATION_MENU_SPRINT"] = "РЎРїСЂРёРЅС‚";
+$MESS["SPRINT_MIGRATION_MENU_MIGRATIONS"] = "РњРёРіСЂР°С†РёРё";

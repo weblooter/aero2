@@ -2,8 +2,9 @@
 
 namespace Local\Core\Model\Data;
 
-use \Bitrix\Main\ORM\Fields,
-    \Bitrix\Main\Entity;
+use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
+
+// TODO сделать OnBeforeDelete проверку на наличие сайтов у компании и стрелять Exception если их более 0. Пусть удалять сайты сначала!
 
 /**
  * Класс ORM компаний.
@@ -20,147 +21,165 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
     public static function getMap()
     {
         return [
-            new Fields\IntegerField( 'ID', [
+            new Fields\IntegerField('ID', [
                 'primary' => true,
                 'autocomplete' => true,
                 'title' => 'ID'
-            ] ),
-            new Fields\EnumField( 'ACTIVE', [
+            ]),
+            new Fields\EnumField('ACTIVE', [
                 'title' => 'Активность',
                 'required' => false,
                 'values' => ['Y', 'N'],
                 'default_value' => 'Y'
-            ] ),
-            new Fields\IntegerField( 'USER_OWN_ID', [
+            ]),
+            new Fields\IntegerField('USER_OWN_ID', [
                 'title' => 'Владелец компании',
                 'required' => false,
-                'default_value' => function () {
-                    return $GLOBALS[ 'USER' ]->GetID();
-                }
-            ] ),
-            new Fields\DatetimeField( 'DATE_CREATE', [
+                'default_value' => function()
+                    {
+                        return $GLOBALS['USER']->GetID();
+                    }
+            ]),
+            new Fields\DatetimeField('DATE_CREATE', [
                 'title' => 'Дата создания',
                 'required' => false,
-                'default_value' => function () {
-                    return new \Bitrix\Main\Type\DateTime();
-                }
-            ] ),
-            new Fields\DatetimeField( 'DATE_MODIFIED', [
+                'default_value' => function()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
+            new Fields\DatetimeField('DATE_MODIFIED', [
                 'title' => 'Дата последнего изменения',
                 'required' => false,
-                'default_value' => function () {
-                    return new \Bitrix\Main\Type\DateTime();
-                }
-            ] ),
+                'default_value' => function()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
 
-            new Fields\EnumField( 'VERIFIED', [
+            new Fields\EnumField('VERIFIED', [
                 'title' => 'Верифицирована',
                 'required' => false,
                 'values' => ['Y', 'N', 'E'], // E - Error
                 'default_value' => 'N'
-            ] ),
-            new Fields\TextField( 'VERIFIED_NOTE', [
+            ]),
+            new Fields\TextField('VERIFIED_NOTE', [
                 'title' => 'Комментарий верификации, выводится в случае ошибки верификации',
                 'required' => false,
-            ] ),
+            ]),
 
-            new Fields\StringField( 'COMPANY_INN', [
+            new Fields\StringField('COMPANY_INN', [
                 'title' => 'ИНН',
                 'required' => true,
-                'validation' => function () {
-                    return [
-                        new Entity\Validator\RegExp( '/[\d]+/' )
-                    ];
-                }
-            ] ),
-            new Fields\TextField( 'COMPANY_NAME_SHORT', [
+                'validation' => function()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/[\d]+/')
+                        ];
+                    }
+            ]),
+            new Fields\TextField('COMPANY_NAME_SHORT', [
                 'title' => 'Сокращенное наименование организации',
                 'required' => true,
-            ] ),
-            new Fields\TextField( 'COMPANY_NAME_FULL', [
+            ]),
+            new Fields\TextField('COMPANY_NAME_FULL', [
                 'title' => 'Полное наименование организации',
                 'required' => true,
-            ] ),
-            new Fields\StringField( 'COMPANY_OGRN', [
+            ]),
+            new Fields\StringField('COMPANY_OGRN', [
                 'title' => 'ОГРН/ОГРНИП',
                 'required' => true,
-                'validation' => function () {
-                    return [
-                        new Entity\Validator\RegExp( '/[\d]+/' )
-                    ];
-                }
-            ] ),
-            new Fields\StringField( 'COMPANY_KPP', [
+                'validation' => function()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/[\d]+/')
+                        ];
+                    }
+            ]),
+            new Fields\StringField('COMPANY_KPP', [
                 'title' => 'КПП',
                 'required' => false,
-                'validation' => function () {
-                    return [
-                        new Entity\Validator\RegExp( '/([\d]+|\-?)/' )
-                    ];
-                }
-            ] ),
-            new Fields\StringField( 'COMPANY_OKPO', [
+                'validation' => function()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+|\-?)/')
+                        ];
+                    }
+            ]),
+            new Fields\StringField('COMPANY_OKPO', [
                 'title' => 'ОКПО',
                 'required' => false,
-                'validation' => function () {
-                    return [
-                        new Entity\Validator\RegExp( '/[\d]+/' )
-                    ];
-                }
-            ] ),
-            new Fields\StringField( 'COMPANY_OKTMO', [
+                'validation' => function()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/[\d]+/')
+                        ];
+                    }
+            ]),
+            new Fields\StringField('COMPANY_OKTMO', [
                 'title' => 'ОКТМО',
                 'required' => false,
-                'validation' => function () {
-                    return [
-                        new Entity\Validator\RegExp( '/([\d]+)?/' )
-                    ];
-                }
-            ] ),
-            new Fields\TextField( 'COMPANY_DIRECTOR', [
+                'validation' => function()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+)?/')
+                        ];
+                    }
+            ]),
+            new Fields\TextField('COMPANY_DIRECTOR', [
                 'title' => 'Ген. директор',
                 'required' => false,
-            ] ),
-            new Fields\TextField( 'COMPANY_ACCOUNTANT', [
+            ]),
+            new Fields\TextField('COMPANY_ACCOUNTANT', [
                 'title' => 'Гл. бухгалтер',
                 'required' => false,
-            ] ),
+            ]),
 
-            new Fields\TextField( 'COMPANY_ADDRESS_COUNTRY', [
+            new Fields\TextField('COMPANY_ADDRESS_COUNTRY', [
                 'title' => 'Страна',
                 'required' => true,
-            ] ),
-            new Fields\TextField( 'COMPANY_ADDRESS_REGION', [
+            ]),
+            new Fields\TextField('COMPANY_ADDRESS_REGION', [
                 'title' => 'Область',
                 'required' => false,
-            ] ),
-            new Fields\TextField( 'COMPANY_ADDRESS_AREA', [
+            ]),
+            new Fields\TextField('COMPANY_ADDRESS_AREA', [
                 'title' => 'Район',
                 'required' => false,
-            ] ),
-            new Fields\TextField( 'COMPANY_ADDRESS_CITY', [
+            ]),
+            new Fields\TextField('COMPANY_ADDRESS_CITY', [
                 'title' => 'Город',
                 'required' => true,
-            ] ),
-            new Fields\TextField( 'COMPANY_ADDRESS_ADDRESS', [
+            ]),
+            new Fields\TextField('COMPANY_ADDRESS_ADDRESS', [
                 'title' => 'Улица, дом, корпус, строение',
                 'required' => true,
-            ] ),
-            new Fields\TextField( 'COMPANY_ADDRESS_OFFICE', [
+            ]),
+            new Fields\TextField('COMPANY_ADDRESS_OFFICE', [
                 'title' => 'Квартира / офис',
                 'required' => true,
-            ] ),
-            new Fields\IntegerField( 'COMPANY_ADDRESS_ZIP', [
+            ]),
+            new Fields\IntegerField('COMPANY_ADDRESS_ZIP', [
                 'title' => 'Почтовый индекс',
                 'required' => true,
-                'validation' => function () {
-                    return [
-                        new Entity\Validator\RegExp( '/([\d]+)?/' )
-                    ];
-                }
-            ] ),
+                'validation' => function()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+)?/')
+                        ];
+                    }
+            ]),
         ];
     }
+
+    /**
+     * Регистр старых владельцев компании.<br/>
+     * Записывается при OnBeforeUpdate() и OnDelete(), что бы очистить кэш<br/>
+     * Является ассоциативном массивом <b>COMPANY_ID => OLD_OWN_ID</b>
+     *
+     * @var array $__arCompanyIdToOldOwnId
+     */
+    private static $__arCompanyIdToOldOwnId = [];
 
     /**
      * Обновим поле DATE_MODIFIED
@@ -170,24 +189,30 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
      * @return \Bitrix\Main\ORM\EventResult
      * @throws \Bitrix\Main\ObjectException
      */
-    public static function OnBeforeUpdate( \Bitrix\Main\ORM\Event $event )
+    public static function OnBeforeUpdate(\Bitrix\Main\ORM\Event $event)
     {
         $arModifiedFields = [];
 
         /** @var \Bitrix\Main\ORM\Event $event */
-        $arFields = $event->getParameter( 'fields' );
+        $arFields = $event->getParameter('fields');
 
-        if ( !empty( $arFields ) )
+        if( !empty($arFields) )
         {
-            $arModifiedFields[ 'DATE_MODIFIED' ] = new \Bitrix\Main\Type\DateTime();
+            $arModifiedFields['DATE_MODIFIED'] = new \Bitrix\Main\Type\DateTime();
         }
 
-        $arFields = array_merge( $arFields, $arModifiedFields );
-        $event->setParameter( 'fields', $arFields );
+        /*
+         * Проверка на смену владельца компании
+         */
+        $ar = self::getById( $event->getParameter('primary')['ID'] )->fetch();
+        self::$__arCompanyIdToOldOwnId[$ar['ID']] = $ar['USER_OWN_ID'];
+
+        $arFields = array_merge($arFields, $arModifiedFields);
+        $event->setParameter('fields', $arFields);
 
         /** @var \Bitrix\Main\ORM\EventResult $result */
         $result = new \Bitrix\Main\ORM\EventResult;
-        $result->modifyFields( $arModifiedFields );
+        $result->modifyFields($arModifiedFields);
 
         return $result;
     }
@@ -201,14 +226,14 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function OnAfterUpdate( \Bitrix\Main\ORM\Event $event )
+    public static function OnAfterUpdate(\Bitrix\Main\ORM\Event $event)
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if ( !empty( $arEventParams[ 'primary' ][ 'ID' ] ) )
+        if( !empty($arEventParams['primary']['ID']) )
         {
-            $ar = self::getById( $arEventParams[ 'primary' ][ 'ID' ] )->fetchRaw();
-            self::clearComponentsCache( $ar );
+            $ar = self::getById($arEventParams['primary']['ID'])->fetchRaw();
+            self::clearComponentsCache($ar);
         }
     }
 
@@ -221,14 +246,17 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function OnDelete( \Bitrix\Main\ORM\Event $event )
+    public static function OnDelete(\Bitrix\Main\ORM\Event $event)
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if ( !empty( $arEventParams[ 'primary' ][ 'ID' ] ) )
+        if( !empty($arEventParams['primary']['ID']) )
         {
-            $ar = self::getById( $arEventParams[ 'primary' ][ 'ID' ] )->fetchRaw();
-            self::clearComponentsCache( $ar );
+            $ar = self::getById($arEventParams['primary']['ID'])->fetchRaw();
+
+            self::$__arCompanyIdToOldOwnId[ $ar['ID'] ] = $ar['USER_OWN_ID'];
+
+            self::clearComponentsCache($ar);
         }
     }
 
@@ -237,9 +265,24 @@ class CompanyTable extends \Bitrix\Main\ORM\Data\DataManager
      *
      * @param $arFields
      */
-    public static function clearComponentsCache( $arFields )
+    public static function clearComponentsCache($arFields)
     {
-        \Local\Core\Inner\Cache::deleteComponentCache( ['personal.company.list'], ['user_id='.$arFields[ 'USER_OWN_ID' ]] );
-        \Local\Core\Inner\Cache::deleteComponentCache( ['personal.company.detail'], ['company_id='.$arFields[ 'ID' ]] );
+        // Скинем кэш списка компаний текущего владельца
+        \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.list'], ['user_id='.$arFields['USER_OWN_ID']]);
+
+        // Скинем кэш деталки компании
+        \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.detail'], ['company_id='.$arFields['ID']]);
+
+        if( $arFields['USER_OWN_ID'] != self::$__arCompanyIdToOldOwnId[ $arFields['ID'] ] )
+        {
+            /*
+             * Сменился владелец компании
+             */
+
+            // Скинем кэш списка компаний старого владельца
+            \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.list'], ['user_id='.self::$__arCompanyIdToOldOwnId[ $arFields['ID'] ]]);
+
+        }
+
     }
 }

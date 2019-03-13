@@ -56,7 +56,10 @@ $funIsRequired = function ( $strCode ) use ( $arResult ) {
             <div class="form-group">
                 <label>Ссылка на файл XML *</label>
                 <input type="text" class="form-control" name="SITE_FIELD[FILE_LINK]" value="<?= $arResult[ 'FIELDS' ][ 'FILE_LINK' ][ 'VALUE' ] ?>" />
-                <small class="form-text text-muted">Ссылка должна вести на файл формата <b>.xml</b>. Так же стоит учитывать, что мы не принимаем файлы, генерируемые "на лету", т.к. время ожидания и скачивания файла ограничено!</small>
+                <small class="form-text text-muted">Ссылка должна вести на файл формата <b>.xml</b>. Так же стоит
+                    учитывать, что мы не принимаем файлы, генерируемые "на лету", т.к. время ожидания и скачивания файла
+                    ограничено!
+                </small>
             </div>
             <div class="form-group">
                 <div class="custom-control custom-switch">
@@ -89,7 +92,8 @@ $funIsRequired = function ( $strCode ) use ( $arResult ) {
                     <input type="file" class="custom-file-input" name="SITE_FIELD[FILE]" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                     <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                 </div>
-                <small class="form-text text-muted">Может быть загружен только XML. Ограничение по размеру - <?= $component->intMaxUploadXMLFileSizeMb ?> Мб.
+                <small class="form-text text-muted">Может быть загружен только XML. Ограничение по размеру
+                    - <?= $component->intMaxUploadXMLFileSizeMb ?> Мб.
                 </small>
             </div>
 

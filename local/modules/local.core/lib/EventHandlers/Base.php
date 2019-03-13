@@ -12,6 +12,7 @@ class Base
     public static function register()
     {
         self::registerMain();
+        self::registerIblock();
     }
 
     /**
@@ -22,7 +23,24 @@ class Base
         $eventManager = EventManager::getInstance();
 
         /** @see \Local\Core\EventHandlers\Main\OnBuildGlobalMenu::addGlobalMenu(); */
-        $eventManager->addEventHandler( 'main', 'OnBuildGlobalMenu', [Main\OnBuildGlobalMenu::class, 'addGlobalMenu'] );
+        $eventManager->addEventHandler('main', 'OnBuildGlobalMenu', [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']);
 
+    }
+
+    /**
+     * Рестрирует все обработчики событий для модуля main
+     */
+    private static function registerIblock()
+    {
+        if( \Bitrix\Main\Loader::includeModule('iblock') )
+        {
+            $eventManager = EventManager::getInstance();
+
+            /** @see \Local\Core\EventHandlers\Iblock\OnIBlockPropertyBuildList::getLinkToORM(); */
+            $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', [
+                Iblock\OnIBlockPropertyBuildList::class,
+                'getLinkToORM'
+            ]);
+        }
     }
 }

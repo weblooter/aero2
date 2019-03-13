@@ -7,9 +7,9 @@ use Bitrix\Main\LoaderException;
 
 class Orm
 {
-    protected static $dataCache = [];
+    protected static $dataCache      = [];
     protected static $entityMapCache = array();
-    protected static $arItemCache = array();
+    protected static $arItemCache    = array();
 
     /**
      * Возвращает массив пользовательских настроек свойства
@@ -18,7 +18,7 @@ class Orm
      *
      * @return array
      */
-    public static function PrepareSettings( $property )
+    public static function PrepareSettings($property)
     {
         $data = [
             "ORM_ENTITY" => null,
@@ -27,40 +27,40 @@ class Orm
             "MODULES" => [],
         ];
 
-        if ( !empty( $property[ "USER_TYPE_SETTINGS" ] ) && is_array( $property[ "USER_TYPE_SETTINGS" ] ) )
+        if( !empty($property["USER_TYPE_SETTINGS"]) && is_array($property["USER_TYPE_SETTINGS"]) )
         {
-            if ( isset( $property[ "USER_TYPE_SETTINGS" ][ "ORM_ENTITY" ] ) )
+            if( isset($property["USER_TYPE_SETTINGS"]["ORM_ENTITY"]) )
             {
-                $data[ "ORM_ENTITY" ] = (string)$property[ "USER_TYPE_SETTINGS" ][ "ORM_ENTITY" ];
+                $data["ORM_ENTITY"] = (string)$property["USER_TYPE_SETTINGS"]["ORM_ENTITY"];
             }
-            if ( isset( $property[ "USER_TYPE_SETTINGS" ][ "ENTITY_ID_COLUMN" ] ) )
+            if( isset($property["USER_TYPE_SETTINGS"]["ENTITY_ID_COLUMN"]) )
             {
-                $data[ "ENTITY_ID_COLUMN" ] = (string)$property[ "USER_TYPE_SETTINGS" ][ "ENTITY_ID_COLUMN" ];
+                $data["ENTITY_ID_COLUMN"] = (string)$property["USER_TYPE_SETTINGS"]["ENTITY_ID_COLUMN"];
             }
-            if ( isset( $property[ "USER_TYPE_SETTINGS" ][ "ENTITY_NAME_COLUMN" ] ) )
+            if( isset($property["USER_TYPE_SETTINGS"]["ENTITY_NAME_COLUMN"]) )
             {
-                $data[ "ENTITY_NAME_COLUMN" ] = (string)$property[ "USER_TYPE_SETTINGS" ][ "ENTITY_NAME_COLUMN" ];
+                $data["ENTITY_NAME_COLUMN"] = (string)$property["USER_TYPE_SETTINGS"]["ENTITY_NAME_COLUMN"];
             }
-            if ( isset( $property[ "USER_TYPE_SETTINGS" ][ "MODULES" ] ) )
+            if( isset($property["USER_TYPE_SETTINGS"]["MODULES"]) )
             {
 
                 $includedModules = [];
-                if ( isset( $property[ "USER_TYPE_SETTINGS" ][ "MODULES" ] ) && !empty( $property[ "USER_TYPE_SETTINGS" ][ "MODULES" ] ) )
+                if( isset($property["USER_TYPE_SETTINGS"]["MODULES"]) && !empty($property["USER_TYPE_SETTINGS"]["MODULES"]) )
                 {
-                    if ( is_array( $property[ "USER_TYPE_SETTINGS" ][ "MODULES" ] ) )
+                    if( is_array($property["USER_TYPE_SETTINGS"]["MODULES"]) )
                     {
-                        $includedModules = $property[ "USER_TYPE_SETTINGS" ][ "MODULES" ];
+                        $includedModules = $property["USER_TYPE_SETTINGS"]["MODULES"];
                     }
                     else
                     {
-                        $includedModules = explode( ",", $property[ "USER_TYPE_SETTINGS" ][ "MODULES" ] );
+                        $includedModules = explode(",", $property["USER_TYPE_SETTINGS"]["MODULES"]);
                     }
                 }
-                if ( !empty( $includedModules ) )
+                if( !empty($includedModules) )
                 {
-                    foreach ( $includedModules as $module )
+                    foreach( $includedModules as $module )
                     {
-                        $data[ "MODULES" ][] = trim( $module );
+                        $data["MODULES"][] = trim($module);
                     }
                 }
             }
@@ -72,15 +72,15 @@ class Orm
     /**
      * Возвращает HTML для редактирования настроек свойства
      *
-     * @param array $property Описание свойства
+     * @param array $property        Описание свойства
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
-     * @param array $propertyFields Поля свойства для формы редактирования
+     * @param array $propertyFields  Поля свойства для формы редактирования
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetSettingsHTML.php
      */
-    public static function GetSettingsHTML( $property, $HTMLControlName, &$propertyFields )
+    public static function GetSettingsHTML($property, $HTMLControlName, &$propertyFields)
     {
         $propertyFields = [
             "HIDE" => [
@@ -92,8 +92,8 @@ class Orm
             ],
         ];
 
-        $settings = self::PrepareSettings( $property );
-        $modules = implode( ",", $settings[ "MODULES" ] );
+        $settings = self::PrepareSettings($property);
+        $modules = implode(",", $settings["MODULES"]);
 
         return <<<"HIBSELECT"
 <tr>
@@ -126,19 +126,19 @@ HIBSELECT;
     /**
      * Возвращает HTML для редактирования единичного значения
      *
-     * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $property        Описание свойства
+     * @param array $value           Текущее значение
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetPropertyFieldHtml.php
      */
-    public static function GetPropertyFieldHtml( $property, $value, $HTMLControlName )
+    public static function GetPropertyFieldHtml($property, $value, $HTMLControlName)
     {
 
         $html = "<select name=\"{$HTMLControlName["VALUE"]}\">";
-        $html .= self::GetOptionsHtml( $property, [$value[ "VALUE" ]] );
+        $html .= self::GetOptionsHtml($property, [$value["VALUE"]]);
         $html .= "</select>";
 
         return $html;
@@ -147,51 +147,51 @@ HIBSELECT;
     /**
      * Вывод формы редактирования множественного свойства
      *
-     * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $property        Описание свойства
+     * @param array $value           Текущее значение
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/getpropertyfieldhtmlmulty.php
      */
-    public static function GetPropertyFieldHtmlMultiple( $property, $value, $HTMLControlName )
+    public static function GetPropertyFieldHtmlMultiple($property, $value, $HTMLControlName)
     {
         $max_n = 0;
         $values = [];
-        if ( is_array( $value ) )
+        if( is_array($value) )
         {
             $match = [];
-            foreach ( $value as $valueId => $arValue )
+            foreach( $value as $valueId => $arValue )
             {
-                $values[ $valueId ] = $arValue[ "VALUE" ];
-                if ( preg_match( "/^n(\\d+)$/", $valueId, $match ) )
+                $values[$valueId] = $arValue["VALUE"];
+                if( preg_match("/^n(\\d+)$/", $valueId, $match) )
                 {
-                    if ( $match[ 1 ] > $max_n )
+                    if( $match[1] > $max_n )
                     {
-                        $max_n = intval( $match[ 1 ] );
+                        $max_n = intval($match[1]);
                     }
                 }
             }
         }
-        if ( end( $values ) != "" || substr( key( $values ), 0, 1 ) != "n" )
+        if( end($values) != "" || substr(key($values), 0, 1) != "n" )
         {
-            $values[ "n".( $max_n + 1 ) ] = "";
+            $values["n".( $max_n + 1 )] = "";
         }
 
 
-        $name = $HTMLControlName[ "VALUE" ]."VALUE";
-        $html = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"nopadding\" width=\"100%\" id=\"tb".md5( $name )."\">";
-        foreach ( $values as $valueId => $value )
+        $name = $HTMLControlName["VALUE"]."VALUE";
+        $html = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"nopadding\" width=\"100%\" id=\"tb".md5($name)."\">";
+        foreach( $values as $valueId => $value )
         {
             $html .= "<tr><td>";
             $html .= "<select name=\"{$HTMLControlName["VALUE"]}[{$valueId}][VALUE]\" >";
-            $html .= self::GetOptionsHtml( $property, [$value] );
+            $html .= self::GetOptionsHtml($property, [$value]);
             $html .= "</select>";
             $html .= "</td></tr>";
         }
         $html .= "</table>";
-        $html .= "<input type=\"button\" value=\"Ещё\" onclick=\"if(window.addNewRow){addNewRow('tb".md5( $name )."', -1)}else{addNewTableRow('tb".md5( $name )."', 1, /\[(n)([0-9]*)\]/g, 2)}\">";
+        $html .= "<input type=\"button\" value=\"Ещё\" onclick=\"if(window.addNewRow){addNewRow('tb".md5($name)."', -1)}else{addNewTableRow('tb".md5($name)."', 1, /\[(n)([0-9]*)\]/g, 2)}\">";
 
         return $html;
     }
@@ -200,20 +200,20 @@ HIBSELECT;
      * Метод должен вернуть HTML отображения элемента управления для редактирования значений свойства в публичной части
      * сайта.
      *
-     * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $property        Описание свойства
+     * @param array $value           Текущее значение
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetPublicEditHTML.php
      */
-    public static function GetPublicEditHTML( $property, $value, $HTMLControlName )
+    public static function GetPublicEditHTML($property, $value, $HTMLControlName)
     {
-        $multi = ( isset( $property[ "MULTIPLE" ] ) && $property[ "MULTIPLE" ] == "Y" );
+        $multi = ( isset($property["MULTIPLE"]) && $property["MULTIPLE"] == "Y" );
 
         $html = "<select ".( $multi ? "multiple" : "" )." name=\"{$HTMLControlName["VALUE"]}".( $multi ? "[]" : "" )."\">";
-        $html .= self::GetOptionsHtml( $property, $value );
+        $html .= self::GetOptionsHtml($property, $value);
         $html .= "</select>";
 
         return $html;
@@ -222,18 +222,18 @@ HIBSELECT;
     /**
      * Аналог GetPublicEditHTML, но работает с множественными свойствами.
      *
-     * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $property        Описание свойства
+     * @param array $value           Текущее значение
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetPublicEditHTMLMulty.php
      */
-    public static function GetPublicEditHTMLMultiple( $property, $value, $HTMLControlName )
+    public static function GetPublicEditHTMLMultiple($property, $value, $HTMLControlName)
     {
         $html = "<select multiple name=\"{$HTMLControlName["VALUE"]}[]\">";
-        $html .= self::GetOptionsHtml( $property, self::normalizeValue( $value ) );
+        $html .= self::GetOptionsHtml($property, self::normalizeValue($value));
         $html .= "</select>";
 
         return $html;
@@ -243,29 +243,29 @@ HIBSELECT;
      * Возвращаем список option'ов для таблицы
      *
      * @param array $property Описание свойства
-     * @param array $values Текущее значение
+     * @param array $values   Текущее значение
      *
      * @return string
      */
-    public static function GetOptionsHtml( $property, $values )
+    public static function GetOptionsHtml($property, $values)
     {
-        $settings = self::PrepareSettings( $property );
+        $settings = self::PrepareSettings($property);
 
         #Подключаем модули при необходимости
         $modulesIncluded = true;
-        if ( !empty( $settings[ "MODULES" ] ) )
+        if( !empty($settings["MODULES"]) )
         {
-            foreach ( $settings[ "MODULES" ] as $module )
+            foreach( $settings["MODULES"] as $module )
             {
                 try
                 {
-                    if ( !Loader::includeModule( trim( $module ) ) )
+                    if( !Loader::includeModule(trim($module)) )
                     {
                         $modulesIncluded = false;
                         break;
                     }
                 }
-                catch ( LoaderException $e )
+                catch( LoaderException $e )
                 {
                     $modulesIncluded = false;
                     break;
@@ -273,7 +273,7 @@ HIBSELECT;
             }
         }
 
-        if ( $modulesIncluded === false )
+        if( $modulesIncluded === false )
         {
             return "";
         }
@@ -281,48 +281,37 @@ HIBSELECT;
         $options = [];
 
         #Название сущности ORM
-        $ormEntityName = $settings[ "ORM_ENTITY" ];
-        $ormEntityColumnID = $settings[ "ENTITY_ID_COLUMN" ];
-        $ormEntityColumnName = $settings[ "ENTITY_NAME_COLUMN" ];
+        $ormEntityName = $settings["ORM_ENTITY"];
+        $ormEntityColumnID = $settings["ENTITY_ID_COLUMN"];
+        $ormEntityColumnName = $settings["ENTITY_NAME_COLUMN"];
 
-        if (
-            !empty( $ormEntityName )
-            && class_exists( $ormEntityName )
-            && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager
-            && !empty( $ormEntityColumnID )
-            && !empty( $ormEntityColumnName )
-        )
+        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
         {
             #Получаем все записи из таблицы
-            if ( empty( self::$dataCache[ $ormEntityName ] ) )
+            if( empty(self::$dataCache[$ormEntityName]) )
             {
-                self::$dataCache[ $ormEntityName ] = self::getEntityFieldsByFilter(
-                    $ormEntityName,
-                    $ormEntityColumnID,
-                    $ormEntityColumnName,
-                    [
+                self::$dataCache[$ormEntityName] = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
                         "select" => [$ormEntityColumnID, $ormEntityColumnName]
-                    ]
-                );
+                    ]);
             }
 
             #Формируем option'ы
             $ormOptions = [];
             $selectedValue = false;
-            foreach ( self::$dataCache[ $ormEntityName ] as $data )
+            foreach( self::$dataCache[$ormEntityName] as $data )
             {
                 $selected = "";
-                if ( in_array( $data[ $ormEntityColumnID ], $values ) )
+                if( in_array($data[$ormEntityColumnID], $values) )
                 {
                     $selected = "selected";
                     $selectedValue = true;
                 }
-                $ormOptions[] = "<option ".$selected." value=\"".htmlspecialcharsbx( $data[ $ormEntityColumnID ] )."\">".htmlspecialcharsEx( $data[ $ormEntityColumnName ]." [".$data[ $ormEntityColumnID ] )."]</option>";
+                $ormOptions[] = "<option ".$selected." value=\"".htmlspecialcharsbx($data[$ormEntityColumnID])."\">".htmlspecialcharsEx($data[$ormEntityColumnName]." [".$data[$ormEntityColumnID])."]</option>";
             }
 
-            $options = array_merge( [
+            $options = array_merge([
                 "<option value=\"\" ".( $selectedValue ? "" : " selected" ).">(не установлено)</option>"
-            ], $ormOptions );
+            ], $ormOptions);
 
         }
         else
@@ -330,41 +319,41 @@ HIBSELECT;
             $options[] = "<option value=\"\" selected>(не установлено)</option>";
         }
 
-        return implode( "", $options );
+        return implode("", $options);
     }
 
     /**
      * Возвращает данные для умного фильтра
      *
      * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $value    Текущее значение
      *
      * @return false|array
      */
-    public static function GetExtendedValue( $property, $value )
+    public static function GetExtendedValue($property, $value)
     {
-        if ( !isset( $value[ "VALUE" ] ) || empty( $value[ "VALUE" ] ) )
+        if( !isset($value["VALUE"]) || empty($value["VALUE"]) )
         {
             return false;
         }
 
-        $settings = self::PrepareSettings( $property );
+        $settings = self::PrepareSettings($property);
 
         #Подключаем модули при необходимости
         $modulesIncluded = true;
-        if ( !empty( $settings[ "MODULES" ] ) )
+        if( !empty($settings["MODULES"]) )
         {
-            foreach ( $settings[ "MODULES" ] as $module )
+            foreach( $settings["MODULES"] as $module )
             {
                 try
                 {
-                    if ( !Loader::includeModule( trim( $module ) ) )
+                    if( !Loader::includeModule(trim($module)) )
                     {
                         $modulesIncluded = false;
                         break;
                     }
                 }
-                catch ( LoaderException $e )
+                catch( LoaderException $e )
                 {
                     $modulesIncluded = false;
                     break;
@@ -372,68 +361,57 @@ HIBSELECT;
             }
         }
 
-        if ( $modulesIncluded === false )
+        if( $modulesIncluded === false )
         {
             return false;
         }
 
-        $ormEntityName = $settings[ "ORM_ENTITY" ];
-        $ormEntityColumnID = $settings[ "ENTITY_ID_COLUMN" ];
-        $ormEntityColumnName = $settings[ "ENTITY_NAME_COLUMN" ];
+        $ormEntityName = $settings["ORM_ENTITY"];
+        $ormEntityColumnID = $settings["ENTITY_ID_COLUMN"];
+        $ormEntityColumnName = $settings["ENTITY_NAME_COLUMN"];
 
-        if (
-            !empty( $ormEntityName )
-            && class_exists( $ormEntityName )
-            && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager
-            && !empty( $ormEntityColumnID )
-            && !empty( $ormEntityColumnName )
-        )
+        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
         {
 
-            if ( !isset( self::$arItemCache[ $ormEntityName ] ) )
+            if( !isset(self::$arItemCache[$ormEntityName]) )
             {
-                self::$arItemCache[ $ormEntityName ] = [];
+                self::$arItemCache[$ormEntityName] = [];
             }
 
             #Если нет кеша или множественное значение, то получаем значения
-            if ( is_array( $value[ "VALUE" ] ) || !isset( self::$arItemCache[ $ormEntityName ][ $value[ "VALUE" ] ] ) )
+            if( is_array($value["VALUE"]) || !isset(self::$arItemCache[$ormEntityName][$value["VALUE"]]) )
             {
-                $data = self::getEntityFieldsByFilter(
-                    $ormEntityName,
-                    $ormEntityColumnID,
-                    $ormEntityColumnName,
-                    [
+                $data = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
                         "select" => array($ormEntityColumnID, $ormEntityColumnName),
-                        "filter" => array("={$ormEntityColumnID}" => $value[ "VALUE" ])
-                    ]
-                );
-                if ( !empty( $data ) )
+                        "filter" => array("={$ormEntityColumnID}" => $value["VALUE"])
+                    ]);
+                if( !empty($data) )
                 {
-                    foreach ( $data as $item )
+                    foreach( $data as $item )
                     {
-                        if ( isset( $item[ $ormEntityColumnName ] ) )
+                        if( isset($item[$ormEntityColumnName]) )
                         {
-                            $item[ "VALUE" ] = $item[ $ormEntityColumnName ];
-                            self::$arItemCache[ $ormEntityName ][ $item[ $ormEntityColumnID ] ] = $item;
+                            $item["VALUE"] = $item[$ormEntityColumnName];
+                            self::$arItemCache[$ormEntityName][$item[$ormEntityColumnID]] = $item;
                         }
                     }
                 }
             }
 
             # Если множественное значение
-            if ( is_array( $value[ "VALUE" ] ) )
+            if( is_array($value["VALUE"]) )
             {
 
                 $result = [];
-                foreach ( $value[ "VALUE" ] as $prop )
+                foreach( $value["VALUE"] as $prop )
                 {
-                    if ( isset( self::$arItemCache[ $ormEntityName ][ $prop ] ) )
+                    if( isset(self::$arItemCache[$ormEntityName][$prop]) )
                     {
-                        $result[ $prop ] = self::$arItemCache[ $ormEntityName ][ $prop ];
+                        $result[$prop] = self::$arItemCache[$ormEntityName][$prop];
                     }
                     else
                     {
-                        $result[ $prop ] = false;
+                        $result[$prop] = false;
                     }
                 }
 
@@ -442,9 +420,9 @@ HIBSELECT;
             #Если единичное значение
             else
             {
-                if ( isset( self::$arItemCache[ $ormEntityName ][ $value[ "VALUE" ] ] ) )
+                if( isset(self::$arItemCache[$ormEntityName][$value["VALUE"]]) )
                 {
-                    return self::$arItemCache[ $ormEntityName ][ $value[ "VALUE" ] ];
+                    return self::$arItemCache[$ormEntityName][$value["VALUE"]];
                 }
             }
         }
@@ -459,21 +437,21 @@ HIBSELECT;
     /**
      * Метод должен вернуть безопасный HTML отображения значения свойства в списке элементов административной части
      *
-     * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $property        Описание свойства
+     * @param array $value           Текущее значение
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetAdminListViewHTML.php
      */
-    public static function GetAdminListViewHTML( $property, $value, $HTMLControlName )
+    public static function GetAdminListViewHTML($property, $value, $HTMLControlName)
     {
-        $settings = self::PrepareSettings( $property );
-        $data = self::GetExtendedValue( $property, $value );
-        if ( $data )
+        $settings = self::PrepareSettings($property);
+        $data = self::GetExtendedValue($property, $value);
+        if( $data )
         {
-            return htmlspecialcharsbx( $data[ $settings[ "ENTITY_NAME_COLUMN" ] ] );
+            return htmlspecialcharsbx($data[$settings["ENTITY_NAME_COLUMN"]]);
         }
 
         return "";
@@ -482,34 +460,34 @@ HIBSELECT;
     /**
      * Метод должна вернуть безопасный HTML отображения значения свойства в публичной части сайта.
      *
-     * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $property        Описание свойства
+     * @param array $value           Текущее значение
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetPublicViewHTML.php
      */
-    public static function GetPublicViewHTML( $property, $value, $HTMLControlName )
+    public static function GetPublicViewHTML($property, $value, $HTMLControlName)
     {
-        $settings = self::PrepareSettings( $property );
-        $data = self::GetExtendedValue( $property, $value );
+        $settings = self::PrepareSettings($property);
+        $data = self::GetExtendedValue($property, $value);
 
-        if ( !empty( $data ) )
+        if( !empty($data) )
         {
-            switch ( $HTMLControlName[ "MODE" ] ?? "" )
+            switch( $HTMLControlName["MODE"] ?? "" )
             {
                 case "CSV_EXPORT":
-                    return $data[ $settings[ "ENTITY_ID_COLUMN" ] ];
+                    return $data[$settings["ENTITY_ID_COLUMN"]];
                     break;
 
                 case "SIMPLE_TEXT":
                 case "ELEMENT_TEMPLATE":
-                    return $data[ $settings[ "ENTITY_NAME_COLUMN" ] ];
+                    return $data[$settings["ENTITY_NAME_COLUMN"]];
                     break;
 
                 default:
-                    return htmlspecialcharsbx( $data[ $settings[ "ENTITY_NAME_COLUMN" ] ] );
+                    return htmlspecialcharsbx($data[$settings["ENTITY_NAME_COLUMN"]]);
                     break;
             }
         }
@@ -520,20 +498,20 @@ HIBSELECT;
     /**
      * Выводит html для фильтра по свойству на административной странице списка элементов инфоблока.
      *
-     * @param array $property Описание свойства
+     * @param array $property        Описание свойства
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/getadminfilterhtml.php
      */
-    public static function GetAdminFilterHTML( $property, $HTMLControlName )
+    public static function GetAdminFilterHTML($property, $HTMLControlName)
     {
-        $lAdmin = new \CAdminList( $HTMLControlName[ "TABLE_ID" ] );
-        $lAdmin->InitFilter( [$HTMLControlName[ "VALUE" ]] );
-        $filterValue = $GLOBALS[ $HTMLControlName[ "VALUE" ] ];
+        $lAdmin = new \CAdminList($HTMLControlName["TABLE_ID"]);
+        $lAdmin->InitFilter([$HTMLControlName["VALUE"]]);
+        $filterValue = $GLOBALS[$HTMLControlName["VALUE"]];
 
-        if ( isset( $filterValue ) && is_array( $filterValue ) )
+        if( isset($filterValue) && is_array($filterValue) )
         {
             $values = $filterValue;
         }
@@ -542,7 +520,7 @@ HIBSELECT;
             $values = [];
         }
 
-        $options = self::GetOptionsHtml( $property, $values );
+        $options = self::GetOptionsHtml($property, $values);
         $html = "<select name=\"{$HTMLControlName["VALUE"]}[]\" multiple>";
         $html .= $options;
         $html .= "</select>";
@@ -553,22 +531,22 @@ HIBSELECT;
     /**
      * Возвращает представление значения свойства для модуля поиска.
      *
-     * @param array $property Описание свойства
-     * @param array $value Текущее значение
+     * @param array $property        Описание свойства
+     * @param array $value           Текущее значение
      * @param array $HTMLControlName Имя элемента управления для заполнения настроек свойства.
      *
      * @return string
      *
      * @see https://dev.1c-bitrix.ru/api_help/iblock/classes/user_properties/GetSearchContent.php
      */
-    public static function GetSearchContent( $property, $value, $HTMLControlName )
+    public static function GetSearchContent($property, $value, $HTMLControlName)
     {
-        $settings = self::PrepareSettings( $property );
-        $data = self::GetExtendedValue( $property, $value );
+        $settings = self::PrepareSettings($property);
+        $data = self::GetExtendedValue($property, $value);
 
-        if ( !empty( $data ) )
+        if( !empty($data) )
         {
-            return $data[ $settings[ "ENTITY_NAME_COLUMN" ] ];
+            return $data[$settings["ENTITY_NAME_COLUMN"]];
         }
 
         return "";
@@ -584,38 +562,38 @@ HIBSELECT;
      *
      * @return void
      */
-    public static function AddFilterFields( $property, $HTMLControlName, &$arFilter, &$filtered )
+    public static function AddFilterFields($property, $HTMLControlName, &$arFilter, &$filtered)
     {
         $filtered = false;
         $values = array();
 
-        if ( isset( $_REQUEST[ $HTMLControlName[ "VALUE" ] ] ) )
+        if( isset($_REQUEST[$HTMLControlName["VALUE"]]) )
         {
-            $values = ( is_array( $_REQUEST[ $HTMLControlName[ "VALUE" ] ] ) ? $_REQUEST[ $HTMLControlName[ "VALUE" ] ] : array($_REQUEST[ $HTMLControlName[ "VALUE" ] ]) );
+            $values = ( is_array($_REQUEST[$HTMLControlName["VALUE"]]) ? $_REQUEST[$HTMLControlName["VALUE"]] : array($_REQUEST[$HTMLControlName["VALUE"]]) );
         }
-        elseif ( isset( $GLOBALS[ $HTMLControlName[ "VALUE" ] ] ) )
+        else if( isset($GLOBALS[$HTMLControlName["VALUE"]]) )
         {
-            $values = ( is_array( $GLOBALS[ $HTMLControlName[ "VALUE" ] ] ) ? $GLOBALS[ $HTMLControlName[ "VALUE" ] ] : array($GLOBALS[ $HTMLControlName[ "VALUE" ] ]) );
+            $values = ( is_array($GLOBALS[$HTMLControlName["VALUE"]]) ? $GLOBALS[$HTMLControlName["VALUE"]] : array($GLOBALS[$HTMLControlName["VALUE"]]) );
         }
 
-        if ( !empty( $values ) )
+        if( !empty($values) )
         {
             $clearValues = array();
-            foreach ( $values as $oneValue )
+            foreach( $values as $oneValue )
             {
                 $oneValue = (string)$oneValue;
-                if ( $oneValue != "" )
+                if( $oneValue != "" )
                 {
                     $clearValues[] = $oneValue;
                 }
             }
             $values = $clearValues;
-            unset( $oneValue, $clearValues );
+            unset($oneValue, $clearValues);
         }
-        if ( !empty( $values ) )
+        if( !empty($values) )
         {
             $filtered = true;
-            $arFilter[ "=PROPERTY_".$property[ "ID" ] ] = $values;
+            $arFilter["=PROPERTY_".$property["ID"]] = $values;
         }
     }
 
@@ -630,53 +608,47 @@ HIBSELECT;
      *
      * @return array
      */
-    private static function getEntityFieldsByFilter( string $ormEntityName, string $ormEntityColumnID, string $ormEntityColumnName, $getListParams = [] )
+    private static function getEntityFieldsByFilter(string $ormEntityName, string $ormEntityColumnID, string $ormEntityColumnName, $getListParams = [])
     {
         $arResult = [];
 
-        if (
-            !empty( $ormEntityName )
-            && class_exists( $ormEntityName )
-            && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager
-            && !empty( $ormEntityColumnID )
-            && !empty( $ormEntityColumnName )
-        )
+        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
         {
 
-            if ( !isset( self::$entityMapCache[ $ormEntityName ] ) )
+            if( !isset(self::$entityMapCache[$ormEntityName]) )
             {
                 /** @var $ormEntityName \Bitrix\Main\Entity\DataManager */
-                self::$entityMapCache[ $ormEntityName ] = $ormEntityName::getMap();
+                self::$entityMapCache[$ormEntityName] = $ormEntityName::getMap();
             }
 
-            $getListParams[ "order" ] = [];
-            if ( isset( self::$entityMapCache[ $ormEntityName ][ "SORT" ] ) )
+            $getListParams["order"] = [];
+            if( isset(self::$entityMapCache[$ormEntityName]["SORT"]) )
             {
-                $getListParams[ "order" ][ "SORT" ] = "ASC";
-                $getListParams[ "select" ][] = "SORT";
+                $getListParams["order"]["SORT"] = "ASC";
+                $getListParams["select"][] = "SORT";
             }
 
-            if ( isset( self::$entityMapCache[ $ormEntityName ][ $ormEntityColumnName ] ) )
+            if( isset(self::$entityMapCache[$ormEntityName][$ormEntityColumnName]) )
             {
-                $getListParams[ "order" ][ $ormEntityColumnName ] = "ASC";
+                $getListParams["order"][$ormEntityColumnName] = "ASC";
             }
 
-            if ( isset( self::$entityMapCache[ $ormEntityName ][ $ormEntityColumnID ] ) )
+            if( isset(self::$entityMapCache[$ormEntityName][$ormEntityColumnID]) )
             {
-                $getListParams[ "order" ][ $ormEntityColumnID ] = "ASC";
+                $getListParams["order"][$ormEntityColumnID] = "ASC";
             }
 
             try
             {
-                $rsData = $ormEntityName::getList( $getListParams );
-                while ( $arData = $rsData->fetch() )
+                $rsData = $ormEntityName::getList($getListParams);
+                while( $arData = $rsData->fetch() )
                 {
                     $arResult[] = $arData;
                 }
-                unset( $arData, $rsData );
+                unset($arData, $rsData);
 
             }
-            catch ( \Exception $e )
+            catch( \Exception $e )
             {
                 return $arResult;
             }
@@ -685,30 +657,30 @@ HIBSELECT;
         return $arResult;
     }
 
-    private static function normalizeValue( $value )
+    private static function normalizeValue($value)
     {
         $result = [];
 
-        if ( !is_array( $value ) )
+        if( !is_array($value) )
         {
             $value = (string)$value;
-            if ( $value !== "" )
+            if( $value !== "" )
             {
                 $result[] = $value;
             }
         }
         else
         {
-            if ( !empty( $value ) )
+            if( !empty($value) )
             {
-                foreach ( $value as $row )
+                foreach( $value as $row )
                 {
                     $oneValue = "";
-                    if ( is_array( $row ) )
+                    if( is_array($row) )
                     {
-                        if ( isset( $row[ "VALUE" ] ) )
+                        if( isset($row["VALUE"]) )
                         {
-                            $oneValue = (string)$row[ "VALUE" ];
+                            $oneValue = (string)$row["VALUE"];
                         }
                     }
                     else
@@ -716,12 +688,12 @@ HIBSELECT;
                         $oneValue = (string)$row;
                     }
 
-                    if ( $oneValue !== "" )
+                    if( $oneValue !== "" )
                     {
                         $result[] = $oneValue;
                     }
                 }
-                unset( $oneValue, $row );
+                unset($oneValue, $row);
             }
         }
 

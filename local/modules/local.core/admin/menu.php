@@ -58,18 +58,18 @@ $aMenu = [];
 //}
 
 
-if ( class_exists( \Local\Core\Inner\AdminHelper\Data\Company\AdminList::class ) )
+if( class_exists(\Local\Core\Inner\AdminHelper\Data\Company\AdminList::class) )
 {
     $lDataCompanyList = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminList() )->getAdminUri();
-    if ( $lDataCompanyList->isSuccess() )
+    if( $lDataCompanyList->isSuccess() )
     {
         $lDataCompanyEdit = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit() )->getAdminUri();
 
         $aMenu[] = [
             "parent_menu" => "global_menu_local_core",
             "text" => "Компании",
-            'url' => $lDataCompanyList->getData()[ 'uri' ],
-            "more_url" => ( $lDataCompanyEdit->isSuccess() ) ? [$lDataCompanyEdit->getData()[ "uri" ]] : [],
+            'url' => $lDataCompanyList->getData()['uri'],
+            "more_url" => ( $lDataCompanyEdit->isSuccess() ) ? [$lDataCompanyEdit->getData()["uri"]] : [],
             "items_id" => "data_company",
             "icon" => "fileman_menu_icon",
             "sort" => 1
@@ -112,5 +112,5 @@ $aMenu = [
     ],
 */
 
-return ( !empty( $aMenu ) ) ? $aMenu : false;
+return ( !empty($aMenu) ) ? $aMenu : false;
 

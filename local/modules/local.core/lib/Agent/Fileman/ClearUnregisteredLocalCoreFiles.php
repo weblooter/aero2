@@ -1,4 +1,5 @@
 <?php
+
 namespace Local\Core\Agent\Fileman;
 
 /**

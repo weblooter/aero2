@@ -12,11 +12,11 @@ class SelectMultiple extends Base
     public function getEditFieldHtml()
     {
         $variants = [
-            "reference" => array_values( $this->variants ),
-            "reference_id" => array_keys( $this->variants ),
+            "reference" => array_values($this->variants),
+            "reference_id" => array_keys($this->variants),
         ];
 
-        return SelectBoxMFromArray( $this->getCode()."[]", $variants, $this->getValue(), "", "" );
+        return SelectBoxMFromArray($this->getCode()."[]", $variants, $this->getValue(), "", "");
     }
 
     /**
@@ -26,12 +26,12 @@ class SelectMultiple extends Base
     {
         $result = "";
 
-        if ( !empty( $this->getValue() ) )
+        if( !empty($this->getValue()) )
         {
 
-            foreach ( $this->getValue() as $value )
+            foreach( $this->getValue() as $value )
             {
-                if ( isset( $this->variants[ $value ] ) )
+                if( isset($this->variants[$value]) )
                 {
                     $result .= "{$this->variants[$value]}<br/>";
                 }
@@ -48,7 +48,7 @@ class SelectMultiple extends Base
      *
      * @return $this
      */
-    public function setVariants( array $variants )
+    public function setVariants(array $variants)
     {
         $this->variants = $variants;
 

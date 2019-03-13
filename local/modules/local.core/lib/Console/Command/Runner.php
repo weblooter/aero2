@@ -20,11 +20,9 @@ class Runner extends Command
      */
     protected function configure(): void
     {
-        $this
-            ->setName( 'runner' )
-            ->setDescription( 'Запускает раннер для очереди задач. 
+        $this->setName('runner')->setDescription('Запускает раннер для очереди задач. 
                              Пример вызова:
-                             $ <info>php -d mbstring.func_overload=2 console runner</info>' );
+                             $ <info>php -d mbstring.func_overload=2 console runner</info>');
     }
 
     /**
@@ -32,7 +30,7 @@ class Runner extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function execute( InputInterface $input, OutputInterface $output ): void
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $runner = new \Local\Core\Inner\JobQueue\Runner();
         $runner->start();

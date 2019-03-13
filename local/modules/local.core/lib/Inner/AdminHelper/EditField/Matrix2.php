@@ -66,13 +66,13 @@ class Matrix2 extends Base
         $result .= "<table id='js_radio_variants'>";
 
         $lastKey = 0;
-        if ( !empty( $values ) )
+        if( !empty($values) )
         {
-            foreach ( $values as $key => $value )
+            foreach( $values as $key => $value )
             {
                 $result .= "<tr class='js-variant'>";
-                $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][0]' value='".htmlspecialchars( $value[ 0 ] )."'/></td>";
-                $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][1]' value='".htmlspecialchars( $value[ 1 ] )."'/></td>";
+                $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][0]' value='".htmlspecialchars($value[0])."'/></td>";
+                $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][1]' value='".htmlspecialchars($value[1])."'/></td>";
                 $result .= "</tr>";
 
                 $lastKey++;
@@ -98,14 +98,14 @@ class Matrix2 extends Base
     {
         $result = "<table id='js_radio_variants'>";
 
-        if ( !empty( $this->getValue() ) )
+        if( !empty($this->getValue()) )
         {
-            foreach ( $this->getValue() as $key => $value )
+            foreach( $this->getValue() as $key => $value )
             {
 
                 $result .= "<tr class='js-variant'>";
-                $result .= "<td>".strip_tags( $key )."</td>";
-                $result .= "<td>".strip_tags( $value )."</td>";
+                $result .= "<td>".strip_tags($key)."</td>";
+                $result .= "<td>".strip_tags($value)."</td>";
                 $result .= "</tr>";
             }
         }

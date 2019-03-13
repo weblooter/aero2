@@ -7,7 +7,7 @@ use Bitrix\Main;
 
 /**
  * Class EntityCollection
- * @package Local\Core\Internals
+ * @package Local\Core\Inner
  */
 abstract class EntityCollection extends CollectionBase
 {
@@ -34,7 +34,7 @@ abstract class EntityCollection extends CollectionBase
      *
      * @return Sale\Result
      */
-    public function onItemModify( CollectableEntity $item, $name = null, $oldValue = null, $value = null )
+    public function onItemModify(CollectableEntity $item, $name = null, $oldValue = null, $value = null)
     {
         return new Main\Result();
     }
@@ -47,17 +47,17 @@ abstract class EntityCollection extends CollectionBase
      * @return mixed
      * @throws Main\ArgumentOutOfRangeException
      */
-    public function deleteItem( $index )
+    public function deleteItem($index)
     {
-        if ( !isset( $this->collection[ $index ] ) )
+        if( !isset($this->collection[$index]) )
         {
-            throw new Main\ArgumentOutOfRangeException( "collection item index wrong" );
+            throw new Main\ArgumentOutOfRangeException("collection item index wrong");
         }
 
-        $oldItem = $this->collection[ $index ];
+        $oldItem = $this->collection[$index];
 
-        unset( $this->collection[ $index ] );
-        $this->setAnyItemDeleted( true );
+        unset($this->collection[$index]);
+        $this->setAnyItemDeleted(true);
 
         return $oldItem;
     }
@@ -68,12 +68,12 @@ abstract class EntityCollection extends CollectionBase
      * @return CollectableEntity
      * @throws Main\ArgumentTypeException
      */
-    protected function addItem( CollectableEntity $item )
+    protected function addItem(CollectableEntity $item)
     {
         $index = $this->createIndex();
-        $item->setInternalIndex( $index );
+        $item->setInternalIndex($index);
 
-        $this->collection[ $index ] = $item;
+        $this->collection[$index] = $item;
 
         return $item;
     }
@@ -90,7 +90,7 @@ abstract class EntityCollection extends CollectionBase
     public function clearCollection()
     {
         /** @var CollectableEntity $item */
-        foreach ( $this->collection as $item )
+        foreach( $this->collection as $item )
         {
             $item->delete();
         }
@@ -103,22 +103,22 @@ abstract class EntityCollection extends CollectionBase
      * @return CollectableEntity|bool
      * @throws Main\ArgumentNullException
      */
-    public function getItemById( $id )
+    public function getItemById($id)
     {
-        if ( intval( $id ) <= 0 )
+        if( intval($id) <= 0 )
         {
-            throw new Main\ArgumentNullException( 'id' );
+            throw new Main\ArgumentNullException('id');
         }
 
-        $index = $this->getIndexById( $id );
-        if ( $index === null )
+        $index = $this->getIndexById($id);
+        if( $index === null )
         {
             return null;
         }
 
-        if ( isset( $this->collection[ $index ] ) )
+        if( isset($this->collection[$index]) )
         {
-            return $this->collection[ $index ];
+            return $this->collection[$index];
         }
 
         return null;
@@ -131,17 +131,17 @@ abstract class EntityCollection extends CollectionBase
      * @return bool|int|null
      * @throws Main\ArgumentNullException
      */
-    public function getIndexById( $id )
+    public function getIndexById($id)
     {
-        if ( intval( $id ) <= 0 )
+        if( intval($id) <= 0 )
         {
-            throw new Main\ArgumentNullException( 'id' );
+            throw new Main\ArgumentNullException('id');
         }
 
         /** @var CollectableEntity $item */
-        foreach ( $this->collection as $item )
+        foreach( $this->collection as $item )
         {
-            if ( $item->getId() > 0 && $id == $item->getId() )
+            if( $item->getId() > 0 && $id == $item->getId() )
             {
                 return $item->getInternalIndex();
             }
@@ -155,17 +155,17 @@ abstract class EntityCollection extends CollectionBase
      * @return CollectableEntity|null
      * @throws Main\ArgumentNullException
      */
-    public function getItemByIndex( $index )
+    public function getItemByIndex($index)
     {
-        if ( intval( $index ) < 0 )
+        if( intval($index) < 0 )
         {
-            throw new Main\ArgumentNullException( 'id' );
+            throw new Main\ArgumentNullException('id');
         }
 
         /** @var CollectableEntity $item */
-        foreach ( $this->collection as $item )
+        foreach( $this->collection as $item )
         {
-            if ( $item->getInternalIndex() == $index )
+            if( $item->getInternalIndex() == $index )
             {
                 return $item;
             }
@@ -199,7 +199,7 @@ abstract class EntityCollection extends CollectionBase
      *
      * @return bool
      */
-    protected function setAnyItemDeleted( $value )
+    protected function setAnyItemDeleted($value)
     {
         return $this->anyItemDeleted = ( $value === true );
     }
@@ -211,62 +211,62 @@ abstract class EntityCollection extends CollectionBase
      *
      * @return EntityCollection
      */
-    public function createClone( \SplObjectStorage $cloneEntity )
+    public function createClone(\SplObjectStorage $cloneEntity)
     {
-        if ( $this->isClone() && $cloneEntity->contains( $this ) )
+        if( $this->isClone() && $cloneEntity->contains($this) )
         {
-            return $cloneEntity[ $this ];
+            return $cloneEntity[$this];
         }
 
         $entityClone = clone $this;
         $entityClone->isClone = true;
 
-        if ( !$cloneEntity->contains( $this ) )
+        if( !$cloneEntity->contains($this) )
         {
-            $cloneEntity[ $this ] = $entityClone;
+            $cloneEntity[$this] = $entityClone;
         }
 
         /**
          * @var int key
          * @var CollectableEntity $entity
          */
-        foreach ( $entityClone->collection as $key => $entity )
+        foreach( $entityClone->collection as $key => $entity )
         {
-            if ( !$cloneEntity->contains( $entity ) )
+            if( !$cloneEntity->contains($entity) )
             {
-                $cloneEntity[ $entity ] = $entity->createClone( $cloneEntity );
+                $cloneEntity[$entity] = $entity->createClone($cloneEntity);
             }
 
-            $entityClone->collection[ $key ] = $cloneEntity[ $entity ];
+            $entityClone->collection[$key] = $cloneEntity[$entity];
         }
 
         return $entityClone;
     }
 
-    public function getArrayValuesField( $field )
+    public function getArrayValuesField($field)
     {
-        if ( !( $field = trim( $field ) ) )
+        if( !( $field = trim($field) ) )
         {
-            throw new Main\ArgumentNullException( 'Не указан код поля' );
+            throw new Main\ArgumentNullException('Не указан код поля');
         }
 
         $has_getter = false;
-        if ( func_num_args() > 1 && is_callable( func_get_arg( 1 ) ) )
+        if( func_num_args() > 1 && is_callable(func_get_arg(1)) )
         { // по идее нужна еще проверка на соотвествие интерфейсу геттера, но этот интерфейс пока не определен у нас
             $has_getter = true;
-            $getter = func_get_arg( 1 );
+            $getter = func_get_arg(1);
         }
 
         $array = [];
-        foreach ( $this as $item )
+        foreach( $this as $item )
         {
-            if ( $has_getter )
+            if( $has_getter )
             {
-                $array[ $item->getId() ] = $getter( $item->getField( $field ) );
+                $array[$item->getId()] = $getter($item->getField($field));
             }
             else
             {
-                $array[ $item->getId() ] = $item->getField( $field );
+                $array[$item->getId()] = $item->getField($field);
             }
         }
 
@@ -276,7 +276,7 @@ abstract class EntityCollection extends CollectionBase
     public function toArray()
     {
         $array = [];
-        foreach ( $this as $item )
+        foreach( $this as $item )
         {
             $array[] = $item->toArray();
         }

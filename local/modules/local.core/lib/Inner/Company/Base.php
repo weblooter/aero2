@@ -21,11 +21,11 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    private static function __fillCompanyRegister( $intCompanyId )
+    private static function __fillCompanyRegister($intCompanyId)
     {
-        if ( is_null( self::$__register[ $intCompanyId ] ) )
+        if( is_null(self::$__register[$intCompanyId]) )
         {
-            $ar = \Local\Core\Model\Data\CompanyTable::getList( [
+            $ar = \Local\Core\Model\Data\CompanyTable::getList([
                 'filter' => ['ID' => $intCompanyId],
                 'select' => [
                     'ID',
@@ -33,9 +33,9 @@ class Base
                     'USER_OWN_ID',
                     'VERIFIED'
                 ]
-            ] )->fetch();
+            ])->fetch();
 
-            self::$__register[ $intCompanyId ] = $ar;
+            self::$__register[$intCompanyId] = $ar;
         }
     }
 
@@ -49,10 +49,10 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    private static function __getCompanyRegister( $intCompanyId )
+    private static function __getCompanyRegister($intCompanyId)
     {
-        self::__fillCompanyRegister( $intCompanyId );
-        return self::$__register[ $intCompanyId ];
+        self::__fillCompanyRegister($intCompanyId);
+        return self::$__register[$intCompanyId];
     }
 
 
@@ -66,11 +66,11 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function isVerified( $intCompanyId )
+    public static function isVerified($intCompanyId)
     {
-        $ar = self::__getCompanyRegister( $intCompanyId );
+        $ar = self::__getCompanyRegister($intCompanyId);
 
-        return ( $ar[ 'VERIFIED' ] == 'Y' );
+        return ( $ar['VERIFIED'] == 'Y' );
     }
 
     /**
@@ -83,10 +83,10 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function getCompanyVerifiedStatus( $intCompanyId )
+    public static function getCompanyVerifiedStatus($intCompanyId)
     {
-        $ar = self::__getCompanyRegister( $intCompanyId );
-        return $ar[ 'VERIFIED' ];
+        $ar = self::__getCompanyRegister($intCompanyId);
+        return $ar['VERIFIED'];
     }
 
 
@@ -104,31 +104,31 @@ class Base
      * </ul>
      *
      * @param integer $intCompanyId ID компании
-     * @param integer $intUserId ID пользователя
+     * @param integer $intUserId    ID пользователя
      *
      * @return string
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function checkUserAccess( $intCompanyId, $intUserId = 0 )
+    public static function checkUserAccess($intCompanyId, $intUserId = 0)
     {
-        if ( $intUserId < 1 )
+        if( $intUserId < 1 )
         {
-            $intUserId = $GLOBALS[ 'USER' ]->GetID();
+            $intUserId = $GLOBALS['USER']->GetID();
         }
 
-        $ar = self::__getCompanyRegister( $intCompanyId );
+        $ar = self::__getCompanyRegister($intCompanyId);
 
-        if ( !empty( $ar ) )
+        if( !empty($ar) )
         {
-            if ( $ar[ 'USER_OWN_ID' ] != $intUserId )
-            {
-                return self::ACCESS_COMPANY_NOT_MINE;
-            }
-            elseif ( $ar[ 'USER_OWN_ID' ] == $intUserId )
+            if( $ar['USER_OWN_ID'] == $intUserId )
             {
                 return self::ACCESS_COMPANY_IS_MINE;
+            }
+            else
+            {
+                return self::ACCESS_COMPANY_NOT_MINE;
             }
         }
         else
@@ -147,9 +147,9 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function getCompanyName( $intCompanyId )
+    public static function getCompanyName($intCompanyId)
     {
-        $ar = self::__getCompanyRegister( $intCompanyId );
-        return $ar[ 'COMPANY_NAME_SHORT' ];
+        $ar = self::__getCompanyRegister($intCompanyId);
+        return $ar['COMPANY_NAME_SHORT'];
     }
 }

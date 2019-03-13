@@ -20,26 +20,26 @@ class Group
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function getIdByCode( string $groupCode )
+    public static function getIdByCode(string $groupCode)
     {
-        $groupCode = trim( $groupCode );
+        $groupCode = trim($groupCode);
 
         static $arStorage = [];
 
-        if ( !isset( $arStorage[ $groupCode ] ) )
+        if( !isset($arStorage[$groupCode]) )
         {
-            $data = \Bitrix\Main\GroupTable::getList( [
+            $data = \Bitrix\Main\GroupTable::getList([
                 "select" => ["ID"],
                 "filter" => [
                     "=STRING_ID" => $groupCode,
                 ],
                 "limit" => 1,
                 "cache" => ["ttl" => 86400]
-            ] )->fetch();
+            ])->fetch();
 
-            $arStorage[ $groupCode ] = $data[ "ID" ] ?? null;
+            $arStorage[$groupCode] = $data["ID"] ?? null;
         }
 
-        return $arStorage[ $groupCode ];
+        return $arStorage[$groupCode];
     }
 }

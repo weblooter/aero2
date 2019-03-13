@@ -11,7 +11,7 @@ $GLOBALS['APPLICATION']->IncludeComponent(
     '.default',
     [
         'COMPANY_ID' => $intCompanyId,
-        'ELEM_COUNT' => 10
+        'ELEM_COUNT' => 1
     ]
 );
 ?>

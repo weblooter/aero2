@@ -9,7 +9,6 @@ $conf = [
     /**
      * Конфиг local.core
      */
-
     'local.core' => [
         'value' => [
         ],
@@ -51,7 +50,17 @@ $conf = [
             ]
         ],
         'readonly' => true
-    ]
+    ],
+
+    /**
+     * Конфиг для работы с очередями
+     */
+    'job_queue' => [
+        'value' => [
+            'MAXIMUM_WORKERS' => 2
+        ],
+        'readonly' => true
+    ],
 ];
 
 return $conf;

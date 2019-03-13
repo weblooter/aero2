@@ -27,13 +27,7 @@ class StepCounter extends Command
      */
     protected function configure(): void
     {
-        $this
-            ->setName( 'kd:step-counter' )
-            ->setDescription( 'Счетчик' )
-            ->setHelp( "Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kdd:stepcounter --help" )
-            ->addArgument( 'start', InputArgument::REQUIRED, 'Начать с' )
-            ->addArgument( 'step', InputArgument::REQUIRED, 'С шагом' )
-            ->addArgument( 'iterations', InputArgument::REQUIRED, 'Количество повторений' );
+        $this->setName('kd:step-counter')->setDescription('Счетчик')->setHelp("Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kdd:stepcounter --help")->addArgument('start', InputArgument::REQUIRED, 'Начать с')->addArgument('step', InputArgument::REQUIRED, 'С шагом')->addArgument('iterations', InputArgument::REQUIRED, 'Количество повторений');
     }
 
     /**
@@ -41,24 +35,24 @@ class StepCounter extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function execute( InputInterface $input, OutputInterface $output ): void
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $start = $input->getArgument( 'start' );
-        $step = $input->getArgument( 'step' );
-        $iterations = $input->getArgument( 'iterations' );
+        $start = $input->getArgument('start');
+        $step = $input->getArgument('step');
+        $iterations = $input->getArgument('iterations');
 
         $counter = 0;
 
-        while ( true )
+        while( true )
         {
             $counter++;
-            $output->writeln( 'Процесс: '.getmypid().' - '.$start );
-            \Local\Core\Inner\ContainerDI::getInstance()->get( 'logger.service' )->alert( 'Процесс: '.getmypid().' - '.$start );
+            $output->writeln('Процесс: '.getmypid().' - '.$start);
+            //            \Local\Core\Inner\ContainerDI::getInstance()->get( 'logger.service' )->alert( 'Процесс: '.getmypid().' - '.$start );
 
             $start += $step;
-            sleep( 1 );
+            sleep(1);
 
-            if ( $counter >= $iterations )
+            if( $counter >= $iterations )
             {
                 return;
             }

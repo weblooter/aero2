@@ -25,16 +25,16 @@ abstract class CollectableEntity extends Entity
      *
      * @return Result
      */
-    protected function onFieldModify( $name, $oldValue, $value )
+    protected function onFieldModify($name, $oldValue, $value)
     {
         $collection = $this->getCollection();
-        return $collection->onItemModify( $this, $name, $oldValue, $value );
+        return $collection->onItemModify($this, $name, $oldValue, $value);
     }
 
     /**
      * @param EntityCollection $collection
      */
-    public function setCollection( EntityCollection $collection )
+    public function setCollection(EntityCollection $collection)
     {
         $this->collection = $collection;
     }
@@ -54,13 +54,13 @@ abstract class CollectableEntity extends Entity
     public function delete()
     {
         $collection = $this->getCollection();
-        if ( !$collection )
+        if( !$collection )
         {
-            throw new Main\ObjectNotFoundException( 'Entity "CollectableEntity" not found' );
+            throw new Main\ObjectNotFoundException('Entity "CollectableEntity" not found');
         }
 
         /** @var Result $r */
-        $collection->deleteItem( $this->getInternalIndex() );
+        $collection->deleteItem($this->getInternalIndex());
 
         return new Main\Result();
     }
@@ -72,7 +72,7 @@ abstract class CollectableEntity extends Entity
      *
      * @throws Main\ArgumentTypeException
      */
-    public function setInternalIndex( $index )
+    public function setInternalIndex($index)
     {
         $this->internalIndex = $index;
     }
@@ -100,37 +100,37 @@ abstract class CollectableEntity extends Entity
      *
      * @return CollectableEntity
      */
-    public function createClone( \SplObjectStorage $cloneEntity )
+    public function createClone(\SplObjectStorage $cloneEntity)
     {
-        if ( $this->isClone() && $cloneEntity->contains( $this ) )
+        if( $this->isClone() && $cloneEntity->contains($this) )
         {
-            return $cloneEntity[ $this ];
+            return $cloneEntity[$this];
         }
 
         $collectableEntity = clone $this;
         $collectableEntity->isClone = true;
 
         /** @var Internals\Fields $fields */
-        if ( $fields = $this->fields )
+        if( $fields = $this->fields )
         {
-            $collectableEntity->fields = $fields->createClone( $cloneEntity );
+            $collectableEntity->fields = $fields->createClone($cloneEntity);
         }
 
-        if ( !$cloneEntity->contains( $this ) )
+        if( !$cloneEntity->contains($this) )
         {
-            $cloneEntity[ $this ] = $collectableEntity;
+            $cloneEntity[$this] = $collectableEntity;
         }
 
-        if ( $collection = $this->getCollection() )
+        if( $collection = $this->getCollection() )
         {
-            if ( !$cloneEntity->contains( $collection ) )
+            if( !$cloneEntity->contains($collection) )
             {
-                $cloneEntity[ $collection ] = $collection->createClone( $cloneEntity );
+                $cloneEntity[$collection] = $collection->createClone($cloneEntity);
             }
 
-            if ( $cloneEntity->contains( $collection ) )
+            if( $cloneEntity->contains($collection) )
             {
-                $collectableEntity->collection = $cloneEntity[ $collection ];
+                $collectableEntity->collection = $cloneEntity[$collection];
             }
         }
 

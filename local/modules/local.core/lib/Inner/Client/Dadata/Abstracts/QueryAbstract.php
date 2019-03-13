@@ -26,13 +26,13 @@ abstract class QueryAbstract
     /** @var array Параметры запроса */
     protected $params = [];
 
-    public static function createFromArray( array $ar_query )
+    public static function createFromArray(array $ar_query)
     {
         $instance = new static;
 
-        foreach ( $ar_query as $key => $value )
+        foreach( $ar_query as $key => $value )
         {
-            $instance->set( $key, $value );
+            $instance->set($key, $value);
         }
 
         return $instance;
@@ -55,23 +55,23 @@ abstract class QueryAbstract
     /**
      * Установить параметр запроса
      *
-     * @param string $name Имя параметра
+     * @param string $name  Имя параметра
      * @param        $value Значение параметра
      *
      * @return $this
      * @throws ArgumentException
      */
-    public function set( string $name, $value )
+    public function set(string $name, $value)
     {
-        $check_result = $this->checkParam( $name, $value );
+        $check_result = $this->checkParam($name, $value);
 
-        if ( !$check_result->isSuccess() )
+        if( !$check_result->isSuccess() )
         {
-            $errors = implode( "\n", $check_result->getErrorMessages() );
-            throw new ArgumentException( 'Некорректный параметр запроса: '.$errors );
+            $errors = implode("\n", $check_result->getErrorMessages());
+            throw new ArgumentException('Некорректный параметр запроса: '.$errors);
         }
 
-        $this->params[ $name ] = $value;
+        $this->params[$name] = $value;
 
         return $this;
     }
@@ -83,9 +83,9 @@ abstract class QueryAbstract
      *
      * @return mixed
      */
-    public function get( string $name )
+    public function get(string $name)
     {
-        return $this->params[ trim( $name ) ];
+        return $this->params[trim($name)];
     }
 
     /**
@@ -93,34 +93,34 @@ abstract class QueryAbstract
      *
      * @param string $name
      */
-    public function unset( string $name )
+    public function unset(string $name)
     {
-        unset( $this->params[ trim( $name ) ] );
+        unset($this->params[trim($name)]);
     }
 
     /**
      * Валидировать параметра запроса. Вызывается в методе set.
      * @see QueryAbstract::set
      *
-     * @param string $name Имя параметра, передается по ссылке
+     * @param string $name  Имя параметра, передается по ссылке
      * @param        $value Значение параметра, передается по ссылке
      *
      * @return Result
      */
-    public function checkParam( string &$name, &$value )
+    public function checkParam(string &$name, &$value)
     {
         $result = new Result;
 
-        $name = trim( $name );
+        $name = trim($name);
 
-        if ( !key_exists( $name, $this->validationRules ) )
+        if( !key_exists($name, $this->validationRules) )
         {
-            $result->addError( new Error( 'Неизвестный параметр запроса "'.$name.'"' ) );
+            $result->addError(new Error('Неизвестный параметр запроса "'.$name.'"'));
         }
 
-        if ( $result->isSuccess() && !call_user_func( $this->validationRules[ $name ], $value ) )
+        if( $result->isSuccess() && !call_user_func($this->validationRules[$name], $value) )
         {
-            $result->addError( new Error( 'Недопустимое значение параметра "'.$name.'"' ) );
+            $result->addError(new Error('Недопустимое значение параметра "'.$name.'"'));
         }
 
         return $result;
@@ -141,6 +141,6 @@ abstract class QueryAbstract
      */
     public function __toString(): string
     {
-        return json_encode( $this->toArray(), JSON_UNESCAPED_UNICODE );
+        return json_encode($this->toArray(), JSON_UNESCAPED_UNICODE);
     }
 }

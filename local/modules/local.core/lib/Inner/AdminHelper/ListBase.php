@@ -52,11 +52,11 @@ abstract class ListBase
 
     public function __construct()
     {
-        $this->app = &$GLOBALS[ "APPLICATION" ];
-        $this->user = &$GLOBALS[ "USER" ];
-        if ( $this->useAdvancedNavigation() )
+        $this->app = &$GLOBALS["APPLICATION"];
+        $this->user = &$GLOBALS["USER"];
+        if( $this->useAdvancedNavigation() )
         {
-            $this->nav = new \Bitrix\Main\UI\AdminPageNavigation( $this->getTableListId() );
+            $this->nav = new \Bitrix\Main\UI\AdminPageNavigation($this->getTableListId());
         }
     }
 
@@ -66,40 +66,31 @@ abstract class ListBase
     public function render()
     {
         global $USER, $APPLICATION, $adminPage, $adminMenu, $adminChain, $SiteExpireDate;
-        $result = $this->checkRights( "render" );
-        if ( !$result->isSuccess() )
+        $result = $this->checkRights("render");
+        if( !$result->isSuccess() )
         {
-            $this->app->AuthForm( join( '<br>', $result->getErrorMessages() ) );
+            $this->app->AuthForm(join('<br>', $result->getErrorMessages()));
             return;
         }
 
         $currentUri = $APPLICATION->GetCurPage();
         $requiredUri = $this->getSortUri();
-        if ( $currentUri <> $requiredUri )
+        if( $currentUri <> $requiredUri )
         {
-            \Closure::bind(
-                function () use ( $requiredUri ) {
+            \Closure::bind(function() use ($requiredUri)
+                {
                     $this->sDocPath2 = $requiredUri;
-                },
-                $this->app,
-                '\CMain'
-            )();
+                }, $this->app, '\CMain')();
         }
 
-        $this->CAdminList = new \CAdminList(
-            $this->getTableListId(),
-            new \CAdminSorting( $this->getTableListId(), $this->getIdentificationField(), "asc" )
-        );
+        $this->CAdminList = new \CAdminList($this->getTableListId(), new \CAdminSorting($this->getTableListId(), $this->getIdentificationField(), "asc"));
 
-        if ( $currentUri <> $requiredUri )
+        if( $currentUri <> $requiredUri )
         {
-            \Closure::bind(
-                function () use ( $currentUri ) {
+            \Closure::bind(function() use ($currentUri)
+                {
                     $this->sDocPath2 = $currentUri;
-                },
-                $this->app,
-                '\CMain'
-            )();
+                }, $this->app, '\CMain')();
         }
 
 
@@ -109,48 +100,48 @@ abstract class ListBase
          * Фильтрация
          */
         $filterKeys = [];
-        foreach ( $this->getFilterSearchFields() as $key => $array )
+        foreach( $this->getFilterSearchFields() as $key => $array )
         {
             $filterKeys[] = $this->filterSearchPrefix.$key;
 
-            if ( $array[ "TYPE" ] == "DATE_PERIOD" )
+            if( $array["TYPE"] == "DATE_PERIOD" )
             {
                 $filterKeys[] = $this->filterSearchPrefix.$key."_2";
             }
         }
-        $this->CAdminList->InitFilter( $filterKeys );
+        $this->CAdminList->InitFilter($filterKeys);
         $this->filterSearch = $this->CAdminList->getFilter();
         $clearFilter = [];
-        foreach ( $this->filterSearch as $key => $value )
+        foreach( $this->filterSearch as $key => $value )
         {
-            $clearFilter[ str_replace( $this->filterSearchPrefix, "", $key ) ] = $value;
+            $clearFilter[str_replace($this->filterSearchPrefix, "", $key)] = $value;
         }
-        $this->filterList = $this->prepareFilterList( $clearFilter );
+        $this->filterList = $this->prepareFilterList($clearFilter);
 
 
         /**
          * Строки
          */
         $resultList = $this->prepareList();
-        if ( !empty( $this->getGroupAction() ) )
+        if( !empty($this->getGroupAction()) )
         {
-            $this->CAdminList->AddGroupActionTable( $this->getGroupAction() );
+            $this->CAdminList->AddGroupActionTable($this->getGroupAction());
         }
-        $this->CAdminList->AddAdminContextMenu( $this->getUpperButtons() );
+        $this->CAdminList->AddAdminContextMenu($this->getUpperButtons());
         $this->CAdminList->CheckListMode();
 
 
-        require( $_SERVER[ "DOCUMENT_ROOT" ]."/bitrix/modules/main/include/prolog_admin_after.php" );
-        if ( $resultList->isSuccess() )
+        require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php" );
+        if( $resultList->isSuccess() )
         {
             $this->displayFilter();
             $this->CAdminList->DisplayList();
         }
         else
         {
-            \CAdminMessage::ShowMessage( implode( "\n", $resultList->getErrorMessages() ) );
+            \CAdminMessage::ShowMessage(implode("\n", $resultList->getErrorMessages()));
         }
-        require( $_SERVER[ "DOCUMENT_ROOT" ]."/bitrix/modules/main/include/epilog_admin.php" );
+        require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php" );
     }
 
     /**
@@ -160,7 +151,7 @@ abstract class ListBase
      *
      * @return \Bitrix\Main\Result
      */
-    abstract protected function checkRights( $operation = "" ): \Bitrix\Main\Result;
+    abstract protected function checkRights($operation = ""): \Bitrix\Main\Result;
 
     /**
      * Подменяет \CMain->sDocPath2 <br>
@@ -195,31 +186,31 @@ abstract class ListBase
     private function executeGroupAction()
     {
         $request = \Bitrix\Main\Context::getCurrent()->getRequest();
-        if ( !empty( $_REQUEST[ "action_button" ] ) )
+        if( !empty($_REQUEST["action_button"]) )
         {
-            $_REQUEST[ "action" ] = $_REQUEST[ "action_button" ];
+            $_REQUEST["action"] = $_REQUEST["action_button"];
         }
 
-        if ( !$request->isPost() && !$_REQUEST[ "action" ] )
+        if( !$request->isPost() && !$_REQUEST["action"] )
         {
             return;
         }
 
         # Групповое редактирование
-        if ( $this->CAdminList->EditAction() && $this->checkRights( "editAction" )->isSuccess() && check_bitrix_sessid() )
+        if( $this->CAdminList->EditAction() && $this->checkRights("editAction")->isSuccess() && check_bitrix_sessid() )
         {
-            $arRows = $request->get( "FIELDS" );
-            if ( !empty( $arRows ) )
+            $arRows = $request->get("FIELDS");
+            if( !empty($arRows) )
             {
 
-                foreach ( $arRows as $id => $fields )
+                foreach( $arRows as $id => $fields )
                 {
-                    if ( $this->CAdminList->IsUpdated( $id ) )
+                    if( $this->CAdminList->IsUpdated($id) )
                     {
-                        $resSave = $this->editAction( $id, $fields );
-                        if ( !$resSave->isSuccess() )
+                        $resSave = $this->editAction($id, $fields);
+                        if( !$resSave->isSuccess() )
                         {
-                            $this->CAdminList->AddUpdateError( implode( "\n", $resSave->getErrorMessages() ), $id );
+                            $this->CAdminList->AddUpdateError(implode("\n", $resSave->getErrorMessages()), $id);
                         }
                     }
                 }
@@ -227,26 +218,25 @@ abstract class ListBase
         }
 
         # Групповое действие
-        if ( isset( $_REQUEST[ "action" ] ) )
+        if( isset($_REQUEST["action"]) )
         {
-            $methodName = $_REQUEST[ "action" ]."Action";
+            $methodName = $_REQUEST["action"]."Action";
 
-            if ( $this->CAdminList->GroupAction() && $this->checkRights( $methodName )->isSuccess() && check_bitrix_sessid() )
+            if( $this->CAdminList->GroupAction() && $this->checkRights($methodName)->isSuccess() && check_bitrix_sessid() )
             {
                 $ids = $this->CAdminList->GroupAction();
 
-                if ( !empty( $ids ) )
+                if( !empty($ids) )
                 {
 
-                    if ( method_exists( $this, $methodName ) )
+                    if( method_exists($this, $methodName) )
                     {
-                        foreach ( $ids as $id )
+                        foreach( $ids as $id )
                         {
-                            $resAction = call_user_func( [$this, $methodName], $id );
-                            if ( !$resAction->isSuccess() )
+                            $resAction = call_user_func([$this, $methodName], $id);
+                            if( !$resAction->isSuccess() )
                             {
-                                $this->CAdminList->AddGroupError( implode( "\n", $resAction->getErrorMessages() ),
-                                    $id );
+                                $this->CAdminList->AddGroupError(implode("\n", $resAction->getErrorMessages()), $id);
                             }
                         }
                     }
@@ -265,7 +255,7 @@ abstract class ListBase
      *
      * @return \Bitrix\Main\Result
      */
-    abstract protected function editAction( $id, $fields );
+    abstract protected function editAction($id, $fields);
 
     /**
      * Формирует список полей для фильтрации (поиск)<br>
@@ -299,7 +289,7 @@ abstract class ListBase
      *
      * @return array
      */
-    abstract protected function prepareFilterList( $filterSearch );
+    abstract protected function prepareFilterList($filterSearch);
 
     /**
      * Подготовка списка элементов
@@ -314,58 +304,51 @@ abstract class ListBase
         {
             $listQuery = $this->getList();
         }
-        catch ( \Exception $e )
+        catch( \Exception $e )
         {
-            $result->addError( new \Bitrix\Main\Error( $e->getMessage() ) );
+            $result->addError(new \Bitrix\Main\Error($e->getMessage()));
 
             return $result;
         }
 
-        if ( $this->useAdvancedNavigation() )
+        if( $this->useAdvancedNavigation() )
         {
-            $this->nav->setRecordCount( $listQuery->getCount() );
-            $this->CAdminList->setNavigation( $this->nav, 'Записей' );
+            $this->nav->setRecordCount($listQuery->getCount());
+            $this->CAdminList->setNavigation($this->nav, 'Записей');
         }
         else
         {
             # Данные и навигация
-            $dbResultList = new \CAdminResult( $listQuery, $this->getTableListId() );
-            $dbResultList->NavStart( 20, true );
-            $this->CAdminList->NavText( $dbResultList->GetNavPrint( "Страница" ) );
+            $dbResultList = new \CAdminResult($listQuery, $this->getTableListId());
+            $dbResultList->NavStart(20, true);
+            $this->CAdminList->NavText($dbResultList->GetNavPrint("Страница"));
         }
 
         # Заголовки
-        $this->CAdminList->AddHeaders( $this->getHeaders() );
+        $this->CAdminList->AddHeaders($this->getHeaders());
 
         # Строки
-        while ( $fields = !$this->useAdvancedNavigation()
-            ? $dbResultList->NavNext( true, "f_" )
-            : $listQuery->fetch()
-        )
+        while( $fields = !$this->useAdvancedNavigation() ? $dbResultList->NavNext(true, "f_") : $listQuery->fetch() )
         {
-            $row = &$this->CAdminList->AddRow( $fields[ $this->getIdentificationField() ], $fields,
-                $this->getEditLink( $fields ) );
+            $row = &$this->CAdminList->AddRow($fields[$this->getIdentificationField()], $fields, $this->getEditLink($fields));
 
             # Подготовка полей
-            $this->prepareRowField( $row, $fields );
+            $this->prepareRowField($row, $fields);
 
             # По умолчанию поля
             $visibleColumns = $this->CAdminList->GetVisibleHeaderColumns();
-            foreach ( $this->getHeaders() as $item )
+            foreach( $this->getHeaders() as $item )
             {
-                if ( in_array( $item[ 'id' ], $visibleColumns )
-                     && is_array( $row->$fields[ $item[ 'id' ] ] )
-                )
+                if( in_array($item['id'], $visibleColumns) && is_array($row->$fields[$item['id']]) )
                 {
-                    $row->AddViewField( $item[ 'id' ],
-                        $fields[ $item[ 'id' ] ] );
+                    $row->AddViewField($item['id'], $fields[$item['id']]);
                 }
             }
             # Действия
-            $row->AddActions( $this->getRowAction( $fields ) );
+            $row->AddActions($this->getRowAction($fields));
         }
-        $this->finalizeAdminrow( $this->CAdminList->aRows );
-//        p($this->CAdminList->aRows);
+        $this->finalizeAdminrow($this->CAdminList->aRows);
+        //        p($this->CAdminList->aRows);
         return $result;
     }
 
@@ -402,7 +385,7 @@ abstract class ListBase
      *
      * @return null|string
      */
-    protected function getEditLink( $fields = [] )
+    protected function getEditLink($fields = [])
     {
         return null;
     }
@@ -415,7 +398,7 @@ abstract class ListBase
      *
      * @see https://dev.1c-bitrix.ru/api_help/main/general/admin.section/classes/cadminlistrow/index.php
      */
-    abstract protected function prepareRowField( \CAdminListRow $row, $fields );
+    abstract protected function prepareRowField(\CAdminListRow $row, $fields);
 
     /**
      * Возвращает список действий для элемента
@@ -440,7 +423,7 @@ abstract class ListBase
      * @see https://dev.1c-bitrix.ru/api_help/main/general/admin.section/classes/cadminlistrow/addactions.php
      * @return array
      */
-    abstract protected function getRowAction( $fields );
+    abstract protected function getRowAction($fields);
 
     /**
      * Возвращает варианты групповых изменений<br>
@@ -484,62 +467,61 @@ abstract class ListBase
 
         #Список доступных полей фильтрации
         $popupList = [];
-        foreach ( $filterFields as $key => $field )
+        foreach( $filterFields as $key => $field )
         {
-            $popupList[ $key ] = $field[ "NAME" ];
+            $popupList[$key] = $field["NAME"];
         }
-        $oFilter = new \CAdminFilter( $this->getTableListId()."_filter", $popupList );
+        $oFilter = new \CAdminFilter($this->getTableListId()."_filter", $popupList);
         ?>
-        <form name="find_form" id="find_form" method="get" action="<?= $this->getFilterUri(); ?>"><?
+        <form name="find_form" id="find_form" method="get" action="<?=$this->getFilterUri();?>"><?
         $oFilter->Begin();
 
-        foreach ( $filterFields as $key => $field )
+        foreach( $filterFields as $key => $field )
         {
             ?>
             <tr>
-                <td><?= $field[ "NAME" ] ?>:</td>
+                <td><?=$field["NAME"]?>:</td>
                 <td>
                     <?
 
                     $name = $this->filterSearchPrefix.$key;
-                    $value = $this->filterSearch[ $name ];
-                    $variants = ( isset( $field[ "VARIANTS" ] ) ) ? [
-                        "reference" => array_values( $field[ "VARIANTS" ] ),
-                        "reference_id" => array_keys( $field[ "VARIANTS" ] ),
+                    $value = $this->filterSearch[$name];
+                    $variants = ( isset($field["VARIANTS"]) ) ? [
+                        "reference" => array_values($field["VARIANTS"]),
+                        "reference_id" => array_keys($field["VARIANTS"]),
                     ] : [];
 
-                    if ( is_callable( $field[ "TYPE" ] ) )
+                    if( is_callable($field["TYPE"]) )
                     {
-                        $field[ "TYPE" ]( ...[$name, $value, $field[ "OPTIONAL_DATA" ] ?? null] );
+                        $field["TYPE"](...[$name, $value, $field["OPTIONAL_DATA"] ?? null]);
                     }
                     else
                     {
-                        switch ( $field[ "TYPE" ] )
+                        switch( $field["TYPE"] )
                         {
                             case "TEXT":
-                                ?><input type="text" name="<?= $name ?>" size="47" value="<?= $value ?>" title="" /><?
+                                ?><input type="text" name="<?=$name?>" size="47" value="<?=$value?>" title="" /><?
                                 break;
 
                             case "CHECKBOX":
-                                ?><input type="checkbox" name="<?= $name ?>"
-                                         value="Y" <?= ( $value == "Y" ) ? "checked" : "" ?> title=""/><?
+                                ?><input type="checkbox" name="<?=$name?>"
+                                         value="Y" <?=( $value == "Y" ) ? "checked" : ""?> title=""/><?
                                 break;
 
                             case "SELECT":
-                                echo SelectBoxFromArray( $name, $variants, $value, "Не выбрано", "" );
+                                echo SelectBoxFromArray($name, $variants, $value, "Не выбрано", "");
                                 break;
 
                             case "SELECT_MULTIPLE":
-                                echo SelectBoxMFromArray( $name.'[]', $variants, $value, "", "" );
+                                echo SelectBoxMFromArray($name.'[]', $variants, $value, "", "");
                                 break;
 
                             case "USER":
-                                echo FindUserID( $name, $value, "", "find_form" );
+                                echo FindUserID($name, $value, "", "find_form");
                                 break;
 
                             case "DATE_PERIOD":
-                                echo \CAdminCalendar::CalendarPeriod( $name, $name."_2", $value,
-                                    $this->filterSearch[ $name."_2" ], false, 15, true );
+                                echo \CAdminCalendar::CalendarPeriod($name, $name."_2", $value, $this->filterSearch[$name."_2"], false, 15, true);
                                 break;
 
                         }
@@ -549,11 +531,11 @@ abstract class ListBase
             </tr>
             <?
         }
-        $oFilter->Buttons( [
+        $oFilter->Buttons([
             "table_id" => $this->getTableListId(),
             "url" => $this->getFilterUri(),
             "form" => "find_form"
-        ] );
+        ]);
         $oFilter->End();
 
         ?></form><?
@@ -592,7 +574,7 @@ abstract class ListBase
      *
      * @see \Local\Core\Inner\AdminHelper\Reference\Transport\Model\AdminList::finalizeAdminRow()
      */
-    protected function finalizeAdminRow( $rows )
+    protected function finalizeAdminRow($rows)
     {
 
     }

@@ -32,9 +32,9 @@ class Route
      */
     private static function __getLocalRoutes()
     {
-        if ( is_null( self::$__arLocalRoutes ) )
+        if( is_null(self::$__arLocalRoutes) )
         {
-            require $_SERVER[ 'DOCUMENT_ROOT' ].'/localroutes.php';
+            require $_SERVER['DOCUMENT_ROOT'].'/localroutes.php';
             self::$__arLocalRoutes = $arLocalRoutes ?? [];
         }
 
@@ -44,19 +44,18 @@ class Route
     /**
      * Получить путь по роуту
      *
-     * @param string $key Ключ
-     * @param string $action Действие
+     * @param string $key      Ключ
+     * @param string $action   Действие
      * @param array  $arParams Массив параметров, которые должны заменить плейсзолдеры
      *
      * @return false|string
      */
-    public static function getRouteTo( $key, $action, $arParams = [] )
+    public static function getRouteTo($key, $action, $arParams = [])
     {
         $arLocalRoutes = self::__getLocalRoutes();
 
-        $strReturn = str_replace( array_keys( $arParams ), array_values( $arParams ),
-            $arLocalRoutes[ $key ][ $action ] );
-        if ( strlen( $strReturn ) < 1 )
+        $strReturn = str_replace(array_keys($arParams), array_values($arParams), $arLocalRoutes[$key][$action]);
+        if( strlen($strReturn) < 1 )
         {
             $strReturn = false;
         }

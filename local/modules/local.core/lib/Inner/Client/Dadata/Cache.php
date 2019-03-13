@@ -35,7 +35,7 @@ class Cache
      *
      * @param ContainerInterface $container
      */
-    public function __construct( ContainerInterface $container )
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -47,9 +47,9 @@ class Cache
      *
      * @return |null
      */
-    public function get( Interfaces\QueryInterface $query )
+    public function get(Interfaces\QueryInterface $query)
     {
-        $hash = $this->hash( $query );
+        $hash = $this->hash($query);
 
         $ar_filter = [
             'select' => [
@@ -62,12 +62,12 @@ class Cache
             'limit' => 1,
         ];
 
-        $result = DadataCacheTable::getList( $ar_filter );
+        $result = DadataCacheTable::getList($ar_filter);
 
-        if ( $row = $result->fetch() )
+        if( $row = $result->fetch() )
         {
-            DadataCacheTable::hit( $row[ 'ID' ] );
-            return $row[ 'DATA' ];
+            DadataCacheTable::hit($row['ID']);
+            return $row['DATA'];
         }
 
         return null;
@@ -81,9 +81,9 @@ class Cache
      *
      * @return bool
      */
-    public function set( Interfaces\QueryInterface $query, array $response )
+    public function set(Interfaces\QueryInterface $query, array $response)
     {
-        $hash = $this->hash( $query );
+        $hash = $this->hash($query);
 
         $ar_fields = [
             'TYPE' => 'GENERAL',
@@ -93,7 +93,7 @@ class Cache
         ];
 
         /** @var $result AddResult */
-        $result = DadataCacheTable::add( $ar_fields );
+        $result = DadataCacheTable::add($ar_fields);
 
         return $result->isSuccess();
     }
@@ -106,7 +106,7 @@ class Cache
     public function clear()
     {
         $date = new DateTime;
-        $date->add( '- '.self::CACHE_TIME.' second' );
+        $date->add('- '.self::CACHE_TIME.' second');
 
         $ar_filter = [
             'select' => [
@@ -117,11 +117,11 @@ class Cache
             ],
         ];
 
-        $result = DadataCacheTable::getList( $ar_filter );
+        $result = DadataCacheTable::getList($ar_filter);
 
-        while ( $row = $result->fetch() )
+        while( $row = $result->fetch() )
         {
-            DadataCacheTable::delete( $row[ 'ID' ] );
+            DadataCacheTable::delete($row['ID']);
         }
     }
 
@@ -132,10 +132,10 @@ class Cache
      *
      * @return string
      */
-    protected function hash( Interfaces\QueryInterface $query )
+    protected function hash(Interfaces\QueryInterface $query)
     {
-        $dump = Arrays::dump( $query->toArray() );
+        $dump = Arrays::dump($query->toArray());
 
-        return md5( $dump );
+        return md5($dump);
     }
 }

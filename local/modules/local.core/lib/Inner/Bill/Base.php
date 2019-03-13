@@ -17,17 +17,17 @@ class Base
      *
      * @return string
      */
-    public static function createAccountNumber( $arFields )
+    public static function createAccountNumber($arFields)
     {
         $strTimestamp = 0;
-        if ( $arFields[ 'DATE_CREATE' ] instanceof \Bitrix\Main\Type\DateTime )
+        if( $arFields['DATE_CREATE'] instanceof \Bitrix\Main\Type\DateTime )
         {
-            $strTimestamp = $arFields[ 'DATE_CREATE' ]->getTimestamp();
+            $strTimestamp = $arFields['DATE_CREATE']->getTimestamp();
         }
         else
         {
-            $strTimestamp = strtotime( 'now' );
+            $strTimestamp = strtotime('now');
         }
-        return date( 'Ymd', $strTimestamp ).'_'.$arFields[ 'COMPANY_ID' ];
+        return date('Ymd', $strTimestamp).'_'.$arFields['COMPANY_ID'];
     }
 }
