@@ -34,7 +34,7 @@ class Route
     {
         if( is_null(self::$__arLocalRoutes) )
         {
-            require $_SERVER['DOCUMENT_ROOT'].'/localroutes.php';
+            require $_SERVER['DOCUMENT_ROOT'].'/.routerewrite.php';
             self::$__arLocalRoutes = $arLocalRoutes ?? [];
         }
 
@@ -44,22 +44,36 @@ class Route
     /**
      * Получить путь по роуту
      *
-     * @param string $key      Ключ
-     * @param string $action   Действие
-     * @param array  $arParams Массив параметров, которые должны заменить плейсзолдеры
+     * @param string $strDirection Ключ
+     * @param string $strAction    Действие
+     * @param array  $arParams     Массив параметров, которые должны заменить плейсзолдеры
      *
      * @return false|string
      */
-    public static function getRouteTo($key, $action, $arParams = [])
+    public static function getRouteTo($strDirection, $strAction, $arParams = [])
     {
         $arLocalRoutes = self::__getLocalRoutes();
 
-        $strReturn = str_replace(array_keys($arParams), array_values($arParams), $arLocalRoutes[$key][$action]);
+        $strReturn = str_replace(
+            array_keys($arParams),
+            array_values($arParams),
+            $arLocalRoutes[$strDirection][$strAction]['URL']
+        );
         if( strlen($strReturn) < 1 )
         {
             $strReturn = false;
         }
 
         return $strReturn;
+    }
+
+    public static function fillRouteBreadcrumbs($strDirection, $strAction, $arParams = [])
+    {
+        $arLocalRoutes = self::__getLocalRoutes();
+
+        if( is_callable($arLocalRoutes[$strDirection][$strAction]['BREADCRUMBS']) )
+        {
+            $arLocalRoutes[$strDirection][$strAction]['BREADCRUMBS']($arParams);
+        }
     }
 }

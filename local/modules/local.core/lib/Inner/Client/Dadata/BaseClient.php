@@ -50,12 +50,16 @@ abstract class BaseClient
     {
         $status_line = $headers[0];
 
-        preg_match('{HTTP\/\S*\s(\d{3})}i', $status_line, $match);
+        preg_match(
+            '{HTTP\/\S*\s(\d{3})}i',
+            $status_line,
+            $match
+        );
 
         $status = $match[1];
 
         $result = [
-            'status' => $status,
+            'status'  => $status,
             'message' => ''
         ];
 
@@ -110,12 +114,12 @@ abstract class BaseClient
      */
     public function suggest(string $resource, Interfaces\QueryInterface $query)
     {
-        $result = new Result;
+        $result = new Result();
 
         $options = array(
             'http' => array(
-                'method' => 'POST',
-                'header' => array(
+                'method'  => 'POST',
+                'header'  => array(
                     'Content-type: application/json',
                     'Authorization: Token '.$this->token,
                 ),
@@ -124,16 +128,29 @@ abstract class BaseClient
         );
         $context = stream_context_create($options);
 
-        $response = file_get_contents($this->url.$resource, false, $context);
+        $response = file_get_contents(
+            $this->url.$resource,
+            false,
+            $context
+        );
 
         $response_status = $this->checkResponseStatus($http_response_header);
 
         if( $response_status['status'] == 200 )
         {
-            $response = json_decode($response, true);
+            $response = json_decode(
+                $response,
+                true
+            );
             $response['count'] = 0;
 
-            if( key_exists('suggestions', $response) && $response['suggestions'] > 0 )
+            if(
+                key_exists(
+                    'suggestions',
+                    $response
+                )
+                && $response['suggestions'] > 0
+            )
             {
                 $response['count'] = count($response['suggestions']);
             }
@@ -142,7 +159,11 @@ abstract class BaseClient
         }
         else
         {
-            $result->addError(new Error($response_status['message'], $response_status['status']));
+            $result->addError(
+                new Error(
+                    $response_status['message'], $response_status['status']
+                )
+            );
         }
 
         return $result;

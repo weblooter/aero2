@@ -10,7 +10,12 @@ class User extends Base
      */
     public function getEditFieldHtml()
     {
-        return FindUserID($this->getCode(), $this->getValue(), "", "post_form");
+        return FindUserID(
+            $this->getCode(),
+            $this->getValue(),
+            "",
+            "post_form"
+        );
     }
 
     /**
@@ -25,11 +30,13 @@ class User extends Base
 
             try
             {
-                $user = \Bitrix\Main\UserTable::getList([
-                    "select" => ["ID", "LOGIN", "NAME", "LAST_NAME"],
-                    "filter" => ["ID" => (int)$this->getValue()],
-                    "limit" => 1
-                ])->fetch();
+                $user = \Bitrix\Main\UserTable::getList(
+                    [
+                        "select" => ["ID", "LOGIN", "NAME", "LAST_NAME"],
+                        "filter" => ["ID" => (int)$this->getValue()],
+                        "limit"  => 1
+                    ]
+                )->fetch();
             }
             catch( \Exception $e )
             {

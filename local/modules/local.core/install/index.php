@@ -14,17 +14,31 @@ Class local_core extends CModule
     var $MODULE_NAME;
     var $MODULE_DESCRIPTION;
     var $MODULE_CSS;
-    var $strError  = "";
+    var $strError = "";
 
     function __construct()
     {
         $arModuleVersion = array();
 
-        $path = str_replace("\\", "/", __FILE__);
-        $path = substr($path, 0, strlen($path) - strlen("/index.php"));
+        $path = str_replace(
+            "\\",
+            "/",
+            __FILE__
+        );
+        $path = substr(
+            $path,
+            0,
+            strlen($path) - strlen("/index.php")
+        );
         include( $path."/version.php" );
 
-        if( is_array($arModuleVersion) && array_key_exists("VERSION", $arModuleVersion) )
+        if(
+            is_array($arModuleVersion)
+            && array_key_exists(
+                "VERSION",
+                $arModuleVersion
+            )
+        )
         {
             $this->MODULE_VERSION = $arModuleVersion["VERSION"];
             $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
@@ -47,7 +61,12 @@ Class local_core extends CModule
 
         if( $this->errors !== false )
         {
-            $GLOBALS["APPLICATION"]->throwException(implode("", $this->errors));
+            $GLOBALS["APPLICATION"]->throwException(
+                implode(
+                    "",
+                    $this->errors
+                )
+            );
 
             return false;
         }
@@ -68,7 +87,12 @@ Class local_core extends CModule
 
         if( $this->errors !== false )
         {
-            $GLOBALS["APPLICATION"]->throwException(implode("", $this->errors));
+            $GLOBALS["APPLICATION"]->throwException(
+                implode(
+                    "",
+                    $this->errors
+                )
+            );
 
             return false;
         }

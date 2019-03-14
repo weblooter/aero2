@@ -13,7 +13,10 @@ class SimpleRegistry
 
     public function has($key)
     {
-        return key_exists($key, $this->data);
+        return key_exists(
+            $key,
+            $this->data
+        );
     }
 
     public function get($key)
@@ -48,11 +51,14 @@ class SimpleRegistry
 
     public static function init(array $config)
     {
-        $registry = new self;
+        $registry = new self();
 
         foreach( $config as $key => $val )
         {
-            $registry->set($key, $val);
+            $registry->set(
+                $key,
+                $val
+            );
         }
 
         return $registry;

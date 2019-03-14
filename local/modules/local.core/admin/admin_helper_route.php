@@ -16,9 +16,18 @@ require_once( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_adm
  * ]
  */
 $arRouteRules = [
-    "data_company" => [
+    "model_data_company" => [
         "list" => \Local\Core\Inner\AdminHelper\Data\Company\AdminList::class,
         "edit" => \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit::class,
+    ],
+    "model_data_site"    => [
+        "list" => \Local\Core\Inner\AdminHelper\Data\Site\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Data\Site\AdminEdit::class,
+    ],
+
+    "model_reference_measure" => [
+        "list" => \Local\Core\Inner\AdminHelper\Reference\Measure\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Reference\Measure\AdminEdit::class,
     ],
     //    "reference_organization" => [
     //        "list" => \Local\Core\Inner\AdminHelper\Reference\Organization\AdminList::class,
@@ -44,15 +53,21 @@ if( Loader::includeModule("local.core") )
 
 if( isset($entity) && isset($arRouteRules[$entity]) && isset($arRouteRules[$entity][$action]) && class_exists($arRouteRules[$entity][$action]) )
 {
-    $page = new $arRouteRules[$entity][$action];
+    $page = new $arRouteRules[$entity][$action]();
     $page->render();
 }
 else
 {
 
     require_once( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php" );
-    define("ERROR_404", "Y");
-    define("BX_ADMIN_SECTION_404", "Y");
+    define(
+        "ERROR_404",
+        "Y"
+    );
+    define(
+        "BX_ADMIN_SECTION_404",
+        "Y"
+    );
     $response->setStatus("404 Not Found");
     IncludeModuleLangFile(__FILE__);
     $APPLICATION->SetTitle(GetMessage("404_title")); ?>

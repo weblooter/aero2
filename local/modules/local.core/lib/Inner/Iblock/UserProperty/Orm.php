@@ -7,9 +7,9 @@ use Bitrix\Main\LoaderException;
 
 class Orm
 {
-    protected static $dataCache      = [];
+    protected static $dataCache = [];
     protected static $entityMapCache = array();
-    protected static $arItemCache    = array();
+    protected static $arItemCache = array();
 
     /**
      * Возвращает массив пользовательских настроек свойства
@@ -21,10 +21,10 @@ class Orm
     public static function PrepareSettings($property)
     {
         $data = [
-            "ORM_ENTITY" => null,
-            "ENTITY_ID_COLUMN" => null,
+            "ORM_ENTITY"         => null,
+            "ENTITY_ID_COLUMN"   => null,
             "ENTITY_NAME_COLUMN" => null,
-            "MODULES" => [],
+            "MODULES"            => [],
         ];
 
         if( !empty($property["USER_TYPE_SETTINGS"]) && is_array($property["USER_TYPE_SETTINGS"]) )
@@ -53,7 +53,10 @@ class Orm
                     }
                     else
                     {
-                        $includedModules = explode(",", $property["USER_TYPE_SETTINGS"]["MODULES"]);
+                        $includedModules = explode(
+                            ",",
+                            $property["USER_TYPE_SETTINGS"]["MODULES"]
+                        );
                     }
                 }
                 if( !empty($includedModules) )
@@ -93,7 +96,10 @@ class Orm
         ];
 
         $settings = self::PrepareSettings($property);
-        $modules = implode(",", $settings["MODULES"]);
+        $modules = implode(
+            ",",
+            $settings["MODULES"]
+        );
 
         return <<<"HIBSELECT"
 <tr>
@@ -138,7 +144,10 @@ HIBSELECT;
     {
 
         $html = "<select name=\"{$HTMLControlName["VALUE"]}\">";
-        $html .= self::GetOptionsHtml($property, [$value["VALUE"]]);
+        $html .= self::GetOptionsHtml(
+            $property,
+            [$value["VALUE"]]
+        );
         $html .= "</select>";
 
         return $html;
@@ -165,7 +174,13 @@ HIBSELECT;
             foreach( $value as $valueId => $arValue )
             {
                 $values[$valueId] = $arValue["VALUE"];
-                if( preg_match("/^n(\\d+)$/", $valueId, $match) )
+                if(
+                preg_match(
+                    "/^n(\\d+)$/",
+                    $valueId,
+                    $match
+                )
+                )
                 {
                     if( $match[1] > $max_n )
                     {
@@ -174,7 +189,14 @@ HIBSELECT;
                 }
             }
         }
-        if( end($values) != "" || substr(key($values), 0, 1) != "n" )
+        if(
+            end($values) != ""
+            || substr(
+                   key($values),
+                   0,
+                   1
+               ) != "n"
+        )
         {
             $values["n".( $max_n + 1 )] = "";
         }
@@ -186,7 +208,10 @@ HIBSELECT;
         {
             $html .= "<tr><td>";
             $html .= "<select name=\"{$HTMLControlName["VALUE"]}[{$valueId}][VALUE]\" >";
-            $html .= self::GetOptionsHtml($property, [$value]);
+            $html .= self::GetOptionsHtml(
+                $property,
+                [$value]
+            );
             $html .= "</select>";
             $html .= "</td></tr>";
         }
@@ -213,7 +238,10 @@ HIBSELECT;
         $multi = ( isset($property["MULTIPLE"]) && $property["MULTIPLE"] == "Y" );
 
         $html = "<select ".( $multi ? "multiple" : "" )." name=\"{$HTMLControlName["VALUE"]}".( $multi ? "[]" : "" )."\">";
-        $html .= self::GetOptionsHtml($property, $value);
+        $html .= self::GetOptionsHtml(
+            $property,
+            $value
+        );
         $html .= "</select>";
 
         return $html;
@@ -233,7 +261,10 @@ HIBSELECT;
     public static function GetPublicEditHTMLMultiple($property, $value, $HTMLControlName)
     {
         $html = "<select multiple name=\"{$HTMLControlName["VALUE"]}[]\">";
-        $html .= self::GetOptionsHtml($property, self::normalizeValue($value));
+        $html .= self::GetOptionsHtml(
+            $property,
+            self::normalizeValue($value)
+        );
         $html .= "</select>";
 
         return $html;
@@ -285,14 +316,19 @@ HIBSELECT;
         $ormEntityColumnID = $settings["ENTITY_ID_COLUMN"];
         $ormEntityColumnName = $settings["ENTITY_NAME_COLUMN"];
 
-        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
+        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
         {
             #Получаем все записи из таблицы
             if( empty(self::$dataCache[$ormEntityName]) )
             {
-                self::$dataCache[$ormEntityName] = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
+                self::$dataCache[$ormEntityName] = self::getEntityFieldsByFilter(
+                    $ormEntityName,
+                    $ormEntityColumnID,
+                    $ormEntityColumnName,
+                    [
                         "select" => [$ormEntityColumnID, $ormEntityColumnName]
-                    ]);
+                    ]
+                );
             }
 
             #Формируем option'ы
@@ -301,17 +337,26 @@ HIBSELECT;
             foreach( self::$dataCache[$ormEntityName] as $data )
             {
                 $selected = "";
-                if( in_array($data[$ormEntityColumnID], $values) )
+                if(
+                in_array(
+                    $data[$ormEntityColumnID],
+                    $values
+                )
+                )
                 {
                     $selected = "selected";
                     $selectedValue = true;
                 }
-                $ormOptions[] = "<option ".$selected." value=\"".htmlspecialcharsbx($data[$ormEntityColumnID])."\">".htmlspecialcharsEx($data[$ormEntityColumnName]." [".$data[$ormEntityColumnID])."]</option>";
+                $ormOptions[] = "<option ".$selected." value=\"".htmlspecialcharsbx($data[$ormEntityColumnID])."\">".htmlspecialcharsEx($data[$ormEntityColumnName]." [".$data[$ormEntityColumnID])
+                                ."]</option>";
             }
 
-            $options = array_merge([
-                "<option value=\"\" ".( $selectedValue ? "" : " selected" ).">(не установлено)</option>"
-            ], $ormOptions);
+            $options = array_merge(
+                [
+                    "<option value=\"\" ".( $selectedValue ? "" : " selected" ).">(не установлено)</option>"
+                ],
+                $ormOptions
+            );
 
         }
         else
@@ -319,7 +364,10 @@ HIBSELECT;
             $options[] = "<option value=\"\" selected>(не установлено)</option>";
         }
 
-        return implode("", $options);
+        return implode(
+            "",
+            $options
+        );
     }
 
     /**
@@ -370,7 +418,7 @@ HIBSELECT;
         $ormEntityColumnID = $settings["ENTITY_ID_COLUMN"];
         $ormEntityColumnName = $settings["ENTITY_NAME_COLUMN"];
 
-        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
+        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
         {
 
             if( !isset(self::$arItemCache[$ormEntityName]) )
@@ -381,10 +429,15 @@ HIBSELECT;
             #Если нет кеша или множественное значение, то получаем значения
             if( is_array($value["VALUE"]) || !isset(self::$arItemCache[$ormEntityName][$value["VALUE"]]) )
             {
-                $data = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
+                $data = self::getEntityFieldsByFilter(
+                    $ormEntityName,
+                    $ormEntityColumnID,
+                    $ormEntityColumnName,
+                    [
                         "select" => array($ormEntityColumnID, $ormEntityColumnName),
                         "filter" => array("={$ormEntityColumnID}" => $value["VALUE"])
-                    ]);
+                    ]
+                );
                 if( !empty($data) )
                 {
                     foreach( $data as $item )
@@ -448,7 +501,10 @@ HIBSELECT;
     public static function GetAdminListViewHTML($property, $value, $HTMLControlName)
     {
         $settings = self::PrepareSettings($property);
-        $data = self::GetExtendedValue($property, $value);
+        $data = self::GetExtendedValue(
+            $property,
+            $value
+        );
         if( $data )
         {
             return htmlspecialcharsbx($data[$settings["ENTITY_NAME_COLUMN"]]);
@@ -471,7 +527,10 @@ HIBSELECT;
     public static function GetPublicViewHTML($property, $value, $HTMLControlName)
     {
         $settings = self::PrepareSettings($property);
-        $data = self::GetExtendedValue($property, $value);
+        $data = self::GetExtendedValue(
+            $property,
+            $value
+        );
 
         if( !empty($data) )
         {
@@ -520,7 +579,10 @@ HIBSELECT;
             $values = [];
         }
 
-        $options = self::GetOptionsHtml($property, $values);
+        $options = self::GetOptionsHtml(
+            $property,
+            $values
+        );
         $html = "<select name=\"{$HTMLControlName["VALUE"]}[]\" multiple>";
         $html .= $options;
         $html .= "</select>";
@@ -542,7 +604,10 @@ HIBSELECT;
     public static function GetSearchContent($property, $value, $HTMLControlName)
     {
         $settings = self::PrepareSettings($property);
-        $data = self::GetExtendedValue($property, $value);
+        $data = self::GetExtendedValue(
+            $property,
+            $value
+        );
 
         if( !empty($data) )
         {
@@ -571,9 +636,12 @@ HIBSELECT;
         {
             $values = ( is_array($_REQUEST[$HTMLControlName["VALUE"]]) ? $_REQUEST[$HTMLControlName["VALUE"]] : array($_REQUEST[$HTMLControlName["VALUE"]]) );
         }
-        else if( isset($GLOBALS[$HTMLControlName["VALUE"]]) )
+        else
         {
-            $values = ( is_array($GLOBALS[$HTMLControlName["VALUE"]]) ? $GLOBALS[$HTMLControlName["VALUE"]] : array($GLOBALS[$HTMLControlName["VALUE"]]) );
+            if( isset($GLOBALS[$HTMLControlName["VALUE"]]) )
+            {
+                $values = ( is_array($GLOBALS[$HTMLControlName["VALUE"]]) ? $GLOBALS[$HTMLControlName["VALUE"]] : array($GLOBALS[$HTMLControlName["VALUE"]]) );
+            }
         }
 
         if( !empty($values) )
@@ -612,7 +680,7 @@ HIBSELECT;
     {
         $arResult = [];
 
-        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
+        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
         {
 
             if( !isset(self::$entityMapCache[$ormEntityName]) )

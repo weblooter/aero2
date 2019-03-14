@@ -52,19 +52,30 @@ class File extends CollectableEntity
                     {
                         if( $property->isMultiple() )
                         {
-                            $values = array_filter(array_map(function($v)
-                                    {
-                                        return (int)$v;
-                                    }, (array)$property->getField('VALUE')));
+                            $values = array_filter(
+                                array_map(
+                                    function($v)
+                                        {
+                                            return (int)$v;
+                                        },
+                                    (array)$property->getField('VALUE')
+                                )
+                            );
 
                             if( $values )
                             {
-                                $file_ids = array_merge($file_ids, $values);
+                                $file_ids = array_merge(
+                                    $file_ids,
+                                    $values
+                                );
                             }
                         }
-                        else if( $value = (int)$property->getField('VALUE') )
+                        else
                         {
-                            $file_ids[] = $value;
+                            if( $value = (int)$property->getField('VALUE') )
+                            {
+                                $file_ids[] = $value;
+                            }
                         }
                     }
                 }
@@ -129,7 +140,11 @@ class File extends CollectableEntity
      */
     protected static function create(array $fields = array())
     {
-        $arContentType = substr($fields['CONTENT_TYPE'], 0, 5);
+        $arContentType = substr(
+            $fields['CONTENT_TYPE'],
+            0,
+            5
+        );
 
         if( $arContentType === 'image' )
         {
@@ -146,7 +161,11 @@ class File extends CollectableEntity
      */
     protected function __construct(array $fields = array())
     {
-        $this->uploadDir = Main\Config\Option::get('main', 'upload_dir', 'upload');
+        $this->uploadDir = Main\Config\Option::get(
+            'main',
+            'upload_dir',
+            'upload'
+        );
 
         parent::__construct($fields);
     }

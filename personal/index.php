@@ -1,12 +1,15 @@
 <?
-require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $APPLICATION->SetTitle("Рабочий стол");
 $APPLICATION->AddChainItem('Рабочий стол');
 ?>
-<div class="col-12">
+    <div class="col-12">
 
-    <a href="<?=\Local\Core\Inner\Route::getRouteTo('company', 'add')?>" class="btn btn-warning">+ Добавить компанию</a>
+        <a href="<?=\Local\Core\Inner\Route::getRouteTo(
+            'company',
+            'add'
+        )?>" class="btn btn-warning">+ Добавить компанию</a>
 
-</div>
+    </div>
 
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+<? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>

@@ -22,11 +22,18 @@ $funIsRequired = function($strCode) use ($arResult)
     </div>
 
 <? endif; ?>
-<form method="post" action="<?=\Local\Core\Inner\Route::getRouteTo('site', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID']])?>" enctype="multipart/form-data">
+<form method="post" action="<?=\Local\Core\Inner\Route::getRouteTo(
+    'site',
+    'edit',
+    ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#SITE_ID#' => $arParams['SITE_ID']]
+)?>" enctype="multipart/form-data">
     <?=bitrix_sessid_post();?>
     <? if( $arResult['UPDATE_STATUS'] == 'ERROR' ): ?>
         <div class="alert alert-danger" role="alert">
-            <?=implode('<br/>', $arResult['ERROR_TEXT'])?>
+            <?=implode(
+                '<br/>',
+                $arResult['ERROR_TEXT']
+            )?>
         </div>
     <? endif; ?>
 
@@ -57,12 +64,13 @@ $funIsRequired = function($strCode) use ($arResult)
             <input type="text" class="form-control" name="SITE_FIELD[FILE_LINK]" value="<?=$arResult['FIELDS']['FILE_LINK']['VALUE']?>" />
             <small class="form-text text-muted">Ссылка должна вести на файл формата <b>.xml</b>. Так же стоит
                 учитывать, что мы не принимаем файлы, генерируемые "на лету", т.к. время ожидания и скачивания файла
-                ограничено!
+                ограничено!<br />
+                Ограничение по размеру - <?=$component->intMaxDownloadXMLFileSizeMb?> Мб.
             </small>
         </div>
         <div class="form-group">
             <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" name="SITE_FIELD[HTTP_AUTH]" value="Y" id="customSwitch1" />
+                <input type="checkbox" class="custom-control-input" name="SITE_FIELD[HTTP_AUTH]" value="Y" <?=$arResult['FIELDS']['HTTP_AUTH']['VALUE'] == 'Y' ? 'checked' : ''?> id="customSwitch1" />
                 <label class="custom-control-label" for="customSwitch1">Для доступа нужен логин и пароль</label>
             </div>
         </div>
@@ -107,14 +115,21 @@ $funIsRequired = function($strCode) use ($arResult)
 
     <? if( $arResult['UPDATE_STATUS'] == 'ERROR' ): ?>
         <div class="alert alert-danger" role="alert">
-            <?=implode('<br/>', $arResult['ERROR_TEXT'])?>
+            <?=implode(
+                '<br/>',
+                $arResult['ERROR_TEXT']
+            )?>
         </div>
     <? endif; ?>
 
 </form>
 
 
-<a href="<?=\Local\Core\Inner\Route::getRouteTo('site', 'list', ['#COMPANY_ID#' => $arParams['COMPANY_ID']])?>" class="btn btn-dark">
+<a href="<?=\Local\Core\Inner\Route::getRouteTo(
+    'site',
+    'list',
+    ['#COMPANY_ID#' => $arParams['COMPANY_ID']]
+)?>" class="btn btn-dark">
     <ion-icon name="arrow-round-back"></ion-icon>
     Вернуться к сайтам</a>
 

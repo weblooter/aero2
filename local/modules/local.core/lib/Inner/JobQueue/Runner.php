@@ -39,7 +39,10 @@ final class Runner
     private function startDaemonIfPossible()
     {
         $arRes = [];
-        exec('ps aux | grep "'.$this->getProcessName().'" | grep -v grep', $arRes);
+        exec(
+            'ps aux | grep "'.$this->getProcessName().'" | grep -v grep',
+            $arRes
+        );
         if( empty($arRes) )
         {
             cli_set_process_title($this->getProcessName());
@@ -144,20 +147,22 @@ final class Runner
             return [];
         }
 
-        $ar = Model\Data\JobQueueTable::getList([
-            'filter' => [
-                '>ATTEMPTS_LEFT' => 0,
-                '<=EXECUTE_AT' => \Bitrix\Main\Type\DateTime::createFromTimestamp(time()),
-                '=STATUS' => [
-                    Model\Data\JobQueueTable::STATUS_ENUM_NEW,
-                    Model\Data\JobQueueTable::STATUS_ENUM_ERROR,
+        $ar = Model\Data\JobQueueTable::getList(
+            [
+                'filter' => [
+                    '>ATTEMPTS_LEFT'  => 0,
+                    '<=EXECUTE_AT'    => \Bitrix\Main\Type\DateTime::createFromTimestamp(time()),
+                    '=STATUS'         => [
+                        Model\Data\JobQueueTable::STATUS_ENUM_NEW,
+                        Model\Data\JobQueueTable::STATUS_ENUM_ERROR,
+                    ],
+                    '=IS_EXECUTE_NOW' => 'N',
+                    '=EXECUTE_BY'     => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
                 ],
-                '=IS_EXECUTE_NOW' => 'N',
-                '=EXECUTE_BY' => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
-            ],
-            'limit' => $maximum,
-            'select' => ['ID'],
-        ])->fetchAll();
+                'limit'  => $maximum,
+                'select' => ['ID'],
+            ]
+        )->fetchAll();
 
         return is_array($ar) ? $ar : [];
     }
@@ -171,10 +176,13 @@ final class Runner
      */
     private function executeJobByWorkerProcess($ar)
     {
-        $executorID = uniqid(getmypid(), true);
+        $executorID = uniqid(
+            getmypid(),
+            true
+        );
         $updateData = [
             [
-                'ID' => $ar['ID'],
+                'ID'         => $ar['ID'],
                 'EXECUTE_BY' => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
             ],
             [
@@ -182,7 +190,10 @@ final class Runner
             ]
         ];
 
-        $rs = Model\Data\JobQueueTable::update(...$updateData);
+        $rs = Model\Data\JobQueueTable::update(
+            ...
+            $updateData
+        );
         if( $rs->isSuccess() )
         {
 
@@ -191,7 +202,15 @@ final class Runner
                 try
                 {
                     $rand = rand();
-                    self::$arProcess[$rand] = new Process(join(' ', $this->getProcessConfig((int)$ar['ID'], $executorID)));
+                    self::$arProcess[$rand] = new Process(
+                        join(
+                            ' ',
+                            $this->getProcessConfig(
+                                (int)$ar['ID'],
+                                $executorID
+                            )
+                        )
+                    );
                     self::$arProcess[$rand]->setTimeout(0);
                     self::$arProcess[$rand]->start();
 

@@ -1,5 +1,5 @@
 <?
-if ( !defined( 'B_PROLOG_INCLUDED' ) || B_PROLOG_INCLUDED !== true )
+if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
 {
     die();
 }
@@ -19,18 +19,18 @@ if ( !defined( 'B_PROLOG_INCLUDED' ) || B_PROLOG_INCLUDED !== true )
     "bitrix:menu",
     ".default",
     array(
-        "ALLOW_MULTI_SELECT" => "N",
-        "CHILD_MENU_TYPE" => "left",
-        "DELAY" => "N",
-        "MAX_LEVEL" => "1",
-        "MENU_CACHE_GET_VARS" => array(),
-        "MENU_CACHE_TIME" => "3600",
-        "MENU_CACHE_TYPE" => "N",
+        "ALLOW_MULTI_SELECT"    => "N",
+        "CHILD_MENU_TYPE"       => "left",
+        "DELAY"                 => "N",
+        "MAX_LEVEL"             => "1",
+        "MENU_CACHE_GET_VARS"   => array(),
+        "MENU_CACHE_TIME"       => "3600",
+        "MENU_CACHE_TYPE"       => "N",
         "MENU_CACHE_USE_GROUPS" => "N",
-        "MENU_THEME" => "site",
-        "ROOT_MENU_TYPE" => "top",
-        "USE_EXT" => "N",
-        "COMPONENT_TEMPLATE" => "horizontal_multilevel"
+        "MENU_THEME"            => "site",
+        "ROOT_MENU_TYPE"        => "top",
+        "USE_EXT"               => "N",
+        "COMPONENT_TEMPLATE"    => "horizontal_multilevel"
     ),
     false
 ); ?>

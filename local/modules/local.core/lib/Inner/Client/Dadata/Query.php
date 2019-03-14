@@ -23,24 +23,30 @@ class Query extends Abstracts\QueryAbstract implements Interfaces\QueryInterface
     protected function setValidationRules()
     {
         $this->validationRules = [
-            'query' => function(&$v)
+            'query'           => function(&$v)
                 {
                     $v = trim($v);
                     $len = strlen($v);
                     return 0 < $len && $len <= 300;
                 },
-            'count' => function(&$v)
+            'count'           => function(&$v)
                 {
                     $v = (int)$v;
                     return is_int($v) && $v > 0;
                 },
-            'type' => function($v)
+            'type'            => function($v)
                 {
-                    return in_array($v, ['LEGAL', 'INDIVIDUAL']); // юрлица или ип
+                    return in_array(
+                        $v,
+                        ['LEGAL', 'INDIVIDUAL']
+                    ); // юрлица или ип
                 },
-            'branch_type' => function($v)
+            'branch_type'     => function($v)
                 {
-                    return in_array($v, ['MAIN']); // если нужна головная организация
+                    return in_array(
+                        $v,
+                        ['MAIN']
+                    ); // если нужна головная организация
                 },
 
             /** На счет параметров ниже мне еще не все известно и тут они далеко не все, поэтому в качестве валидаторов пока только заглушки.
@@ -56,7 +62,7 @@ class Query extends Abstracts\QueryAbstract implements Interfaces\QueryInterface
              * $query->set('locations_boost', ['kladr_id' => '63000001']);
              * </code>
              */
-            'locations' => function($v)
+            'locations'       => function($v)
                 {
                     return true;
                 },
@@ -64,11 +70,11 @@ class Query extends Abstracts\QueryAbstract implements Interfaces\QueryInterface
                 {
                     return true;
                 },
-            'to_bound' => function($v)
+            'to_bound'        => function($v)
                 {
                     return true;
                 },
-            'from_bound' => function($v)
+            'from_bound'      => function($v)
                 {
                     return true;
                 },

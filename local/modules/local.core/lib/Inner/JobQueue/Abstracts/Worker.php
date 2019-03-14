@@ -119,13 +119,15 @@ abstract class Worker
 
     private function getClearJobID()
     {
-        $ar = JobQueueTable::getList([
-            'filter' => [
-                '=ID' => $this->dirtyJobID,
-                '=EXECUTE_BY' => $this->dirtyExecutorID,
-            ],
-            'select' => ['*'],
-        ])->fetch();
+        $ar = JobQueueTable::getList(
+            [
+                'filter' => [
+                    '=ID'         => $this->dirtyJobID,
+                    '=EXECUTE_BY' => $this->dirtyExecutorID,
+                ],
+                'select' => ['*'],
+            ]
+        )->fetch();
 
         if( !empty($ar) )
         {
@@ -159,18 +161,26 @@ abstract class Worker
 
         $updateData = [
             [
-                'ID' => $this->getJobID(),
+                'ID'         => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'ATTEMPTS_LEFT' => new Main\DB\SqlExpression('?# - 1', 'ATTEMPTS_LEFT'),
-                'IS_EXECUTE_NOW' => 'Y',
+                'ATTEMPTS_LEFT'      => new Main\DB\SqlExpression(
+                    '?# - 1', 'ATTEMPTS_LEFT'
+                ),
+                'IS_EXECUTE_NOW'     => 'Y',
                 'LAST_EXECUTE_START' => new Main\Type\DateTime(),
             ]
         ];
 
-        $rs = JobQueueTable::update(...$updateData);
-        $this->checkUpdateResult($rs, $updateData);
+        $rs = JobQueueTable::update(
+            ...
+            $updateData
+        );
+        $this->checkUpdateResult(
+            $rs,
+            $updateData
+        );
     }
 
     final private function markJobFail()
@@ -178,18 +188,24 @@ abstract class Worker
 
         $updateData = [
             [
-                'ID' => $this->getJobID(),
+                'ID'         => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'STATUS' => JobQueueTable::STATUS_ENUM_FAIL,
-                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_DEFAULT,
+                'STATUS'         => JobQueueTable::STATUS_ENUM_FAIL,
+                'EXECUTE_BY'     => JobQueueTable::EXECUTE_BY_DEFAULT,
                 'IS_EXECUTE_NOW' => 'N',
             ]
         ];
 
-        $rs = JobQueueTable::update(...$updateData);
-        $this->checkUpdateResult($rs, $updateData);
+        $rs = JobQueueTable::update(
+            ...
+            $updateData
+        );
+        $this->checkUpdateResult(
+            $rs,
+            $updateData
+        );
 
     }
 
@@ -197,18 +213,24 @@ abstract class Worker
     {
         $updateData = [
             [
-                'ID' => $this->getJobID(),
+                'ID'         => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'STATUS' => JobQueueTable::STATUS_ENUM_ERROR,
-                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_DEFAULT,
+                'STATUS'         => JobQueueTable::STATUS_ENUM_ERROR,
+                'EXECUTE_BY'     => JobQueueTable::EXECUTE_BY_DEFAULT,
                 'IS_EXECUTE_NOW' => 'N',
-                'EXECUTE_AT' => $this->getNextExecuteAt(),
+                'EXECUTE_AT'     => $this->getNextExecuteAt(),
             ]
         ];
-        $rs = JobQueueTable::update(...$updateData);
-        $this->checkUpdateResult($rs, $updateData);
+        $rs = JobQueueTable::update(
+            ...
+            $updateData
+        );
+        $this->checkUpdateResult(
+            $rs,
+            $updateData
+        );
     }
 
     final private function markJobSuccess()
@@ -216,18 +238,24 @@ abstract class Worker
 
         $updateData = [
             [
-                'ID' => $this->getJobID(),
+                'ID'         => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'STATUS' => JobQueueTable::STATUS_ENUM_SUCCESS,
-                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_DEFAULT,
+                'STATUS'         => JobQueueTable::STATUS_ENUM_SUCCESS,
+                'EXECUTE_BY'     => JobQueueTable::EXECUTE_BY_DEFAULT,
                 'IS_EXECUTE_NOW' => 'N',
             ]
         ];
 
-        $rs = JobQueueTable::update(...$updateData);
-        $this->checkUpdateResult($rs, $updateData);
+        $rs = JobQueueTable::update(
+            ...
+            $updateData
+        );
+        $this->checkUpdateResult(
+            $rs,
+            $updateData
+        );
 
     }
 

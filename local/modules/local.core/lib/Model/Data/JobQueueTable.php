@@ -69,40 +69,56 @@ class JobQueueTable extends Entity\DataManager
     public static function getMap()
     {
         return array(
-            new Orm\Fields\IntegerField('ID', [
-                'primary' => true,
-                'autocomplete' => true,
-            ]),
-            new Orm\Fields\StringField('EXECUTE_BY', [
-                'primary' => true,
-                'default_value' => self::EXECUTE_BY_DEFAULT,
-            ]),
-            new Orm\Fields\StringField('WORKER_CLASS_NAME', ['required' => true]),
-            new Orm\Fields\TextField('INPUT_DATA', [
-                'required' => true,
-                'serialized' => true,
-            ]),
+            new Orm\Fields\IntegerField(
+                'ID', [
+                    'primary'      => true,
+                    'autocomplete' => true,
+                ]
+            ),
+            new Orm\Fields\StringField(
+                'EXECUTE_BY', [
+                    'primary'       => true,
+                    'default_value' => self::EXECUTE_BY_DEFAULT,
+                ]
+            ),
+            new Orm\Fields\StringField(
+                'WORKER_CLASS_NAME', ['required' => true]
+            ),
+            new Orm\Fields\TextField(
+                'INPUT_DATA', [
+                    'required'   => true,
+                    'serialized' => true,
+                ]
+            ),
             new Orm\Fields\StringField('HASH'),
-            new Orm\Fields\IntegerField('ATTEMPTS_LEFT', [
-                'required' => true,
-                'default_value' => 10,
-            ]),
-            new Orm\Fields\EnumField('STATUS', [
-                'values' => [
-                    self::STATUS_ENUM_NEW,
-                    self::STATUS_ENUM_SUCCESS,
-                    self::STATUS_ENUM_ERROR,
-                    self::STATUS_ENUM_FAIL,
-                ],
-                'default_value' => self::STATUS_ENUM_NEW,
-            ]),
-            new Orm\Fields\DatetimeField('EXECUTE_AT', [
-                'required' => true,
-            ]),
-            new Orm\Fields\EnumField('IS_EXECUTE_NOW', [
-                'values' => ['Y', 'N'],
-                'default_value' => 'N',
-            ]),
+            new Orm\Fields\IntegerField(
+                'ATTEMPTS_LEFT', [
+                    'required'      => true,
+                    'default_value' => 10,
+                ]
+            ),
+            new Orm\Fields\EnumField(
+                'STATUS', [
+                    'values'        => [
+                        self::STATUS_ENUM_NEW,
+                        self::STATUS_ENUM_SUCCESS,
+                        self::STATUS_ENUM_ERROR,
+                        self::STATUS_ENUM_FAIL,
+                    ],
+                    'default_value' => self::STATUS_ENUM_NEW,
+                ]
+            ),
+            new Orm\Fields\DatetimeField(
+                'EXECUTE_AT', [
+                    'required' => true,
+                ]
+            ),
+            new Orm\Fields\EnumField(
+                'IS_EXECUTE_NOW', [
+                    'values'        => ['Y', 'N'],
+                    'default_value' => 'N',
+                ]
+            ),
             new Orm\Fields\DatetimeField('LAST_EXECUTE_START'),
             new Orm\Fields\DatetimeField('DATE_ADD'),
             new Orm\Fields\DatetimeField('DATE_UPDATE'),
@@ -113,12 +129,17 @@ class JobQueueTable extends Entity\DataManager
     {
         $data = $event->getParameter("fields");
 
-        $result = new \Bitrix\Main\Entity\EventResult;
+        $result = new \Bitrix\Main\Entity\EventResult();
         $result->unsetFields(['DATE_UPDATE', 'UPDATED_BY']);
 
-        $result->modifyFields([
-            'HASH' => self::hash($data['WORKER_CLASS_NAME'], $data['INPUT_DATA']),
-        ]);
+        $result->modifyFields(
+            [
+                'HASH' => self::hash(
+                    $data['WORKER_CLASS_NAME'],
+                    $data['INPUT_DATA']
+                ),
+            ]
+        );
 
         return $result;
     }
@@ -128,11 +149,17 @@ class JobQueueTable extends Entity\DataManager
         $primary = $event->getParameter("primary");
         $data = $event->getParameter("fields");
 
-        $result = new \Bitrix\Main\Entity\EventResult;
+        $result = new \Bitrix\Main\Entity\EventResult();
         $result->unsetFields(['DATE_ADD', 'ADDED_BY']);
 
-        $class = key_exists('WORKER_CLASS_NAME', $data);
-        $input = key_exists('INPUT_DATA', $data);
+        $class = key_exists(
+            'WORKER_CLASS_NAME',
+            $data
+        );
+        $input = key_exists(
+            'INPUT_DATA',
+            $data
+        );
 
         if( $class || $input )
         {
@@ -142,9 +169,14 @@ class JobQueueTable extends Entity\DataManager
                 $source = self::getById($primary)->fetch();
             }
 
-            $result->modifyFields([
-                'HASH' => self::hash(( $data['WORKER_CLASS_NAME'] ? : @$source['WORKER_CLASS_NAME'] ), ( $data['INPUT_DATA'] ? : @$source['INPUT_DATA'] )),
-            ]);
+            $result->modifyFields(
+                [
+                    'HASH' => self::hash(
+                        ( $data['WORKER_CLASS_NAME'] ? : @$source['WORKER_CLASS_NAME'] ),
+                        ( $data['INPUT_DATA'] ? : @$source['INPUT_DATA'] )
+                    ),
+                ]
+            );
         }
         return $result;
     }
@@ -169,7 +201,10 @@ class JobQueueTable extends Entity\DataManager
 
         $str_to_hash = $class.'#'.$input_dump;
 
-        return hash(self::HASH_ALGO, $str_to_hash);
+        return hash(
+            self::HASH_ALGO,
+            $str_to_hash
+        );
     }
 
     /**

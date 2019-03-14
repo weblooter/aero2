@@ -1,11 +1,11 @@
 <?
-if ( !defined( 'B_PROLOG_INCLUDED' ) || B_PROLOG_INCLUDED !== true )
+if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
 {
     die();
 }
 
 $arTemplate = Array(
-    'NAME' => 'Пустой шаблон',
+    'NAME'        => 'Пустой шаблон',
     'DESCRIPTION' => 'Пустой шаблон для сайта'
 );
 ?>

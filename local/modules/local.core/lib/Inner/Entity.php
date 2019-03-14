@@ -38,7 +38,10 @@ abstract class Entity
 
         if( $fieldsMap === null )
         {
-            $fieldsMap = array_fill_keys(static::getAvailableFields(), true);
+            $fieldsMap = array_fill_keys(
+                static::getAvailableFields(),
+                true
+            );
         }
 
         return $fieldsMap;
@@ -84,12 +87,15 @@ abstract class Entity
                     'TYPE' => $value['data_type']
                 ];
             }
-            else if( $value instanceof Main\Entity\ScalarField )
+            else
             {
-                $result[$value->getName()] = [
-                    'CODE' => $value->getName(),
-                    'TYPE' => $value->getDataType(),
-                ];
+                if( $value instanceof Main\Entity\ScalarField )
+                {
+                    $result[$value->getName()] = [
+                        'CODE' => $value->getName(),
+                        'TYPE' => $value->getDataType(),
+                    ];
+                }
             }
         }
 
@@ -147,19 +153,33 @@ abstract class Entity
 
         if( $oldValue != $value || ( $oldValue === null && $value !== null ) )
         {
-            $this->fields->set($name, $value);
+            $this->fields->set(
+                $name,
+                $value
+            );
             try
             {
-                $result = $this->onFieldModify($name, $oldValue, $value);
+                $result = $this->onFieldModify(
+                    $name,
+                    $oldValue,
+                    $value
+                );
 
                 if( $result->isSuccess() )
                 {
-                    static::addChangesToHistory($name, $oldValue, $value);
+                    static::addChangesToHistory(
+                        $name,
+                        $oldValue,
+                        $value
+                    );
                 }
             }
             catch( \Exception $e )
             {
-                $this->fields->set($name, $oldValue);
+                $this->fields->set(
+                    $name,
+                    $oldValue
+                );
                 throw $e;
             }
 
@@ -189,8 +209,15 @@ abstract class Entity
 
         if( $oldValue != $value || ( $oldValue === null && $value !== null ) )
         {
-            $this->fields->set($name, $value);
-            static::addChangesToHistory($name, $oldValue, $value);
+            $this->fields->set(
+                $name,
+                $value
+            );
+            static::addChangesToHistory(
+                $name,
+                $oldValue,
+                $value
+            );
         }
     }
 
@@ -223,13 +250,20 @@ abstract class Entity
         if( $this->eventName )
         {
             $eventManager = Main\EventManager::getInstance();
-            if( $eventsList = $eventManager->findEventHandlers('sale', 'OnBefore'.$this->eventName.'SetFields') )
+            if(
+            $eventsList = $eventManager->findEventHandlers(
+                'sale',
+                'OnBefore'.$this->eventName.'SetFields'
+            )
+            )
             {
-                $event = new Main\Event('sale', 'OnBefore'.$this->eventName.'SetFields', array(
-                    'ENTITY' => $this,
-                    'VALUES' => $values,
-                    'OLD_VALUES' => $oldValues
-                ));
+                $event = new Main\Event(
+                    'sale', 'OnBefore'.$this->eventName.'SetFields', array(
+                        'ENTITY'     => $this,
+                        'VALUES'     => $values,
+                        'OLD_VALUES' => $oldValues
+                    )
+                );
                 $event->send();
 
                 if( $event->getResults() )
@@ -247,20 +281,26 @@ abstract class Entity
                                 }
                             }
                         }
-                        else if( $eventResult->getType() == Main\EventResult::ERROR )
+                        else
                         {
-                            $errorMsg = new ResultError(Main\Localization\Loc::getMessage('SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR'), 'SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR');
-
-                            if( $eventResultData = $eventResult->getParameters() )
+                            if( $eventResult->getType() == Main\EventResult::ERROR )
                             {
-                                if( isset($eventResultData) && $eventResultData instanceof ResultError )
-                                {
-                                    /** @var ResultError $errorMsg */
-                                    $errorMsg = $eventResultData;
-                                }
-                            }
+                                $errorMsg = new ResultError(
+                                    Main\Localization\Loc::getMessage('SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR'),
+                                    'SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR'
+                                );
 
-                            $result->addError($errorMsg);
+                                if( $eventResultData = $eventResult->getParameters() )
+                                {
+                                    if( isset($eventResultData) && $eventResultData instanceof ResultError )
+                                    {
+                                        /** @var ResultError $errorMsg */
+                                        $errorMsg = $eventResultData;
+                                    }
+                                }
+
+                                $result->addError($errorMsg);
+                            }
                         }
                     }
                 }
@@ -276,13 +316,19 @@ abstract class Entity
 
         foreach( $values as $key => $value )
         {
-            $r = $this->setField($key, $value);
+            $r = $this->setField(
+                $key,
+                $value
+            );
             if( !$r->isSuccess() )
             {
                 $data = $r->getData();
                 if( !empty($data) && is_array($data) )
                 {
-                    $resultData = array_merge($resultData, $data);
+                    $resultData = array_merge(
+                        $resultData,
+                        $data
+                    );
                 }
                 $result->addErrors($r->getErrors());
             }
@@ -306,7 +352,12 @@ abstract class Entity
 
             if( ( $data = $r->getData() ) && !empty($data) && is_array($data) )
             {
-                $result->setData(array_merge($result->getData(), $data));
+                $result->setData(
+                    array_merge(
+                        $result->getData(),
+                        $data
+                    )
+                );
             }
         }
 
@@ -324,7 +375,10 @@ abstract class Entity
     {
         foreach( $values as $key => $value )
         {
-            $this->setFieldNoDemand($key, $value);
+            $this->setFieldNoDemand(
+                $key,
+                $value
+            );
         }
     }
 
@@ -344,7 +398,10 @@ abstract class Entity
             throw new Main\ArgumentOutOfRangeException($name);
         }
 
-        $this->fields->init($name, $value);
+        $this->fields->init(
+            $name,
+            $value
+        );
     }
 
     /**
@@ -358,7 +415,10 @@ abstract class Entity
     {
         foreach( $values as $key => $value )
         {
-            $this->initField($key, $value);
+            $this->initField(
+                $key,
+                $value
+            );
         }
     }
 
@@ -425,7 +485,10 @@ abstract class Entity
     {
         $eventName = null;
         $className = static::getClassName();
-        $parts = explode("\\", $className);
+        $parts = explode(
+            "\\",
+            $className
+        );
 
         $first = true;
         foreach( $parts as $part )

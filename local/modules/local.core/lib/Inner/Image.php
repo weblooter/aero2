@@ -28,13 +28,25 @@ class Image extends File
 
         $ar_fields = $this->getFieldValues();
 
-        $ar_picture = \CFile::ResizeImageGet($ar_fields, [
-            'width' => $width,
-            'height' => $height,
-        ], $options, true);
+        $ar_picture = \CFile::ResizeImageGet(
+            $ar_fields,
+            [
+                'width'  => $width,
+                'height' => $height,
+            ],
+            $options,
+            true
+        );
 
         $ar_fields['FILENAME'] = basename($ar_picture['src']);
-        $ar_fields['SUBDIR'] = trim(str_replace('/'.$this->uploadDir.'/', '', dirname($ar_picture['src'])), '/');
+        $ar_fields['SUBDIR'] = trim(
+            str_replace(
+                '/'.$this->uploadDir.'/',
+                '',
+                dirname($ar_picture['src'])
+            ),
+            '/'
+        );
 
         return new self($ar_fields);
     }
@@ -57,9 +69,13 @@ class Image extends File
 
         if( $width || $height )
         {
-            $src = $this->getResizeImage($width, $height)->getSrc();
+            $src = $this->getResizeImage(
+                $width,
+                $height
+            )->getSrc();
         }
 
-        return '<img src="'.$src.'" '.( $class ? 'class="'.$class.'"' : '' ).' '.( $style ? 'style="'.$style.'"' : '' ).' '.( $alt ? 'alt="'.$alt.'"' : '' ).' '.( $title ? 'title="'.$title.'"' : '' ).' />';
+        return '<img src="'.$src.'" '.( $class ? 'class="'.$class.'"' : '' ).' '.( $style ? 'style="'.$style.'"' : '' ).' '.( $alt ? 'alt="'.$alt.'"' : '' ).' '.( $title ? 'title="'.$title.'"' : '' )
+               .' />';
     }
 }

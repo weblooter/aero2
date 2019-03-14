@@ -15,7 +15,7 @@ class HighLoadBlock
      *
      * @var array
      */
-    private static $entities       = [];
+    private static $entities = [];
     private static $entitiesTables = [];
 
     /**
@@ -40,10 +40,12 @@ class HighLoadBlock
 
         if( self::$entities[$highLoadBlockName] == null )
         {
-            $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList([
-                'filter' => ['NAME' => $highLoadBlockName],
-                'select' => ['ID']
-            ]);
+            $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList(
+                [
+                    'filter' => ['NAME' => $highLoadBlockName],
+                    'select' => ['ID']
+                ]
+            );
             $ar = $rs->fetch();
             if( empty($ar['ID']) )
             {
@@ -81,10 +83,12 @@ class HighLoadBlock
 
         if( self::$entities[$highLoadBlockTableName] == null )
         {
-            $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList([
-                'filter' => ['TABLE_NAME' => $highLoadBlockTableName],
-                'select' => ['ID']
-            ]);
+            $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList(
+                [
+                    'filter' => ['TABLE_NAME' => $highLoadBlockTableName],
+                    'select' => ['ID']
+                ]
+            );
             $ar = $rs->fetch();
             if( empty($ar['ID']) )
             {
@@ -112,10 +116,12 @@ class HighLoadBlock
 
         if( static::$entitiesTables[$highLoadBlockName] == null )
         {
-            $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList([
-                'filter' => ['NAME' => $highLoadBlockName],
-                'select' => ['TABLE_NAME']
-            ]);
+            $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList(
+                [
+                    'filter' => ['NAME' => $highLoadBlockName],
+                    'select' => ['TABLE_NAME']
+                ]
+            );
             $ar = $rs->fetch();
             if( empty($ar['TABLE_NAME']) )
             {

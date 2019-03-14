@@ -10,7 +10,7 @@ class Html extends Base
      */
     public function getEditFieldHtml()
     {
-        return ( new \CBXSanitizer )->SanitizeHtml($this->getValue());
+        return ( new \CBXSanitizer() )->SanitizeHtml($this->getValue());
     }
 
     /**
@@ -18,7 +18,7 @@ class Html extends Base
      */
     public function getViewFieldHtml()
     {
-        return ( new \CBXSanitizer )->SanitizeHtml($this->getValue());
+        return ( new \CBXSanitizer() )->SanitizeHtml($this->getValue());
     }
 
 }

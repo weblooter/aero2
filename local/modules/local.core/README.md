@@ -31,6 +31,7 @@
 ---
 ## Важная информация по ходу разработки
 + После каждого мержа смотреть в **\Local\Core\Inner\BxModified** на наличие новых классов. Создавая новый класс необходимо пройтись по проекту и применить его везде, согласовав с предидущим разработчиком. **Использовать переопределенные класса отсюда!**
++ Не, я серьзно. Мы DataManager даже расширили. Поэтому создавая **ORM** наследуйся от **\Local\Core\Inner\BxModified\Main\ORM\Data\DataManager**
 + Если ORM модуля **local.core** использует работу с **\CFile** или таблице **b_file** - дописать логику проверки в метод **getOrmFiles()**. Подробнее ниже в **\Local\Core\Inner\Fileman\Cleaner::clearUnregisteredLocalCoreFiles()**.
 + Каждый **ORM** должен содержать поля **DATE_CREATE** и **DATE_MODIFIED**.
 + Каждый **ORM**, который используется в компоненте, который кэширует результат, находящийся в области кэширования, должен иметь метод **public static function clearComponentsCache()** . Более подробно читать в **Local\Core\Model\Data**
@@ -38,98 +39,75 @@
 ---
 ## API | EASY
 
+### \Local\Core\Model и тонкости ORM
+
+Была проблема, что значения Fields\EnumField везде приходилось прописывать ручками.
+
+Решением проблемы стало унаследование от **\Local\Core\Inner\BxModified\Main\ORM\Data\DataManager**. 
+
+Там определены 2 метода:
++ **public static function getEnumFieldHtmlValues()** - получает коды значений и текст значений Fields\EnumField в формате **VALUE => TEXT** по коду поля.
++ **public static function getEnumFieldValues()** - получает только коды значений Fields\EnumField по коду поля.
+
+Для работы необходимо в описании ORM определить **public static $arEnumFieldsValues**.
+
+Пример описания:
+```php
+/** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */
+public static $arEnumFieldsValues = [
+    'RESOURCE_TYPE' => [
+        'LINK' => 'Ссылка на файл',
+        'FILE' => 'Загрузить файл',
+    ],
+    'HTTP_AUTH' => [
+        'Y' => 'Да',
+        'N' => 'Нет'
+    ]
+];
+```
+Значение для **ACTIVE** задано по умолчанию, т.к. для **Model\Data** это обязательно поле!
+
+Так же есть метод **public static function clearComponentsCache()** . Служит для скидывания кэша компонента. По умолчанию он пустой и вызывается через хэндлеры OnAfterUpdate и OnDelete (об этом ниже). При необхомости вызывается либо из-вне.
+
+Пример тела метода:
+```php
+\Local\Core\Inner\Cache::deleteComponentCache(['personal.company.list'], [ 'user_id='.$arFields['USER_OWN_ID'] ]);
+```
+
+#### \CLocalCore::getOrmFieldsTable()
+У главного класса local.core есть метод **getOrmFieldsTable()**, который позваляет сделать html структуру, описывая **getMap()**.
+
+После любого внесения изменения в **getMap()** и его логические цепочки, необходимо вызвать
+```php
+echo \CLocalCore::getOrmFieldsTable( Local\Core\Model\Data\SiteTable::class );
+```
+А получившийся текст в ставить описание класса ORM, как это сделано сейчас. Это позволит смотреть поля, их типы и варианты не залезая в код класса. Чисто для PHPDoc'a.
+
+---
+
 ### \Local\Core\Model\Data
 
-Как упоминалось выше каждый ORM должен содержать поля **DATE_CREATE** и **DATE_MODIFIED**. Это сделано для удобства контроля по датам, а так же что бы не делать 100500 ключей для этого. Их всего 2 и они называются везде одинаково. При этом если необходимо - можно делать и другие. Но эти 2 всегда должны быть.
+**ORM сущности, которые предназначены для хранение данных по другим сущностям. Данные не должны быть справочными!** 
 
-Ввижу этого каждый ORM должен содержать как минимум
-```php
-/**
- * Обновим поле DATE_MODIFIED
- *
- * @param \Bitrix\Main\ORM\Event $event
- *
- * @return \Bitrix\Main\ORM\EventResult
- * @throws \Bitrix\Main\ObjectException
- */
-public static function OnBeforeUpdate( \Bitrix\Main\ORM\Event $event )
-{
-    $arModifiedFields = [];
+К примеру в **\Local\Core\Model\Data** нужно хранить список компаний, сайтов, фидов.
 
-    /** @var \Bitrix\Main\ORM\Event $event */
-    $arFields = $event->getParameter( 'fields' );
+Каждый ORM **Model\Data** должен содержать поля **ID**, **ACTIVE**, **DATE_CREATE** и **DATE_MODIFIED**.
 
-    if ( !empty( $arFields ) )
-    {
-        $arModifiedFields[ 'DATE_MODIFIED' ] = new \Bitrix\Main\Type\DateTime();
-    }
+Так же ORM **Model\Data** должен содержать 2 обработчика и метод для инициализации сброса кэша компонента.
 
-    $arFields = array_merge( $arFields, $arModifiedFields );
-    $event->setParameter( 'fields', $arFields );
+Ввиду этого, что бы точно ничего не забыть, необходимо, создавая класс в ORM **Model\Data**, скопировать **Model\Data\BaseOrmTable** и продолжить писать уже от того, что есть.
 
-    /** @var \Bitrix\Main\ORM\EventResult $result */
-    $result = new \Bitrix\Main\ORM\EventResult;
-    $result->modifyFields( $arModifiedFields );
+---
 
-    return $result;
-}
-```
+### \Local\Core\Model\Reference
+**ORM сущности, которые являются справочниками чего либо.**
 
-Так же ORM класс должен содержать 2 обработчика и метод для инициализации сброса кэша компонента. Тело **public static function clearComponentsCache()** может быть пустым, но он обязан быть!
+К примеру справочник единиц измерения.
 
-Код ниже необходимо скопировать и вставить в ORM класс
-```php
-/**
- * Скинем кэши компонентов
- *
- * @param \Bitrix\Main\ORM\Event $event
- *
- * @throws \Bitrix\Main\ArgumentException
- * @throws \Bitrix\Main\ObjectPropertyException
- * @throws \Bitrix\Main\SystemException
- */
-public static function OnAfterUpdate( \Bitrix\Main\ORM\Event $event )
-{
-    /** @var \Bitrix\Main\ORM\Event $event */
-    $arEventParams = $event->getParameters();
-    if ( !empty( $arEventParams[ 'primary' ][ 'ID' ] ) )
-    {
-        $ar = self::getById( $arEventParams[ 'primary' ][ 'ID' ] )->fetchRaw();
-        self::clearComponentsCache( $ar );
-    }
-}
+Каждый ORM **Model\Reference** должен содержать поля **ID**, **DATE_CREATE** и **DATE_MODIFIED**.
 
-/**
- * Скинем кэши компонентов
- *
- * @param \Bitrix\Main\ORM\Event $event
- *
- * @throws \Bitrix\Main\ArgumentException
- * @throws \Bitrix\Main\ObjectPropertyException
- * @throws \Bitrix\Main\SystemException
- */
-public static function OnDelete( \Bitrix\Main\ORM\Event $event )
-{
-    /** @var \Bitrix\Main\ORM\Event $event */
-    $arEventParams = $event->getParameters();
-    if ( !empty( $arEventParams[ 'primary' ][ 'ID' ] ) )
-    {
-        $ar = self::getById( $arEventParams[ 'primary' ][ 'ID' ] )->fetchRaw();
-        self::clearComponentsCache( $ar );
-    }
-}
+Создавая справочник в ORM **Model\Reference** следует так же скопировать **Model\Reference\BaseOrmTable** и продолжить писать уже от того, что есть.
 
-/**
- * Метод чистит кэши компонентов, в которых используется данный класс ORM
- *
- * @param $arFields
- */
-public static function clearComponentsCache( $arFields )
-{
-    \Local\Core\Inner\Cache::deleteComponentCache( ['personal.company.list'], ['user_id='.$arFields[ 'USER_OWN_ID' ]] );
-    \Local\Core\Inner\Cache::deleteComponentCache( ['personal.company.detail'], ['company_id='.$arFields[ 'ID' ]] );
-}
-```
 ---
 
 ### \Local\Core\Inner\Cache
@@ -261,33 +239,67 @@ private static function registerMain()
 
 ---
 ### \Local\Core\Inner\Route
-Класс рассчитан на создание путей по единому шаблону. Для корректной работы в корне сайта требуется создать файл **localroutes.php** и объявить внутри массив **$arLocalRoutes**. 
+Класс рассчитан на работу с путями по единому шаблону. 
+Для корректной работы в корне сайта требуется создать файл **.routerewrite.php** и объявить внутри массив **$arLocalRoutes**. 
 ##### Структура массива и пример его реализации: 
 ```php
 $arLocalRoutes = [
-  'company' => [
-    'list' => '/personal/company/',
-    'add' => '/personal/company/add/',
-    'edit' => '/personal/company/#COMPANY_ID#/edit/',
-    'delete' => '/personal/company/#COMPANY_ID#/delete/',
-  ],
+    'company' => [
+        'list'   => [
+            'URL'         => '/personal/company/',
+            'BREADCRUMBS' => function($arParams = [])
+                {
+                    $GLOBALS['APPLICATION']->AddChainItem(
+                        "Мои компании",
+                        \Local\Core\Inner\Route::getRouteTo(
+                            'company',
+                            'list'
+                        )
+                    );
+                }
+        ],
+        'edit'   => [
+            'URL'         => '/personal/company/#COMPANY_ID#/edit/',
+            'BREADCRUMBS' => function($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs(
+                        'company',
+                        'list'
+                    );
+                    $GLOBALS['APPLICATION']->AddChainItem('Редактирование компании '.\Local\Core\Inner\Company\Base::getCompanyName($arParams['COMPANY_ID']));
+                }
+        ],
+    ]
 ];
 ```
-Говоря проще заполняется он следующим образом:
-```php
-$arLocalRoutes = [
-  'Ключи какого либо роута. Как правило равен началу ветки урла' => [
-    'Действие, примеру список list' => 'URI, к примеру /example/list/',
-    'Действие, к примеру редактирование' => 'URI с плейсхолдером, к примеру /example/#ID#/edit/',
-  ],
-];
-```
-##### Вызов
+В данном примере **company** - это ключ **$strDirectory**, **list** - **$strAction**.
+Экшен - массив со следующими ключами:
++ URL - нужен для **getRouteTo()**, записывается урл, возможно размещение плэйсхолдера.
++ BREADCRUMBS - каллбек функция, нужна для **fillRouteBreadcrumbs()**, имеет параметр **$arParams**, в который передаютс параметры. В этой функции происходит построение цепочтки навигации. Предпочтительно использовать анонимные функции.
+
+##### \Local\Core\Inner\Route::getRouteTo
+Возвращает путь по роуту, заменяя плейсхолдеры.
+
 Пример вызова с заменой плейсхолдеров из структуры выше:
 ```php
+\Local\Core\Inner\Route::getRouteTo('company','list');
+// /personal/company/
+
+
 \Local\Core\Inner\Route::getRouteTo('company','edit', ['#COMPANY_ID#' => 12]);
-// Вернет строку /personal/company/12/edit/
+// /personal/company/12/edit/
 ```
+
+##### \Local\Core\Inner\Route::fillRouteBreadcrumbs
+Заполняет breadcrumbs по роуту.
+
+Пример вызова:
+```php
+\Local\Core\Inner\Route::fillRouteBreadcrumbs('company', 'list');
+
+\Local\Core\Inner\Route::fillRouteBreadcrumbs('company', 'edit', ['COMPANY_ID' => $arParams['COMPANY_ID']]);
+```
+Предполагается вызывать его из **component_epilog.php**
 
 ---
 ## API | MEDIUM

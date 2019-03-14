@@ -27,12 +27,26 @@ class StepCounter extends Command
      */
     protected function configure(): void
     {
-        $this->setName('kd:step-counter')->setDescription('Счетчик')->setHelp("Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kdd:stepcounter --help")->addArgument('start', InputArgument::REQUIRED, 'Начать с')->addArgument('step', InputArgument::REQUIRED, 'С шагом')->addArgument('iterations', InputArgument::REQUIRED, 'Количество повторений');
+        $this->setName('kd:step-counter')->setDescription('Счетчик')->setHelp(
+                "Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kdd:stepcounter --help"
+            )->addArgument(
+                'start',
+                InputArgument::REQUIRED,
+                'Начать с'
+            )->addArgument(
+                'step',
+                InputArgument::REQUIRED,
+                'С шагом'
+            )->addArgument(
+                'iterations',
+                InputArgument::REQUIRED,
+                'Количество повторений'
+            );
     }
 
     /**
      * Бизнесс-логика
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output): void

@@ -12,11 +12,17 @@ class Select extends Base
     public function getEditFieldHtml()
     {
         $variants = [
-            "reference" => array_values($this->variants),
+            "reference"    => array_values($this->variants),
             "reference_id" => array_keys($this->variants),
         ];
 
-        return SelectBoxFromArray($this->getCode(), $variants, $this->getValue(), "Не выбрано", "");
+        return SelectBoxFromArray(
+            $this->getCode(),
+            $variants,
+            $this->getValue(),
+            "Не выбрано",
+            ""
+        );
     }
 
     /**

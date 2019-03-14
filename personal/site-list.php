@@ -1,9 +1,12 @@
 <?
-require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID');
 
 $APPLICATION->SetTitle("Список сайтов");
-$APPLICATION->SetPageProperty('title', "Список сайтов");
+$APPLICATION->SetPageProperty(
+    'title',
+    "Список сайтов"
+);
 ?>
 <?
 $GLOBALS['APPLICATION']->IncludeComponent(
@@ -15,4 +18,4 @@ $GLOBALS['APPLICATION']->IncludeComponent(
     ]
 );
 ?>
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+<? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>

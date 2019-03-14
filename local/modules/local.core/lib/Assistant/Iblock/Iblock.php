@@ -30,15 +30,17 @@ class Iblock
 
         if( !isset($arStorage[$iblockTypeId][$iblockCode]) )
         {
-            $data = IblockTable::getList([
-                "select" => ["ID"],
-                "filter" => [
-                    "=IBLOCK_TYPE_ID" => $iblockTypeId,
-                    "=CODE" => $iblockCode,
-                ],
-                "limit" => 1,
-                "cache" => ["ttl" => 86400]
-            ])->fetch();
+            $data = IblockTable::getList(
+                [
+                    "select" => ["ID"],
+                    "filter" => [
+                        "=IBLOCK_TYPE_ID" => $iblockTypeId,
+                        "=CODE"           => $iblockCode,
+                    ],
+                    "limit"  => 1,
+                    "cache"  => ["ttl" => 86400]
+                ]
+            )->fetch();
 
             $arStorage[$iblockTypeId][$iblockCode] = $data["ID"] ?? null;
         }

@@ -3,6 +3,8 @@
 namespace Local\Core\Inner\AdminHelper\Data\Company;
 
 
+use Local\Core\Model\Data\CompanyTable;
+
 /**
  * Class AdminList
  * @package Local\Core\Inner\AdminHelper\Data\Company
@@ -10,21 +12,11 @@ namespace Local\Core\Inner\AdminHelper\Data\Company;
 class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
 {
 
-    const ADMIN_ENTITY_VALUE = "data_company";
+    const ADMIN_ENTITY_VALUE = "model_data_company";
     const ADMIN_ACTION_VALUE = "list";
 
-    static $fields          = [];
-    static $currencies      = [];
-    static $approved_values = [
-        "N" => "Ожидается проверка",
-        "E" => "Проверка не пройдена",
-        "Y" => "Проверка пройдена"
-    ];
-    static $verified_values = [
-        "N" => "Ожидается проверка",
-        "E" => "Проверка не пройдена",
-        "Y" => "Проверка пройдена"
-    ];
+    static $fields = [];
+    static $currencies = [];
 
     /**
      * Ссылка в админку с учётом прав
@@ -38,17 +30,21 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     public function getAdminUri(string $operation = "menuVisible"): \Bitrix\Main\Result
     {
-        $result = new \Bitrix\Main\Result;
+        $result = new \Bitrix\Main\Result();
 
         $check = $this->checkRights($operation);
         if( $check->isSuccess() )
         {
-            $result->setData([
-                "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                ]),
-            ]);
+            $result->setData(
+                [
+                    "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
+                        [
+                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+                        ]
+                    ),
+                ]
+            );
         }
         else
         {
@@ -92,7 +88,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getTableListId()
     {
-        return \str_replace(["\\"], ["_"], __CLASS__);
+        return \str_replace(
+            ["\\"],
+            ["_"],
+            __CLASS__
+        );
     }
 
     /**
@@ -102,14 +102,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $buttons = [];
 
-        if( $this->checkRights("can_add")->isSuccess() )
+        if(
+        $this->checkRights("can_add")->isSuccess()
+        )
         {
             $buttons = [
                 [
-                    "TEXT" => "Добавить",
-                    "LINK" => $this->getEditLink(),
+                    "TEXT"  => "Добавить",
+                    "LINK"  => $this->getEditLink(),
                     "TITLE" => "Добавить компанию",
-                    "ICON" => "btn_new",
+                    "ICON"  => "btn_new",
                 ],
             ];
         }
@@ -123,68 +125,65 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getFilterSearchFields()
     {
         return [
-            "ID" => [
+            "ID"                      => [
                 "NAME" => self::$fields["ID"],
                 "TYPE" => "TEXT",
             ],
-            "ACTIVE" => [
-                "NAME" => self::$fields["ACTIVE"],
-                "TYPE" => "SELECT",
-                "VARIANTS" => [
-                    "Y" => "Да",
-                    "N" => "Нет",
-                ]
+            "ACTIVE"                  => [
+                "NAME"     => self::$fields["ACTIVE"],
+                "TYPE"     => "SELECT",
+                "VARIANTS" => CompanyTable::getEnumFieldHtmlValues('ACTIVE')
             ],
-            "USER_OWN_ID" => [
+            "USER_OWN_ID"             => [
                 "NAME" => self::$fields["USER_OWN_ID"],
                 "TYPE" => "TEXT",
             ],
-            "DATE_CREATE" => [
+            "DATE_CREATE"             => [
                 "NAME" => self::$fields["DATE_CREATE"],
                 "TYPE" => "DATE_PERIOD",
             ],
-            "DATE_MODIFIED" => [
+            "DATE_MODIFIED"           => [
                 "NAME" => self::$fields["DATE_MODIFIED"],
                 "TYPE" => "DATE_PERIOD",
             ],
-            "VERIFIED" => [
-                "NAME" => self::$fields["VERIFIED"],
-                "TYPE" => "SELECT",
-                "VARIANTS" => self::$verified_values
+            "VERIFIED"                => [
+                "NAME"     => self::$fields["VERIFIED"],
+                "TYPE"     => "SELECT",
+                "VARIANTS" => CompanyTable::getEnumFieldHtmlValues('VERIFIED')
             ],
-            "COMPANY_INN" => [
+            "COMPANY_INN"             => [
                 "NAME" => self::$fields["COMPANY_INN"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_NAME_SHORT" => [
+            "COMPANY_NAME_SHORT"      => [
                 "NAME" => self::$fields["COMPANY_NAME_SHORT"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_NAME_FULL" => [
+            "COMPANY_NAME_FULL"       => [
                 "NAME" => self::$fields["COMPANY_NAME_FULL"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_OGRN" => [
+            "COMPANY_OGRN"            => [
                 "NAME" => self::$fields["COMPANY_OGRN"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_KPP" => [
+            "COMPANY_KPP"             => [
                 "NAME" => self::$fields["COMPANY_KPP"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_OKPO" => [
+            "COMPANY_OKPO"            => [
                 "NAME" => self::$fields["COMPANY_OKPO"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_OKTMO" => [
+            "COMPANY_OKTMO"           => [
                 "NAME" => self::$fields["COMPANY_OKTMO"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_DIRECTOR" => [
+            "COMPANY_DIRECTOR"        => [
                 "NAME" => self::$fields["COMPANY_DIRECTOR"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ACCOUNTANT" => [
+            "COMPANY_ACCOUNTANT"      => [
                 "NAME" => self::$fields["COMPANY_ACCOUNTANT"],
                 "TYPE" => "TEXT",
             ],
@@ -192,15 +191,15 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "NAME" => self::$fields["COMPANY_ADDRESS_COUNTRY"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_REGION" => [
+            "COMPANY_ADDRESS_REGION"  => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_REGION"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_AREA" => [
+            "COMPANY_ADDRESS_AREA"    => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_AREA"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_CITY" => [
+            "COMPANY_ADDRESS_CITY"    => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_CITY"],
                 "TYPE" => "TEXT",
             ],
@@ -208,11 +207,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "NAME" => self::$fields["COMPANY_ADDRESS_ADDRESS"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_OFFICE" => [
+            "COMPANY_ADDRESS_OFFICE"  => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_OFFICE"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_ZIP" => [
+            "COMPANY_ADDRESS_ZIP"     => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_ZIP"],
                 "TYPE" => "TEXT",
             ],
@@ -259,14 +258,24 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                         break;
 
                     case "VERIFIED":
-                        if( isset(self::$verified_values[$value]) )
+                        if(
+                            in_array(
+                                $value,
+                                CompanyTable::getEnumFieldValues('VERIFIED')
+                            )
+                        )
                         {
                             $arFilter["=".$code] = trim($value);
                         }
                         break;
 
                     case "ACTIVE":
-                        if( in_array($value, ['Y', 'N']) )
+                        if(
+                            in_array(
+                                $value,
+                                CompanyTable::getEnumFieldValues('ACTIVE')
+                            )
+                        )
                         {
                             $arFilter["=".$code] = trim($value);
                         }
@@ -297,13 +306,31 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getList()
     {
-        return \Local\Core\Model\Data\CompanyTable::getlist([
-            "select" => [
-                "*",
-            ],
-            "filter" => $this->filterList,
-            "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
-        ]);
+        //        return \Local\Core\Model\Data\CompanyTable::getlist([
+        //            "select" => [
+        //                "*",
+        //            ],
+        //            "filter" => $this->filterList,
+        //            "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
+        //        ]);
+        return \Local\Core\Model\Data\CompanyTable::getlist(
+            [
+                "select"  => [
+                    "*",
+                    'OWN_DATA_' => 'OWN'
+                ],
+                "filter"  => $this->filterList,
+                "order"   => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
+                'runtime' => [
+                    new \Bitrix\Main\ORM\Fields\Relations\Reference(
+                        'OWN', \Bitrix\Main\UserTable::class, \Bitrix\Main\ORM\Query\Join::on(
+                        'this.USER_OWN_ID',
+                        'ref.ID'
+                    )
+                    )
+                ]
+            ]
+        );
     }
 
     /**
@@ -316,9 +343,9 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         foreach( self::$fields as $columnCode => $columnName )
         {
             $columns[] = [
-                "id" => $columnCode,
+                "id"      => $columnCode,
                 "content" => $columnName,
-                "sort" => $columnCode,
+                "sort"    => $columnCode,
                 "default" => $columnCode == "ID",
             ];
         }
@@ -333,21 +360,21 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
 
 
+        $row->AddViewField(
+            "ID",
+            '<a href="'.$this->getEditLink($fields).'">'.$fields["ID"].'</a>'
+        );
         $row->AddCheckField("ACTIVE");
 
-        $row->AddInputField("USER_OWN_ID", ['size' => 20]);
-        $row->AddViewField("VERIFIED", ( self::$verified_values[$fields["VERIFIED"]] ? : "Ошибка: Неизвестный статус" ));
-        $row->AddSelectField("VERIFIED", self::$verified_values);
-
-        $row->AddInputField("COMPANY_INN", ['size' => 20]);
-        $row->AddInputField("COMPANY_NAME_SHORT", ['size' => 20]);
-        $row->AddInputField("COMPANY_NAME_FULL", ['size' => 20]);
-        $row->AddInputField("COMPANY_OGRN", ['size' => 20]);
-        $row->AddInputField("COMPANY_KPP", ['size' => 20]);
-        $row->AddInputField("COMPANY_OKPO", ['size' => 20]);
-        $row->AddInputField("COMPANY_OKTMO", ['size' => 20]);
-        $row->AddInputField("COMPANY_DIRECTOR", ['size' => 20]);
-        $row->AddInputField("COMPANY_ACCOUNTANT", ['size' => 20]);
+        $row->AddViewField(
+            "USER_OWN_ID",
+            '<a href="/bitrix/admin/user_edit.php?lang=ru&ID='.$fields["USER_OWN_ID"].'" target="_blank">['.$fields["USER_OWN_ID"].'] '.$fields['OWN_DATA_LAST_NAME'].' '.$fields['OWN_DATA_NAME']
+            .'</a>'
+        );
+        $row->AddViewField(
+            "VERIFIED",
+            CompanyTable::getEnumFieldHtmlValues('VERIFIED')[ $fields["VERIFIED"] ]
+        );
     }
 
     /**
@@ -357,22 +384,30 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $actions = [];
 
-        if( $this->checkRights("can_edit")->isSuccess() )
+        if(
+        $this->checkRights("can_edit")->isSuccess()
+        )
         {
             $actions[] = [
-                "ICON" => "edit",
-                "TEXT" => "Редактировать",
+                "ICON"   => "edit",
+                "TEXT"   => "Редактировать",
                 "ACTION" => $this->CAdminList->ActionRedirect($this->getEditLink($fields)),
             ];
         }
 
-        if( $this->checkRights("can_delete")->isSuccess() )
+        if(
+        $this->checkRights("can_delete")->isSuccess()
+        )
         {
             $addParams = \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY."=".self::ADMIN_ENTITY_VALUE."&".\Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION."=".self::ADMIN_ACTION_VALUE;
             $actions[] = [
-                "ICON" => "delete",
-                "TEXT" => "Удалить",
-                "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup($fields["ID"], "delete", $addParams)
+                "ICON"   => "delete",
+                "TEXT"   => "Удалить",
+                "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup(
+                        $fields["ID"],
+                        "delete",
+                        $addParams
+                    )
             ];
         }
 
@@ -386,12 +421,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $actions = [];
 
-        if( $this->checkRights("can_delete")->isSuccess() )
+        if(
+        $this->checkRights("can_delete")->isSuccess()
+        )
         {
             $actions["delete"] = "Удалить";
         }
 
-        if( $this->checkRights("can_edit")->isSuccess() )
+        if(
+        $this->checkRights("can_edit")->isSuccess()
+        )
         {
             $actions["edit"] = "Редактировать";
         }
@@ -404,7 +443,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function editAction($id, $fields)
     {
-        $result = new \Bitrix\Main\Result;
+        $result = new \Bitrix\Main\Result();
         $checkRights = $this->checkRights("can_edit");
 
         if( $checkRights->isSuccess() )
@@ -412,21 +451,14 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             try
             {
                 $arFields = [
-                    "ACTIVE" => $fields["ACTIVE"] ?? "N",
-                    "USER_OWN_ID" => trim($fields['USER_OWN_ID']),
+                    "ACTIVE"   => $fields["ACTIVE"] ?? "N",
                     "VERIFIED" => $fields["VERIFIED"] ?? "N",
-                    "COMPANY_INN" => trim($fields['COMPANY_INN']),
-                    "COMPANY_NAME_SHORT" => trim($fields['COMPANY_NAME_SHORT']),
-                    "COMPANY_NAME_FULL" => trim($fields['COMPANY_NAME_FULL']),
-                    "COMPANY_OGRN" => trim($fields['COMPANY_OGRN']),
-                    "COMPANY_KPP" => trim($fields['COMPANY_KPP']),
-                    "COMPANY_OKPO" => trim($fields['COMPANY_OKPO']),
-                    "COMPANY_OKTMO" => trim($fields['COMPANY_OKTMO']),
-                    "COMPANY_DIRECTOR" => trim($fields['COMPANY_DIRECTOR']),
-                    "COMPANY_ACCOUNTANT" => trim($fields['COMPANY_ACCOUNTANT']),
                 ];
 
-                $res = \Local\Core\Model\Data\CompanyTable::update($id, $arFields);
+                $res = \Local\Core\Model\Data\CompanyTable::update(
+                    $id,
+                    $arFields
+                );
                 if( !$res->isSuccess() )
                 {
                     $result->addErrors($res->getErrors());
@@ -455,7 +487,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function deleteAction($id)
     {
-        $result = new \Bitrix\Main\Result;
+        $result = new \Bitrix\Main\Result();
         $checkRights = $this->checkRights("can_delete");
 
         if( $checkRights->isSuccess() )
@@ -486,13 +518,15 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     /**
      * {@inheritdoc}
      */
-    protected function getEditLink($fields = [])
+    public function getEditLink($fields = [])
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
-            "id" => $fields["ID"],
-        ]);
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
+            [
+                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
+                "id"                                                   => $fields["ID"],
+            ]
+        );
     }
 
     /**
@@ -500,10 +534,12 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getFilterUri(array $arData = []): string
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-        ]);
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
+            [
+                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+            ]
+        );
     }
 
     /**
@@ -511,10 +547,12 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getSortUri(): string
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-        ]);
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
+            [
+                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+            ]
+        );
     }
 
     /**
@@ -524,6 +562,8 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         foreach( \Local\Core\Model\Data\CompanyTable::getMap() ?? [] as $column )
         {
+            $GLOBALS['APPLICATION']->SetTitle('Компании');
+
             if( $column instanceof \Bitrix\Main\ORM\Fields\ScalarField )
             {
                 self::$fields[$column->getColumnName()] = $column->getTitle();

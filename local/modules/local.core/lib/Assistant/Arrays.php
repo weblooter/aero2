@@ -16,10 +16,18 @@ class Arrays
      */
     public static function clearKeyTilda(array &$array)
     {
-        $array = array_filter($array, function($k)
-            {
-                return substr($k, 0, 1) != '~';
-            }, ARRAY_FILTER_USE_KEY);
+        $array = array_filter(
+            $array,
+            function($k)
+                {
+                    return substr(
+                               $k,
+                               0,
+                               1
+                           ) != '~';
+                },
+            ARRAY_FILTER_USE_KEY
+        );
     }
 
     /**
@@ -39,7 +47,16 @@ class Arrays
 
         ksort($data);
 
-        return implode(':', array_keys($data)).'|'.implode(':', array_map(array(self, 'dump'), $data));
+        return implode(
+                   ':',
+                   array_keys($data)
+               ).'|'.implode(
+                   ':',
+                   array_map(
+                       array(self, 'dump'),
+                       $data
+                   )
+               );
     }
 
     /**
@@ -58,9 +75,12 @@ class Arrays
                 $res[$key] = self::recursive_htmlspecialcharsbx($val);
             }
         }
-        else if( is_string($res) )
+        else
         {
-            $res = htmlspecialcharsbx($res);
+            if( is_string($res) )
+            {
+                $res = htmlspecialcharsbx($res);
+            }
         }
         return $res;
     }

@@ -12,11 +12,17 @@ class SelectMultiple extends Base
     public function getEditFieldHtml()
     {
         $variants = [
-            "reference" => array_values($this->variants),
+            "reference"    => array_values($this->variants),
             "reference_id" => array_keys($this->variants),
         ];
 
-        return SelectBoxMFromArray($this->getCode()."[]", $variants, $this->getValue(), "", "");
+        return SelectBoxMFromArray(
+            $this->getCode()."[]",
+            $variants,
+            $this->getValue(),
+            "",
+            ""
+        );
     }
 
     /**

@@ -30,7 +30,10 @@ class CBitrixComponent extends \CBitrixComponent
     {
         $isSuccessAccess = true;
 
-        switch( \Local\Core\Inner\Company\Base::checkUserAccess($intCompanyId, $intUserId) )
+        switch( \Local\Core\Inner\Company\Base::checkUserAccess(
+            $intCompanyId,
+            $intUserId
+        ) )
         {
             case \Local\Core\Inner\Company\Base::ACCESS_COMPANY_NOT_FOUND:
             case \Local\Core\Inner\Company\Base::ACCESS_COMPANY_NOT_MINE:
@@ -63,7 +66,10 @@ class CBitrixComponent extends \CBitrixComponent
     {
         $isSuccessAccess = true;
 
-        switch( \Local\Core\Inner\Site\Base::checkUserAccess($intSiteId, $intUserId) )
+        switch( \Local\Core\Inner\Site\Base::checkUserAccess(
+            $intSiteId,
+            $intUserId
+        ) )
         {
             case \Local\Core\Inner\Site\Base::ACCESS_SITE_NOT_FOUND:
             case \Local\Core\Inner\Site\Base::ACCESS_SITE_NOT_MINE:
@@ -89,6 +95,12 @@ class CBitrixComponent extends \CBitrixComponent
     protected function _show404Page($strMessage = '')
     {
         \Bitrix\Main\Loader::includeModule('iblock');
-        \Bitrix\Iblock\Component\Tools::process404($strMessage, true, true, true, "");
+        \Bitrix\Iblock\Component\Tools::process404(
+            $strMessage,
+            true,
+            true,
+            true,
+            ""
+        );
     }
 }

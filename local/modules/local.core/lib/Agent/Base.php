@@ -11,43 +11,65 @@ abstract class Base
     {
         try
         {
-            static::execute(...func_get_args());
+            static::execute(
+                ...
+                func_get_args()
+            );
         }
         catch( \Throwable $e )
         {
             \Local\Core\Assistant\Throwable::registerShutdown($e);
         }
 
-        return static::return(...func_get_args());
+        return static::return(
+            ...
+            func_get_args()
+        );
     }
 
     static function return()
     {
         $arParams = func_get_args();
         $strParams = '';
-        $arParams = array_map(function($val)
-            {
-                if( is_scalar($val) )
+        $arParams = array_map(
+            function($val)
                 {
-                    if( is_string($val) )
+                    if( is_scalar($val) )
                     {
-                        $val = '\''.str_replace(['\\', '\''], ['\\\\', '\\\''], $val).'\'';
+                        if( is_string($val) )
+                        {
+                            $val = '\''.str_replace(
+                                    ['\\', '\''],
+                                    ['\\\\', '\\\''],
+                                    $val
+                                ).'\'';
+                        }
+                        else
+                        {
+                            if( is_bool($val) )
+                            {
+                                $val = ( $val ) ? 'true' : 'false';
+                            }
+                        }
+                        return $val;
                     }
-                    else if( is_bool($val) )
+                    else
                     {
-                        $val = ( $val ) ? 'true' : 'false';
+                        return null;
                     }
-                    return $val;
-                }
-                else
-                {
-                    return null;
-                }
-            }, $arParams);
-        $arParams = array_diff($arParams, [null]);
+                },
+            $arParams
+        );
+        $arParams = array_diff(
+            $arParams,
+            [null]
+        );
         if( !empty($arParams) )
         {
-            $strParams = implode(", ", $arParams);
+            $strParams = implode(
+                ", ",
+                $arParams
+            );
         }
         return static::class.'::init('.$strParams.');';
     }

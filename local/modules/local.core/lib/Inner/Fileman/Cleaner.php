@@ -37,7 +37,13 @@ class Cleaner
         self::$__arFinedRegisteredFiles = self::__getFilesFromCFile();
 
         // Проверим файловую структуру с b_file и удалим левые файлы
-        self::__checkAndClearDirFiles(\Bitrix\Main\Application::getDocumentRoot().'/'.\Bitrix\Main\Config\Option::get('main', 'upload_dir', 'upload'));
+        self::__checkAndClearDirFiles(
+            \Bitrix\Main\Application::getDocumentRoot().'/'.\Bitrix\Main\Config\Option::get(
+                'main',
+                'upload_dir',
+                'upload'
+            )
+        );
 
         // Пройдемся по ORM файлам
         self::$__arFinedRegisteredFiles = array_keys(self::$__arFinedRegisteredFiles);
@@ -53,7 +59,10 @@ class Cleaner
      */
     private static function __getFilesFromCFile()
     {
-        $rs = CFile::GetList([], ['MODULE_ID' => 'local.core']);
+        $rs = CFile::GetList(
+            [],
+            ['MODULE_ID' => 'local.core']
+        );
         $arReturn = [];
         while( $ar = $rs->Fetch() )
         {
@@ -83,8 +92,23 @@ class Cleaner
                 }
                 else
                 {
-                    $hashFile = md5(str_replace(\Bitrix\Main\Application::getDocumentRoot().'/'.\Bitrix\Main\Config\Option::get('main', 'upload_dir', 'upload'), '', $strFile));
-                    if( !in_array($hashFile, self::$__arFinedRegisteredFiles) )
+                    $hashFile = md5(
+                        str_replace(
+                            \Bitrix\Main\Application::getDocumentRoot().'/'.\Bitrix\Main\Config\Option::get(
+                                'main',
+                                'upload_dir',
+                                'upload'
+                            ),
+                            '',
+                            $strFile
+                        )
+                    );
+                    if(
+                    !in_array(
+                        $hashFile,
+                        self::$__arFinedRegisteredFiles
+                    )
+                    )
                     {
                         /*
                          * Файл есть в файловой структуре, но не занесем в базу. Удаляем
@@ -105,7 +129,12 @@ class Cleaner
     {
         foreach( self::$__arOrmWithFiles as $strClassName )
         {
-            if( method_exists($strClassName, 'getOrmFiles') )
+            if(
+            method_exists(
+                $strClassName,
+                'getOrmFiles'
+            )
+            )
             {
                 /** @var \Bitrix\Main\ORM\Query\Result $obResult */
                 $obResult = $strClassName::getOrmFiles();
@@ -115,7 +144,10 @@ class Cleaner
                     {
                         $arFilesIdList = array_values($ar);
 
-                        self::$__arFinedRegisteredFiles = array_diff(self::$__arFinedRegisteredFiles, $arFilesIdList);
+                        self::$__arFinedRegisteredFiles = array_diff(
+                            self::$__arFinedRegisteredFiles,
+                            $arFilesIdList
+                        );
                     }
                 }
             }

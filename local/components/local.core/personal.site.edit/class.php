@@ -3,14 +3,23 @@
 class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public $intMaxUploadXMLFileSizeMb;
+    public $intMaxDownloadXMLFileSizeMb;
 
     public function executeComponent()
     {
-        $this->_checkCompanyAccess($this->arParams['COMPANY_ID'], $GLOBALS['USER']->GetID());
+        $this->_checkCompanyAccess(
+            $this->arParams['COMPANY_ID'],
+            $GLOBALS['USER']->GetID()
+        );
 
-        $this->_checkSiteAccess($this->arParams['SITE_ID'], $GLOBALS['USER']->GetID());
+        $this->_checkSiteAccess(
+            $this->arParams['SITE_ID'],
+            $GLOBALS['USER']->GetID()
+        );
 
         $this->intMaxUploadXMLFileSizeMb = \Bitrix\Main\Config\Configuration::getInstance()->get('site')['upload_xml']['max_size_mb'] ?? 100;
+
+        $this->intMaxDownloadXMLFileSizeMb = \Bitrix\Main\Config\Configuration::getInstance()->get('site')['download_xml']['max_size_mb'] ?? 300;
 
         $this->__tryUpdate();
 
@@ -19,14 +28,14 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
         $this->includeComponentTemplate();
     }
 
-    public function onPrepareComponentParams( $arParams )
+    public function onPrepareComponentParams($arParams)
     {
-        if ( $arParams[ 'COMPANY_ID' ] < 1 )
+        if( $arParams['COMPANY_ID'] < 1 )
         {
             $this->_show404Page();
         }
 
-        if ( $arParams[ 'SITE_ID' ] < 1 )
+        if( $arParams['SITE_ID'] < 1 )
         {
             $this->_show404Page();
         }
@@ -36,15 +45,19 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
 
     private function __tryUpdate()
     {
-        if( !empty(\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getPost('SITE_FIELD')) && check_bitrix_sessid() )
+        if(
+            !empty(
+            \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getPost('SITE_FIELD')
+            )
+            && check_bitrix_sessid()
+        )
         {
             $arFields = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getPost('SITE_FIELD');
 
-            $arAddFields = [];
-            $arAddFields['DOMAIN'] = $arFields['DOMAIN'];
-            $arAddFields['RESOURCE_TYPE'] = $arFields['RESOURCE_TYPE'];
-            $arAddFields['COMPANY_ID'] = $this->arParams['COMPANY_ID'];
-
+            $arUpdateFields = [];
+            $arUpdateFields['DOMAIN'] = $arFields['DOMAIN'];
+            $arUpdateFields['RESOURCE_TYPE'] = $arFields['RESOURCE_TYPE'];
+            $arUpdateFields['COMPANY_ID'] = $this->arParams['COMPANY_ID'];
 
             try
             {
@@ -52,43 +65,74 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                 {
                     case 'LINK':
 
-                        $arAddFields['FILE_LINK'] = $arFields['FILE_LINK'];
+                        $arUpdateFields['FILE_LINK'] = $arFields['FILE_LINK'];
 
                         if( $arFields['HTTP_AUTH'] == 'Y' )
                         {
-                            $arAddFields['HTTP_AUTH'] = $arFields['HTTP_AUTH'];
-                            $arAddFields['HTTP_AUTH_LOGIN'] = $arFields['HTTP_AUTH_LOGIN'];
-                            $arAddFields['HTTP_AUTH_PASS'] = $arFields['HTTP_AUTH_PASS'];
+                            $arUpdateFields['HTTP_AUTH'] = $arFields['HTTP_AUTH'];
+                            $arUpdateFields['HTTP_AUTH_LOGIN'] = $arFields['HTTP_AUTH_LOGIN'];
+                            $arUpdateFields['HTTP_AUTH_PASS'] = $arFields['HTTP_AUTH_PASS'];
+                        }
+                        else
+                        {
+                            $arUpdateFields['HTTP_AUTH'] = 'N';
+                            $arUpdateFields['HTTP_AUTH_LOGIN'] = '';
+                            $arUpdateFields['HTTP_AUTH_PASS'] = '';
                         }
 
                         break;
 
                     case 'FILE': // Загрузить файл
 
-                        if( empty(\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD')['name']['FILE']) )
+                        if(
+                        empty(
+                        \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD')['name']['FILE']
+                        )
+                        )
                         {
                             throw new \Exception('Вы не выбрали файл');
                         }
 
-                        $arFile = array_combine(array_keys(\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD')), array_column(\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD'), 'FILE'));
+                        $arFile = array_combine(
+                            array_keys(
+                                \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD')
+                            ),
+                            array_column(
+                                \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD'),
+                                'FILE'
+                            )
+                        );
 
-                        if( !\Local\Core\Inner\BxModified\CFile::checkExtension($arFile, '.xml') )
+                        if(
+                        !\Local\Core\Inner\BxModified\CFile::checkExtension(
+                            $arFile,
+                            '.xml'
+                        )
+                        )
                         {
                             throw new \Exception('Файл должен быть XML');
                         }
 
-                        if( round(( $arFile['size'] / 1000 / 1000 ), 3) > $this->intMaxUploadXMLFileSizeMb )
+                        if(
+                            round(
+                                ( $arFile['size'] / 1000 / 1000 ),
+                                3
+                            ) > $this->intMaxUploadXMLFileSizeMb
+                        )
                         {
                             throw new \Exception('Максимальный размер файла - '.$this->intMaxUploadXMLFileSizeMb.'Мб');
                         }
 
-                        $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile($arFile, '/personal.site/xml/');
+                        $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile(
+                            $arFile,
+                            '/personal.site/xml/'
+                        );
                         if( $intFileSave < 1 )
                         {
                             throw new \Exception('Не удалось сохранить файл');
                         }
 
-                        $arAddFields['FILE_ID'] = $intFileSave;
+                        $arUpdateFields['FILE_ID'] = $intFileSave;
 
                         break;
                 }
@@ -100,7 +144,10 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
             }
 
             /** @var \Bitrix\Main\ORM\Data\AddResult $obRes */
-            $obRes = \Local\Core\Model\Data\SiteTable::update($this->arParams['SITE_ID'], $arAddFields);
+            $obRes = \Local\Core\Model\Data\SiteTable::update(
+                $this->arParams['SITE_ID'],
+                $arUpdateFields
+            );
             if( $obRes->isSuccess() )
             {
                 $this->arResult['UPDATE_STATUS'] = 'SUCCESS';
@@ -125,7 +172,7 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
             {
                 $this->arResult['FIELDS'][$obField->getColumnName()] = [
                     'IS_REQUIRED' => $obField->isRequired(),
-                    'VALUE' => $arDefaultValues[ $obField->getColumnName() ]
+                    'VALUE'       => $arDefaultValues[$obField->getColumnName()]
                 ];
             }
         }

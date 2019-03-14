@@ -70,7 +70,12 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function set($name, $value)
     {
-        if( $this->markChanged($name, $value) )
+        if(
+        $this->markChanged(
+            $name,
+            $value
+        )
+        )
         {
             $this->values[$name] = $value;
             return true;
@@ -130,7 +135,10 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     {
         foreach( $values as $name => $value )
         {
-            $this->set($name, $value);
+            $this->set(
+                $name,
+                $value
+            );
         }
     }
 
@@ -170,11 +178,14 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
             {
                 $this->originalValues[$name] = $this->get($name);
             }
-            else if( $this->originalValues[$name] == $value )
+            else
             {
-                unset($this->changedValues[$name]);
-                unset($this->originalValues[$name]);
-                return true;
+                if( $this->originalValues[$name] == $value )
+                {
+                    unset($this->changedValues[$name]);
+                    unset($this->originalValues[$name]);
+                    return true;
+                }
             }
 
             $this->changedValues[$name] = true;
@@ -258,7 +269,11 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function offsetExists($offset)
     {
-        return isset($this->values[$offset]) || array_key_exists($offset, $this->values);
+        return isset($this->values[$offset])
+               || array_key_exists(
+                   $offset,
+                   $this->values
+               );
     }
 
     /**
@@ -281,7 +296,10 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function offsetSet($offset, $value)
     {
-        $this->set($offset, $value);
+        $this->set(
+            $offset,
+            $value
+        );
     }
 
     /**
@@ -354,13 +372,26 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
         {
             if( is_object($val) )
             {
-                if( method_exists($val, 'toArray') )
+                if(
+                method_exists(
+                    $val,
+                    'toArray'
+                )
+                )
                 {
                     $tmp[$field] = $val->toArray($val);
                 }
-                else if( method_exists($val, 'toString') )
+                else
                 {
-                    $tmp[$field] = $val->toString();
+                    if(
+                    method_exists(
+                        $val,
+                        'toString'
+                    )
+                    )
+                    {
+                        $tmp[$field] = $val->toString();
+                    }
                 }
             }
         }

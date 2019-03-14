@@ -5,9 +5,9 @@ namespace Local\Core\Inner\AdminHelper\EditField;
 class CatalogCategoryAccodrance extends Base
 {
 
-    private $_sectionsTree                = null;
-    private $_marketTaxonomy              = null;
-    private $_marketTaxonomyFile          = null;
+    private $_sectionsTree = null;
+    private $_marketTaxonomy = null;
+    private $_marketTaxonomyFile = null;
     private $_marketTaxonomyFileSeparator = ' - '; // разделительно idCategory - nameCategory
 
     /**
@@ -35,24 +35,36 @@ class CatalogCategoryAccodrance extends Base
             $currentValueName = $this->_marketTaxonomy[$arValues[$st['ID']]]['NAME'];
             $currentValue = $currentValueName.' ['.$currentValueId.']';
 
-            $APPLICATION->IncludeComponent('bitrix:main.lookup.input', 'iblockedit', array(
-                    'CONTROL_ID' => $this->getCode().'_'.mt_rand(0, 10000),
-                    'INPUT_NAME' => $this->getCode().'['.$st['ID'].']',
-                    'INPUT_NAME_STRING' => 'text_area_'.$this->getCode().'['.$st['ID'].']',
-                    'INPUT_VALUE_STRING' => $currentValue,
-                    'START_TEXT' => "Начните вводить текст",
-                    'SEARCH_DATA_FILE' => $this->_marketTaxonomyFile,
+            $APPLICATION->IncludeComponent(
+                'bitrix:main.lookup.input',
+                'iblockedit',
+                array(
+                    'CONTROL_ID'                 => $this->getCode().'_'.mt_rand(
+                            0,
+                            10000
+                        ),
+                    'INPUT_NAME'                 => $this->getCode().'['.$st['ID'].']',
+                    'INPUT_NAME_STRING'          => 'text_area_'.$this->getCode().'['.$st['ID'].']',
+                    'INPUT_VALUE_STRING'         => $currentValue,
+                    'START_TEXT'                 => "Начните вводить текст",
+                    'SEARCH_DATA_FILE'           => $this->_marketTaxonomyFile,
                     'SEARCH_DATA_FILE_SEPARATOR' => $this->_marketTaxonomyFileSeparator,
-                    'MULTIPLE' => 'N',
-                    'WITHOUT_IBLOCK' => 'Y',
-                    'FILTER' => 'Y',
-                    'TYPE' => 'SECTION',
-                ), null, array('HIDE_ICONS' => 'Y'));
+                    'MULTIPLE'                   => 'N',
+                    'WITHOUT_IBLOCK'             => 'Y',
+                    'FILTER'                     => 'Y',
+                    'TYPE'                       => 'SECTION',
+                ),
+                null,
+                array('HIDE_ICONS' => 'Y')
+            );
 
             $input = ob_get_contents();
             ob_end_clean();
 
-            $padding = str_repeat('&nbsp;&nbsp;&nbsp;', $st['DEPTH_LEVEL']);
+            $padding = str_repeat(
+                '&nbsp;&nbsp;&nbsp;',
+                $st['DEPTH_LEVEL']
+            );
             $return .= "<tr>
                     <td width='30%' style='text-align:left;'>
                         {$padding} {$st['NAME']} [{$st['ID']}]
@@ -111,7 +123,10 @@ class CatalogCategoryAccodrance extends Base
             throw new \Exception("Не верно задан файл с категоризацией товаров");
         }
 
-        $handle = fopen($_SERVER['DOCUMENT_ROOT'].$this->_marketTaxonomyFile, "r");
+        $handle = fopen(
+            $_SERVER['DOCUMENT_ROOT'].$this->_marketTaxonomyFile,
+            "r"
+        );
         if( $handle )
         {
 
@@ -120,12 +135,15 @@ class CatalogCategoryAccodrance extends Base
             while( ( $buffer = fgets($handle) ) !== false )
             {
 
-                $ar = explode($sep, trim($buffer));
+                $ar = explode(
+                    $sep,
+                    trim($buffer)
+                );
 
                 if( 2 == count($ar) )
                 {
                     $this->_marketTaxonomy[$ar[0]] = [
-                        'ID' => $ar[0],
+                        'ID'   => $ar[0],
                         'NAME' => $ar[1],
                     ];
                 }

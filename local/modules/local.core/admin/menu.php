@@ -2,81 +2,69 @@
 
 $aMenu = [];
 
-
-//$arTransportReference = [];
-
-//$lTransportBodyList = (new \Local\Core\Inner\AdminHelper\Reference\Transport\Body\AdminList)->getAdminUri();
-//if ($lTransportBodyList->isSuccess()) {
-//    $lTransportBodyEdit = (new \Local\Core\Inner\AdminHelper\Reference\Transport\Body\AdminEdit())->getAdminUri();
-//    $arTransportReference[] = [
-//        "text" => "Кузова",
-//        "url" => $lTransportBodyList->getData()["uri"],
-//        "more_url" => ($lTransportBodyEdit->isSuccess()) ? [$lTransportBodyEdit->getData()["uri"]] : []
-//    ];
-//}
-
-//$lTransportBrand = (new \Local\Core\Inner\AdminHelper\Reference\Transport\Brand\AdminList)->getAdminUri();
-//if ($lTransportBrand->isSuccess()) {
-//    $lTransportBrandEdit = (new \Local\Core\Inner\AdminHelper\Reference\Transport\Brand\AdminEdit())->getAdminUri();
-//    $arTransportReference[] = [
-//        "text" => "Бренды (марки)",
-//        "url" => $lTransportBrand->getData()["uri"],
-//        "more_url" => ($lTransportBrandEdit->isSuccess()) ? [$lTransportBrandEdit->getData()["uri"]] : []
-//    ];
-//}
-
-//if (!empty($arTransportReference)) {
-//    $aMenu[] = [
-//        "parent_menu" => "global_menu_content",
-//        "text" => "Справочники транспорта",
-//        "items_id" => "ref_transport",
-//        "items" => $arTransportReference,
-//        "icon" => "iblock_menu_icon_types",
-//        "sort" => 1000
-//    ];
-//}
-
-
-//if( class_exists(\Local\Core\Inner\Module\FeedExport\View\AdminList::class) )
-//{
-//    $lModuleFeedExport = ( new \Local\Core\Inner\Module\FeedExport\View\AdminList() )->getAdminUri();
-//    if( $lModuleFeedExport->isSuccess() )
-//    {
-//        $lModuleFeedExportEdit =  ( new \Local\Core\Inner\Module\FeedExport\View\AdminEdit() )->getAdminUri();
-//
-//        $aMenu[] = [
-//            "parent_menu" => "global_menu_marketing",
-//            "text" => "Генерация фидов",
-//            'url' => $lModuleFeedExport->getData()['uri'],
-//            "more_url" => ($lModuleFeedExportEdit->isSuccess()) ? [$lModuleFeedExportEdit->getData()["uri"]] : [],
-//            "items_id" => "module_feed_export",
-//            "icon" => "iblock_menu_icon_types",
-//            "sort" => 1
-//        ];
-//    }
-//
-//}
-
+$arModelData = [];
 
 if( class_exists(\Local\Core\Inner\AdminHelper\Data\Company\AdminList::class) )
 {
-    $lDataCompanyList = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminList() )->getAdminUri();
-    if( $lDataCompanyList->isSuccess() )
+    $lDataList = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminList() )->getAdminUri();
+    if( $lDataList->isSuccess() )
     {
-        $lDataCompanyEdit = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit() )->getAdminUri();
+        $lDataEdit = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit() )->getAdminUri();
 
-        $aMenu[] = [
-            "parent_menu" => "global_menu_local_core",
-            "text" => "Компании",
-            'url' => $lDataCompanyList->getData()['uri'],
-            "more_url" => ( $lDataCompanyEdit->isSuccess() ) ? [$lDataCompanyEdit->getData()["uri"]] : [],
-            "items_id" => "data_company",
-            "icon" => "fileman_menu_icon",
-            "sort" => 1
+        $arModelData[] = [
+            "text"     => "Компании",
+            'url'      => $lDataList->getData()['uri'],
+            "more_url" => ($lDataEdit->isSuccess()) ? [$lDataEdit->getData()["uri"]] : [],
+            "icon"     => ""
         ];
     }
 
 }
+
+if( class_exists(\Local\Core\Inner\AdminHelper\Data\Site\AdminList::class) )
+{
+    $lDataList = ( new \Local\Core\Inner\AdminHelper\Data\Site\AdminList() )->getAdminUri();
+    if( $lDataList->isSuccess() )
+    {
+        $lDataEdit = ( new \Local\Core\Inner\AdminHelper\Data\Site\AdminEdit() )->getAdminUri();
+
+        $arModelData[] = [
+            "text"     => "Сайты",
+            'url'      => $lDataList->getData()['uri'],
+            "more_url" => ($lDataEdit->isSuccess()) ? [$lDataEdit->getData()["uri"]] : [],
+            "icon"     => ""
+        ];
+    }
+
+}
+
+/* *********** */
+/* СПРАВОЧНИКИ */
+/* *********** */
+$arModelReferences = [];
+
+if( class_exists(\Local\Core\Inner\AdminHelper\Reference\Measure\AdminList::class) )
+{
+    $lDataList = ( new \Local\Core\Inner\AdminHelper\Reference\Measure\AdminList() )->getAdminUri();
+    if( $lDataList->isSuccess() )
+    {
+        $lDataEdit = ( new \Local\Core\Inner\AdminHelper\Reference\Measure\AdminEdit() )->getAdminUri();
+
+        $arModelReferences[] = [
+            "text"     => "Единицы измерения",
+            'url'      => $lDataList->getData()['uri'],
+            "more_url" => ($lDataEdit->isSuccess()) ? [$lDataEdit->getData()["uri"]] : [],
+            "icon"     => "",
+        ];
+    }
+
+}
+
+/* ******************** */
+/* СПРАВОЧНИКИ FEED API */
+/* ******************** */
+
+$arFeedApiReferences = [];
 
 
 /*
@@ -111,6 +99,45 @@ $aMenu = [
         ],
     ],
 */
+
+if( !empty($arModelData) )
+{
+    $aMenu[] = [
+        "parent_menu" => "global_menu_local_core",
+        "text"        => "Model\Data",
+        'url'         => '',
+        "items_id"    => "model_data",
+        "icon"        => "iblock_menu_icon_types",
+        "sort"        => 1,
+        'items'       => $arModelData
+    ];
+}
+
+if( !empty($arModelReferences) )
+{
+    $aMenu[] = [
+        "parent_menu" => "global_menu_local_core",
+        "text"        => "Справочники",
+        'url'         => '',
+        "items_id"    => "model_reference",
+        "icon"        => "highloadblock_menu_icon",
+        "sort"        => 99,
+        'items'       => $arModelReferences
+    ];
+}
+
+if( !empty($arFeedApiReferences) )
+{
+    $aMenu[] = [
+        "parent_menu" => "global_menu_local_core",
+        "text"        => "Справочники FeedApi",
+        'url'         => '',
+        "items_id"    => "model_reference_feed_api",
+        "icon"        => "highloadblock_menu_icon",
+        "sort"        => 99,
+        'items'       => $arFeedApiReferences
+    ];
+}
 
 return ( !empty($aMenu) ) ? $aMenu : false;
 

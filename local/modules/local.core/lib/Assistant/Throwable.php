@@ -19,10 +19,13 @@ class Throwable
      */
     public static function registerShutdown(\Throwable $e)
     {
-        register_shutdown_function(function(\Throwable $e)
-            {
-                \Bitrix\Main\Application::getInstance()->getExceptionHandler()->handleException($e);
-            }, $e);
+        register_shutdown_function(
+            function(\Throwable $e)
+                {
+                    \Bitrix\Main\Application::getInstance()->getExceptionHandler()->handleException($e);
+                },
+            $e
+        );
     }
 
     /**
@@ -45,7 +48,11 @@ class Throwable
         $arCustomData['__info']['file'] = $file ?? $d[0]['file'];
         $arCustomData['__info']['line'] = $line ?? $d[0]['line'];
         $arCustomData['__info']['__:'] = $arCustomData['__info']['file'].':'.$arCustomData['__info']['line'];
-        $arCustomData['__info']['__::'] = chr(13).str_replace($_SERVER['DOCUMENT_ROOT'], '', $arCustomData['__info']['file'].':'.$arCustomData['__info']['line']);
+        $arCustomData['__info']['__::'] = chr(13).str_replace(
+                $_SERVER['DOCUMENT_ROOT'],
+                '',
+                $arCustomData['__info']['file'].':'.$arCustomData['__info']['line']
+            );
 
         foreach( $arErrorCollection as $error )
         {
@@ -55,7 +62,10 @@ class Throwable
             {
                 if( is_array($custom) )
                 {
-                    $arCustomData = array_merge($error->getCustomData() ?? [], $arCustomData);
+                    $arCustomData = array_merge(
+                        $error->getCustomData() ?? [],
+                        $arCustomData
+                    );
                 }
                 else
                 {
@@ -64,7 +74,11 @@ class Throwable
             }
             if( $error instanceof Main\Error )
             {
-                $result->addError(new Main\Error($error->getMessage(), $error->getCode(), $arCustomData));
+                $result->addError(
+                    new Main\Error(
+                        $error->getMessage(), $error->getCode(), $arCustomData
+                    )
+                );
             }
             else
             {
@@ -86,7 +100,11 @@ class Throwable
         foreach( $errorCollection as $error )
         {
             /** @var Main\Error $error */
-            $result->addError(new Main\Error($error->getMessage(), $error->getCode(), $error->getCustomData()));
+            $result->addError(
+                new Main\Error(
+                    $error->getMessage(), $error->getCode(), $error->getCustomData()
+                )
+            );
         }
     }
 }

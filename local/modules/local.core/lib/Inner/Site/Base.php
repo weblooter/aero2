@@ -25,20 +25,22 @@ class Base
     {
         if( is_null(self::$__register[$intSiteId]) )
         {
-            $arTmp = \Local\Core\Model\Data\SiteTable::getList([
-                'filter' => ['ID' => $intSiteId],
-                'select' => [
-                    'ID',
-                    'DOMAIN',
-                    'COMPANY_ID',
-                    'COMPANY_DATA_' => 'COMPANY'
+            $arTmp = \Local\Core\Model\Data\SiteTable::getList(
+                [
+                    'filter' => ['ID' => $intSiteId],
+                    'select' => [
+                        'ID',
+                        'DOMAIN',
+                        'COMPANY_ID',
+                        'COMPANY_DATA_' => 'COMPANY'
+                    ]
                 ]
-            ])->fetch();
+            )->fetch();
 
             $ar = [
-                'ID' => $arTmp['ID'],
-                'DOMAIN' => $arTmp['DOMAIN'],
-                'COMPANY_ID' => $arTmp['COMPANY_ID'],
+                'ID'                  => $arTmp['ID'],
+                'DOMAIN'              => $arTmp['DOMAIN'],
+                'COMPANY_ID'          => $arTmp['COMPANY_ID'],
                 'COMPANY_USER_OWN_ID' => $arTmp['COMPANY_DATA_USER_OWN_ID'],
             ];
 
@@ -93,7 +95,7 @@ class Base
 
         $ar = self::__getSiteRegister($intSiteId);
 
-        if( !empty( $ar )  )
+        if( !empty($ar) )
         {
             if( $ar['COMPANY_USER_OWN_ID'] == $intUserId )
             {

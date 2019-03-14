@@ -28,6 +28,9 @@ class Base
         {
             $strTimestamp = strtotime('now');
         }
-        return date('Ymd', $strTimestamp).'_'.$arFields['COMPANY_ID'];
+        return date(
+                   'Ymd',
+                   $strTimestamp
+               ).'_'.$arFields['COMPANY_ID'];
     }
 }

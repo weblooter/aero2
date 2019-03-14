@@ -2,7 +2,7 @@
 
 namespace Local\Core\EventHandlers;
 
-use Bitrix\Main\EventManager;
+use Bitrix\Main\EventManager, Local\Core\Model\Data;
 
 class Base
 {
@@ -23,12 +23,16 @@ class Base
         $eventManager = EventManager::getInstance();
 
         /** @see \Local\Core\EventHandlers\Main\OnBuildGlobalMenu::addGlobalMenu(); */
-        $eventManager->addEventHandler('main', 'OnBuildGlobalMenu', [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']);
+        $eventManager->addEventHandler(
+            'main',
+            'OnBuildGlobalMenu',
+            [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']
+        );
 
     }
 
     /**
-     * Рестрирует все обработчики событий для модуля main
+     * Рестрирует все обработчики событий для модуля iblock
      */
     private static function registerIblock()
     {
@@ -37,10 +41,14 @@ class Base
             $eventManager = EventManager::getInstance();
 
             /** @see \Local\Core\EventHandlers\Iblock\OnIBlockPropertyBuildList::getLinkToORM(); */
-            $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', [
-                Iblock\OnIBlockPropertyBuildList::class,
-                'getLinkToORM'
-            ]);
+            $eventManager->addEventHandler(
+                'iblock',
+                'OnIBlockPropertyBuildList',
+                [
+                    Iblock\OnIBlockPropertyBuildList::class,
+                    'getLinkToORM'
+                ]
+            );
         }
     }
 }

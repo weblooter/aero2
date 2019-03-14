@@ -28,7 +28,12 @@ abstract class CollectableEntity extends Entity
     protected function onFieldModify($name, $oldValue, $value)
     {
         $collection = $this->getCollection();
-        return $collection->onItemModify($this, $name, $oldValue, $value);
+        return $collection->onItemModify(
+            $this,
+            $name,
+            $oldValue,
+            $value
+        );
     }
 
     /**

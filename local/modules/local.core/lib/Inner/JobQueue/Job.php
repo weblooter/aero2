@@ -25,14 +25,17 @@ class Job
      * @see \Local\Core\Inner\JobQueue\Worker\Example
      */
     public static function add(
-        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker, \Bitrix\Main\Type\DateTime $executeAt, int $attempts = 10
-    ){
+        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker,
+        \Bitrix\Main\Type\DateTime $executeAt,
+        int $attempts = 10
+    )
+    {
         $result = new AddResult();
         $addData = [
             'WORKER_CLASS_NAME' => $worker::getClassName(),
-            'INPUT_DATA' => $worker->getInputData(),
-            'EXECUTE_AT' => $executeAt,
-            'ATTEMPTS_LEFT' => $attempts
+            'INPUT_DATA'        => $worker->getInputData(),
+            'EXECUTE_AT'        => $executeAt,
+            'ATTEMPTS_LEFT'     => $attempts
         ];
         $rs = \Local\Core\Model\Data\JobQueueTable::add($addData);
         if( $rs->isSuccess() )
@@ -43,7 +46,10 @@ class Job
         }
         else
         {
-            \Local\Core\Assistant\Throwable::addError($result, $rs->getErrorCollection());
+            \Local\Core\Assistant\Throwable::addError(
+                $result,
+                $rs->getErrorCollection()
+            );
         }
         return $result;
     }
@@ -60,29 +66,37 @@ class Job
      * @throws \Local\Core\Inner\Client\Dadata\Exception\ArgumentException
      */
     public static function addIfNotExist(
-        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker, \Bitrix\Main\Type\DateTime $executeAt, int $attempts = 10
-    ){
+        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker,
+        \Bitrix\Main\Type\DateTime $executeAt,
+        int $attempts = 10
+    )
+    {
         $result = new AddResult();
         $class = $worker::getClassName();
         $input = $worker->getInputData();
-        $hash = JobQueueTable::hash($class, $input);
+        $hash = JobQueueTable::hash(
+            $class,
+            $input
+        );
 
         /** @var $rows \Bitrix\Main\ORM\Query\Result */
-        $rows = JobQueueTable::getList([
-            'select' => [
-                'ID',
-                'WORKER_CLASS_NAME',
-                'INPUT_DATA',
-                'EXECUTE_AT',
-                'ATTEMPTS_LEFT',
-            ],
-            'filter' => [
-                'HASH' => $hash,
-                '>ATTEMPTS_LEFT' => 0,
-                'STATUS' => ['N', 'E']
-            ],
-            'limit' => 1,
-        ]);
+        $rows = JobQueueTable::getList(
+            [
+                'select' => [
+                    'ID',
+                    'WORKER_CLASS_NAME',
+                    'INPUT_DATA',
+                    'EXECUTE_AT',
+                    'ATTEMPTS_LEFT',
+                ],
+                'filter' => [
+                    'HASH'           => $hash,
+                    '>ATTEMPTS_LEFT' => 0,
+                    'STATUS'         => ['N', 'E']
+                ],
+                'limit'  => 1,
+            ]
+        );
 
         $findJob = $rows->fetch();
 
@@ -94,7 +108,10 @@ class Job
         }
         else
         {
-            return self::add(...func_get_args());
+            return self::add(
+                ...
+                func_get_args()
+            );
         }
         return $result;
     }

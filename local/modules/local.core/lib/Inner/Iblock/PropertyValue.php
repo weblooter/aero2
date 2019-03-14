@@ -44,9 +44,9 @@ class PropertyValue extends CollectableEntity
         }
 
         $filter = array(
-            'IBLOCK_ID' => $iblock_id,
-            'ACTIVE' => 'Y',
-            'ACTIVE_DATE' => 'Y',
+            'IBLOCK_ID'         => $iblock_id,
+            'ACTIVE'            => 'Y',
+            'ACTIVE_DATE'       => 'Y',
             'CHECK_PERMISSIONS' => 'N'
         );
 
@@ -54,7 +54,12 @@ class PropertyValue extends CollectableEntity
             'ACTIVE' => 'Y'
         ];
 
-        if( !in_array('*', $select) )
+        if(
+        !in_array(
+            '*',
+            $select
+        )
+        )
         {
             foreach( $select as $p )
             {
@@ -72,7 +77,12 @@ class PropertyValue extends CollectableEntity
             }
         }
 
-        \CIBlockElement::GetPropertyValuesArray($arr_props, $iblock_id, $filter, $filter_props);
+        \CIBlockElement::GetPropertyValuesArray(
+            $arr_props,
+            $iblock_id,
+            $filter,
+            $filter_props
+        );
 
         foreach( $arr_props as $element_id => $properties )
         {

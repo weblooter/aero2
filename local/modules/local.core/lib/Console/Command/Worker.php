@@ -16,9 +16,19 @@ class Worker extends Command
      */
     protected function configure(): void
     {
-        $this->setName('worker')->setDescription("Запускает worker, исполняющий задачу из очереди. 
+        $this->setName('worker')->setDescription(
+                "Запускает worker, исполняющий задачу из очереди. 
                              Пример вызова для дебага: 
-                             $ <info>php -d mbstring.func_overload=2 console worker 1002 NONE</info>")->addArgument('jobID', InputArgument::REQUIRED, '')->addArgument('executorID', InputArgument::REQUIRED, '');
+                             $ <info>php -d mbstring.func_overload=2 console worker 1002 NONE</info>"
+            )->addArgument(
+                'jobID',
+                InputArgument::REQUIRED,
+                ''
+            )->addArgument(
+                'executorID',
+                InputArgument::REQUIRED,
+                ''
+            );
     }
 
     /**
@@ -32,17 +42,21 @@ class Worker extends Command
         $executorID = $input->getArgument('executorID');
         cli_set_process_title('kd_queue_job_worker_'.$jobID);
 
-        $arJob = JobQueueTable::getList([
-            'filter' => [
-                'ID' => $jobID,
-                'EXECUTE_BY' => $executorID,
-            ],
-        ])->fetch();
+        $arJob = JobQueueTable::getList(
+            [
+                'filter' => [
+                    'ID'         => $jobID,
+                    'EXECUTE_BY' => $executorID,
+                ],
+            ]
+        )->fetch();
 
         if( is_array($arJob) )
         {
             /** @var \Local\Core\Inner\JobQueue\Abstracts\Worker $worker */
-            $worker = new $arJob['WORKER_CLASS_NAME']($arJob['INPUT_DATA'], $jobID, $executorID);
+            $worker = new $arJob['WORKER_CLASS_NAME'](
+                $arJob['INPUT_DATA'], $jobID, $executorID
+            );
             $worker->execute();
 
         }

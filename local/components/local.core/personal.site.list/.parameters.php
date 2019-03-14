@@ -1,5 +1,5 @@
 <?
-if ( !defined( "B_PROLOG_INCLUDED" ) || B_PROLOG_INCLUDED !== true )
+if( !defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true )
 {
     die();
 }
@@ -7,15 +7,15 @@ if ( !defined( "B_PROLOG_INCLUDED" ) || B_PROLOG_INCLUDED !== true )
 $arComponentParameters = array(
     "PARAMETERS" => array(
         'ELEM_COUNT' => [
-            'PARENT' => 'BASE',
-            'NAME' => 'Кол-во сайтов на странице',
-            'TYPE' => 'STRING',
+            'PARENT'        => 'BASE',
+            'NAME'          => 'Кол-во сайтов на странице',
+            'TYPE'          => 'STRING',
             'DEFAULT_VALUE' => 10
         ],
         'COMPANY_ID' => [
-            'PARENT' => 'BASE',
-            'NAME' => 'ID компании',
-            'TYPE' => 'STRING',
+            'PARENT'        => 'BASE',
+            'NAME'          => 'ID компании',
+            'TYPE'          => 'STRING',
             'DEFAULT_VALUE' => 0
         ]
     )

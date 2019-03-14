@@ -1,14 +1,17 @@
 <?
-require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
+$intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID');
+$intSiteId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('SITE_ID');
 $APPLICATION->SetTitle("Title");
 ?>
-<div class="container-fluid">
-    <div class="row">
-
-        <div class="col-12">
-            site-detail
-        </div>
-
-    </div>
-</div>
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+<?
+$GLOBALS['APPLICATION']->IncludeComponent(
+    'local.core:personal.site.detail',
+    '.default',
+    [
+        'COMPANY_ID' => $intCompanyId,
+        'SITE_ID'    => $intSiteId,
+    ]
+);
+?>
+<? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>

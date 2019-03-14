@@ -11,118 +11,170 @@ use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
 /**
  * Класс ORM сайтов компаний.
  *
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [14.03.2019 20:35:58] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [14.03.2019 20:35:58] | Fields\DatetimeField</li><li>COMPANY_ID - ID компании | Fields\IntegerField</li><li>DOMAIN - Ссылка на сайт | Fields\StringField</li><li>RESOURCE_TYPE - Источник данных | Fields\EnumField<br/>&emsp;LINK => Ссылка на файл<br/>&emsp;FILE => Загрузить файл<br/></li><li>FILE_ID - Загруженный файл XML | Fields\IntegerField</li><li>FILE_LINK - Ссылка на файл XML | Fields\StringField</li><li>HTTP_AUTH - Для доступа нужен логин и пароль [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>HTTP_AUTH_LOGIN - Логин для авторизации | Fields\StringField</li><li>HTTP_AUTH_PASS - Пароль для авторизации | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li></ul>
+ *
+ *
  * @package Local\Core\Model\Data
  */
-class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
+class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 {
     public static function getTableName()
     {
         return 'a_model_data_site';
     }
 
+    /** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */
+    public static $arEnumFieldsValues = [
+        'RESOURCE_TYPE' => [
+            'LINK' => 'Ссылка на файл',
+            'FILE' => 'Загрузить файл',
+        ],
+        'HTTP_AUTH' => [
+            'Y' => 'Да',
+            'N' => 'Нет'
+        ]
+    ];
+
     public static function getMap()
     {
         return [
-            new Fields\IntegerField('ID', [
-                'primary' => true,
-                'autocomplete' => true,
-                'title' => 'ID'
-            ]),
-            new Fields\EnumField('ACTIVE', [
-                'title' => 'Активность',
-                'required' => false,
-                'values' => ['Y', 'N'],
-                'default_value' => 'Y'
-            ]),
-            new Fields\DatetimeField('DATE_CREATE', [
-                'title' => 'Дата создания',
-                'required' => false,
-                'default_value' => function()
-                    {
-                        return new \Bitrix\Main\Type\DateTime();
-                    }
-            ]),
-            new Fields\DatetimeField('DATE_MODIFIED', [
-                'title' => 'Дата последнего изменения',
-                'required' => false,
-                'default_value' => function()
-                    {
-                        return new \Bitrix\Main\Type\DateTime();
-                    }
-            ]),
-            new Fields\IntegerField('COMPANY_ID', [
-                'required' => true,
-                'title' => 'ID компании'
-            ]),
-            new Fields\StringField('DOMAIN', [
-                'required' => true,
-                'title' => 'Ссылка на сайт',
-                'validation' => function()
-                    {
-                        return [
-                            new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/')
-                        ];
-                    },
-                'save_data_modification' => function()
-                    {
-                        return [
-                            function($value)
-                                {
-                                    preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/', $value, $arMatches);
-                                    return $arMatches[1];
-                                }
-                        ];
-                    }
-            ]),
-            new Fields\EnumField('RESOURCE_TYPE', [
-                'required' => true,
-                'title' => 'Источник данных',
-                'values' => ['LINK', 'FILE']
-            ]),
+            new Fields\IntegerField(
+                'ID', [
+                    'primary'      => true,
+                    'autocomplete' => true,
+                    'title'        => 'ID'
+                ]
+            ),
+            new Fields\EnumField(
+                'ACTIVE', [
+                    'title'         => 'Активность',
+                    'required'      => false,
+                    'values'        => self::getEnumFieldValues('ACTIVE'),
+                    'default_value' => 'Y'
+                ]
+            ),
+            new Fields\DatetimeField(
+                'DATE_CREATE', [
+                    'title'         => 'Дата создания',
+                    'required'      => false,
+                    'default_value' => function()
+                        {
+                            return new \Bitrix\Main\Type\DateTime();
+                        }
+                ]
+            ),
+            new Fields\DatetimeField(
+                'DATE_MODIFIED', [
+                    'title'         => 'Дата последнего изменения',
+                    'required'      => false,
+                    'default_value' => function()
+                        {
+                            return new \Bitrix\Main\Type\DateTime();
+                        }
+                ]
+            ),
+            new Fields\IntegerField(
+                'COMPANY_ID', [
+                    'required' => true,
+                    'title'    => 'ID компании'
+                ]
+            ),
+            new Fields\StringField(
+                'DOMAIN', [
+                    'required'               => true,
+                    'title'                  => 'Ссылка на сайт',
+                    'validation'             => function()
+                        {
+                            return [
+                                new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/')
+                            ];
+                        },
+                    'save_data_modification' => function()
+                        {
+                            return [
+                                function($value)
+                                    {
+                                        preg_match(
+                                            '/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/',
+                                            $value,
+                                            $arMatches
+                                        );
+                                        return $arMatches[1];
+                                    }
+                            ];
+                        }
+                ]
+            ),
+            new Fields\EnumField(
+                'RESOURCE_TYPE', [
+                    'required' => true,
+                    'title'    => 'Источник данных',
+                    'values'   => self::getEnumFieldValues('RESOURCE_TYPE')
+                ]
+            ),
 
-            new Fields\IntegerField('FILE_ID', [
-                'required' => false,
-                'title' => 'Файл XML',
-            ]),
+            new Fields\IntegerField(
+                'FILE_ID', [
+                    'required' => false,
+                    'title'    => 'Загруженный файл XML',
+                ]
+            ),
 
-            new Fields\StringField('FILE_LINK', [
-                'required' => false,
-                'title' => 'Ссылка на файл XML',
-                'validation' => function()
-                    {
-                        return [
-                            new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/')
-                        ];
-                    },
-                'save_data_modification' => function()
-                    {
-                        return [
-                            function($value)
-                                {
-                                    preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/', $value, $arMatches);
-                                    return $arMatches[1];
-                                }
-                        ];
-                    }
-            ]),
-            new Fields\EnumField('HTTP_AUTH', [
-                'required' => false,
-                'title' => 'Для доступа нужен логин и пароль',
-                'values' => ['N', 'Y'],
-                'default_value' => 'N'
-            ]),
-            new Fields\StringField('HTTP_AUTH_LOGIN', [
-                'required' => false,
-                'title' => 'Логин для авторизации',
-            ]),
-            new Fields\StringField('HTTP_AUTH_PASS', [
-                'required' => false,
-                'title' => 'Пароль для авторизации',
-            ]),
+            new Fields\StringField(
+                'FILE_LINK', [
+                    'required'               => false,
+                    'title'                  => 'Ссылка на файл XML',
+                    'validation'             => function()
+                        {
+                            return [
+                                new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/')
+                            ];
+                        },
+                    'save_data_modification' => function()
+                        {
+                            return [
+                                function($value)
+                                    {
+                                        preg_match(
+                                            '/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/',
+                                            $value,
+                                            $arMatches
+                                        );
+                                        return $arMatches[1];
+                                    }
+                            ];
+                        }
+                ]
+            ),
+            new Fields\EnumField(
+                'HTTP_AUTH', [
+                    'required'      => false,
+                    'title'         => 'Для доступа нужен логин и пароль',
+                    'values'        => self::getEnumFieldValues('HTTP_AUTH'),
+                    'default_value' => 'N'
+                ]
+            ),
+            new Fields\StringField(
+                'HTTP_AUTH_LOGIN', [
+                    'required' => false,
+                    'title'    => 'Логин для авторизации',
+                ]
+            ),
+            new Fields\StringField(
+                'HTTP_AUTH_PASS', [
+                    'required' => false,
+                    'title'    => 'Пароль для авторизации',
+                ]
+            ),
 
-            new Fields\Relations\Reference('COMPANY', \Local\Core\Model\Data\CompanyTable::class, \Bitrix\Main\ORM\Query\Join::on('this.COMPANY_ID', 'ref.ID'), [
-                'title' => 'ORM: Компания'
-            ]),
+            new Fields\Relations\Reference(
+                'COMPANY', \Local\Core\Model\Data\CompanyTable::class, \Bitrix\Main\ORM\Query\Join::on(
+                'this.COMPANY_ID',
+                'ref.ID'
+            ), [
+                    'title' => 'ORM: Компания'
+                ]
+            ),
         ];
     }
 
@@ -135,7 +187,7 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
      */
     public static function onBeforeAdd(\Bitrix\Main\ORM\Event $event)
     {
-        $result = new \Bitrix\Main\ORM\EventResult;
+        $result = new \Bitrix\Main\ORM\EventResult();
         $arFields = $event->getParameter('fields');
         $arModifiedFields = [];
 
@@ -191,8 +243,14 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
 
         if( !empty($arModifiedFields) )
         {
-            $arFields = array_merge($arFields, $arModifiedFields);
-            $event->setParameter('fields', $arFields);
+            $arFields = array_merge(
+                $arFields,
+                $arModifiedFields
+            );
+            $event->setParameter(
+                'fields',
+                $arFields
+            );
             $result->modifyFields($arModifiedFields);
         }
 
@@ -228,9 +286,9 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
      */
     public static function OnBeforeUpdate(\Bitrix\Main\ORM\Event $event)
     {
+        $result = new \Bitrix\Main\ORM\EventResult();
         $arModifiedFields = [];
 
-        /** @var \Bitrix\Main\ORM\Event $event */
         $arFields = $event->getParameter('fields');
 
         /*
@@ -239,27 +297,47 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
         if( !empty($arFields) )
         {
 
-            $arModifiedFields['DATE_MODIFIED'] = new \Bitrix\Main\Type\DateTime();
-
-            switch( $arFields['RESOURCE_TYPE'] )
+            try
             {
-                case 'LINK':
-                    // Ссылка на файл
 
-                    $arModifiedFields['FILE_ID'] = '';
-                    self::$__NeedDeleteFileID[$event->getParameter('primary')['ID']] = $arFields['FILE_ID'];
+                switch( $arFields['RESOURCE_TYPE'] )
+                {
+                    case 'LINK':
+                        // Ссылка на файл
 
-                    break;
+                        if( $arFields['HTTP_AUTH'] == 'Y' )
+                        {
+                            if( empty($arFields['HTTP_AUTH_LOGIN']) )
+                            {
+                                throw new \Exception('Необходимо указать логин для авторизации');
+                            }
 
-                case 'FILE':
-                    // Загрузить файл
+                            if( empty($arFields['HTTP_AUTH_PASS']) )
+                            {
+                                throw new \Exception('Необходимо указать пароль для авторизации');
+                            }
+                        }
 
-                    $arModifiedFields['FILE_LINK'] = '';
-                    $arModifiedFields['HTTP_AUTH'] = '';
-                    $arModifiedFields['HTTP_AUTH_LOGIN'] = '';
-                    $arModifiedFields['HTTP_AUTH_PASS'] = '';
+                        $arModifiedFields['FILE_ID'] = '';
+                        self::$__NeedDeleteFileID[$event->getParameter('primary')['ID']] = $arFields['FILE_ID'];
 
-                    break;
+                        break;
+
+                    case 'FILE':
+                        // Загрузить файл
+
+                        $arModifiedFields['FILE_LINK'] = '';
+                        $arModifiedFields['HTTP_AUTH'] = '';
+                        $arModifiedFields['HTTP_AUTH_LOGIN'] = '';
+                        $arModifiedFields['HTTP_AUTH_PASS'] = '';
+
+                        break;
+                }
+
+            }
+            catch( \Exception $e )
+            {
+                $result->addError(new \Bitrix\Main\ORM\EntityError($e->getMessage()));
             }
 
         }
@@ -267,24 +345,28 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
         /*
          * Проверка на смену компании сайта
          */
-        $ar = self::getById( $event->getParameter('primary')['ID'] )->fetch();
+        $ar = self::getById($event->getParameter('primary')['ID'])->fetch();
         self::$__arSiteIdToOldCompanyId[$ar['ID']] = $ar['COMPANY_ID'];
 
 
+        $arFields = array_merge(
+            $arFields,
+            $arModifiedFields
+        );
+        $event->setParameter(
+            'fields',
+            $arFields
+        );
 
-        $arFields = array_merge($arFields, $arModifiedFields);
-        $event->setParameter('fields', $arFields);
-
-        /** @var \Bitrix\Main\ORM\EventResult $result */
-        $result = new \Bitrix\Main\ORM\EventResult;
         $result->modifyFields($arModifiedFields);
+
+        # Вызывается строго в конце
+        self::_OnBeforeUpdateBase($event, $result, $arModifiedFields);
 
         return $result;
     }
 
     /**
-     * Скинем кэши компонентов и удалим файл
-     *
      * @param \Bitrix\Main\ORM\Event $event
      *
      * @throws \Bitrix\Main\ArgumentException
@@ -302,15 +384,13 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
                 \CFile::Delete(self::$__NeedDeleteFileID[$arEventParams['primary']['ID']]);
                 $arModifiedFields['FILE_ID'] = null;
             }
-
-            $ar = self::getById($arEventParams['primary']['ID'])->fetch();
-            self::clearComponentsCache($ar);
         }
+
+        # Вызывается строго в конце
+        self::_initClearComponentCache($event, []);
     }
 
     /**
-     * Скинем кэши компонентов
-     *
      * @param \Bitrix\Main\ORM\Event $event
      *
      * @throws \Bitrix\Main\ArgumentException
@@ -331,9 +411,10 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
             {
                 self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] = $ar['FILE_ID'];
             }
-
-            self::clearComponentsCache($ar);
         }
+
+        # Вызывается строго в конце
+        self::_initClearComponentCache($event, []);
     }
 
     /**
@@ -351,24 +432,31 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
         $arEventParams = $event->getParameters();
         if( !empty($arEventParams['primary']) )
         {
-            \AddMessage2Log(print_r(self::$__NeedDeleteFileID, true));
-
             if( self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] > 0 )
             {
-                \CFile::Delete(self::$__NeedDeleteFileID[$arEventParams['primary']['ID']]);
+                \Local\Core\Inner\BxModified\CFile::Delete(self::$__NeedDeleteFileID[$arEventParams['primary']['ID']]);
             }
         }
     }
 
     /**
-     * Метод чистит кэши компонентов, в которых используется данный класс ORM
-     *
-     * @param $arFields
+     * @inheritdoc
      */
     public static function clearComponentsCache($arFields)
     {
         // Удаляет кэш списка у текущей компании
-        \Local\Core\Inner\Cache::deleteComponentCache(['personal.site.list'], ['company_id='.$arFields['COMPANY_ID']]);
+        \Local\Core\Inner\Cache::deleteComponentCache(
+            ['personal.site.list'],
+            ['company_id='.$arFields['COMPANY_ID']]
+        );
+
+        // Удаляет кэш деталки сайта
+        \Local\Core\Inner\Cache::deleteComponentCache(
+            ['personal.site.detail'],
+            [
+                'site_id='.$arFields['ID']
+            ]
+        );
 
         if( self::$__arSiteIdToOldCompanyId[$arFields['ID']] != $arFields['COMPANY_ID'] )
         {
@@ -377,7 +465,10 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
              */
 
             // Удаляет кэш списка у старой компании, если сменился владелец
-            \Local\Core\Inner\Cache::deleteComponentCache(['personal.site.list'], ['company_id='.self::$__arSiteIdToOldCompanyId[$arFields['ID']]]);
+            \Local\Core\Inner\Cache::deleteComponentCache(
+                ['personal.site.list'],
+                ['company_id='.self::$__arSiteIdToOldCompanyId[$arFields['ID']]]
+            );
         }
     }
 
@@ -391,11 +482,13 @@ class SiteTable extends \Bitrix\Main\ORM\Data\DataManager
      */
     public static function getOrmFiles()
     {
-        return self::getList([
-            'filter' => [
-                '!FILE_ID' => false,
-            ],
-            'select' => ['FILE_ID']
-        ]);
+        return self::getList(
+            [
+                'filter' => [
+                    '!FILE_ID' => false,
+                ],
+                'select' => ['FILE_ID']
+            ]
+        );
     }
 }

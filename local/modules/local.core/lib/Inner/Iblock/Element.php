@@ -63,10 +63,10 @@ class Element extends CollectableEntity
         }
 
         $default = array(
-            'IBLOCK_LID' => SITE_ID,
-            'ACTIVE_DATE' => 'Y',
+            'IBLOCK_LID'        => SITE_ID,
+            'ACTIVE_DATE'       => 'Y',
             'CHECK_PERMISSIONS' => 'Y',
-            'MIN_PERMISSION' => 'R',
+            'MIN_PERMISSION'    => 'R',
         );
 
         if( !empty($filter) )
@@ -78,7 +78,10 @@ class Element extends CollectableEntity
                 $filter['SECTION_GLOBAL_ACTIVE'] = $filter['SECTION_GLOBAL_ACTIVE'] === 'N' ? 'N' : 'Y';
             }
 
-            $default = array_merge($default, $filter);
+            $default = array_merge(
+                $default,
+                $filter
+            );
         }
         return $default;
     }
@@ -157,7 +160,10 @@ class Element extends CollectableEntity
 
         if( !empty($select) )
         {
-            $default = array_merge($default, $select);
+            $default = array_merge(
+                $default,
+                $select
+            );
         }
 
         return $default;
@@ -174,17 +180,33 @@ class Element extends CollectableEntity
     {
         if( !empty($select) )
         {
-            $props = array_filter($select, function($v)
-                {
-                    return strpos($v, 'PROPERTY_') !== false;
-                });
+            $props = array_filter(
+                $select,
+                function($v)
+                    {
+                        return strpos(
+                                   $v,
+                                   'PROPERTY_'
+                               ) !== false;
+                    }
+            );
 
-            $select = array_diff($select, $props);
+            $select = array_diff(
+                $select,
+                $props
+            );
 
-            array_walk($props, function(&$v, $k)
-                {
-                    $v = str_replace('PROPERTY_', '', $v);
-                });
+            array_walk(
+                $props,
+                function(&$v, $k)
+                    {
+                        $v = str_replace(
+                            'PROPERTY_',
+                            '',
+                            $v
+                        );
+                    }
+            );
 
             return $props;
         }
@@ -247,7 +269,13 @@ class Element extends CollectableEntity
         $lazy_init = self::getLazy($params['lazy']);
 
         /** @var $elementIterator \CDBResult */
-        $elementIterator = \CIBlockElement::GetList($order_fields, $filter_fields, $group_fields, $nav_fields, $select_fields);
+        $elementIterator = \CIBlockElement::GetList(
+            $order_fields,
+            $filter_fields,
+            $group_fields,
+            $nav_fields,
+            $select_fields
+        );
 
         /** @var $collection ElementCollection */
         $collection = ElementCollection::create();
@@ -270,7 +298,10 @@ class Element extends CollectableEntity
 
         if( !$lazy_init )
         {
-            self::initProps($collection, $property_fields);
+            self::initProps(
+                $collection,
+                $property_fields
+            );
             self::initFiles($collection);
         }
 
@@ -298,7 +329,9 @@ class Element extends CollectableEntity
      */
     protected static function createLazy(array $fields = array())
     {
-        return new static($fields, true);
+        return new static(
+            $fields, true
+        );
     }
 
     /**
@@ -367,12 +400,22 @@ class Element extends CollectableEntity
         $element['ID'] = (int)$element['ID'];
         $element['IBLOCK_ID'] = (int)$element['IBLOCK_ID'];
 
-        $element['ACTIVE_FROM'] = ( isset($element['DATE_ACTIVE_FROM']) ? new Main\Type\DateTime($element['DATE_ACTIVE_FROM'], 'd.m.Y H:i:s') : null );
-        $element['ACTIVE_TO'] = ( isset($element['DATE_ACTIVE_TO']) ? new Main\Type\DateTime($element['DATE_ACTIVE_TO'], 'd.m.Y H:i:s') : null );
-        $element['DATE_CREATE'] = ( isset($element['DATE_CREATE']) ? new Main\Type\DateTime($element['DATE_CREATE'], 'd.m.Y H:i:s') : null );
-        $element['TIMESTAMP_X'] = ( isset($element['TIMESTAMP_X']) ? new Main\Type\DateTime($element['TIMESTAMP_X'], 'd.m.Y H:i:s') : null );
+        $element['ACTIVE_FROM'] = ( isset($element['DATE_ACTIVE_FROM']) ? new Main\Type\DateTime(
+            $element['DATE_ACTIVE_FROM'], 'd.m.Y H:i:s'
+        ) : null );
+        $element['ACTIVE_TO'] = ( isset($element['DATE_ACTIVE_TO']) ? new Main\Type\DateTime(
+            $element['DATE_ACTIVE_TO'], 'd.m.Y H:i:s'
+        ) : null );
+        $element['DATE_CREATE'] = ( isset($element['DATE_CREATE']) ? new Main\Type\DateTime(
+            $element['DATE_CREATE'], 'd.m.Y H:i:s'
+        ) : null );
+        $element['TIMESTAMP_X'] = ( isset($element['TIMESTAMP_X']) ? new Main\Type\DateTime(
+            $element['TIMESTAMP_X'], 'd.m.Y H:i:s'
+        ) : null );
 
-        $ipropValues = new ElementValues($element['IBLOCK_ID'], $element['ID']);
+        $ipropValues = new ElementValues(
+            $element['IBLOCK_ID'], $element['ID']
+        );
         $element['IPROPERTY_VALUES'] = $ipropValues->getValues();
 
     }
@@ -387,7 +430,10 @@ class Element extends CollectableEntity
      */
     protected static function initProps(ElementCollection $collection, $select = false)
     {
-        $prop_collection = PropertyValue::getCollectionArrayByIblockElementCollection($collection, $select);
+        $prop_collection = PropertyValue::getCollectionArrayByIblockElementCollection(
+            $collection,
+            $select
+        );
 
         if( !count($prop_collection) )
         {
@@ -427,7 +473,10 @@ class Element extends CollectableEntity
             {
                 if( $file = $file_collection->getItemById($file_id) )
                 {
-                    $item->setField('DETAIL_PICTURE', $file);
+                    $item->setField(
+                        'DETAIL_PICTURE',
+                        $file
+                    );
                 }
             }
 
@@ -435,7 +484,10 @@ class Element extends CollectableEntity
             {
                 if( $file = $file_collection->getItemById($file_id) )
                 {
-                    $item->setField('PREVIEW_PICTURE', $file);
+                    $item->setField(
+                        'PREVIEW_PICTURE',
+                        $file
+                    );
                 }
             }
 
@@ -448,10 +500,15 @@ class Element extends CollectableEntity
                     {
                         if( $property->isMultiple() )
                         {
-                            $values = array_filter(array_map(function($v)
-                                    {
-                                        return (int)$v;
-                                    }, (array)$property->getField('VALUE')));
+                            $values = array_filter(
+                                array_map(
+                                    function($v)
+                                        {
+                                            return (int)$v;
+                                        },
+                                    (array)$property->getField('VALUE')
+                                )
+                            );
 
                             if( $values )
                             {
@@ -463,7 +520,10 @@ class Element extends CollectableEntity
                                     {
                                         $item_file_collection->addItem($file);
                                         $file->setCollection($item_file_collection);
-                                        $property->setField('VALUE', $item_file_collection);
+                                        $property->setField(
+                                            'VALUE',
+                                            $item_file_collection
+                                        );
                                     }
                                 }
                             }
@@ -475,7 +535,10 @@ class Element extends CollectableEntity
                             {
                                 if( $file = $file_collection->getItemById($value) )
                                 {
-                                    $property->setField('VALUE', $file);
+                                    $property->setField(
+                                        'VALUE',
+                                        $file
+                                    );
                                 }
                             }
                         }
@@ -741,7 +804,12 @@ class Element extends CollectableEntity
         foreach( $arFilters as $type => $typeList )
         {
 
-            if( !in_array($type, ["CROSS", "UNION"]) )
+            if(
+            !in_array(
+                $type,
+                ["CROSS", "UNION"]
+            )
+            )
             {
                 continue;
             }
@@ -749,7 +817,12 @@ class Element extends CollectableEntity
             foreach( $typeList as $arFilter )
             {
                 $ob = new \CIBlockElement();
-                $ob->prepareSql($arSelectFields, $arFilter, false, $arOrder);
+                $ob->prepareSql(
+                    $arSelectFields,
+                    $arFilter,
+                    false,
+                    $arOrder
+                );
 
                 $arFilterIBlocks = $arFilterIBlocks + $ob->arFilterIBlocks;
 
@@ -763,13 +836,25 @@ class Element extends CollectableEntity
                     # Добавляем в SELECT поля для сортировки, чтобы потом по ним можно было отсортировать весь результат
                     $sqlSelectAddOrderFields = [];
                     # Бьем поля на 2 группы ({алиас таблицы}.{название поля}) as ({название поля})
-                    if( preg_match_all("/([^,\.\s]+\.([^,\.\s]+))/", $ob->sOrderBy, $sqlOrderMatches) )
+                    if(
+                    preg_match_all(
+                        "/([^,\.\s]+\.([^,\.\s]+))/",
+                        $ob->sOrderBy,
+                        $sqlOrderMatches
+                    )
+                    )
                     {
 
                         foreach( $sqlOrderMatches[1] as $key => $field )
                         {
                             # Если значение {название поля) существует, и если этого значения ещё нет в SELECT
-                            if( !isset($sqlOrderMatches[2][$key]) || preg_match("/[\s\,]as\s+{$sqlOrderMatches[2][$key]}[\s\,]/", $sqlSelect) )
+                            if(
+                                !isset($sqlOrderMatches[2][$key])
+                                || preg_match(
+                                    "/[\s\,]as\s+{$sqlOrderMatches[2][$key]}[\s\,]/",
+                                    $sqlSelect
+                                )
+                            )
                             {
                                 continue;
                             }
@@ -778,11 +863,18 @@ class Element extends CollectableEntity
                     }
                     if( !empty($sqlSelectAddOrderFields) )
                     {
-                        $sqlSelect .= ", ".implode(", ", $sqlSelectAddOrderFields);
+                        $sqlSelect .= ", ".implode(
+                                ", ",
+                                $sqlSelectAddOrderFields
+                            );
                     }
 
                     # Используется для сортировки всего результата. Убираем алиасы таблиц для полей, так как они не нужны.
-                    $sqlOrder = preg_replace("/([^.\s,]+\.)/", "", $ob->sOrderBy);
+                    $sqlOrder = preg_replace(
+                        "/([^.\s,]+\.)/",
+                        "",
+                        $ob->sOrderBy
+                    );
                 }
 
                 $sqlList[$type][] = "
@@ -812,7 +904,13 @@ class Element extends CollectableEntity
             $arSelectCross = [];
 
             #Получим все названия колонок (...as {Название колонки}...)
-            if( preg_match_all("/as\s([^,]+)/", $sqlSelect, $matches) )
+            if(
+            preg_match_all(
+                "/as\s([^,]+)/",
+                $sqlSelect,
+                $matches
+            )
+            )
             {
                 $countCrossQueries = count($sqlList["CROSS"]) - 1;
                 foreach( $matches[1] as $fieldName )
@@ -828,18 +926,28 @@ class Element extends CollectableEntity
                     # Если есть особая обработка слияния колонок
                     if( isset($SelectPlaceholders[$fieldName]) && is_callable($SelectPlaceholders[$fieldName]) )
                     {
-                        $arSelectCross[] = call_user_func($SelectPlaceholders[$fieldName], $arSelectFieldQueries, $fieldName);
+                        $arSelectCross[] = call_user_func(
+                            $SelectPlaceholders[$fieldName],
+                            $arSelectFieldQueries,
+                            $fieldName
+                        );
                     }
                     # Иначе собираем значения для колонки из всех CROSS запросов через разделитель
                     else
                     {
-                        $arSelectCross[] = "CONCAT( ".implode(", '{$delimiter}', ", $arSelectFieldQueries)." ) as {$fieldName}";
+                        $arSelectCross[] = "CONCAT( ".implode(
+                                ", '{$delimiter}', ",
+                                $arSelectFieldQueries
+                            )." ) as {$fieldName}";
                     }
                 }
             }
 
             # Формируем запросы через CROSS JOIN
-            $sqlCross = "( SELECT ".implode(", ", $arSelectCross)." FROM ";
+            $sqlCross = "( SELECT ".implode(
+                    ", ",
+                    $arSelectCross
+                )." FROM ";
             foreach( $sqlList["CROSS"] as $key => $sqlItem )
             {
                 if( $key != 0 )
@@ -877,19 +985,31 @@ class Element extends CollectableEntity
             if( $nTopCount > 0 )
             {
                 $strSql .= " LIMIT {$nTopCount}";
-                $res = $GLOBALS["DB"]->Query($strSql, false, "FILE: ".__FILE__."<br> LINE: ".__LINE__);
+                $res = $GLOBALS["DB"]->Query(
+                    $strSql,
+                    false,
+                    "FILE: ".__FILE__."<br> LINE: ".__LINE__
+                );
             }
             else
             {
                 $res_cnt = $GLOBALS["DB"]->Query($strSql);
                 $cntRows = $res_cnt->SelectedRowsCount();
                 $res = new \CDBResult();
-                $res->NavQuery($strSql, $cntRows, $arNavStartParams);
+                $res->NavQuery(
+                    $strSql,
+                    $cntRows,
+                    $arNavStartParams
+                );
             }
         }
         else
         {
-            $res = $GLOBALS["DB"]->Query($strSql, false, "FILE: ".__FILE__."<br> LINE: ".__LINE__);
+            $res = $GLOBALS["DB"]->Query(
+                $strSql,
+                false,
+                "FILE: ".__FILE__."<br> LINE: ".__LINE__
+            );
         }
 
         $result = new \CIBlockResult($res);

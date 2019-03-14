@@ -10,39 +10,46 @@
  * @var string                    $templateFolder
  */
 
-$funIsRequired = function ( $strCode ) use ( $arResult ) {
-    return $arResult[ 'FIELDS' ][ $strCode ][ 'IS_REQUIRED' ];
-}
+$funIsRequired = function($strCode) use ($arResult)
+    {
+        return $arResult['FIELDS'][$strCode]['IS_REQUIRED'];
+    }
 ?>
 
-<? if ( $arResult[ 'ADD_STATUS' ] == 'SUCCESS' ): ?>
+<? if( $arResult['ADD_STATUS'] == 'SUCCESS' ): ?>
     <div class="alert alert-success" role="alert">
         Сайт успешно добавлен!
     </div>
 
 <? else: ?>
 
-    <form method="post" action="<?= \Local\Core\Inner\Route::getRouteTo( 'site', 'add',
-        ['#COMPANY_ID#' => $arParams[ 'COMPANY_ID' ]] ) ?>" enctype="multipart/form-data">
-        <?= bitrix_sessid_post(); ?>
-        <? if ( $arResult[ 'ADD_STATUS' ] == 'ERROR' ): ?>
+    <form method="post" action="<?=\Local\Core\Inner\Route::getRouteTo(
+        'site',
+        'add',
+        ['#COMPANY_ID#' => $arParams['COMPANY_ID']]
+    )?>" enctype="multipart/form-data">
+        <?=bitrix_sessid_post();?>
+        <? if( $arResult['ADD_STATUS'] == 'ERROR' ): ?>
             <div class="alert alert-danger" role="alert">
-                <?= implode( '<br/>', $arResult[ 'ERROR_TEXT' ] ) ?>
+                <?=implode(
+                    '<br/>',
+                    $arResult['ERROR_TEXT']
+                )?>
             </div>
         <? endif; ?>
 
         <div class="form-group">
-            <label>Ссылка на сайт <?= ( $funIsRequired( 'DOMAIN' ) ? '*' : '' ) ?></label>
-            <input type="text" class="form-control" name="SITE_FIELD[DOMAIN]" required value="<?= $arResult[ 'FIELDS' ][ 'DOMAIN' ][ 'VALUE' ] ?>" placeholder="http://example.com" />
+            <label>Ссылка на сайт <?=( $funIsRequired('DOMAIN') ? '*' : '' )?></label>
+            <input type="text" class="form-control" name="SITE_FIELD[DOMAIN]" required value="<?=$arResult['FIELDS']['DOMAIN']['VALUE']?>" placeholder="http://example.com" />
             <small class="form-text text-muted">С http://</small>
         </div>
         <div class="form-group">
-            <label>Источник данных <?= ( $funIsRequired( 'RESOURCE_TYPE' ) ? '*' : '' ) ?></label>
+            <label>Источник данных <?=( $funIsRequired('RESOURCE_TYPE') ? '*' : '' )?></label>
             <select name="SITE_FIELD[RESOURCE_TYPE]" class="custom-select mb-3" required>
-                <option value="LINK" <?= $arResult[ 'FIELDS' ][ 'RESOURCE_TYPE' ][ 'VALUE' ] == 'LINK' ? 'selected' : '' ?> >
+                <option value="LINK" <?=$arResult['FIELDS']['RESOURCE_TYPE']['VALUE'] == 'LINK' ? 'selected' : ''?> >
                     Ссылка на файл
                 </option>
-                <option value="FILE" <?= $arResult[ 'FIELDS' ][ 'RESOURCE_TYPE' ][ 'VALUE' ] == 'FILE' ? 'selected' : '' ?> >
+                <option value="FILE" <?=$arResult['FIELDS']['RESOURCE_TYPE']['VALUE'] == 'FILE' ? 'selected' : ''?> >
                     Загрузить файл
                 </option>
             </select>
@@ -55,10 +62,11 @@ $funIsRequired = function ( $strCode ) use ( $arResult ) {
             </div>
             <div class="form-group">
                 <label>Ссылка на файл XML *</label>
-                <input type="text" class="form-control" name="SITE_FIELD[FILE_LINK]" value="<?= $arResult[ 'FIELDS' ][ 'FILE_LINK' ][ 'VALUE' ] ?>" />
+                <input type="text" class="form-control" name="SITE_FIELD[FILE_LINK]" value="<?=$arResult['FIELDS']['FILE_LINK']['VALUE']?>" />
                 <small class="form-text text-muted">Ссылка должна вести на файл формата <b>.xml</b>. Так же стоит
                     учитывать, что мы не принимаем файлы, генерируемые "на лету", т.к. время ожидания и скачивания файла
-                    ограничено!
+                    ограничено!<br />
+                    Ограничение по размеру - <?=$component->intMaxDownloadXMLFileSizeMb?> Мб.
                 </small>
             </div>
             <div class="form-group">
@@ -72,11 +80,11 @@ $funIsRequired = function ( $strCode ) use ( $arResult ) {
             </div>
             <div class="form-group">
                 <label>Логин для авторизации</label>
-                <input type="text" class="form-control" name="SITE_FIELD[HTTP_AUTH_LOGIN]" value="<?= $arResult[ 'FIELDS' ][ 'HTTP_AUTH_LOGIN' ][ 'VALUE' ] ?>" />
+                <input type="text" class="form-control" name="SITE_FIELD[HTTP_AUTH_LOGIN]" value="<?=$arResult['FIELDS']['HTTP_AUTH_LOGIN']['VALUE']?>" />
             </div>
             <div class="form-group">
                 <label>Пароль для авторизации</label>
-                <input type="text" class="form-control" name="SITE_FIELD[HTTP_AUTH_PASS]" value="<?= $arResult[ 'FIELDS' ][ 'HTTP_AUTH_PASS' ][ 'VALUE' ] ?>" />
+                <input type="text" class="form-control" name="SITE_FIELD[HTTP_AUTH_PASS]" value="<?=$arResult['FIELDS']['HTTP_AUTH_PASS']['VALUE']?>" />
             </div>
 
         </div>
@@ -93,7 +101,7 @@ $funIsRequired = function ( $strCode ) use ( $arResult ) {
                     <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                 </div>
                 <small class="form-text text-muted">Может быть загружен только XML. Ограничение по размеру
-                    - <?= $component->intMaxUploadXMLFileSizeMb ?> Мб.
+                    - <?=$component->intMaxUploadXMLFileSizeMb?> Мб.
                 </small>
             </div>
 
@@ -106,9 +114,12 @@ $funIsRequired = function ( $strCode ) use ( $arResult ) {
             </button>
         </div>
 
-        <? if ( $arResult[ 'ADD_STATUS' ] == 'ERROR' ): ?>
+        <? if( $arResult['ADD_STATUS'] == 'ERROR' ): ?>
             <div class="alert alert-danger" role="alert">
-                <?= implode( '<br/>', $arResult[ 'ERROR_TEXT' ] ) ?>
+                <?=implode(
+                    '<br/>',
+                    $arResult['ERROR_TEXT']
+                )?>
             </div>
         <? endif; ?>
 
@@ -117,8 +128,11 @@ $funIsRequired = function ( $strCode ) use ( $arResult ) {
 <? endif; ?>
 
 
-<a href="<?= \Local\Core\Inner\Route::getRouteTo( 'site', 'list',
-    ['#COMPANY_ID#' => $arParams[ 'COMPANY_ID' ]] ) ?>" class="btn btn-dark">
+<a href="<?=\Local\Core\Inner\Route::getRouteTo(
+    'site',
+    'list',
+    ['#COMPANY_ID#' => $arParams['COMPANY_ID']]
+)?>" class="btn btn-dark">
     <ion-icon name="arrow-round-back"></ion-icon>
     Вернуться к сайтам</a>
 

@@ -15,28 +15,50 @@ function isDev()
  * Некий аналог print_r / print / echo
  *
  * @param      $value - Данные
- * @param bool $die - Прервать выполнение сраницы
+ * @param bool $die   - Прервать выполнение сраницы
  * @param bool $bHtml - Преобразование в HTML
  */
-function p( $value, $die = false, $bHtml = true )
+function p($value, $die = false, $bHtml = true)
 {
-    if ( is_bool( $value ) )
+    if( is_bool($value) )
     {
         $value = 'bool: '.( $value == true ? 'true' : 'false' );
     }
 
-    $sReturn = print_r( $value, true );
+    $sReturn = print_r(
+        $value,
+        true
+    );
     $debug_backtrace = debug_backtrace();
 
     /* php-cli */
-    if ( defined( "STDIN" ) )
+    if( defined("STDIN") )
     {
 
-        if ( substr( ltrim( $sReturn ), 0, 1 ) === "*" )
+        if(
+            substr(
+                ltrim($sReturn),
+                0,
+                1
+            ) === "*"
+        )
         {
-            $pos = strpos( $sReturn, "*" );
-            echo "\r".str_repeat( " ", 40 );
-            echo "\r".substr( $sReturn, 0, $pos ).substr( $sReturn, $pos + 1 );
+            $pos = strpos(
+                $sReturn,
+                "*"
+            );
+            echo "\r".str_repeat(
+                    " ",
+                    40
+                );
+            echo "\r".substr(
+                    $sReturn,
+                    0,
+                    $pos
+                ).substr(
+                     $sReturn,
+                     $pos + 1
+                 );
         }
         else
         {
@@ -49,17 +71,20 @@ function p( $value, $die = false, $bHtml = true )
     else
     {
 
-        if ( $bHtml )
+        if( $bHtml )
         {
-            $sReturn = htmlspecialchars( $sReturn );
+            $sReturn = htmlspecialchars($sReturn);
         }
 
-        echo "<pre data-source=\"".substr( $debug_backtrace[ 0 ][ "file" ],
-                strlen( $_SERVER[ "DOCUMENT_ROOT" ] ) ).":".$debug_backtrace[ 0 ][ "line" ]."\" style=\"text-align:left;overflow:auto; color: #000; background-color: white; border: 1px solid #CCC; padding: 5px; font-size: 12px; line-height: 18px;\">".$sReturn."</pre>";
+        echo "<pre data-source=\"".substr(
+                $debug_backtrace[0]["file"],
+                strlen($_SERVER["DOCUMENT_ROOT"])
+            ).":".$debug_backtrace[0]["line"]
+             ."\" style=\"text-align:left;overflow:auto; color: #000; background-color: white; border: 1px solid #CCC; padding: 5px; font-size: 12px; line-height: 18px;\">".$sReturn."</pre>";
 
     }
 
-    if ( $die )
+    if( $die )
     {
         ob_get_flush();
         die();

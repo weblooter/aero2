@@ -4,10 +4,10 @@ namespace Local\Core\Inner\AdminHelper\EditField;
 
 class SelectPlusTexts extends Select
 {
-    protected $variants         = [];
-    private   $inputs           = [];
-    private   $inputSeparator   = 'x';
-    private   $valueModificator = null;
+    protected $variants = [];
+    private $inputs = [];
+    private $inputSeparator = 'x';
+    private $valueModificator = null;
 
     /**
      * {@inheritdoc}
@@ -15,7 +15,7 @@ class SelectPlusTexts extends Select
     public function getEditFieldHtml()
     {
         $variants = [
-            "reference" => array_values($this->variants),
+            "reference"    => array_values($this->variants),
             "reference_id" => array_keys($this->variants),
         ];
 
@@ -25,12 +25,21 @@ class SelectPlusTexts extends Select
         {
             if( $this->valueModificator )
             {
-                $value = call_user_func($this->valueModificator, $value);
+                $value = call_user_func(
+                    $this->valueModificator,
+                    $value
+                );
             }
         }
 
         $return = [];
-        $return[] = SelectBoxFromArray($this->getCode().'[]', $variants, $value[0], "Не выбрано", "");
+        $return[] = SelectBoxFromArray(
+            $this->getCode().'[]',
+            $variants,
+            $value[0],
+            "Не выбрано",
+            ""
+        );
         $arInputs = [];
         foreach( $this->inputs as $inputKey => $arInput )
         {
@@ -57,13 +66,22 @@ class SelectPlusTexts extends Select
             }
 
             $i[] = '/>';
-            $arInputs[] = join(' ', $i);
+            $arInputs[] = join(
+                ' ',
+                $i
+            );
 
         }
 
-        $return[] = join($this->inputSeparator, $arInputs);
+        $return[] = join(
+            $this->inputSeparator,
+            $arInputs
+        );
 
-        return join('&nbsp;', $return);
+        return join(
+            '&nbsp;',
+            $return
+        );
     }
 
     /**

@@ -16,20 +16,40 @@ abstract class Base
     {
         global $APPLICATION, $USER_FIELD_MANAGER;
 
-        if( in_array(static::GetCurPage(), static::PAGES) )
+        if(
+        in_array(
+            static::GetCurPage(),
+            static::PAGES
+        )
+        )
         {
-            AddEventHandler("main", "OnAdminTabControlBegin", array(get_called_class(), 'OnAdminTabControlBegin'));
-            AddEventHandler("main", "OnEndBufferContent", array(get_called_class(), 'OnEndBufferContent'));
+            AddEventHandler(
+                "main",
+                "OnAdminTabControlBegin",
+                array(get_called_class(), 'OnAdminTabControlBegin')
+            );
+            AddEventHandler(
+                "main",
+                "OnEndBufferContent",
+                array(get_called_class(), 'OnEndBufferContent')
+            );
 
             if( $_SERVER["REQUEST_METHOD"] == "POST" )
             {
-                AddEventHandler("main", "OnBeforeLocalRedirect", array(get_called_class(), 'OnBeforeLocalRedirect'));
+                AddEventHandler(
+                    "main",
+                    "OnBeforeLocalRedirect",
+                    array(get_called_class(), 'OnBeforeLocalRedirect')
+                );
 
                 if( $ENTITY_ID = static::GetEntityId($_REQUEST[static::REQUEST_PARAM_NAME]) )
                 {
 
                     $arUfFields = $_REQUEST;
-                    $USER_FIELD_MANAGER->EditFormAddFields(static::UF_PROPERTY_ID, $arUfFields);
+                    $USER_FIELD_MANAGER->EditFormAddFields(
+                        static::UF_PROPERTY_ID,
+                        $arUfFields
+                    );
                     $arFields = $USER_FIELD_MANAGER->GetUserFields(static::UF_PROPERTY_ID);
 
                     foreach( $arFields as $fieldName => $arField )
@@ -54,9 +74,19 @@ abstract class Base
                         }
                     }
 
-                    if( $USER_FIELD_MANAGER->CheckFields(static::UF_PROPERTY_ID, $ENTITY_ID, $arUfFields) )
+                    if(
+                    $USER_FIELD_MANAGER->CheckFields(
+                        static::UF_PROPERTY_ID,
+                        $ENTITY_ID,
+                        $arUfFields
+                    )
+                    )
                     {
-                        $USER_FIELD_MANAGER->Update(static::UF_PROPERTY_ID, $ENTITY_ID, $arUfFields);
+                        $USER_FIELD_MANAGER->Update(
+                            static::UF_PROPERTY_ID,
+                            $ENTITY_ID,
+                            $arUfFields
+                        );
                     }
                     else
                     {
@@ -78,11 +108,20 @@ abstract class Base
 
     public static function OnEndBufferContent(&$content)
     {
-        if( in_array(static::GetCurPage(), static::PAGES) )
+        if(
+        in_array(
+            static::GetCurPage(),
+            static::PAGES
+        )
+        )
         {
             foreach( static::PAGES as $page )
             {
-                $content = preg_replace("#(\<form.*?action=\"{$page}.*?\")#is", "\\1 enctype=\"multipart/form-data\"", $content);
+                $content = preg_replace(
+                    "#(\<form.*?action=\"{$page}.*?\")#is",
+                    "\\1 enctype=\"multipart/form-data\"",
+                    $content
+                );
             }
         }
     }
@@ -91,13 +130,30 @@ abstract class Base
     {
         foreach( $_REQUEST as $k => $v )
         {
-            if( strpos($k, "active_tab") > 0 && strpos($v, "user_fields") === 0 )
+            if(
+                strpos(
+                    $k,
+                    "active_tab"
+                ) > 0
+                && strpos(
+                       $v,
+                       "user_fields"
+                   ) === 0
+            )
             {
                 foreach( static::PAGES as $page )
                 {
-                    if( strpos($url, $page) === 0 )
+                    if(
+                        strpos(
+                            $url,
+                            $page
+                        ) === 0
+                    )
                     {
-                        $url .= ( ( strpos($url, "?") > 0 ? "&" : "?" ) )."{$k}={$v}";
+                        $url .= ( ( strpos(
+                                        $url,
+                                        "?"
+                                    ) > 0 ? "&" : "?" ) )."{$k}={$v}";
                         break 2;
                     }
                 }
@@ -110,14 +166,23 @@ abstract class Base
     {
         global $USER_FIELD_MANAGER;
 
-        if( in_array(static::GetCurPage(), static::PAGES) )
+        if(
+        in_array(
+            static::GetCurPage(),
+            static::PAGES
+        )
+        )
         {
             if( $ENTITY_ID = static::GetEntityId($_REQUEST[static::REQUEST_PARAM_NAME]) )
             {
                 $arTab = $USER_FIELD_MANAGER->EditFormTab(static::UF_PROPERTY_ID);
 
                 ob_start();
-                $USER_FIELD_MANAGER->EditFormShowTab(static::UF_PROPERTY_ID, false, $ENTITY_ID);
+                $USER_FIELD_MANAGER->EditFormShowTab(
+                    static::UF_PROPERTY_ID,
+                    false,
+                    $ENTITY_ID
+                );
                 $arTab["CONTENT"] = ob_get_clean();
 
                 $form->tabs[] = $arTab;

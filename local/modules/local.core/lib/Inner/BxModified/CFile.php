@@ -39,15 +39,34 @@ class CFile extends \CFile
         }
         else
         {
-            $strNewSavePath = explode('/', $strSavePath);
-            $strNewSavePath = array_diff($strNewSavePath, ['local.core'], ['']);
-            $strNewSavePath = array_merge(['local.core'], $strNewSavePath);
-            $strNewSavePath = array_map('trim', $strNewSavePath);
+            $strNewSavePath = explode(
+                '/',
+                $strSavePath
+            );
+            $strNewSavePath = array_diff(
+                $strNewSavePath,
+                ['local.core'],
+                ['']
+            );
+            $strNewSavePath = array_merge(
+                ['local.core'],
+                $strNewSavePath
+            );
+            $strNewSavePath = array_map(
+                'trim',
+                $strNewSavePath
+            );
         }
 
-        $strNewSavePath = '/'.implode('/', $strNewSavePath).'/';
+        $strNewSavePath = '/'.implode(
+                '/',
+                $strNewSavePath
+            ).'/';
 
-        return parent::SaveFile($arFile, $strNewSavePath);
+        return parent::SaveFile(
+            $arFile,
+            $strNewSavePath
+        );
     }
 
     /**
@@ -65,11 +84,17 @@ class CFile extends \CFile
         $strExtension = preg_quote($strExtension);
         if( is_array($mixFile) )
         {
-            return ( preg_match('/('.$strExtension.')$/', trim($mixFile['name'])) === 1 );
+            return ( preg_match(
+                         '/('.$strExtension.')$/',
+                         trim($mixFile['name'])
+                     ) === 1 );
         }
         else
         {
-            return ( preg_match('/('.$strExtension.')$/', trim($mixFile)) === 1 );
+            return ( preg_match(
+                         '/('.$strExtension.')$/',
+                         trim($mixFile)
+                     ) === 1 );
         }
     }
 }

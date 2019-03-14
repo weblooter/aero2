@@ -162,10 +162,42 @@ abstract class EditBase
     protected function getEditLink($fields = [])
     {
         $editLink = new \Bitrix\Main\Web\Uri($this->app->GetCurPage());
-        $editLink->addParams(array_merge([
-            "id" => $this->id,
-            "lang" => LANGUAGE_ID,
-        ], $fields));
+        $editLink->addParams(
+            array_merge(
+                [
+                    "id"   => $this->id,
+                    "lang" => LANGUAGE_ID,
+                ],
+                $fields
+            )
+        );
+
+        return $editLink->getUri();
+    }
+
+
+    /**
+     * Возвращает путь до создания нового элемента
+     *
+     * @param $fields - массив полей
+     *
+     * @return string
+     */
+    protected function getEditAndNewLink($fields = [])
+    {
+        $editLink = new \Bitrix\Main\Web\Uri($this->app->GetCurPage());
+        $editLink->addParams(
+            array_merge(
+                [
+                    "lang" => LANGUAGE_ID,
+                ],
+                [
+                    'adminEntity' => \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('adminEntity'),
+                    'adminAction' => \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('adminAction'),
+                ],
+                $fields
+            )
+        );
 
         return $editLink->getUri();
     }
@@ -182,7 +214,7 @@ abstract class EditBase
             return;
         }
 
-        if( $request->get("save") || $request->get("apply") && $this->checkRights("editAction") )
+        if( ( $request->get("save") || $request->get("save_and_add") || $request->get("apply") ) && $this->checkRights("editAction") )
         {
 
             $result = $this->editAction($request);
@@ -193,9 +225,13 @@ abstract class EditBase
                 {
                     LocalRedirect($this->getEditLink(["tabControl_active_tab" => $this->CAdminTabControl->GetSelectedTab()]));
                 }
-                else
+                elseif( $request->get("save") !== null )
                 {
                     LocalRedirect($this->getListLink());
+                }
+                elseif( $request->get("save_and_add") !== null )
+                {
+                    LocalRedirect($this->getEditAndNewLink());
                 }
             }
             else
@@ -204,25 +240,37 @@ abstract class EditBase
             }
 
         }
-        else if( $request->get("action") )
+        else
         {
-
-            $methodName = $request->get("action")."Action";
-            if( $this->checkRights($methodName) && method_exists($this, $methodName) )
+            if( $request->get("action") )
             {
 
-                $resAction = call_user_func([$this, $methodName], $request);
-                if( $resAction->isSuccess() )
+                $methodName = $request->get("action")."Action";
+                if(
+                    $this->checkRights($methodName)
+                    && method_exists(
+                        $this,
+                        $methodName
+                    )
+                )
                 {
-                    LocalRedirect($this->getListLink());
-                }
-                else
-                {
-                    $this->resultAction->addErrors($resAction->getErrors());
+
+                    $resAction = call_user_func(
+                        [$this, $methodName],
+                        $request
+                    );
+                    if( $resAction->isSuccess() )
+                    {
+                        LocalRedirect($this->getListLink());
+                    }
+                    else
+                    {
+                        $this->resultAction->addErrors($resAction->getErrors());
+                    }
+
                 }
 
             }
-
         }
     }
 
@@ -245,19 +293,31 @@ abstract class EditBase
         $setDataResult = $this->setData();
         if( !$setDataResult->isSuccess() )
         {
-            echo ( new \CAdminMessage(implode("\n", $setDataResult->getErrorMessages())) )->Show();
+            echo ( new \CAdminMessage(
+                implode(
+                    "\n",
+                    $setDataResult->getErrorMessages()
+                )
+            ) )->Show();
             require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php" );
 
             return;
         }
 
         ( new \CAdminContextMenu($this->getUpperButtons()) )->Show();
-        $this->CAdminTabControl = new \CAdminTabControl("tabControl", $this->getTabsList());
+        $this->CAdminTabControl = new \CAdminTabControl(
+            "tabControl", $this->getTabsList()
+        );
 
         $this->executeAction();
         if( !$this->resultAction->isSuccess() )
         {
-            echo ( new \CAdminMessage(implode("\n", $this->resultAction->getErrorMessages())) )->Show();
+            echo ( new \CAdminMessage(
+                implode(
+                    "\n",
+                    $this->resultAction->getErrorMessages()
+                )
+            ) )->Show();
         }
 
         ?>
@@ -286,10 +346,13 @@ abstract class EditBase
             }
         }
 
-        $this->CAdminTabControl->Buttons([
-            "disabled" => false,
-            "back_url" => $this->getListLink(),
-        ]);
+        $this->CAdminTabControl->Buttons(
+            [
+                "disabled"      => false,
+                "back_url"      => $this->getListLink(),
+                'btnSaveAndAdd' => true
+            ]
+        );
         $this->CAdminTabControl->End();
 
         if( !empty($this->getNote()) )

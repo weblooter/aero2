@@ -12,7 +12,7 @@ abstract class Base
 {
     protected $elementData;
     protected $fields;
-    private   $required;
+    private $required;
     protected $isEditable = true;
 
     /**
@@ -110,13 +110,16 @@ abstract class Base
             {
                 $value = $request->get($this->getCode());
             }
-            else if( !empty($this->elementData) && is_array($this->elementData) )
-            {
-                $value = $this->elementData[$this->getCode()];
-            }
             else
             {
-                $value = $this->getDefaultValue();
+                if( !empty($this->elementData) && is_array($this->elementData) )
+                {
+                    $value = $this->elementData[$this->getCode()];
+                }
+                else
+                {
+                    $value = $this->getDefaultValue();
+                }
             }
         }
 

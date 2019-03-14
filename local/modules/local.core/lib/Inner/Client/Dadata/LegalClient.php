@@ -31,7 +31,10 @@ class LegalClient extends BaseClient
     public function suggest(Interfaces\QueryInterface $query)
     {
 
-        return parent::suggest($this->resource, $query);
+        return parent::suggest(
+            $this->resource,
+            $query
+        );
     }
 
     protected function signHash(&$response)

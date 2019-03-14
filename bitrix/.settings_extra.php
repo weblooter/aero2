@@ -46,7 +46,11 @@ $conf = [
     'site' => [
         'value' => [
             'upload_xml' => [
-                'max_size_mb' => 75
+                'max_size_mb' => 75 // Максимальный размер загружаемого файла
+            ],
+            'download_xml' => [
+                'max_size_mb' => 300, // Максимальный размер скачиваемого файла
+                'connect_timeout' => 180 // Количество секунд ожидания при попытке скачивания
             ]
         ],
         'readonly' => true
@@ -57,7 +61,7 @@ $conf = [
      */
     'job_queue' => [
         'value' => [
-            'MAXIMUM_WORKERS' => 2
+            'MAXIMUM_WORKERS' => 2 // Максимальное кол-во одновременно запущенных воркеров
         ],
         'readonly' => true
     ],
