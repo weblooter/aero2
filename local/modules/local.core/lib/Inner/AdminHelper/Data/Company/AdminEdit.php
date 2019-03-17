@@ -85,7 +85,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     protected function setData()
     {
         $result = new \Bitrix\Main\Result();
-        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+        $request = \Bitrix\Main\Context::getCurrent()
+            ->getRequest();
 
         if( $request->get("id") !== null )
         {
@@ -98,9 +99,10 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                         "filter" => [
                             "=ID" => (int)$request->get("id")
                         ],
-                        "limit"  => 1
+                        "limit" => 1
                     ]
-                )->fetch();
+                )
+                    ->fetch();
 
             }
             catch( \Exception $e )
@@ -140,10 +142,10 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
         $buttons = [
             [
-                "TEXT"  => "Вернуться к списку ",
-                "LINK"  => $this->getListLink(),
+                "TEXT" => "Вернуться к списку ",
+                "LINK" => $this->getListLink(),
                 "TITLE" => "Вернуться к списку ",
-                "ICON"  => "btn_list",
+                "ICON" => "btn_list",
             ]
         ];
 
@@ -151,31 +153,33 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
         {
 
             if(
-            $this->checkRights("can_add")->isSuccess()
+            $this->checkRights("can_add")
+                ->isSuccess()
             )
             {
                 $buttons[] = [
-                    "TEXT"  => "Добавить",
-                    "LINK"  => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
+                    "TEXT" => "Добавить",
+                    "LINK" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
                         [
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
                         ]
                     ),
                     "TITLE" => "Добавить компанию",
-                    "ICON"  => "btn_new",
+                    "ICON" => "btn_new",
                 ];
             }
 
             if(
-            $this->checkRights("can_delete")->isSuccess()
+            $this->checkRights("can_delete")
+                ->isSuccess()
             )
             {
                 $buttons[] = [
-                    "TEXT"  => "Удалить",
-                    "LINK"  => "javascript:if(confirm('Действительно удалить?'))window.location='".$this->getEditLink(["id" => $this->id])."&action=delete&".bitrix_sessid_get()."';",
+                    "TEXT" => "Удалить",
+                    "LINK" => "javascript:if(confirm('Действительно удалить?'))window.location='".$this->getEditLink(["id" => $this->id])."&action=delete&".bitrix_sessid_get()."';",
                     "TITLE" => "Удалить компанию",
-                    "ICON"  => "btn_delete",
+                    "ICON" => "btn_delete",
                 ];
             }
 
@@ -191,18 +195,18 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
         return [
             [
-                "DIV"   => "main",
-                "TAB"   => "Основное",
+                "DIV" => "main",
+                "TAB" => "Основное",
                 "TITLE" => "Основное"
             ],
             [
-                "DIV"   => "ur_data",
-                "TAB"   => "Данные юр. лица",
+                "DIV" => "ur_data",
+                "TAB" => "Данные юр. лица",
                 "TITLE" => "Данные юр. лица"
             ],
             [
-                "DIV"   => "ur_address",
-                "TAB"   => "Юр. адрес",
+                "DIV" => "ur_address",
+                "TAB" => "Юр. адрес",
                 "TITLE" => "Юр. адрес"
             ],
         ];
@@ -215,9 +219,11 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
 
         $canEdit = ( ( (int)$this->id > 0
-                       && $this->checkRights("can_edit")->isSuccess() )
+                       && $this->checkRights("can_edit")
+                           ->isSuccess() )
                      || ( (int)$this->id == 0
-                          && $this->checkRights("can_add")->isSuccess() ) ) ? true : false;
+                          && $this->checkRights("can_add")
+                              ->isSuccess() ) ) ? true : false;
 
         $columnName = [];
         $map = \Local\Core\Model\Data\CompanyTable::getMap();
@@ -244,7 +250,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\User(
                     $columnName['USER_OWN_ID'], 'USER_OWN_ID'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Date(
                     $columnName["DATE_CREATE"], "DATE_CREATE"
@@ -256,79 +263,97 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Select(
                     $columnName["VERIFIED"], "VERIFIED"
-                ) )->setEditable($canEdit)->setVariants(CompanyTable::getEnumFieldHtmlValues('VERIFIED')),
+                ) )->setEditable($canEdit)
+                    ->setVariants(CompanyTable::getEnumFieldHtmlValues('VERIFIED')),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Textarea(
                     $columnName['VERIFIED_NOTE'], 'VERIFIED_NOTE'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
             ],
 
             'ur_data' => [
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_INN'], 'COMPANY_INN'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_NAME_SHORT'], 'COMPANY_NAME_SHORT'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_NAME_FULL'], 'COMPANY_NAME_FULL'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_OGRN'], 'COMPANY_OGRN'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_KPP'], 'COMPANY_KPP'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_OKPO'], 'COMPANY_OKPO'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_OKTMO'], 'COMPANY_OKTMO'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_DIRECTOR'], 'COMPANY_DIRECTOR'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ACCOUNTANT'], 'COMPANY_ACCOUNTANT'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
             ],
 
             'ur_address' => [
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ADDRESS_COUNTRY'], 'COMPANY_ADDRESS_COUNTRY'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ADDRESS_REGION'], 'COMPANY_ADDRESS_REGION'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ADDRESS_AREA'], 'COMPANY_ADDRESS_AREA'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ADDRESS_CITY'], 'COMPANY_ADDRESS_CITY'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ADDRESS_ADDRESS'], 'COMPANY_ADDRESS_ADDRESS'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ADDRESS_OFFICE'], 'COMPANY_ADDRESS_OFFICE'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ADDRESS_ZIP'], 'COMPANY_ADDRESS_ZIP'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
             ]
         ];
     }
@@ -350,28 +375,28 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
         $id = (int)$request->getPost("ID");
         $arFields = [
-            'ACTIVE'        => $request->getPost("ACTIVE") ?? "N",
-            'USER_OWN_ID'   => trim($request->getPost('USER_OWN_ID')),
-            'VERIFIED'      => $request->getPost("VERIFIED") ?? "N",
+            'ACTIVE' => $request->getPost("ACTIVE") ?? "N",
+            'USER_OWN_ID' => trim($request->getPost('USER_OWN_ID')),
+            'VERIFIED' => $request->getPost("VERIFIED") ?? "N",
             'VERIFIED_NOTE' => trim($request->getPost('VERIFIED_NOTE')),
 
-            'COMPANY_INN'        => trim($request->getPost('COMPANY_INN')),
+            'COMPANY_INN' => trim($request->getPost('COMPANY_INN')),
             'COMPANY_NAME_SHORT' => trim($request->getPost('COMPANY_NAME_SHORT')),
-            'COMPANY_NAME_FULL'  => trim($request->getPost('COMPANY_NAME_FULL')),
-            'COMPANY_OGRN'       => trim($request->getPost('COMPANY_OGRN')),
-            'COMPANY_KPP'        => trim($request->getPost('COMPANY_KPP')),
-            'COMPANY_OKPO'       => trim($request->getPost('COMPANY_OKPO')),
-            'COMPANY_OKTMO'      => trim($request->getPost('COMPANY_OKTMO')),
-            'COMPANY_DIRECTOR'   => trim($request->getPost('COMPANY_DIRECTOR')),
+            'COMPANY_NAME_FULL' => trim($request->getPost('COMPANY_NAME_FULL')),
+            'COMPANY_OGRN' => trim($request->getPost('COMPANY_OGRN')),
+            'COMPANY_KPP' => trim($request->getPost('COMPANY_KPP')),
+            'COMPANY_OKPO' => trim($request->getPost('COMPANY_OKPO')),
+            'COMPANY_OKTMO' => trim($request->getPost('COMPANY_OKTMO')),
+            'COMPANY_DIRECTOR' => trim($request->getPost('COMPANY_DIRECTOR')),
             'COMPANY_ACCOUNTANT' => trim($request->getPost('COMPANY_ACCOUNTANT')),
 
             'COMPANY_ADDRESS_COUNTRY' => trim($request->getPost('COMPANY_ADDRESS_COUNTRY')),
-            'COMPANY_ADDRESS_REGION'  => trim($request->getPost('COMPANY_ADDRESS_REGION')),
-            'COMPANY_ADDRESS_AREA'    => trim($request->getPost('COMPANY_ADDRESS_AREA')),
-            'COMPANY_ADDRESS_CITY'    => trim($request->getPost('COMPANY_ADDRESS_CITY')),
+            'COMPANY_ADDRESS_REGION' => trim($request->getPost('COMPANY_ADDRESS_REGION')),
+            'COMPANY_ADDRESS_AREA' => trim($request->getPost('COMPANY_ADDRESS_AREA')),
+            'COMPANY_ADDRESS_CITY' => trim($request->getPost('COMPANY_ADDRESS_CITY')),
             'COMPANY_ADDRESS_ADDRESS' => trim($request->getPost('COMPANY_ADDRESS_ADDRESS')),
-            'COMPANY_ADDRESS_OFFICE'  => trim($request->getPost('COMPANY_ADDRESS_OFFICE')),
-            'COMPANY_ADDRESS_ZIP'     => trim($request->getPost('COMPANY_ADDRESS_ZIP')),
+            'COMPANY_ADDRESS_OFFICE' => trim($request->getPost('COMPANY_ADDRESS_OFFICE')),
+            'COMPANY_ADDRESS_ZIP' => trim($request->getPost('COMPANY_ADDRESS_ZIP')),
 
         ];
 
@@ -491,7 +516,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             [
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                "id"                                                   => $this->id,
+                "id" => $this->id,
             ]
         );
     }

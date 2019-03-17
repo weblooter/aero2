@@ -1,6 +1,9 @@
 <?
 require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
-$intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID');
+$intCompanyId = \Bitrix\Main\Application::getInstance()
+    ->getContext()
+    ->getRequest()
+    ->get('COMPANY_ID');
 
 $APPLICATION->SetTitle("Список сайтов");
 $APPLICATION->SetPageProperty(

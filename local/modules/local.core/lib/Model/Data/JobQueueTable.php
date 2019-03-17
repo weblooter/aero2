@@ -71,13 +71,13 @@ class JobQueueTable extends Entity\DataManager
         return array(
             new Orm\Fields\IntegerField(
                 'ID', [
-                    'primary'      => true,
+                    'primary' => true,
                     'autocomplete' => true,
                 ]
             ),
             new Orm\Fields\StringField(
                 'EXECUTE_BY', [
-                    'primary'       => true,
+                    'primary' => true,
                     'default_value' => self::EXECUTE_BY_DEFAULT,
                 ]
             ),
@@ -86,20 +86,20 @@ class JobQueueTable extends Entity\DataManager
             ),
             new Orm\Fields\TextField(
                 'INPUT_DATA', [
-                    'required'   => true,
+                    'required' => true,
                     'serialized' => true,
                 ]
             ),
             new Orm\Fields\StringField('HASH'),
             new Orm\Fields\IntegerField(
                 'ATTEMPTS_LEFT', [
-                    'required'      => true,
+                    'required' => true,
                     'default_value' => 10,
                 ]
             ),
             new Orm\Fields\EnumField(
                 'STATUS', [
-                    'values'        => [
+                    'values' => [
                         self::STATUS_ENUM_NEW,
                         self::STATUS_ENUM_SUCCESS,
                         self::STATUS_ENUM_ERROR,
@@ -115,7 +115,7 @@ class JobQueueTable extends Entity\DataManager
             ),
             new Orm\Fields\EnumField(
                 'IS_EXECUTE_NOW', [
-                    'values'        => ['Y', 'N'],
+                    'values' => ['Y', 'N'],
                     'default_value' => 'N',
                 ]
             ),
@@ -166,7 +166,8 @@ class JobQueueTable extends Entity\DataManager
             $source = [];
             if( !$class || !$input )
             {
-                $source = self::getById($primary)->fetch();
+                $source = self::getById($primary)
+                    ->fetch();
             }
 
             $result->modifyFields(

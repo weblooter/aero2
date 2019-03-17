@@ -15,7 +15,7 @@ class SelectPlusTexts extends Select
     public function getEditFieldHtml()
     {
         $variants = [
-            "reference"    => array_values($this->variants),
+            "reference" => array_values($this->variants),
             "reference_id" => array_keys($this->variants),
         ];
 

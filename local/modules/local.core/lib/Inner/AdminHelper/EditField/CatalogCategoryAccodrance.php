@@ -39,20 +39,20 @@ class CatalogCategoryAccodrance extends Base
                 'bitrix:main.lookup.input',
                 'iblockedit',
                 array(
-                    'CONTROL_ID'                 => $this->getCode().'_'.mt_rand(
+                    'CONTROL_ID' => $this->getCode().'_'.mt_rand(
                             0,
                             10000
                         ),
-                    'INPUT_NAME'                 => $this->getCode().'['.$st['ID'].']',
-                    'INPUT_NAME_STRING'          => 'text_area_'.$this->getCode().'['.$st['ID'].']',
-                    'INPUT_VALUE_STRING'         => $currentValue,
-                    'START_TEXT'                 => "Начните вводить текст",
-                    'SEARCH_DATA_FILE'           => $this->_marketTaxonomyFile,
+                    'INPUT_NAME' => $this->getCode().'['.$st['ID'].']',
+                    'INPUT_NAME_STRING' => 'text_area_'.$this->getCode().'['.$st['ID'].']',
+                    'INPUT_VALUE_STRING' => $currentValue,
+                    'START_TEXT' => "Начните вводить текст",
+                    'SEARCH_DATA_FILE' => $this->_marketTaxonomyFile,
                     'SEARCH_DATA_FILE_SEPARATOR' => $this->_marketTaxonomyFileSeparator,
-                    'MULTIPLE'                   => 'N',
-                    'WITHOUT_IBLOCK'             => 'Y',
-                    'FILTER'                     => 'Y',
-                    'TYPE'                       => 'SECTION',
+                    'MULTIPLE' => 'N',
+                    'WITHOUT_IBLOCK' => 'Y',
+                    'FILTER' => 'Y',
+                    'TYPE' => 'SECTION',
                 ),
                 null,
                 array('HIDE_ICONS' => 'Y')
@@ -143,7 +143,7 @@ class CatalogCategoryAccodrance extends Base
                 if( 2 == count($ar) )
                 {
                     $this->_marketTaxonomy[$ar[0]] = [
-                        'ID'   => $ar[0],
+                        'ID' => $ar[0],
                         'NAME' => $ar[1],
                     ];
                 }

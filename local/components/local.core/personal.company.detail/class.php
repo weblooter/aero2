@@ -31,7 +31,8 @@ class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitri
 
     private function __getResult()
     {
-        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+        $obCache = \Bitrix\Main\Application::getInstance()
+            ->getCache();
         $arResult = [];
 
         if(
@@ -51,10 +52,10 @@ class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitri
             $rsCompany = \Local\Core\Model\Data\CompanyTable::getList(
                 [
                     'filter' => [
-                        'ID'          => $this->arParams['COMPANY_ID'],
+                        'ID' => $this->arParams['COMPANY_ID'],
                         'USER_OWN_ID' => $GLOBALS['USER']->GetID()
                     ],
-                    'order'  => ['DATE_CREATE' => 'DESC'],
+                    'order' => ['DATE_CREATE' => 'DESC'],
                     'select' => [
                         'ID',
                         'ACTIVE',

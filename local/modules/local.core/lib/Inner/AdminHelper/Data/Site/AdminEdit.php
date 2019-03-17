@@ -85,7 +85,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     protected function setData()
     {
         $result = new \Bitrix\Main\Result();
-        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+        $request = \Bitrix\Main\Context::getCurrent()
+            ->getRequest();
 
         if( $request->get("id") !== null )
         {
@@ -94,15 +95,15 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
                 $body = \Local\Core\Model\Data\SiteTable::getList(
                     [
-                        "select"  => [
+                        "select" => [
                             "*",
                             'COMPANY_DATA_' => 'COMPANY',
-                            'FILE_DATA_'    => 'B_FILE'
+                            'FILE_DATA_' => 'B_FILE'
                         ],
-                        "filter"  => [
+                        "filter" => [
                             "=ID" => (int)$request->get("id")
                         ],
-                        "limit"   => 1,
+                        "limit" => 1,
                         'runtime' => [
                             new \Bitrix\Main\ORM\Fields\Relations\Reference(
                                 'B_FILE', \Bitrix\Main\FileTable::class, \Bitrix\Main\ORM\Query\Join::on(
@@ -112,7 +113,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                             )
                         ]
                     ]
-                )->fetch();
+                )
+                    ->fetch();
 
             }
             catch( \Exception $e )
@@ -152,10 +154,10 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
         $buttons = [
             [
-                "TEXT"  => "Вернуться к списку ",
-                "LINK"  => $this->getListLink(),
+                "TEXT" => "Вернуться к списку ",
+                "LINK" => $this->getListLink(),
                 "TITLE" => "Вернуться к списку ",
-                "ICON"  => "btn_list",
+                "ICON" => "btn_list",
             ]
         ];
 
@@ -163,33 +165,35 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
         {
 
             if(
-            $this->checkRights("can_add")->isSuccess()
+            $this->checkRights("can_add")
+                ->isSuccess()
             )
             {
                 $buttons[] = [
-                    "TEXT"  => "Добавить",
-                    "LINK"  => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
+                    "TEXT" => "Добавить",
+                    "LINK" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
                         [
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
                         ]
                     ),
                     "TITLE" => "Добавить сайт",
-                    "ICON"  => "btn_new",
+                    "ICON" => "btn_new",
                 ];
             }
 
             if(
-            $this->checkRights("can_delete")->isSuccess()
+            $this->checkRights("can_delete")
+                ->isSuccess()
             )
             {
                 $buttons[] = [
-                    "TEXT"  => "Удалить",
-                    "LINK"  => "javascript:if(confirm('Действительно удалить?'))window.location='".$this->getEditLink(
+                    "TEXT" => "Удалить",
+                    "LINK" => "javascript:if(confirm('Действительно удалить?'))window.location='".$this->getEditLink(
                             ["id" => $this->id]
                         )."&action=delete&".bitrix_sessid_get()."';",
                     "TITLE" => "Удалить сайт",
-                    "ICON"  => "btn_delete",
+                    "ICON" => "btn_delete",
                 ];
             }
 
@@ -205,8 +209,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
         return [
             [
-                "DIV"   => "main",
-                "TAB"   => "Основное",
+                "DIV" => "main",
+                "TAB" => "Основное",
                 "TITLE" => "Основное"
             ],
         ];
@@ -219,11 +223,13 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
 
         $canEdit = ( ( (int)$this->id > 0
-                       && $this->checkRights("can_edit")->isSuccess() )
+                       && $this->checkRights("can_edit")
+                           ->isSuccess() )
                      || ( (int)$this->id == 0
                           && $this->checkRights(
                     "can_add"
-                )->isSuccess() ) ) ? true : false;
+                )
+                              ->isSuccess() ) ) ? true : false;
 
         $columnName = [];
         $map = \Local\Core\Model\Data\SiteTable::getMap();
@@ -263,37 +269,53 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['COMPANY_ID'], 'COMPANY_ID'
-                ) )->setEditable($canEdit)->setRequired(true),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
+
+                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
+                    $columnName['NAME'], 'NAME'
+                ) )->setEditable(
+                    $canEdit
+                )
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['DOMAIN'], 'DOMAIN'
                 ) )->setEditable(
                     $canEdit
-                )->setRequired(true),
+                )
+                    ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Select(
                     $columnName["RESOURCE_TYPE"], "RESOURCE_TYPE"
-                ) )->setEditable($canEdit)->setRequired(true)->setVariants(SiteTable::getEnumFieldHtmlValues('RESOURCE_TYPE')),
+                ) )->setEditable($canEdit)
+                    ->setRequired(true)
+                    ->setVariants(SiteTable::getEnumFieldHtmlValues('RESOURCE_TYPE')),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\SimpleText(
                     $columnName['FILE_ID'], 'FILE_ID', $strHtmlFileValue
-                ) )->setEditable(false)->setRequired(false),
+                ) )->setEditable(false)
+                    ->setRequired(false),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['FILE_LINK'], 'FILE_LINK'
-                ) )->setEditable($canEdit)->setRequired(false),
+                ) )->setEditable($canEdit)
+                    ->setRequired(false),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Checkbox(
                     $columnName['HTTP_AUTH'], 'HTTP_AUTH'
-                ) )->setEditable($canEdit)->setRequired(false),
+                ) )->setEditable($canEdit)
+                    ->setRequired(false),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['HTTP_AUTH_LOGIN'], 'HTTP_AUTH_LOGIN'
-                ) )->setEditable($canEdit)->setRequired(false),
+                ) )->setEditable($canEdit)
+                    ->setRequired(false),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['HTTP_AUTH_PASS'], 'HTTP_AUTH_PASS'
-                ) )->setEditable($canEdit)->setRequired(false),
+                ) )->setEditable($canEdit)
+                    ->setRequired(false),
             ],
         ];
     }
@@ -315,14 +337,15 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
         $id = (int)$request->getPost("ID");
         $arFields = [
-            'ACTIVE'          => $request->getPost("ACTIVE") ?? "N",
-            'COMPANY_ID'      => trim($request->getPost('COMPANY_ID')),
-            'DOMAIN'          => trim($request->getPost('DOMAIN')),
-            'RESOURCE_TYPE'   => $request->getPost("RESOURCE_TYPE"),
-            'FILE_LINK'       => trim($request->getPost('FILE_LINK')),
-            'HTTP_AUTH'       => trim($request->getPost('HTTP_AUTH')) ?? 'N',
+            'ACTIVE' => $request->getPost("ACTIVE") ?? "N",
+            'COMPANY_ID' => trim($request->getPost('COMPANY_ID')),
+            'DOMAIN' => trim($request->getPost('DOMAIN')),
+            'NAME' => trim($request->getPost('NAME')),
+            'RESOURCE_TYPE' => $request->getPost("RESOURCE_TYPE"),
+            'FILE_LINK' => trim($request->getPost('FILE_LINK')),
+            'HTTP_AUTH' => trim($request->getPost('HTTP_AUTH')) ?? 'N',
             'HTTP_AUTH_LOGIN' => trim($request->getPost('HTTP_AUTH_LOGIN')),
-            'HTTP_AUTH_PASS'  => trim($request->getPost('HTTP_AUTH_PASS')),
+            'HTTP_AUTH_PASS' => trim($request->getPost('HTTP_AUTH_PASS')),
         ];
 
         if( (int)$id > 0 )
@@ -441,7 +464,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             [
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                "id"                                                   => $this->id,
+                "id" => $this->id,
             ]
         );
     }

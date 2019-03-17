@@ -165,7 +165,7 @@ abstract class EditBase
         $editLink->addParams(
             array_merge(
                 [
-                    "id"   => $this->id,
+                    "id" => $this->id,
                     "lang" => LANGUAGE_ID,
                 ],
                 $fields
@@ -192,8 +192,14 @@ abstract class EditBase
                     "lang" => LANGUAGE_ID,
                 ],
                 [
-                    'adminEntity' => \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('adminEntity'),
-                    'adminAction' => \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('adminAction'),
+                    'adminEntity' => \Bitrix\Main\Application::getInstance()
+                        ->getContext()
+                        ->getRequest()
+                        ->get('adminEntity'),
+                    'adminAction' => \Bitrix\Main\Application::getInstance()
+                        ->getContext()
+                        ->getRequest()
+                        ->get('adminAction'),
                 ],
                 $fields
             )
@@ -207,7 +213,8 @@ abstract class EditBase
      */
     private function executeAction()
     {
-        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+        $request = \Bitrix\Main\Context::getCurrent()
+            ->getRequest();
 
         if( ( !$request->isPost() && $request->get("action") === null ) || !check_bitrix_sessid() )
         {
@@ -225,11 +232,11 @@ abstract class EditBase
                 {
                     LocalRedirect($this->getEditLink(["tabControl_active_tab" => $this->CAdminTabControl->GetSelectedTab()]));
                 }
-                elseif( $request->get("save") !== null )
+                else if( $request->get("save") !== null )
                 {
                     LocalRedirect($this->getListLink());
                 }
-                elseif( $request->get("save_and_add") !== null )
+                else if( $request->get("save_and_add") !== null )
                 {
                     LocalRedirect($this->getEditAndNewLink());
                 }
@@ -348,8 +355,8 @@ abstract class EditBase
 
         $this->CAdminTabControl->Buttons(
             [
-                "disabled"      => false,
-                "back_url"      => $this->getListLink(),
+                "disabled" => false,
+                "back_url" => $this->getListLink(),
                 'btnSaveAndAdd' => true
             ]
         );

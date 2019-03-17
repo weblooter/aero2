@@ -29,7 +29,8 @@ class UserField
      */
     public static function set($entity_id, $value_id, $uf_id, $uf_value)
     {
-        return self::getUserFieldManager()->Update(
+        return self::getUserFieldManager()
+            ->Update(
                 $entity_id,
                 $value_id,
                 [$uf_id => $uf_value]
@@ -47,7 +48,8 @@ class UserField
      */
     public static function get($entity_id, $value_id, $uf_id)
     {
-        $arUF = self::getUserFieldManager()->GetUserFields(
+        $arUF = self::getUserFieldManager()
+            ->GetUserFields(
                 $entity_id,
                 $value_id
             );
@@ -62,7 +64,8 @@ class UserField
      */
     public static function getList($entity_id, $value_id)
     {
-        return self::getUserFieldManager()->GetUserFields(
+        return self::getUserFieldManager()
+            ->GetUserFields(
                 $entity_id,
                 $value_id
             );

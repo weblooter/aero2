@@ -35,7 +35,8 @@ class Base
                         'VERIFIED'
                     ]
                 ]
-            )->fetch();
+            )
+                ->fetch();
 
             self::$__register[$intCompanyId] = $ar;
         }

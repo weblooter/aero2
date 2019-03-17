@@ -34,10 +34,11 @@ class Group
                     "filter" => [
                         "=STRING_ID" => $groupCode,
                     ],
-                    "limit"  => 1,
-                    "cache"  => ["ttl" => 86400]
+                    "limit" => 1,
+                    "cache" => ["ttl" => 86400]
                 ]
-            )->fetch();
+            )
+                ->fetch();
 
             $arStorage[$groupCode] = $data["ID"] ?? null;
         }

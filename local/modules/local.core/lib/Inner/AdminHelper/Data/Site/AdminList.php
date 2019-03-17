@@ -103,15 +103,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $buttons = [];
 
         if(
-        $this->checkRights("can_add")->isSuccess()
+        $this->checkRights("can_add")
+            ->isSuccess()
         )
         {
             $buttons = [
                 [
-                    "TEXT"  => "Добавить",
-                    "LINK"  => $this->getEditLink(),
+                    "TEXT" => "Добавить",
+                    "LINK" => $this->getEditLink(),
                     "TITLE" => "Добавить сайт",
-                    "ICON"  => "btn_new",
+                    "ICON" => "btn_new",
                 ],
             ];
         }
@@ -125,16 +126,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getFilterSearchFields()
     {
         return [
-            "ID"            => [
+            "ID" => [
                 "NAME" => self::$fields["ID"],
                 "TYPE" => "TEXT",
             ],
-            "ACTIVE"        => [
-                "NAME"     => self::$fields["ACTIVE"],
-                "TYPE"     => "SELECT",
+            "ACTIVE" => [
+                "NAME" => self::$fields["ACTIVE"],
+                "TYPE" => "SELECT",
                 "VARIANTS" => SiteTable::getEnumFieldHtmlValues('ACTIVE')
             ],
-            "DATE_CREATE"   => [
+            "DATE_CREATE" => [
                 "NAME" => self::$fields["DATE_CREATE"],
                 "TYPE" => "DATE_PERIOD",
             ],
@@ -143,33 +144,37 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "TYPE" => "DATE_PERIOD",
             ],
 
-            "COMPANY_ID"      => [
+            "COMPANY_ID" => [
                 "NAME" => self::$fields["COMPANY_ID"],
                 "TYPE" => "TEXT",
             ],
-            "DOMAIN"          => [
+            "NAME" => [
+                "NAME" => self::$fields["NAME"],
+                "TYPE" => "TEXT",
+            ],
+            "DOMAIN" => [
                 "NAME" => self::$fields["DOMAIN"],
                 "TYPE" => "TEXT",
             ],
-            "RESOURCE_TYPE"   => [
-                "NAME"     => self::$fields["RESOURCE_TYPE"],
-                "TYPE"     => "SELECT",
+            "RESOURCE_TYPE" => [
+                "NAME" => self::$fields["RESOURCE_TYPE"],
+                "TYPE" => "SELECT",
                 "VARIANTS" => SiteTable::getEnumFieldHtmlValues('RESOURCE_TYPE')
             ],
-            "FILE_LINK"       => [
+            "FILE_LINK" => [
                 "NAME" => self::$fields["FILE_LINK"],
                 "TYPE" => "TEXT",
             ],
-            "HTTP_AUTH"       => [
-                "NAME"     => self::$fields["HTTP_AUTH"],
-                "TYPE"     => "SELECT",
+            "HTTP_AUTH" => [
+                "NAME" => self::$fields["HTTP_AUTH"],
+                "TYPE" => "SELECT",
                 "VARIANTS" => SiteTable::getEnumFieldHtmlValues('HTTP_AUTH')
             ],
             "HTTP_AUTH_LOGIN" => [
                 "NAME" => self::$fields["HTTP_AUTH_LOGIN"],
                 "TYPE" => "TEXT",
             ],
-            "HTTP_AUTH_PASS"  => [
+            "HTTP_AUTH_PASS" => [
                 "NAME" => self::$fields["HTTP_AUTH_PASS"],
                 "TYPE" => "TEXT",
             ],
@@ -196,6 +201,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                         $arFilter["=".$code] = trim($value);
                         break;
 
+                    case "NAME":
                     case "DOMAIN":
                     case "FILE_LINK":
                     case "HTTP_AUTH_LOGIN":
@@ -254,7 +260,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                     'COMPANY_DATA_' => 'COMPANY'
                 ],
                 "filter" => $this->filterList,
-                "order"  => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
+                "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
             ]
         );
     }
@@ -269,9 +275,9 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         foreach( self::$fields as $columnCode => $columnName )
         {
             $columns[] = [
-                "id"      => $columnCode,
+                "id" => $columnCode,
                 "content" => $columnName,
-                "sort"    => $columnCode,
+                "sort" => $columnCode,
                 "default" => $columnCode == "ID",
             ];
         }
@@ -313,24 +319,26 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $actions = [];
 
         if(
-        $this->checkRights("can_edit")->isSuccess()
+        $this->checkRights("can_edit")
+            ->isSuccess()
         )
         {
             $actions[] = [
-                "ICON"   => "edit",
-                "TEXT"   => "Редактировать",
+                "ICON" => "edit",
+                "TEXT" => "Редактировать",
                 "ACTION" => $this->CAdminList->ActionRedirect($this->getEditLink($fields)),
             ];
         }
 
         if(
-        $this->checkRights("can_delete")->isSuccess()
+        $this->checkRights("can_delete")
+            ->isSuccess()
         )
         {
             $addParams = \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY."=".self::ADMIN_ENTITY_VALUE."&".\Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION."=".self::ADMIN_ACTION_VALUE;
             $actions[] = [
-                "ICON"   => "delete",
-                "TEXT"   => "Удалить",
+                "ICON" => "delete",
+                "TEXT" => "Удалить",
                 "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup(
                         $fields["ID"],
                         "delete",
@@ -350,14 +358,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $actions = [];
 
         if(
-        $this->checkRights("can_delete")->isSuccess()
+        $this->checkRights("can_delete")
+            ->isSuccess()
         )
         {
             $actions["delete"] = "Удалить";
         }
 
         if(
-        $this->checkRights("can_edit")->isSuccess()
+        $this->checkRights("can_edit")
+            ->isSuccess()
         )
         {
             $actions["edit"] = "Редактировать";
@@ -451,7 +461,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             [
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
-                "id"                                                   => $fields["ID"],
+                "id" => $fields["ID"],
             ]
         );
     }

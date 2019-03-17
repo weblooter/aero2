@@ -16,8 +16,8 @@
     ['COMPANY_ID' => $arParams['COMPANY_ID'], 'SITE_ID' => $arParams['SITE_ID']]
 );
 
-$APPLICATION->SetTitle('Рабочий стол '.\Local\Core\Inner\Site\Base::getSiteDomain($arParams['SITE_ID']));
+$APPLICATION->SetTitle(\Local\Core\Inner\Site\Base::getSiteName($arParams['SITE_ID']));
 $APPLICATION->SetPageProperty(
     'title',
-    'Рабочий стол '.\Local\Core\Inner\Site\Base::getSiteDomain($arParams['SITE_ID'])
+    \Local\Core\Inner\Site\Base::getSiteName($arParams['SITE_ID'])
 );

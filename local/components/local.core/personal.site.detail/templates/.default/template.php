@@ -16,6 +16,7 @@
 
         <div class="col-12">
 
+            Название: <?=$arResult['ITEM']['NAME'];?><br />
             Сайт: <?=$arResult['ITEM']['DOMAIN'];?><br />
             Активность: <?=$arResult['ITEM']['ACTIVE'] == 'Y' ? 'Да' : 'Нет';?><br />
             <?

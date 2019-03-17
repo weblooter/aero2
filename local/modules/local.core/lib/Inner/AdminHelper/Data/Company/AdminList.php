@@ -103,15 +103,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $buttons = [];
 
         if(
-        $this->checkRights("can_add")->isSuccess()
+        $this->checkRights("can_add")
+            ->isSuccess()
         )
         {
             $buttons = [
                 [
-                    "TEXT"  => "Добавить",
-                    "LINK"  => $this->getEditLink(),
+                    "TEXT" => "Добавить",
+                    "LINK" => $this->getEditLink(),
                     "TITLE" => "Добавить компанию",
-                    "ICON"  => "btn_new",
+                    "ICON" => "btn_new",
                 ],
             ];
         }
@@ -125,65 +126,65 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getFilterSearchFields()
     {
         return [
-            "ID"                      => [
+            "ID" => [
                 "NAME" => self::$fields["ID"],
                 "TYPE" => "TEXT",
             ],
-            "ACTIVE"                  => [
-                "NAME"     => self::$fields["ACTIVE"],
-                "TYPE"     => "SELECT",
+            "ACTIVE" => [
+                "NAME" => self::$fields["ACTIVE"],
+                "TYPE" => "SELECT",
                 "VARIANTS" => CompanyTable::getEnumFieldHtmlValues('ACTIVE')
             ],
-            "USER_OWN_ID"             => [
+            "USER_OWN_ID" => [
                 "NAME" => self::$fields["USER_OWN_ID"],
                 "TYPE" => "TEXT",
             ],
-            "DATE_CREATE"             => [
+            "DATE_CREATE" => [
                 "NAME" => self::$fields["DATE_CREATE"],
                 "TYPE" => "DATE_PERIOD",
             ],
-            "DATE_MODIFIED"           => [
+            "DATE_MODIFIED" => [
                 "NAME" => self::$fields["DATE_MODIFIED"],
                 "TYPE" => "DATE_PERIOD",
             ],
-            "VERIFIED"                => [
-                "NAME"     => self::$fields["VERIFIED"],
-                "TYPE"     => "SELECT",
+            "VERIFIED" => [
+                "NAME" => self::$fields["VERIFIED"],
+                "TYPE" => "SELECT",
                 "VARIANTS" => CompanyTable::getEnumFieldHtmlValues('VERIFIED')
             ],
-            "COMPANY_INN"             => [
+            "COMPANY_INN" => [
                 "NAME" => self::$fields["COMPANY_INN"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_NAME_SHORT"      => [
+            "COMPANY_NAME_SHORT" => [
                 "NAME" => self::$fields["COMPANY_NAME_SHORT"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_NAME_FULL"       => [
+            "COMPANY_NAME_FULL" => [
                 "NAME" => self::$fields["COMPANY_NAME_FULL"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_OGRN"            => [
+            "COMPANY_OGRN" => [
                 "NAME" => self::$fields["COMPANY_OGRN"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_KPP"             => [
+            "COMPANY_KPP" => [
                 "NAME" => self::$fields["COMPANY_KPP"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_OKPO"            => [
+            "COMPANY_OKPO" => [
                 "NAME" => self::$fields["COMPANY_OKPO"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_OKTMO"           => [
+            "COMPANY_OKTMO" => [
                 "NAME" => self::$fields["COMPANY_OKTMO"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_DIRECTOR"        => [
+            "COMPANY_DIRECTOR" => [
                 "NAME" => self::$fields["COMPANY_DIRECTOR"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ACCOUNTANT"      => [
+            "COMPANY_ACCOUNTANT" => [
                 "NAME" => self::$fields["COMPANY_ACCOUNTANT"],
                 "TYPE" => "TEXT",
             ],
@@ -191,15 +192,15 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "NAME" => self::$fields["COMPANY_ADDRESS_COUNTRY"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_REGION"  => [
+            "COMPANY_ADDRESS_REGION" => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_REGION"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_AREA"    => [
+            "COMPANY_ADDRESS_AREA" => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_AREA"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_CITY"    => [
+            "COMPANY_ADDRESS_CITY" => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_CITY"],
                 "TYPE" => "TEXT",
             ],
@@ -207,11 +208,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "NAME" => self::$fields["COMPANY_ADDRESS_ADDRESS"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_OFFICE"  => [
+            "COMPANY_ADDRESS_OFFICE" => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_OFFICE"],
                 "TYPE" => "TEXT",
             ],
-            "COMPANY_ADDRESS_ZIP"     => [
+            "COMPANY_ADDRESS_ZIP" => [
                 "NAME" => self::$fields["COMPANY_ADDRESS_ZIP"],
                 "TYPE" => "TEXT",
             ],
@@ -259,10 +260,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
 
                     case "VERIFIED":
                         if(
-                            in_array(
-                                $value,
-                                CompanyTable::getEnumFieldValues('VERIFIED')
-                            )
+                        in_array(
+                            $value,
+                            CompanyTable::getEnumFieldValues('VERIFIED')
+                        )
                         )
                         {
                             $arFilter["=".$code] = trim($value);
@@ -271,10 +272,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
 
                     case "ACTIVE":
                         if(
-                            in_array(
-                                $value,
-                                CompanyTable::getEnumFieldValues('ACTIVE')
-                            )
+                        in_array(
+                            $value,
+                            CompanyTable::getEnumFieldValues('ACTIVE')
+                        )
                         )
                         {
                             $arFilter["=".$code] = trim($value);
@@ -315,12 +316,12 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         //        ]);
         return \Local\Core\Model\Data\CompanyTable::getlist(
             [
-                "select"  => [
+                "select" => [
                     "*",
                     'OWN_DATA_' => 'OWN'
                 ],
-                "filter"  => $this->filterList,
-                "order"   => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
+                "filter" => $this->filterList,
+                "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
                 'runtime' => [
                     new \Bitrix\Main\ORM\Fields\Relations\Reference(
                         'OWN', \Bitrix\Main\UserTable::class, \Bitrix\Main\ORM\Query\Join::on(
@@ -343,9 +344,9 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         foreach( self::$fields as $columnCode => $columnName )
         {
             $columns[] = [
-                "id"      => $columnCode,
+                "id" => $columnCode,
                 "content" => $columnName,
-                "sort"    => $columnCode,
+                "sort" => $columnCode,
                 "default" => $columnCode == "ID",
             ];
         }
@@ -373,7 +374,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         );
         $row->AddViewField(
             "VERIFIED",
-            CompanyTable::getEnumFieldHtmlValues('VERIFIED')[ $fields["VERIFIED"] ]
+            CompanyTable::getEnumFieldHtmlValues('VERIFIED')[$fields["VERIFIED"]]
         );
     }
 
@@ -385,24 +386,26 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $actions = [];
 
         if(
-        $this->checkRights("can_edit")->isSuccess()
+        $this->checkRights("can_edit")
+            ->isSuccess()
         )
         {
             $actions[] = [
-                "ICON"   => "edit",
-                "TEXT"   => "Редактировать",
+                "ICON" => "edit",
+                "TEXT" => "Редактировать",
                 "ACTION" => $this->CAdminList->ActionRedirect($this->getEditLink($fields)),
             ];
         }
 
         if(
-        $this->checkRights("can_delete")->isSuccess()
+        $this->checkRights("can_delete")
+            ->isSuccess()
         )
         {
             $addParams = \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY."=".self::ADMIN_ENTITY_VALUE."&".\Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION."=".self::ADMIN_ACTION_VALUE;
             $actions[] = [
-                "ICON"   => "delete",
-                "TEXT"   => "Удалить",
+                "ICON" => "delete",
+                "TEXT" => "Удалить",
                 "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup(
                         $fields["ID"],
                         "delete",
@@ -422,14 +425,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $actions = [];
 
         if(
-        $this->checkRights("can_delete")->isSuccess()
+        $this->checkRights("can_delete")
+            ->isSuccess()
         )
         {
             $actions["delete"] = "Удалить";
         }
 
         if(
-        $this->checkRights("can_edit")->isSuccess()
+        $this->checkRights("can_edit")
+            ->isSuccess()
         )
         {
             $actions["edit"] = "Редактировать";
@@ -451,7 +456,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             try
             {
                 $arFields = [
-                    "ACTIVE"   => $fields["ACTIVE"] ?? "N",
+                    "ACTIVE" => $fields["ACTIVE"] ?? "N",
                     "VERIFIED" => $fields["VERIFIED"] ?? "N",
                 ];
 
@@ -524,7 +529,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             [
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
-                "id"                                                   => $fields["ID"],
+                "id" => $fields["ID"],
             ]
         );
     }

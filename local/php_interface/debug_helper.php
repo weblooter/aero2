@@ -15,10 +15,10 @@ function isDev()
  * Некий аналог print_r / print / echo
  *
  * @param      $value - Данные
- * @param bool $die   - Прервать выполнение сраницы
  * @param bool $bHtml - Преобразование в HTML
+ * @param bool $die   - Прервать выполнение сраницы
  */
-function p($value, $die = false, $bHtml = true)
+function p($value, $bHtml = false, $die = false)
 {
     if( is_bool($value) )
     {
@@ -80,7 +80,8 @@ function p($value, $die = false, $bHtml = true)
                 $debug_backtrace[0]["file"],
                 strlen($_SERVER["DOCUMENT_ROOT"])
             ).":".$debug_backtrace[0]["line"]
-             ."\" style=\"text-align:left;overflow:auto; color: #000; background-color: white; border: 1px solid #CCC; padding: 5px; font-size: 12px; line-height: 18px;\">".$sReturn."</pre>";
+             ."\" style=\"text-align:left;overflow:auto; color: #000; background-color: white; border: 1px solid #CCC; padding: 5px; font-size: 12px; line-height: 18px; font-family: monospace;\">"
+             .$sReturn."</pre>";
 
     }
 
@@ -89,14 +90,4 @@ function p($value, $die = false, $bHtml = true)
         ob_get_flush();
         die();
     }
-}
-
-function w()
-{
-
-}
-
-function d()
-{
-
 }

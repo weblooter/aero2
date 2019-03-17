@@ -34,12 +34,13 @@ class ElementProperty
                     "select" => ["ID"],
                     "filter" => [
                         "=IBLOCK_ID" => $iblockId,
-                        "=CODE"      => $code,
+                        "=CODE" => $code,
                     ],
-                    "limit"  => 1,
-                    "cache"  => ["ttl" => 86400]
+                    "limit" => 1,
+                    "cache" => ["ttl" => 86400]
                 ]
-            )->fetch();
+            )
+                ->fetch();
 
             $arStorage[$iblockId][$code] = $data["ID"] ?? null;
         }
@@ -75,10 +76,11 @@ class ElementProperty
             {
                 $data = \Bitrix\Iblock\PropertyEnumerationTable::getList(
                     [
-                        'order'  => ['SORT' => 'ASC'],
+                        'order' => ['SORT' => 'ASC'],
                         'filter' => ['=PROPERTY_ID' => $propertyId],
                     ]
-                )->fetchAll();
+                )
+                    ->fetchAll();
             }
 
             $arStorage[$iblockId][$code] = !empty($data) ? $data : null;

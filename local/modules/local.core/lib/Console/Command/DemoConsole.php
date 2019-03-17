@@ -35,9 +35,12 @@ class DemoConsole extends Command
      */
     protected function configure(): void
     {
-        $this->setName('kd:demo')->setDescription('Демострация работы консольной команды')->setHelp(
+        $this->setName('kd:demo')
+            ->setDescription('Демострация работы консольной команды')
+            ->setHelp(
                 "Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kd:demo --help"
-            )->addArgument(
+            )
+            ->addArgument(
                 'username',
                 ( $this->requireName ? InputArgument :: REQUIRED : InputArgument::OPTIONAL ),
                 'Ваше имя'
@@ -46,7 +49,7 @@ class DemoConsole extends Command
 
     /**
      * Бизнесс-логика
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output): void

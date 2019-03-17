@@ -15,7 +15,10 @@ class PersonalCompanyFormEditComponent extends \Local\Core\Inner\BxModified\CBit
 
         if(
             !empty(
-            \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD')
+            \Bitrix\Main\Application::getInstance()
+                ->getContext()
+                ->getRequest()
+                ->get('COMPANY_FIELD')
             )
             && check_bitrix_sessid()
         )
@@ -56,7 +59,7 @@ class PersonalCompanyFormEditComponent extends \Local\Core\Inner\BxModified\CBit
         $rs = \Local\Core\Model\Data\CompanyTable::getList(
             [
                 'filter' => [
-                    'ID'          => $this->arParams['COMPANY_ID'],
+                    'ID' => $this->arParams['COMPANY_ID'],
                     'USER_OWN_ID' => $GLOBALS['USER']->GetID()
                 ]
             ]
@@ -79,10 +82,10 @@ class PersonalCompanyFormEditComponent extends \Local\Core\Inner\BxModified\CBit
                 }
 
                 $this->arResult['FIELDS'][$obField->getColumnName()] = [
-                    'TITLE'       => $obField->getTitle(),
-                    'CODE'        => $obField->getColumnName(),
+                    'TITLE' => $obField->getTitle(),
+                    'CODE' => $obField->getColumnName(),
                     'IS_REQUIRED' => $obField->isRequired(),
-                    'VALUE'       => $arCompanyFields[$obField->getColumnName()] ?? ''
+                    'VALUE' => $arCompanyFields[$obField->getColumnName()] ?? ''
                 ];
             }
         }
@@ -91,7 +94,10 @@ class PersonalCompanyFormEditComponent extends \Local\Core\Inner\BxModified\CBit
 
     private function __tryUpdate()
     {
-        $arCompanyFields = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD');
+        $arCompanyFields = \Bitrix\Main\Application::getInstance()
+            ->getContext()
+            ->getRequest()
+            ->get('COMPANY_FIELD');
 
         $arUpdateFields = [];
         foreach( $arCompanyFields as $key => $val )

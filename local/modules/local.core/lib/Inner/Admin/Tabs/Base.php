@@ -192,6 +192,9 @@ abstract class Base
 
     protected static function GetCurPage()
     {
-        return Application::getInstance()->getContext()->getRequest()->getPhpSelf();
+        return Application::getInstance()
+            ->getContext()
+            ->getRequest()
+            ->getPhpSelf();
     }
 }

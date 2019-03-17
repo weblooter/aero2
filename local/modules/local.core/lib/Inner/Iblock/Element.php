@@ -63,10 +63,10 @@ class Element extends CollectableEntity
         }
 
         $default = array(
-            'IBLOCK_LID'        => SITE_ID,
-            'ACTIVE_DATE'       => 'Y',
+            'IBLOCK_LID' => SITE_ID,
+            'ACTIVE_DATE' => 'Y',
             'CHECK_PERMISSIONS' => 'Y',
-            'MIN_PERMISSION'    => 'R',
+            'MIN_PERMISSION' => 'R',
         );
 
         if( !empty($filter) )

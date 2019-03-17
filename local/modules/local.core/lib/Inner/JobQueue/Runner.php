@@ -122,7 +122,8 @@ final class Runner
      */
     private function getMaximumWorkers(): int
     {
-        return (int)\Bitrix\Main\Config\Configuration::getInstance()->get('job_queue')['MAXIMUM_WORKERS'] ?? self::MAXIMUM_WORKERS;
+        return (int)\Bitrix\Main\Config\Configuration::getInstance()
+                ->get('job_queue')['MAXIMUM_WORKERS'] ?? self::MAXIMUM_WORKERS;
     }
 
     /**
@@ -150,19 +151,20 @@ final class Runner
         $ar = Model\Data\JobQueueTable::getList(
             [
                 'filter' => [
-                    '>ATTEMPTS_LEFT'  => 0,
-                    '<=EXECUTE_AT'    => \Bitrix\Main\Type\DateTime::createFromTimestamp(time()),
-                    '=STATUS'         => [
+                    '>ATTEMPTS_LEFT' => 0,
+                    '<=EXECUTE_AT' => \Bitrix\Main\Type\DateTime::createFromTimestamp(time()),
+                    '=STATUS' => [
                         Model\Data\JobQueueTable::STATUS_ENUM_NEW,
                         Model\Data\JobQueueTable::STATUS_ENUM_ERROR,
                     ],
                     '=IS_EXECUTE_NOW' => 'N',
-                    '=EXECUTE_BY'     => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
+                    '=EXECUTE_BY' => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
                 ],
-                'limit'  => $maximum,
+                'limit' => $maximum,
                 'select' => ['ID'],
             ]
-        )->fetchAll();
+        )
+            ->fetchAll();
 
         return is_array($ar) ? $ar : [];
     }
@@ -182,7 +184,7 @@ final class Runner
         );
         $updateData = [
             [
-                'ID'         => $ar['ID'],
+                'ID' => $ar['ID'],
                 'EXECUTE_BY' => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
             ],
             [
@@ -217,7 +219,9 @@ final class Runner
                 }
                 catch( \Throwable $t )
                 {
-                    \Bitrix\Main\Application::getInstance()->getExceptionHandler()->writeToLog($t);
+                    \Bitrix\Main\Application::getInstance()
+                        ->getExceptionHandler()
+                        ->writeToLog($t);
 
                 }
             }

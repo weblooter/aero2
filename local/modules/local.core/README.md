@@ -6,8 +6,6 @@
 + Namespace всегда начинаются с большой буквы, camelCase
 + Методы всегда начинаются с маленькой буквы, camelCase
 + Ключи массива всегда UPPER CASE
-+ **private** св-ва и методы класса должны помечаться ввиде 2х нижних подчеркиваний перед названием ( **private $__arExport** )
-+ **protected** св-ва и методы класса должны помечаться ввиде 1 нижнего подчеркивания перед названием ( **protected $_arExport** )
 + Если указывается название какого-либо класса в качестве параметра в формате строки, то допустимо использовать только {classname}::class, без кавычек. Это необходимо для корректного поиска по проекту
 + Переменные и св-ва должны в первых буквах отображать свое содержимое.  Пример:
   + $arResult - > array
@@ -83,6 +81,12 @@ echo \CLocalCore::getOrmFieldsTable( Local\Core\Model\Data\SiteTable::class );
 ```
 А получившийся текст в ставить описание класса ORM, как это сделано сейчас. Это позволит смотреть поля, их типы и варианты не залезая в код класса. Чисто для PHPDoc'a.
 
+#### \CLocalCore::createDBTableByGetMap()
+
+Метод создает таблицу ORM по описанию **getMap()**. **Создавать таблицы надо через него!**
+
+Так же еще есть **dropDBTableByGetMap()** и **resetDBTableByGetMap()**
+
 ---
 
 ### \Local\Core\Model\Data
@@ -104,7 +108,7 @@ echo \CLocalCore::getOrmFieldsTable( Local\Core\Model\Data\SiteTable::class );
 
 К примеру справочник единиц измерения.
 
-Каждый ORM **Model\Reference** должен содержать поля **ID**, **DATE_CREATE** и **DATE_MODIFIED**.
+Каждый ORM **Model\Reference** должен содержать поля **ID**, **DATE_CREATE**,**DATE_MODIFIED**, **SORT**, **NAME**, **CODE**.
 
 Создавая справочник в ORM **Model\Reference** следует так же скопировать **Model\Reference\BaseOrmTable** и продолжить писать уже от того, что есть.
 

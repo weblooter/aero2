@@ -21,10 +21,10 @@ class Orm
     public static function PrepareSettings($property)
     {
         $data = [
-            "ORM_ENTITY"         => null,
-            "ENTITY_ID_COLUMN"   => null,
+            "ORM_ENTITY" => null,
+            "ENTITY_ID_COLUMN" => null,
             "ENTITY_NAME_COLUMN" => null,
-            "MODULES"            => [],
+            "MODULES" => [],
         ];
 
         if( !empty($property["USER_TYPE_SETTINGS"]) && is_array($property["USER_TYPE_SETTINGS"]) )

@@ -44,7 +44,10 @@
             'company',
             'detail',
             [
-                '#COMPANY_ID#' => \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID')
+                '#COMPANY_ID#' => \Bitrix\Main\Application::getInstance()
+                    ->getContext()
+                    ->getRequest()
+                    ->get('COMPANY_ID')
             ]
         )?>" class="btn btn-dark">Вернуться
             к компании</a>

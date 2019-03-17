@@ -17,9 +17,11 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
             $GLOBALS['USER']->GetID()
         );
 
-        $this->intMaxUploadXMLFileSizeMb = \Bitrix\Main\Config\Configuration::getInstance()->get('site')['upload_xml']['max_size_mb'] ?? 100;
+        $this->intMaxUploadXMLFileSizeMb = \Bitrix\Main\Config\Configuration::getInstance()
+                                               ->get('site')['upload_xml']['max_size_mb'] ?? 100;
 
-        $this->intMaxDownloadXMLFileSizeMb = \Bitrix\Main\Config\Configuration::getInstance()->get('site')['download_xml']['max_size_mb'] ?? 300;
+        $this->intMaxDownloadXMLFileSizeMb = \Bitrix\Main\Config\Configuration::getInstance()
+                                                 ->get('site')['download_xml']['max_size_mb'] ?? 300;
 
         $this->__tryUpdate();
 
@@ -47,12 +49,18 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
     {
         if(
             !empty(
-            \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getPost('SITE_FIELD')
+            \Bitrix\Main\Application::getInstance()
+                ->getContext()
+                ->getRequest()
+                ->getPost('SITE_FIELD')
             )
             && check_bitrix_sessid()
         )
         {
-            $arFields = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getPost('SITE_FIELD');
+            $arFields = \Bitrix\Main\Application::getInstance()
+                ->getContext()
+                ->getRequest()
+                ->getPost('SITE_FIELD');
 
             $arUpdateFields = [];
             $arUpdateFields['DOMAIN'] = $arFields['DOMAIN'];
@@ -86,7 +94,10 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
 
                         if(
                         empty(
-                        \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD')['name']['FILE']
+                        \Bitrix\Main\Application::getInstance()
+                            ->getContext()
+                            ->getRequest()
+                            ->getFile('SITE_FIELD')['name']['FILE']
                         )
                         )
                         {
@@ -95,10 +106,16 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
 
                         $arFile = array_combine(
                             array_keys(
-                                \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD')
+                                \Bitrix\Main\Application::getInstance()
+                                    ->getContext()
+                                    ->getRequest()
+                                    ->getFile('SITE_FIELD')
                             ),
                             array_column(
-                                \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getFile('SITE_FIELD'),
+                                \Bitrix\Main\Application::getInstance()
+                                    ->getContext()
+                                    ->getRequest()
+                                    ->getFile('SITE_FIELD'),
                                 'FILE'
                             )
                         );
@@ -163,7 +180,8 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
 
     private function __getAndSetResult()
     {
-        $arDefaultValues = \Local\Core\Model\Data\SiteTable::getById($this->arParams['SITE_ID'])->fetch();
+        $arDefaultValues = \Local\Core\Model\Data\SiteTable::getById($this->arParams['SITE_ID'])
+            ->fetch();
 
         /** @var \Bitrix\Main\ORM\Fields\ScalarField $obField */
         foreach( \Local\Core\Model\Data\SiteTable::getMap() as $obField )
@@ -172,7 +190,7 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
             {
                 $this->arResult['FIELDS'][$obField->getColumnName()] = [
                     'IS_REQUIRED' => $obField->isRequired(),
-                    'VALUE'       => $arDefaultValues[$obField->getColumnName()]
+                    'VALUE' => $arDefaultValues[$obField->getColumnName()]
                 ];
             }
         }

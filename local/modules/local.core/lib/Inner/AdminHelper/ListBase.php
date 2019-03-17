@@ -211,7 +211,8 @@ abstract class ListBase
      */
     private function executeGroupAction()
     {
-        $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+        $request = \Bitrix\Main\Context::getCurrent()
+            ->getRequest();
         if( !empty($_REQUEST["action_button"]) )
         {
             $_REQUEST["action"] = $_REQUEST["action_button"];
@@ -225,7 +226,8 @@ abstract class ListBase
         # Групповое редактирование
         if(
             $this->CAdminList->EditAction()
-            && $this->checkRights("editAction")->isSuccess()
+            && $this->checkRights("editAction")
+                ->isSuccess()
             && check_bitrix_sessid()
         )
         {
@@ -263,7 +265,8 @@ abstract class ListBase
 
             if(
                 $this->CAdminList->GroupAction()
-                && $this->checkRights($methodName)->isSuccess()
+                && $this->checkRights($methodName)
+                    ->isSuccess()
                 && check_bitrix_sessid()
             )
             {
@@ -573,7 +576,7 @@ abstract class ListBase
                     $name = $this->filterSearchPrefix.$key;
                     $value = $this->filterSearch[$name];
                     $variants = ( isset($field["VARIANTS"]) ) ? [
-                        "reference"    => array_values($field["VARIANTS"]),
+                        "reference" => array_values($field["VARIANTS"]),
                         "reference_id" => array_keys($field["VARIANTS"]),
                     ] : [];
 
@@ -648,8 +651,8 @@ abstract class ListBase
         $oFilter->Buttons(
             [
                 "table_id" => $this->getTableListId(),
-                "url"      => $this->getFilterUri(),
-                "form"     => "find_form"
+                "url" => $this->getFilterUri(),
+                "form" => "find_form"
             ]
         );
         $oFilter->End();

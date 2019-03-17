@@ -59,7 +59,7 @@ class Cache
             'filter' => [
                 'HASH' => $hash,
             ],
-            'limit'  => 1,
+            'limit' => 1,
         ];
 
         $result = DadataCacheTable::getList($ar_filter);

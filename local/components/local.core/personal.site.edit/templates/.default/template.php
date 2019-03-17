@@ -38,7 +38,12 @@ $funIsRequired = function($strCode) use ($arResult)
     <? endif; ?>
 
     <div class="form-group">
-        <label>Ссылка на сайт <?=( $funIsRequired('DOMAIN') ? '*' : '' )?></label>
+        <label>Название <?=( $funIsRequired('NAME') ? '*' : '' )?></label>
+        <input type="text" class="form-control" name="SITE_FIELD[NAME]" required value="<?=$arResult['FIELDS']['NAME']['VALUE']?>" placeholder="Мой магазин" />
+    </div>
+
+    <div class="form-group">
+        <label>Домен <?=( $funIsRequired('DOMAIN') ? '*' : '' )?></label>
         <input type="text" class="form-control" name="SITE_FIELD[DOMAIN]" required value="<?=$arResult['FIELDS']['DOMAIN']['VALUE']?>" placeholder="http://example.com" />
         <small class="form-text text-muted">С http://</small>
     </div>

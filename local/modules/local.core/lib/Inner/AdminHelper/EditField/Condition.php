@@ -35,9 +35,9 @@ class Condition extends Base
                 BT_COND_BUILD_CATALOG,
                 [
                     "FORM_NAME" => $this->formName, // ID формы в которую будет выводится
-                    "CONT_ID"   => $this->fieldName,
-                    "JS_NAME"   => "JSCatCond",
-                    "PREFIX"    => $this->fieldName
+                    "CONT_ID" => $this->fieldName,
+                    "JS_NAME" => "JSCatCond",
+                    "PREFIX" => $this->fieldName
                 ]
             );
             if( !$boolCond )

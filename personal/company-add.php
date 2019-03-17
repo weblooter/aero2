@@ -8,12 +8,12 @@ require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
                     "local.core:personal.company.add",
                     "",
                     Array(
-                        "AJAX_MODE"              => "Y",
+                        "AJAX_MODE" => "Y",
                         "AJAX_OPTION_ADDITIONAL" => "",
-                        "AJAX_OPTION_HISTORY"    => "N",
-                        "AJAX_OPTION_JUMP"       => "N",
-                        "AJAX_OPTION_STYLE"      => "N",
-                        "ALLOW_FIELDS_LIST"      => array(
+                        "AJAX_OPTION_HISTORY" => "N",
+                        "AJAX_OPTION_JUMP" => "N",
+                        "AJAX_OPTION_STYLE" => "N",
+                        "ALLOW_FIELDS_LIST" => array(
                             "COMPANY_INN",
                             "COMPANY_NAME_SHORT",
                             "COMPANY_NAME_FULL",

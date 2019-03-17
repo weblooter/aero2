@@ -18,31 +18,30 @@ class BillTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     }
 
     /** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */
-    public static $arEnumFieldsValues = [
-    ];
+    public static $arEnumFieldsValues = [];
 
     public static function getMap()
     {
         return [
             new Fields\IntegerField(
                 'ID', [
-                    'primary'      => true,
+                    'primary' => true,
                     'autocomplete' => true,
-                    'title'        => 'ID'
+                    'title' => 'ID'
                 ]
             ),
             new Fields\EnumField(
                 'ACTIVE', [
-                    'title'         => 'Активность',
-                    'required'      => false,
-                    'values'        => self::getEnumFieldValues('ACTIVE'),
+                    'title' => 'Активность',
+                    'required' => false,
+                    'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
                 ]
             ),
             new Fields\DatetimeField(
                 'DATE_CREATE', [
-                    'title'         => 'Дата создания',
-                    'required'      => false,
+                    'title' => 'Дата создания',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -51,8 +50,8 @@ class BillTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ),
             new Fields\DatetimeField(
                 'DATE_MODIFIED', [
-                    'title'         => 'Дата последнего изменения',
-                    'required'      => false,
+                    'title' => 'Дата последнего изменения',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -61,7 +60,7 @@ class BillTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ),
             new Fields\TextField(
                 'ACCOUNT_NUMBER', [
-                    'title'      => 'Номер счета',
+                    'title' => 'Номер счета',
                     'validation' => function()
                         {
                             return [
@@ -73,7 +72,7 @@ class BillTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             new Fields\IntegerField(
                 'COMPANY_ID', [
                     'required' => true,
-                    'title'    => 'ID компании'
+                    'title' => 'ID компании'
                 ]
             ),
 

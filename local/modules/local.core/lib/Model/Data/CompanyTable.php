@@ -44,23 +44,23 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
         return [
             new Fields\IntegerField(
                 'ID', [
-                    'primary'      => true,
+                    'primary' => true,
                     'autocomplete' => true,
-                    'title'        => 'ID'
+                    'title' => 'ID'
                 ]
             ),
             new Fields\EnumField(
                 'ACTIVE', [
-                    'title'         => 'Активность',
-                    'required'      => false,
-                    'values'        => self::getEnumFieldValues('ACTIVE'),
+                    'title' => 'Активность',
+                    'required' => false,
+                    'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
                 ]
             ),
             new Fields\IntegerField(
                 'USER_OWN_ID', [
-                    'title'         => 'Владелец компании',
-                    'required'      => false,
+                    'title' => 'Владелец компании',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return $GLOBALS['USER']->GetID();
@@ -69,8 +69,8 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\DatetimeField(
                 'DATE_CREATE', [
-                    'title'         => 'Дата создания',
-                    'required'      => false,
+                    'title' => 'Дата создания',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -79,8 +79,8 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\DatetimeField(
                 'DATE_MODIFIED', [
-                    'title'         => 'Дата последнего изменения',
-                    'required'      => false,
+                    'title' => 'Дата последнего изменения',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -90,23 +90,23 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
 
             new Fields\EnumField(
                 'VERIFIED', [
-                    'title'         => 'Верифицирована',
-                    'required'      => true,
-                    'values'        => self::getEnumFieldValues('VERIFIED'),
+                    'title' => 'Верифицирована',
+                    'required' => true,
+                    'values' => self::getEnumFieldValues('VERIFIED'),
                     'default_value' => 'N'
                 ]
             ),
             new Fields\TextField(
                 'VERIFIED_NOTE', [
-                    'title'    => 'Комментарий верификации, выводится в случае ошибки верификации',
+                    'title' => 'Комментарий верификации, выводится в случае ошибки верификации',
                     'required' => false,
                 ]
             ),
 
             new Fields\StringField(
                 'COMPANY_INN', [
-                    'title'      => 'ИНН',
-                    'required'   => true,
+                    'title' => 'ИНН',
+                    'required' => true,
                     'validation' => function()
                         {
                             return [
@@ -117,20 +117,20 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\TextField(
                 'COMPANY_NAME_SHORT', [
-                    'title'    => 'Сокращенное наименование организации',
+                    'title' => 'Сокращенное наименование организации',
                     'required' => true,
                 ]
             ),
             new Fields\TextField(
                 'COMPANY_NAME_FULL', [
-                    'title'    => 'Полное наименование организации',
+                    'title' => 'Полное наименование организации',
                     'required' => true,
                 ]
             ),
             new Fields\StringField(
                 'COMPANY_OGRN', [
-                    'title'      => 'ОГРН/ОГРНИП',
-                    'required'   => true,
+                    'title' => 'ОГРН/ОГРНИП',
+                    'required' => true,
                     'validation' => function()
                         {
                             return [
@@ -141,8 +141,8 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\StringField(
                 'COMPANY_KPP', [
-                    'title'      => 'КПП',
-                    'required'   => false,
+                    'title' => 'КПП',
+                    'required' => false,
                     'validation' => function()
                         {
                             return [
@@ -153,8 +153,8 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\StringField(
                 'COMPANY_OKPO', [
-                    'title'      => 'ОКПО',
-                    'required'   => false,
+                    'title' => 'ОКПО',
+                    'required' => false,
                     'validation' => function()
                         {
                             return [
@@ -165,8 +165,8 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\StringField(
                 'COMPANY_OKTMO', [
-                    'title'      => 'ОКТМО',
-                    'required'   => false,
+                    'title' => 'ОКТМО',
+                    'required' => false,
                     'validation' => function()
                         {
                             return [
@@ -177,57 +177,57 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\TextField(
                 'COMPANY_DIRECTOR', [
-                    'title'    => 'Ген. директор',
+                    'title' => 'Ген. директор',
                     'required' => false,
                 ]
             ),
             new Fields\TextField(
                 'COMPANY_ACCOUNTANT', [
-                    'title'    => 'Гл. бухгалтер',
+                    'title' => 'Гл. бухгалтер',
                     'required' => false,
                 ]
             ),
 
             new Fields\TextField(
                 'COMPANY_ADDRESS_COUNTRY', [
-                    'title'    => 'Страна',
+                    'title' => 'Страна',
                     'required' => true,
                 ]
             ),
             new Fields\TextField(
                 'COMPANY_ADDRESS_REGION', [
-                    'title'    => 'Область',
+                    'title' => 'Область',
                     'required' => false,
                 ]
             ),
             new Fields\TextField(
                 'COMPANY_ADDRESS_AREA', [
-                    'title'    => 'Район',
+                    'title' => 'Район',
                     'required' => false,
                 ]
             ),
             new Fields\TextField(
                 'COMPANY_ADDRESS_CITY', [
-                    'title'    => 'Город',
+                    'title' => 'Город',
                     'required' => true,
                 ]
             ),
             new Fields\TextField(
                 'COMPANY_ADDRESS_ADDRESS', [
-                    'title'    => 'Улица, дом, корпус, строение',
+                    'title' => 'Улица, дом, корпус, строение',
                     'required' => true,
                 ]
             ),
             new Fields\TextField(
                 'COMPANY_ADDRESS_OFFICE', [
-                    'title'    => 'Квартира / офис',
+                    'title' => 'Квартира / офис',
                     'required' => true,
                 ]
             ),
             new Fields\IntegerField(
                 'COMPANY_ADDRESS_ZIP', [
-                    'title'      => 'Почтовый индекс',
-                    'required'   => true,
+                    'title' => 'Почтовый индекс',
+                    'required' => true,
                     'validation' => function()
                         {
                             return [
@@ -282,7 +282,8 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
         /*
          * Проверка на смену владельца компании
          */
-        $ar = self::getById($event->getParameter('primary')['ID'])->fetch();
+        $ar = self::getById($event->getParameter('primary')['ID'])
+            ->fetch();
         self::$__arCompanyIdToOldOwnId[$ar['ID']] = $ar['USER_OWN_ID'];
 
         $arFields = array_merge(
@@ -327,7 +328,8 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
         $arEventParams = $event->getParameters();
         if( !empty($arEventParams['primary']['ID']) )
         {
-            $ar = self::getById($arEventParams['primary']['ID'])->fetchRaw();
+            $ar = self::getById($arEventParams['primary']['ID'])
+                ->fetchRaw();
 
             self::$__arCompanyIdToOldOwnId[$ar['ID']] = $ar['USER_OWN_ID'];
         }

@@ -5,7 +5,7 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
 }
 
 $arTemplate = Array(
-    'NAME'        => 'feed: Публичная часть',
+    'NAME' => 'feed: Публичная часть',
     'DESCRIPTION' => 'feed: Публичная часть'
 );
 ?>

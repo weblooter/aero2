@@ -2,7 +2,10 @@
 require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $APPLICATION->SetTitle("Мои компании");
 
-$intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID');
+$intCompanyId = \Bitrix\Main\Application::getInstance()
+    ->getContext()
+    ->getRequest()
+    ->get('COMPANY_ID');
 ?>
 <?
 $APPLICATION->IncludeComponent(

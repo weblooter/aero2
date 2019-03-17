@@ -22,7 +22,9 @@ class Throwable
         register_shutdown_function(
             function(\Throwable $e)
                 {
-                    \Bitrix\Main\Application::getInstance()->getExceptionHandler()->handleException($e);
+                    \Bitrix\Main\Application::getInstance()
+                        ->getExceptionHandler()
+                        ->handleException($e);
                 },
             $e
         );

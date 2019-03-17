@@ -1,70 +1,51 @@
 <?php
 
+
 $aMenu = [];
 
 $arModelData = [];
 
-if( class_exists(\Local\Core\Inner\AdminHelper\Data\Company\AdminList::class) )
-{
-    $lDataList = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminList() )->getAdminUri();
-    if( $lDataList->isSuccess() )
-    {
-        $lDataEdit = ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit() )->getAdminUri();
 
-        $arModelData[] = [
-            "text"     => "Компании",
-            'url'      => $lDataList->getData()['uri'],
-            "more_url" => ($lDataEdit->isSuccess()) ? [$lDataEdit->getData()["uri"]] : [],
-            "icon"     => ""
-        ];
-    }
+/* ********** */
+/* Model\Data */
+/* ********** */
+\CLocalCore::addItemToMenu(
+    $arModelData,
+    \Local\Core\Inner\AdminHelper\Data\Company\AdminList::class,
+    \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit::class,
+    'Компании'
+);
+\CLocalCore::addItemToMenu(
+    $arModelData,
+    \Local\Core\Inner\AdminHelper\Data\Site\AdminList::class,
+    \Local\Core\Inner\AdminHelper\Data\Site\AdminEdit::class,
+    'Сайты'
+);
 
-}
-
-if( class_exists(\Local\Core\Inner\AdminHelper\Data\Site\AdminList::class) )
-{
-    $lDataList = ( new \Local\Core\Inner\AdminHelper\Data\Site\AdminList() )->getAdminUri();
-    if( $lDataList->isSuccess() )
-    {
-        $lDataEdit = ( new \Local\Core\Inner\AdminHelper\Data\Site\AdminEdit() )->getAdminUri();
-
-        $arModelData[] = [
-            "text"     => "Сайты",
-            'url'      => $lDataList->getData()['uri'],
-            "more_url" => ($lDataEdit->isSuccess()) ? [$lDataEdit->getData()["uri"]] : [],
-            "icon"     => ""
-        ];
-    }
-
-}
 
 /* *********** */
 /* СПРАВОЧНИКИ */
 /* *********** */
 $arModelReferences = [];
 
-if( class_exists(\Local\Core\Inner\AdminHelper\Reference\Measure\AdminList::class) )
-{
-    $lDataList = ( new \Local\Core\Inner\AdminHelper\Reference\Measure\AdminList() )->getAdminUri();
-    if( $lDataList->isSuccess() )
-    {
-        $lDataEdit = ( new \Local\Core\Inner\AdminHelper\Reference\Measure\AdminEdit() )->getAdminUri();
-
-        $arModelReferences[] = [
-            "text"     => "Единицы измерения",
-            'url'      => $lDataList->getData()['uri'],
-            "more_url" => ($lDataEdit->isSuccess()) ? [$lDataEdit->getData()["uri"]] : [],
-            "icon"     => "",
-        ];
-    }
-
-}
-
-/* ******************** */
-/* СПРАВОЧНИКИ FEED API */
-/* ******************** */
-
-$arFeedApiReferences = [];
+\CLocalCore::addItemToMenu(
+    $arModelReferences,
+    \Local\Core\Inner\AdminHelper\Reference\Measure\AdminList::class,
+    \Local\Core\Inner\AdminHelper\Reference\Measure\AdminEdit::class,
+    'Единицы измерения'
+);
+\CLocalCore::addItemToMenu(
+    $arModelReferences,
+    \Local\Core\Inner\AdminHelper\Reference\Currency\AdminList::class,
+    \Local\Core\Inner\AdminHelper\Reference\Currency\AdminEdit::class,
+    'Валюты'
+);
+\CLocalCore::addItemToMenu(
+    $arModelReferences,
+    \Local\Core\Inner\AdminHelper\Reference\Country\AdminList::class,
+    \Local\Core\Inner\AdminHelper\Reference\Country\AdminEdit::class,
+    'Страны'
+);
 
 
 /*
@@ -104,12 +85,12 @@ if( !empty($arModelData) )
 {
     $aMenu[] = [
         "parent_menu" => "global_menu_local_core",
-        "text"        => "Model\Data",
-        'url'         => '',
-        "items_id"    => "model_data",
-        "icon"        => "iblock_menu_icon_types",
-        "sort"        => 1,
-        'items'       => $arModelData
+        "text" => "Model\Data",
+        'url' => '',
+        "items_id" => "model_data",
+        "icon" => "iblock_menu_icon_types",
+        "sort" => 1,
+        'items' => $arModelData
     ];
 }
 
@@ -117,25 +98,12 @@ if( !empty($arModelReferences) )
 {
     $aMenu[] = [
         "parent_menu" => "global_menu_local_core",
-        "text"        => "Справочники",
-        'url'         => '',
-        "items_id"    => "model_reference",
-        "icon"        => "highloadblock_menu_icon",
-        "sort"        => 99,
-        'items'       => $arModelReferences
-    ];
-}
-
-if( !empty($arFeedApiReferences) )
-{
-    $aMenu[] = [
-        "parent_menu" => "global_menu_local_core",
-        "text"        => "Справочники FeedApi",
-        'url'         => '',
-        "items_id"    => "model_reference_feed_api",
-        "icon"        => "highloadblock_menu_icon",
-        "sort"        => 99,
-        'items'       => $arFeedApiReferences
+        "text" => "Справочники",
+        'url' => '',
+        "items_id" => "model_reference",
+        "icon" => "highloadblock_menu_icon",
+        "sort" => 99,
+        'items' => $arModelReferences
     ];
 }
 

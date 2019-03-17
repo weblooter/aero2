@@ -18,31 +18,30 @@ class BillProductTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMa
     }
 
     /** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */
-    public static $arEnumFieldsValues = [
-    ];
+    public static $arEnumFieldsValues = [];
 
     public static function getMap()
     {
         return [
             new Fields\IntegerField(
                 'ID', [
-                    'primary'      => true,
+                    'primary' => true,
                     'autocomplete' => true,
-                    'title'        => 'ID'
+                    'title' => 'ID'
                 ]
             ),
             new Fields\EnumField(
                 'ACTIVE', [
-                    'title'         => 'Активность',
-                    'required'      => false,
-                    'values'        => self::getEnumFieldValues('ACTIVE'),
+                    'title' => 'Активность',
+                    'required' => false,
+                    'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
                 ]
             ),
             new Fields\DatetimeField(
                 'DATE_CREATE', [
-                    'title'         => 'Дата создания',
-                    'required'      => false,
+                    'title' => 'Дата создания',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -51,8 +50,8 @@ class BillProductTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMa
             ),
             new Fields\DatetimeField(
                 'DATE_MODIFIED', [
-                    'title'         => 'Дата последнего изменения',
-                    'required'      => false,
+                    'title' => 'Дата последнего изменения',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -67,38 +66,38 @@ class BillProductTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMa
 
             new Fields\TextField(
                 'NAME', [
-                    'title'    => 'Название товара',
+                    'title' => 'Название товара',
                     'required' => true,
                 ]
             ),
 
             new Fields\FloatField(
                 'PRICE', [
-                    'title'    => 'Стоимость',
+                    'title' => 'Стоимость',
                     'required' => true,
                 ]
             ),
 
             new Fields\FloatField(
                 'QUANTITY', [
-                    'title'    => 'Кол-во',
+                    'title' => 'Кол-во',
                     'required' => true,
                 ]
             ),
 
             new Fields\EnumField(
                 'UNIT', [
-                    'title'    => 'Единица измерения',
+                    'title' => 'Единица измерения',
                     'required' => true,
-                    'values'   => ['PIECE', 'HOUR', 'MONTH']
+                    'values' => ['PIECE', 'HOUR', 'MONTH']
                 ]
             ),
 
             new Fields\EnumField(
                 'CURRENCY', [
-                    'title'         => 'Валюта',
-                    'required'      => true,
-                    'values'        => ['RUB'],
+                    'title' => 'Валюта',
+                    'required' => true,
+                    'values' => ['RUB'],
                     'default_value' => 'RUB'
                 ]
             ),

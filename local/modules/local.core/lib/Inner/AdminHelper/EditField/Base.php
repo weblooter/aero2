@@ -104,7 +104,8 @@ abstract class Base
         if( $value === null )
         {
 
-            $request = \Bitrix\Main\Context::getCurrent()->getRequest();
+            $request = \Bitrix\Main\Context::getCurrent()
+                ->getRequest();
 
             if( $request->isPost() )
             {

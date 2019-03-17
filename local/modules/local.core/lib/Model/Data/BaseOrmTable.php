@@ -18,31 +18,30 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
     }
 
     /** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */
-    public static $arEnumFieldsValues = [
-    ];
+    public static $arEnumFieldsValues = [];
 
     public static function getMap()
     {
         return [
             new Fields\IntegerField(
                 'ID', [
-                    'primary'      => true,
+                    'primary' => true,
                     'autocomplete' => true,
-                    'title'        => 'ID'
+                    'title' => 'ID'
                 ]
             ),
             new Fields\EnumField(
                 'ACTIVE', [
-                    'title'         => 'Активность',
-                    'required'      => false,
-                    'values'        => self::getEnumFieldValues('ACTIVE'),
+                    'title' => 'Активность',
+                    'required' => false,
+                    'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
                 ]
             ),
             new Fields\DatetimeField(
                 'DATE_CREATE', [
-                    'title'         => 'Дата создания',
-                    'required'      => false,
+                    'title' => 'Дата создания',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -51,8 +50,8 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
             new Fields\DatetimeField(
                 'DATE_MODIFIED', [
-                    'title'         => 'Дата последнего изменения',
-                    'required'      => false,
+                    'title' => 'Дата последнего изменения',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();

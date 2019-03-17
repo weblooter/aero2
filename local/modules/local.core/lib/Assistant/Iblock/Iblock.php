@@ -35,12 +35,13 @@ class Iblock
                     "select" => ["ID"],
                     "filter" => [
                         "=IBLOCK_TYPE_ID" => $iblockTypeId,
-                        "=CODE"           => $iblockCode,
+                        "=CODE" => $iblockCode,
                     ],
-                    "limit"  => 1,
-                    "cache"  => ["ttl" => 86400]
+                    "limit" => 1,
+                    "cache" => ["ttl" => 86400]
                 ]
-            )->fetch();
+            )
+                ->fetch();
 
             $arStorage[$iblockTypeId][$iblockCode] = $data["ID"] ?? null;
         }

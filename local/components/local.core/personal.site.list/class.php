@@ -17,10 +17,13 @@ class PersonalSiteListComponent extends \Local\Core\Inner\BxModified\CBitrixComp
     private function __getAndSetResult()
     {
         $arResult = [];
-        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+        $obCache = \Bitrix\Main\Application::getInstance()
+            ->getCache();
 
         $nav = new \Bitrix\Main\UI\PageNavigation("site-nav");
-        $nav->allowAllRecords(true)->setPageSize($this->arParams['ELEM_COUNT'])->initFromUri();
+        $nav->allowAllRecords(true)
+            ->setPageSize($this->arParams['ELEM_COUNT'])
+            ->initFromUri();
 
         if(
         $obCache->startDataCache(
@@ -41,20 +44,21 @@ class PersonalSiteListComponent extends \Local\Core\Inner\BxModified\CBitrixComp
         {
             $rs = \Local\Core\Model\Data\SiteTable::getList(
                 [
-                    'filter'      => [
+                    'filter' => [
                         'COMPANY_ID' => $this->arParams['COMPANY_ID']
                     ],
-                    'order'       => ['DATE_CREATE' => 'DESC'],
-                    'select'      => [
+                    'order' => ['DATE_CREATE' => 'DESC'],
+                    'select' => [
                         'ID',
+                        'NAME',
                         'DOMAIN',
                         'ACTIVE',
                         'DATE_CREATE',
                         'RESOURCE_TYPE'
                     ],
                     "count_total" => true,
-                    "offset"      => $nav->getOffset(),
-                    "limit"       => $nav->getLimit(),
+                    "offset" => $nav->getOffset(),
+                    "limit" => $nav->getLimit(),
                 ]
             );
             if( $rs->getSelectedRowsCount() < 1 )

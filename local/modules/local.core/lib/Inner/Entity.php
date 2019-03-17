@@ -259,8 +259,8 @@ abstract class Entity
             {
                 $event = new Main\Event(
                     'sale', 'OnBefore'.$this->eventName.'SetFields', array(
-                        'ENTITY'     => $this,
-                        'VALUES'     => $values,
+                        'ENTITY' => $this,
+                        'VALUES' => $values,
                         'OLD_VALUES' => $oldValues
                     )
                 );

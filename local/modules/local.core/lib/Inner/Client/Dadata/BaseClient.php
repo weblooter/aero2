@@ -32,7 +32,8 @@ abstract class BaseClient
     {
 
 
-        $config = \Bitrix\Main\Config\Configuration::getInstance()->get('dadata');
+        $config = \Bitrix\Main\Config\Configuration::getInstance()
+            ->get('dadata');
 
         $this->token = $config['token'];
 
@@ -59,7 +60,7 @@ abstract class BaseClient
         $status = $match[1];
 
         $result = [
-            'status'  => $status,
+            'status' => $status,
             'message' => ''
         ];
 
@@ -118,8 +119,8 @@ abstract class BaseClient
 
         $options = array(
             'http' => array(
-                'method'  => 'POST',
-                'header'  => array(
+                'method' => 'POST',
+                'header' => array(
                     'Content-type: application/json',
                     'Authorization: Token '.$this->token,
                 ),

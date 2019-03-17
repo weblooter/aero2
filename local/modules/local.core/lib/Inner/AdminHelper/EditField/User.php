@@ -34,9 +34,10 @@ class User extends Base
                     [
                         "select" => ["ID", "LOGIN", "NAME", "LAST_NAME"],
                         "filter" => ["ID" => (int)$this->getValue()],
-                        "limit"  => 1
+                        "limit" => 1
                     ]
-                )->fetch();
+                )
+                    ->fetch();
             }
             catch( \Exception $e )
             {

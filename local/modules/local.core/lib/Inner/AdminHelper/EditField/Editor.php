@@ -32,7 +32,7 @@ class Editor extends Base
             "html",
             [
                 "height" => 450,
-                "width"  => "100%"
+                "width" => "100%"
             ],
             "N",
             0,
@@ -42,8 +42,8 @@ class Editor extends Base
             true,
             false,
             [
-                "toolbarConfig"    => \CFileMan::GetEditorToolbarConfig("admin"),
-                "saveEditorKey"    => 1,
+                "toolbarConfig" => \CFileMan::GetEditorToolbarConfig("admin"),
+                "saveEditorKey" => 1,
                 "hideTypeSelector" => "N",
             ]
         );

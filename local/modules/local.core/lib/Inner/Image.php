@@ -31,7 +31,7 @@ class Image extends File
         $ar_picture = \CFile::ResizeImageGet(
             $ar_fields,
             [
-                'width'  => $width,
+                'width' => $width,
                 'height' => $height,
             ],
             $options,
@@ -72,7 +72,8 @@ class Image extends File
             $src = $this->getResizeImage(
                 $width,
                 $height
-            )->getSrc();
+            )
+                ->getSrc();
         }
 
         return '<img src="'.$src.'" '.( $class ? 'class="'.$class.'"' : '' ).' '.( $style ? 'style="'.$style.'"' : '' ).' '.( $alt ? 'alt="'.$alt.'"' : '' ).' '.( $title ? 'title="'.$title.'"' : '' )

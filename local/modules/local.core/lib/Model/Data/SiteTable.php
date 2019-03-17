@@ -11,7 +11,12 @@ use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
 /**
  * Класс ORM сайтов компаний.
  *
- * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [14.03.2019 20:35:58] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [14.03.2019 20:35:58] | Fields\DatetimeField</li><li>COMPANY_ID - ID компании | Fields\IntegerField</li><li>DOMAIN - Ссылка на сайт | Fields\StringField</li><li>RESOURCE_TYPE - Источник данных | Fields\EnumField<br/>&emsp;LINK => Ссылка на файл<br/>&emsp;FILE => Загрузить файл<br/></li><li>FILE_ID - Загруженный файл XML | Fields\IntegerField</li><li>FILE_LINK - Ссылка на файл XML | Fields\StringField</li><li>HTTP_AUTH - Для доступа нужен логин и пароль [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>HTTP_AUTH_LOGIN - Логин для авторизации | Fields\StringField</li><li>HTTP_AUTH_PASS - Пароль для авторизации | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li></ul>
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [14.03.2019 20:35:58] |
+ * Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [14.03.2019 20:35:58] | Fields\DatetimeField</li><li>COMPANY_ID - ID компании | Fields\IntegerField</li><li>DOMAIN - Ссылка
+ * на сайт | Fields\StringField</li><li>RESOURCE_TYPE - Источник данных | Fields\EnumField<br/>&emsp;LINK => Ссылка на файл<br/>&emsp;FILE => Загрузить файл<br/></li><li>FILE_ID - Загруженный файл
+ * XML | Fields\IntegerField</li><li>FILE_LINK - Ссылка на файл XML | Fields\StringField</li><li>HTTP_AUTH - Для доступа нужен логин и пароль [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N =>
+ * Нет<br/></li><li>HTTP_AUTH_LOGIN - Логин для авторизации | Fields\StringField</li><li>HTTP_AUTH_PASS - Пароль для авторизации | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company
+ * | Fields\Relations\Reference</li></ul>
  *
  *
  * @package Local\Core\Model\Data
@@ -40,23 +45,23 @@ class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         return [
             new Fields\IntegerField(
                 'ID', [
-                    'primary'      => true,
+                    'primary' => true,
                     'autocomplete' => true,
-                    'title'        => 'ID'
+                    'title' => 'ID'
                 ]
             ),
             new Fields\EnumField(
                 'ACTIVE', [
-                    'title'         => 'Активность',
-                    'required'      => false,
-                    'values'        => self::getEnumFieldValues('ACTIVE'),
+                    'title' => 'Активность',
+                    'required' => false,
+                    'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
                 ]
             ),
             new Fields\DatetimeField(
                 'DATE_CREATE', [
-                    'title'         => 'Дата создания',
-                    'required'      => false,
+                    'title' => 'Дата создания',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -65,8 +70,8 @@ class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ),
             new Fields\DatetimeField(
                 'DATE_MODIFIED', [
-                    'title'         => 'Дата последнего изменения',
-                    'required'      => false,
+                    'title' => 'Дата последнего изменения',
+                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -76,14 +81,20 @@ class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             new Fields\IntegerField(
                 'COMPANY_ID', [
                     'required' => true,
-                    'title'    => 'ID компании'
+                    'title' => 'ID компании'
+                ]
+            ),
+            new Fields\StringField(
+                'NAME', [
+                    'required' => true,
+                    'title' => 'Название',
                 ]
             ),
             new Fields\StringField(
                 'DOMAIN', [
-                    'required'               => true,
-                    'title'                  => 'Ссылка на сайт',
-                    'validation'             => function()
+                    'required' => true,
+                    'title' => 'Домен',
+                    'validation' => function()
                         {
                             return [
                                 new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/')
@@ -108,26 +119,26 @@ class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             new Fields\EnumField(
                 'RESOURCE_TYPE', [
                     'required' => true,
-                    'title'    => 'Источник данных',
-                    'values'   => self::getEnumFieldValues('RESOURCE_TYPE')
+                    'title' => 'Источник данных',
+                    'values' => self::getEnumFieldValues('RESOURCE_TYPE')
                 ]
             ),
 
             new Fields\IntegerField(
                 'FILE_ID', [
                     'required' => false,
-                    'title'    => 'Загруженный файл XML',
+                    'title' => 'Загруженный файл XML',
                 ]
             ),
 
             new Fields\StringField(
                 'FILE_LINK', [
-                    'required'               => false,
-                    'title'                  => 'Ссылка на файл XML',
-                    'validation'             => function()
+                    'required' => false,
+                    'title' => 'Ссылка на файл XML',
+                    'validation' => function()
                         {
                             return [
-                                new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/')
+                                new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)?$/')
                             ];
                         },
                     'save_data_modification' => function()
@@ -148,22 +159,22 @@ class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ),
             new Fields\EnumField(
                 'HTTP_AUTH', [
-                    'required'      => false,
-                    'title'         => 'Для доступа нужен логин и пароль',
-                    'values'        => self::getEnumFieldValues('HTTP_AUTH'),
+                    'required' => false,
+                    'title' => 'Для доступа нужен логин и пароль',
+                    'values' => self::getEnumFieldValues('HTTP_AUTH'),
                     'default_value' => 'N'
                 ]
             ),
             new Fields\StringField(
                 'HTTP_AUTH_LOGIN', [
                     'required' => false,
-                    'title'    => 'Логин для авторизации',
+                    'title' => 'Логин для авторизации',
                 ]
             ),
             new Fields\StringField(
                 'HTTP_AUTH_PASS', [
                     'required' => false,
-                    'title'    => 'Пароль для авторизации',
+                    'title' => 'Пароль для авторизации',
                 ]
             ),
 
@@ -345,7 +356,8 @@ class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         /*
          * Проверка на смену компании сайта
          */
-        $ar = self::getById($event->getParameter('primary')['ID'])->fetch();
+        $ar = self::getById($event->getParameter('primary')['ID'])
+            ->fetch();
         self::$__arSiteIdToOldCompanyId[$ar['ID']] = $ar['COMPANY_ID'];
 
 
@@ -403,7 +415,8 @@ class SiteTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         $arEventParams = $event->getParameters();
         if( !empty($arEventParams['primary']['ID']) )
         {
-            $ar = self::getById($arEventParams['primary']['ID'])->fetchRaw();
+            $ar = self::getById($arEventParams['primary']['ID'])
+                ->fetchRaw();
 
             self::$__arSiteIdToOldCompanyId[$ar['ID']] = $ar['COMPANY_ID'];
 

@@ -52,7 +52,8 @@ class HighLoadBlock
                 throw new \Exception('HL by code '.$highLoadBlockName.' not found!');
             }
 
-            $hlblock = \Bitrix\Highloadblock\HighloadBlockTable::getById($ar['ID'])->fetch();
+            $hlblock = \Bitrix\Highloadblock\HighloadBlockTable::getById($ar['ID'])
+                ->fetch();
             $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity($hlblock);
             self::$entities[$highLoadBlockName] = $entity->getDataClass();
         }
@@ -95,7 +96,8 @@ class HighLoadBlock
                 throw new \Exception('HL by table name '.$highLoadBlockTableName.' not found!');
             }
 
-            $hlblock = \Bitrix\Highloadblock\HighloadBlockTable::getById($ar['ID'])->fetch();
+            $hlblock = \Bitrix\Highloadblock\HighloadBlockTable::getById($ar['ID'])
+                ->fetch();
             $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity($hlblock);
             self::$entities[$highLoadBlockTableName] = $entity->getDataClass();
         }

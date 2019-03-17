@@ -16,15 +16,18 @@ class Worker extends Command
      */
     protected function configure(): void
     {
-        $this->setName('worker')->setDescription(
+        $this->setName('worker')
+            ->setDescription(
                 "Запускает worker, исполняющий задачу из очереди. 
                              Пример вызова для дебага: 
                              $ <info>php -d mbstring.func_overload=2 console worker 1002 NONE</info>"
-            )->addArgument(
+            )
+            ->addArgument(
                 'jobID',
                 InputArgument::REQUIRED,
                 ''
-            )->addArgument(
+            )
+            ->addArgument(
                 'executorID',
                 InputArgument::REQUIRED,
                 ''
@@ -45,11 +48,12 @@ class Worker extends Command
         $arJob = JobQueueTable::getList(
             [
                 'filter' => [
-                    'ID'         => $jobID,
+                    'ID' => $jobID,
                     'EXECUTE_BY' => $executorID,
                 ],
             ]
-        )->fetch();
+        )
+            ->fetch();
 
         if( is_array($arJob) )
         {

@@ -25,7 +25,7 @@
                             'edit',
                             [
                                 '#COMPANY_ID#' => $arParams['COMPANY_ID'],
-                                '#SITE_ID#'    => $arItem['ID']
+                                '#SITE_ID#' => $arItem['ID']
                             ]
                         )?>" title="Редактировать">
                             <ion-icon name="create"></ion-icon>
@@ -40,9 +40,9 @@
                             'detail',
                             [
                                 '#COMPANY_ID#' => $arParams['COMPANY_ID'],
-                                '#SITE_ID#'    => $arItem['ID']
+                                '#SITE_ID#' => $arItem['ID']
                             ]
-                        )?>">[<?=$arItem['ID']?>] <?=$arItem['DOMAIN']?></a>
+                        )?>">[<?=$arItem['ID']?>] <?=$arItem['NAME']?></a>
                     </h5>
                     Активность: <?=( $arItem['ACTIVE'] == 'Y' ) ? 'Активен' : 'Деактивирован'?><br />
                     Дата создания: <?=date(
@@ -80,7 +80,7 @@
         "",
         array(
             "NAV_OBJECT" => $arResult['NAV_OBJ'],
-            "SEF_MODE"   => "N", // ЧПУ пагинация или нет, Y|N
+            "SEF_MODE" => "N", // ЧПУ пагинация или нет, Y|N
             "SHOW_COUNT" => "N",
         ),
         false

@@ -82,7 +82,7 @@ $arLocalRoutes = [
                 }
         ],
         'detail' => [
-            'URL' => '/personal/company/#COMPANY_ID#/site/#SITE_ID#/',
+            'URL'         => '/personal/company/#COMPANY_ID#/site/#SITE_ID#/',
             'BREADCRUMBS' => function($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs(
@@ -92,7 +92,7 @@ $arLocalRoutes = [
                     );
 
                     $GLOBALS['APPLICATION']->AddChainItem(
-                        \Local\Core\Inner\Site\Base::getSiteDomain($arParams['SITE_ID']),
+                        \Local\Core\Inner\Site\Base::getSiteName($arParams['SITE_ID']),
                         \Local\Core\Inner\Route::getRouteTo(
                             'site',
                             'detail',
@@ -102,7 +102,7 @@ $arLocalRoutes = [
                 }
         ],
         'add'    => [
-            'URL' => '/personal/company/#COMPANY_ID#/site/add/',
+            'URL'         => '/personal/company/#COMPANY_ID#/site/add/',
             'BREADCRUMBS' => function($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs(
@@ -122,7 +122,7 @@ $arLocalRoutes = [
                 }
         ],
         'edit'   => [
-            'URL' => '/personal/company/#COMPANY_ID#/site/#SITE_ID#/edit/',
+            'URL'         => '/personal/company/#COMPANY_ID#/site/#SITE_ID#/edit/',
             'BREADCRUMBS' => function($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs(
@@ -132,7 +132,7 @@ $arLocalRoutes = [
                     );
 
                     $GLOBALS['APPLICATION']->AddChainItem(
-                        "Редактирование ".\Local\Core\Inner\Site\Base::getSiteDomain($arParams['SITE_ID']),
+                        "Редактирование ".\Local\Core\Inner\Site\Base::getSiteName($arParams['SITE_ID']),
                         \Local\Core\Inner\Route::getRouteTo(
                             'site',
                             'edit',

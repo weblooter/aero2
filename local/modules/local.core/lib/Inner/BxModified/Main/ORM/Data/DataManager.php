@@ -124,7 +124,8 @@ class DataManager extends \Bitrix\Main\ORM\Data\DataManager
         $arEventParams = $event->getParameters();
         if( !empty($arEventParams['primary']['ID']) )
         {
-            $ar = static::getById($arEventParams['primary']['ID'])->fetchRaw();
+            $ar = static::getById($arEventParams['primary']['ID'])
+                ->fetchRaw();
 
             if( !empty($arAdditionalParams) )
             {

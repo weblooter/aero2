@@ -122,12 +122,13 @@ abstract class Worker
         $ar = JobQueueTable::getList(
             [
                 'filter' => [
-                    '=ID'         => $this->dirtyJobID,
+                    '=ID' => $this->dirtyJobID,
                     '=EXECUTE_BY' => $this->dirtyExecutorID,
                 ],
                 'select' => ['*'],
             ]
-        )->fetch();
+        )
+            ->fetch();
 
         if( !empty($ar) )
         {
@@ -161,14 +162,14 @@ abstract class Worker
 
         $updateData = [
             [
-                'ID'         => $this->getJobID(),
+                'ID' => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'ATTEMPTS_LEFT'      => new Main\DB\SqlExpression(
+                'ATTEMPTS_LEFT' => new Main\DB\SqlExpression(
                     '?# - 1', 'ATTEMPTS_LEFT'
                 ),
-                'IS_EXECUTE_NOW'     => 'Y',
+                'IS_EXECUTE_NOW' => 'Y',
                 'LAST_EXECUTE_START' => new Main\Type\DateTime(),
             ]
         ];
@@ -188,12 +189,12 @@ abstract class Worker
 
         $updateData = [
             [
-                'ID'         => $this->getJobID(),
+                'ID' => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'STATUS'         => JobQueueTable::STATUS_ENUM_FAIL,
-                'EXECUTE_BY'     => JobQueueTable::EXECUTE_BY_DEFAULT,
+                'STATUS' => JobQueueTable::STATUS_ENUM_FAIL,
+                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_DEFAULT,
                 'IS_EXECUTE_NOW' => 'N',
             ]
         ];
@@ -213,14 +214,14 @@ abstract class Worker
     {
         $updateData = [
             [
-                'ID'         => $this->getJobID(),
+                'ID' => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'STATUS'         => JobQueueTable::STATUS_ENUM_ERROR,
-                'EXECUTE_BY'     => JobQueueTable::EXECUTE_BY_DEFAULT,
+                'STATUS' => JobQueueTable::STATUS_ENUM_ERROR,
+                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_DEFAULT,
                 'IS_EXECUTE_NOW' => 'N',
-                'EXECUTE_AT'     => $this->getNextExecuteAt(),
+                'EXECUTE_AT' => $this->getNextExecuteAt(),
             ]
         ];
         $rs = JobQueueTable::update(
@@ -238,12 +239,12 @@ abstract class Worker
 
         $updateData = [
             [
-                'ID'         => $this->getJobID(),
+                'ID' => $this->getJobID(),
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'STATUS'         => JobQueueTable::STATUS_ENUM_SUCCESS,
-                'EXECUTE_BY'     => JobQueueTable::EXECUTE_BY_DEFAULT,
+                'STATUS' => JobQueueTable::STATUS_ENUM_SUCCESS,
+                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_DEFAULT,
                 'IS_EXECUTE_NOW' => 'N',
             ]
         ];

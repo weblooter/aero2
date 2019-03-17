@@ -8,7 +8,10 @@ class PersonalCompanyFormAddComponent extends \Local\Core\Inner\BxModified\CBitr
 
         if(
             !empty(
-            \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD')
+            \Bitrix\Main\Application::getInstance()
+                ->getContext()
+                ->getRequest()
+                ->get('COMPANY_FIELD')
             )
             && check_bitrix_sessid()
         )
@@ -43,7 +46,10 @@ class PersonalCompanyFormAddComponent extends \Local\Core\Inner\BxModified\CBitr
 
     private function __getAndSetOrmFields()
     {
-        $arRequestFieldsValues = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD');
+        $arRequestFieldsValues = \Bitrix\Main\Application::getInstance()
+            ->getContext()
+            ->getRequest()
+            ->get('COMPANY_FIELD');
 
         /** @var \Bitrix\Main\ORM\Fields\ScalarField $obField */
         foreach( \Local\Core\Model\Data\CompanyTable::getMap() as $obField )
@@ -61,10 +67,10 @@ class PersonalCompanyFormAddComponent extends \Local\Core\Inner\BxModified\CBitr
                 }
 
                 $this->arResult['FIELDS'][$obField->getColumnName()] = [
-                    'TITLE'       => $obField->getTitle(),
-                    'CODE'        => $obField->getColumnName(),
+                    'TITLE' => $obField->getTitle(),
+                    'CODE' => $obField->getColumnName(),
                     'IS_REQUIRED' => $obField->isRequired(),
-                    'VALUE'       => $arRequestFieldsValues[$obField->getColumnName()] ?? ''
+                    'VALUE' => $arRequestFieldsValues[$obField->getColumnName()] ?? ''
                 ];
             }
         }
@@ -72,7 +78,10 @@ class PersonalCompanyFormAddComponent extends \Local\Core\Inner\BxModified\CBitr
 
     private function __tryAdd()
     {
-        $arCompanyFields = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_FIELD');
+        $arCompanyFields = \Bitrix\Main\Application::getInstance()
+            ->getContext()
+            ->getRequest()
+            ->get('COMPANY_FIELD');
 
         $arAddFields = [];
         foreach( $arCompanyFields as $key => $val )

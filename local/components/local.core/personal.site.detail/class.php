@@ -22,7 +22,8 @@ class PersonalSiteDetailComponent extends \Local\Core\Inner\BxModified\CBitrixCo
     private function __getAndSetResult()
     {
         $arResult = [];
-        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+        $obCache = \Bitrix\Main\Application::getInstance()
+            ->getCache();
 
         if(
         $obCache->startDataCache(
@@ -43,7 +44,7 @@ class PersonalSiteDetailComponent extends \Local\Core\Inner\BxModified\CBitrixCo
                 [
                     'filter' => [
                         'COMPANY_ID' => $this->arParams['COMPANY_ID'],
-                        'ID'         => $this->arParams['SITE_ID']
+                        'ID' => $this->arParams['SITE_ID']
                     ],
                     'select' => [
                         '*'

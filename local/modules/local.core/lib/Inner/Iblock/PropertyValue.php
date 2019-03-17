@@ -44,9 +44,9 @@ class PropertyValue extends CollectableEntity
         }
 
         $filter = array(
-            'IBLOCK_ID'         => $iblock_id,
-            'ACTIVE'            => 'Y',
-            'ACTIVE_DATE'       => 'Y',
+            'IBLOCK_ID' => $iblock_id,
+            'ACTIVE' => 'Y',
+            'ACTIVE_DATE' => 'Y',
             'CHECK_PERMISSIONS' => 'N'
         );
 

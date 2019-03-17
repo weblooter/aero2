@@ -2,7 +2,10 @@
 require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $APPLICATION->SetTitle("Редактирование компании");
 
-$intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('COMPANY_ID');
+$intCompanyId = \Bitrix\Main\Application::getInstance()
+    ->getContext()
+    ->getRequest()
+    ->get('COMPANY_ID');
 ?>
     <div class="container-fluid">
         <div class="row">
@@ -11,12 +14,12 @@ $intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getReques
                     "local.core:personal.company.edit",
                     "",
                     Array(
-                        "AJAX_MODE"              => "Y",
+                        "AJAX_MODE" => "Y",
                         "AJAX_OPTION_ADDITIONAL" => "",
-                        "AJAX_OPTION_HISTORY"    => "N",
-                        "AJAX_OPTION_JUMP"       => "N",
-                        "AJAX_OPTION_STYLE"      => "N",
-                        "ALLOW_FIELDS_LIST"      => array(
+                        "AJAX_OPTION_HISTORY" => "N",
+                        "AJAX_OPTION_JUMP" => "N",
+                        "AJAX_OPTION_STYLE" => "N",
+                        "ALLOW_FIELDS_LIST" => array(
                             "COMPANY_INN",
                             "COMPANY_NAME_SHORT",
                             "COMPANY_NAME_FULL",
@@ -34,7 +37,7 @@ $intCompanyId = \Bitrix\Main\Application::getInstance()->getContext()->getReques
                             "COMPANY_ADDRESS_ZIP",
                             "COMPANY_ADDRESS_COUNTRY"
                         ),
-                        'COMPANY_ID'             => $intCompanyId
+                        'COMPANY_ID' => $intCompanyId
                     )
                 ); ?>
             </div>

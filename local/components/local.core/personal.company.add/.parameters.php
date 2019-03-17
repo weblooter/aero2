@@ -13,14 +13,14 @@ foreach( \Local\Core\Model\Data\CompanyTable::getMap() as $obField )
 
 $arComponentParameters = array(
     "PARAMETERS" => array(
-        "AJAX_MODE"         => [],
+        "AJAX_MODE" => [],
         'ALLOW_FIELDS_LIST' => [
-            'PARENT'   => 'BASE',
-            'NAME'     => 'Список выводимых параметров',
-            'TYPE'     => 'LIST',
-            'SIZE'     => 10,
+            'PARENT' => 'BASE',
+            'NAME' => 'Список выводимых параметров',
+            'TYPE' => 'LIST',
+            'SIZE' => 10,
             'MULTIPLE' => 'Y',
-            'VALUES'   => $arAllowFieldsListValues
+            'VALUES' => $arAllowFieldsListValues
         ]
     )
 );

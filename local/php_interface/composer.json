@@ -22,10 +22,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Local\\Core\\": "../modules/local.core/lib"
+            "Local\\Core\\": "../modules/local.core/lib/"
         },
         "files": [
             "debug_helper.php"
+        ],
+        "classmap" : [
+            "externalLibs/"
         ]
     },
     "config": {

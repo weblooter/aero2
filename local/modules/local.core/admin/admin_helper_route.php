@@ -16,32 +16,35 @@ require_once( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_adm
  * ]
  */
 $arRouteRules = [
+    // Model\Data
     "model_data_company" => [
         "list" => \Local\Core\Inner\AdminHelper\Data\Company\AdminList::class,
         "edit" => \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit::class,
     ],
-    "model_data_site"    => [
+    "model_data_site" => [
         "list" => \Local\Core\Inner\AdminHelper\Data\Site\AdminList::class,
         "edit" => \Local\Core\Inner\AdminHelper\Data\Site\AdminEdit::class,
     ],
 
+    // Model\Reference
     "model_reference_measure" => [
         "list" => \Local\Core\Inner\AdminHelper\Reference\Measure\AdminList::class,
         "edit" => \Local\Core\Inner\AdminHelper\Reference\Measure\AdminEdit::class,
     ],
-    //    "reference_organization" => [
-    //        "list" => \Local\Core\Inner\AdminHelper\Reference\Organization\AdminList::class,
-    //        "edit" => \Local\Core\Inner\AdminHelper\Reference\Organization\AdminEdit::class,
-    //    ],
-    //    "reference_useraddress" => [
-    //        "list" => \Local\Core\Inner\AdminHelper\Reference\UserAddress\AdminList::class,
-    //        "edit" => \Local\Core\Inner\AdminHelper\Reference\UserAddress\AdminEdit::class,
-    //    ],
+    "model_reference_currency" => [
+        "list" => \Local\Core\Inner\AdminHelper\Reference\Currency\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Reference\Currency\AdminEdit::class,
+    ],
+    "model_reference_country" => [
+        "list" => \Local\Core\Inner\AdminHelper\Reference\Country\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Reference\Country\AdminEdit::class,
+    ],
 
 ];
 
 
-$context = Application::getInstance()->getContext();
+$context = Application::getInstance()
+    ->getContext();
 $request = $context->getRequest();
 $response = $context->getResponse();
 

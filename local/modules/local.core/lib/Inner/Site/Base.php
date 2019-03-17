@@ -30,17 +30,20 @@ class Base
                     'filter' => ['ID' => $intSiteId],
                     'select' => [
                         'ID',
+                        'NAME',
                         'DOMAIN',
                         'COMPANY_ID',
                         'COMPANY_DATA_' => 'COMPANY'
                     ]
                 ]
-            )->fetch();
+            )
+                ->fetch();
 
             $ar = [
-                'ID'                  => $arTmp['ID'],
-                'DOMAIN'              => $arTmp['DOMAIN'],
-                'COMPANY_ID'          => $arTmp['COMPANY_ID'],
+                'ID' => $arTmp['ID'],
+                'NAME' => $arTmp['NAME'],
+                'DOMAIN' => $arTmp['DOMAIN'],
+                'COMPANY_ID' => $arTmp['COMPANY_ID'],
                 'COMPANY_USER_OWN_ID' => $arTmp['COMPANY_DATA_USER_OWN_ID'],
             ];
 
@@ -127,5 +130,21 @@ class Base
     {
         $ar = self::__getSiteRegister($intSiteId);
         return $ar['DOMAIN'];
+    }
+
+    /**
+     * Получить название сайта
+     *
+     * @param integer $intSiteId ID компании
+     *
+     * @return string
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getSiteName($intSiteId)
+    {
+        $ar = self::__getSiteRegister($intSiteId);
+        return $ar['NAME'];
     }
 }

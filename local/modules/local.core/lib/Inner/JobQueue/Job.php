@@ -25,17 +25,14 @@ class Job
      * @see \Local\Core\Inner\JobQueue\Worker\Example
      */
     public static function add(
-        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker,
-        \Bitrix\Main\Type\DateTime $executeAt,
-        int $attempts = 10
-    )
-    {
+        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker, \Bitrix\Main\Type\DateTime $executeAt, int $attempts = 10
+    ){
         $result = new AddResult();
         $addData = [
             'WORKER_CLASS_NAME' => $worker::getClassName(),
-            'INPUT_DATA'        => $worker->getInputData(),
-            'EXECUTE_AT'        => $executeAt,
-            'ATTEMPTS_LEFT'     => $attempts
+            'INPUT_DATA' => $worker->getInputData(),
+            'EXECUTE_AT' => $executeAt,
+            'ATTEMPTS_LEFT' => $attempts
         ];
         $rs = \Local\Core\Model\Data\JobQueueTable::add($addData);
         if( $rs->isSuccess() )
@@ -66,11 +63,8 @@ class Job
      * @throws \Local\Core\Inner\Client\Dadata\Exception\ArgumentException
      */
     public static function addIfNotExist(
-        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker,
-        \Bitrix\Main\Type\DateTime $executeAt,
-        int $attempts = 10
-    )
-    {
+        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker, \Bitrix\Main\Type\DateTime $executeAt, int $attempts = 10
+    ){
         $result = new AddResult();
         $class = $worker::getClassName();
         $input = $worker->getInputData();
@@ -90,11 +84,11 @@ class Job
                     'ATTEMPTS_LEFT',
                 ],
                 'filter' => [
-                    'HASH'           => $hash,
+                    'HASH' => $hash,
                     '>ATTEMPTS_LEFT' => 0,
-                    'STATUS'         => ['N', 'E']
+                    'STATUS' => ['N', 'E']
                 ],
-                'limit'  => 1,
+                'limit' => 1,
             ]
         );
 

@@ -21,11 +21,14 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
 
     private function __getResult()
     {
-        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+        $obCache = \Bitrix\Main\Application::getInstance()
+            ->getCache();
         $arResult = [];
 
         $nav = new \Bitrix\Main\UI\PageNavigation("company-nav");
-        $nav->allowAllRecords(true)->setPageSize($this->arParams['ELEM_COUNT'])->initFromUri();
+        $nav->allowAllRecords(true)
+            ->setPageSize($this->arParams['ELEM_COUNT'])
+            ->initFromUri();
 
         if(
         $obCache->startDataCache(
@@ -48,11 +51,11 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
 
             $rs = \Local\Core\Model\Data\CompanyTable::getList(
                 [
-                    'filter'      => [
+                    'filter' => [
                         'USER_OWN_ID' => $GLOBALS['USER']->GetID()
                     ],
-                    'order'       => ['DATE_CREATE' => 'DESC'],
-                    'select'      => [
+                    'order' => ['DATE_CREATE' => 'DESC'],
+                    'select' => [
                         'ID',
                         'ACTIVE',
                         'DATE_CREATE',
@@ -62,8 +65,8 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
                         'COMPANY_NAME_SHORT',
                     ],
                     "count_total" => true,
-                    "offset"      => $nav->getOffset(),
-                    "limit"       => $nav->getLimit(),
+                    "offset" => $nav->getOffset(),
+                    "limit" => $nav->getLimit(),
                 ]
             );
             if( $rs->getSelectedRowsCount() < 1 )
