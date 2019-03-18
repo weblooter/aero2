@@ -68,7 +68,7 @@
             case 'E':
                 ?>
                 Во время проверки компании возникли проблемы: <?=$arResult['COMPANY']['VERIFIED_NOTE']?><br />
-                До тех пор, пока ошибки не будут исправлены, компания и ее сайты не будут работать.
+                До тех пор, пока ошибки не будут исправлены, компания и ее магазины не будут работать.
                 <?
                 break;
         }
@@ -78,7 +78,7 @@
 </div>
 
 <div class="col-6 mb-3">
-    // TODO Сайты компании
+    // TODO Магазины компании
     <ul class="list-group mb-3">
         <li class="list-group-item"><a href="#">https://example.com</a></li>
         <li class="list-group-item"><a href="#">https://example.com</a></li>
@@ -86,24 +86,24 @@
         <li class="list-group-item"><a href="#">https://example.com</a></li>
     </ul>
     <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-        'site',
+        'store',
         'list',
         ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
     )?>" class="btn btn-warning">
         <ion-icon name="reorder"></ion-icon>
-        Сайты компании</a>
+        Магазины компании</a>
     <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-        'site',
+        'store',
         'add',
         ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
     )?>" class="btn btn-warning">
         <ion-icon name="add-circle-outline"></ion-icon>
-        Добавить сайт</a>
+        Добавить магазин</a>
 </div>
 <div class="col-6 mb-3">
 
     <div class="alert alert-warning" role="alert">
-        // TODO нотификации, типа новый инвойс или сайт прошел проверкуccc
+        // TODO нотификации, типа новый инвойс или сайт прошел проверку
     </div>
 </div>
 

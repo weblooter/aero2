@@ -17,9 +17,9 @@ $arModelData = [];
 );
 \CLocalCore::addItemToMenu(
     $arModelData,
-    \Local\Core\Inner\AdminHelper\Data\Site\AdminList::class,
-    \Local\Core\Inner\AdminHelper\Data\Site\AdminEdit::class,
-    'Сайты'
+    \Local\Core\Inner\AdminHelper\Data\Store\AdminList::class,
+    \Local\Core\Inner\AdminHelper\Data\Store\AdminEdit::class,
+    'Магазины'
 );
 
 

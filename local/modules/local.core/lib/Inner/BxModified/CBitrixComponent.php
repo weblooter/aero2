@@ -52,7 +52,7 @@ class CBitrixComponent extends \CBitrixComponent
     /**
      * Проверка прав пользователя на сайт (проверяет по владельцу компании сайта)
      *
-     * @param  int $intSiteId      ID сайта
+     * @param  int $intStoreId      ID магазина
      * @param int  $intUserId      ID пользователя
      * @param bool $init404Process Запустить процесс 404й (true) или просто вернуть boolean (false), по умолчанию true
      *
@@ -62,17 +62,17 @@ class CBitrixComponent extends \CBitrixComponent
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    protected function _checkSiteAccess($intSiteId, $intUserId = 0, $init404Process = true)
+    protected function _checkStoreAccess($intStoreId, $intUserId = 0, $init404Process = true)
     {
         $isSuccessAccess = true;
 
-        switch( \Local\Core\Inner\Site\Base::checkUserAccess(
-            $intSiteId,
+        switch( \Local\Core\Inner\Store\Base::checkUserAccess(
+            $intStoreId,
             $intUserId
         ) )
         {
-            case \Local\Core\Inner\Site\Base::ACCESS_SITE_NOT_FOUND:
-            case \Local\Core\Inner\Site\Base::ACCESS_SITE_NOT_MINE:
+            case \Local\Core\Inner\Store\Base::ACCESS_STORE_NOT_FOUND:
+            case \Local\Core\Inner\Store\Base::ACCESS_STORE_NOT_MINE:
                 $isSuccessAccess = false;
                 break;
         }

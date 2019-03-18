@@ -38,12 +38,11 @@ class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitri
         if(
         $obCache->startDataCache(
             ( 60 * 60 * 24 * 7 ),
-            md5(__METHOD__.'_company_id='.$this->arParams['COMPANY_ID'].'_user_id='.$GLOBALS['USER']->GetID()),
+            md5(__METHOD__.'_company_id='.$this->arParams['COMPANY_ID']),
             \Local\Core\Inner\Cache::getComponentCachePath(
                 ['personal.company.detail'],
                 [
-                    'company_id='.$this->arParams['COMPANY_ID'],
-                    'user_id='.$GLOBALS['USER']->GetID()
+                    'company_id='.$this->arParams['COMPANY_ID']
                 ]
             )
         )

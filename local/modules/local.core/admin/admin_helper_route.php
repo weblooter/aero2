@@ -21,9 +21,9 @@ $arRouteRules = [
         "list" => \Local\Core\Inner\AdminHelper\Data\Company\AdminList::class,
         "edit" => \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit::class,
     ],
-    "model_data_site" => [
-        "list" => \Local\Core\Inner\AdminHelper\Data\Site\AdminList::class,
-        "edit" => \Local\Core\Inner\AdminHelper\Data\Site\AdminEdit::class,
+    "model_data_store" => [
+        "list" => \Local\Core\Inner\AdminHelper\Data\Store\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Data\Store\AdminEdit::class,
     ],
 
     // Model\Reference

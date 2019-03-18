@@ -16,7 +16,7 @@ class CLocalCore
                      ->compileDbTableStructureDump() as $sqlString )
         {
             $sqlString = str_replace(
-                ' NOT NULL ',
+                ' NOT NULL',
                 ' ',
                 $sqlString
             );

@@ -17,7 +17,7 @@ use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
  * Fields\StringField</li><li>COMPANY_OKPO - ОКПО | Fields\StringField</li><li>COMPANY_OKTMO - ОКТМО | Fields\StringField</li><li>COMPANY_DIRECTOR - Ген. директор |
  * Fields\TextField</li><li>COMPANY_ACCOUNTANT - Гл. бухгалтер | Fields\TextField</li><li>COMPANY_ADDRESS_COUNTRY - Страна | Fields\TextField</li><li>COMPANY_ADDRESS_REGION - Область |
  * Fields\TextField</li><li>COMPANY_ADDRESS_AREA - Район | Fields\TextField</li><li>COMPANY_ADDRESS_CITY - Город | Fields\TextField</li><li>COMPANY_ADDRESS_ADDRESS - Улица, дом, корпус, строение |
- * Fields\TextField</li><li>COMPANY_ADDRESS_OFFICE - Квартира / офис | Fields\TextField</li><li>COMPANY_ADDRESS_ZIP - Почтовый индекс | Fields\IntegerField</li><li>SITES - \Local\Core\Model\Data\Site
+ * Fields\TextField</li><li>COMPANY_ADDRESS_OFFICE - Квартира / офис | Fields\TextField</li><li>COMPANY_ADDRESS_ZIP - Почтовый индекс | Fields\IntegerField</li><li>STORES - \Local\Core\Model\Data\Store
  * | Fields\Relations\OneToMany</li></ul>
  *
  * @package Local\Core\Model\Data
@@ -238,68 +238,9 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ),
 
             ( new Fields\Relations\OneToMany(
-                'SITES', \Local\Core\Model\Data\SiteTable::class, 'COMPANY'
+                'STORES', \Local\Core\Model\Data\StoreTable::class, 'COMPANY'
             ) )
         ];
-    }
-
-    /**
-     * Регистр старых владельцев компании.<br/>
-     * Записывается при OnBeforeUpdate() и OnDelete(), что бы очистить кэш<br/>
-     * Является ассоциативном массивом <b>COMPANY_ID => OLD_OWN_ID</b>
-     *
-     * @var array $__arCompanyIdToOldOwnId
-     */
-    private static $__arCompanyIdToOldOwnId = [];
-
-    /**
-     * @param \Bitrix\Main\ORM\Event $event
-     *
-     * @return \Bitrix\Main\ORM\EventResult|void
-     * @throws \Bitrix\Main\ArgumentException
-     * @throws \Bitrix\Main\ObjectException
-     * @throws \Bitrix\Main\ObjectPropertyException
-     * @throws \Bitrix\Main\SystemException
-     */
-
-    /**
-     * @param \Bitrix\Main\ORM\Event $event
-     *
-     * @return \Bitrix\Main\ORM\EventResult|void
-     * @throws \Bitrix\Main\ArgumentException
-     * @throws \Bitrix\Main\ObjectException
-     * @throws \Bitrix\Main\ObjectPropertyException
-     * @throws \Bitrix\Main\SystemException
-     */
-    public static function OnBeforeUpdate(\Bitrix\Main\ORM\Event $event)
-    {
-        $result = new \Bitrix\Main\ORM\EventResult();
-        $arModifiedFields = [];
-
-        /** @var \Bitrix\Main\ORM\Event $event */
-        $arFields = $event->getParameter('fields');
-
-        /*
-         * Проверка на смену владельца компании
-         */
-        $ar = self::getById($event->getParameter('primary')['ID'])
-            ->fetch();
-        self::$__arCompanyIdToOldOwnId[$ar['ID']] = $ar['USER_OWN_ID'];
-
-        $arFields = array_merge(
-            $arFields,
-            $arModifiedFields
-        );
-        $event->setParameter(
-            'fields',
-            $arFields
-        );
-
-        $result->modifyFields($arModifiedFields);
-
-        self::_OnBeforeUpdateBase($event, $result, $arModifiedFields);
-
-        return $result;
     }
 
     /**
@@ -324,16 +265,6 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
      */
     public static function OnDelete(\Bitrix\Main\ORM\Event $event)
     {
-        /** @var \Bitrix\Main\ORM\Event $event */
-        $arEventParams = $event->getParameters();
-        if( !empty($arEventParams['primary']['ID']) )
-        {
-            $ar = self::getById($arEventParams['primary']['ID'])
-                ->fetchRaw();
-
-            self::$__arCompanyIdToOldOwnId[$ar['ID']] = $ar['USER_OWN_ID'];
-        }
-
         # Вызывается строго в конце
         self::_initClearComponentCache($event, []);
     }
@@ -355,20 +286,6 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ['personal.company.detail'],
             ['company_id='.$arFields['ID']]
         );
-
-        if( $arFields['USER_OWN_ID'] != self::$__arCompanyIdToOldOwnId[$arFields['ID']] )
-        {
-            /*
-             * Сменился владелец компании
-             */
-
-            // Скинем кэш списка компаний старого владельца
-            \Local\Core\Inner\Cache::deleteComponentCache(
-                ['personal.company.list'],
-                ['user_id='.self::$__arCompanyIdToOldOwnId[$arFields['ID']]]
-            );
-
-        }
 
     }
 }

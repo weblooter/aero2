@@ -13,11 +13,14 @@ class Validate
     /**
      * Производит валидацию значения и в случае ошибки сообщает в $obResult
      *
-     * @param mixed                                               $mixValue Значение
-     * @param \Local\Core\Inner\Robofeed\SchemeFields\ScalarField $obField  Объект скалярного поля
-     * @param \Bitrix\Main\Result                                 $obResult Объект результата ORM битрикса
+     * @param string                                              $mixValue
+     * @param \Local\Core\Inner\Robofeed\SchemeFields\ScalarField $obField
+     * @param \Bitrix\Main\Result                                 $obResult
+     *
+     * @return bool
+     * @throws \Bitrix\Main\SystemException
      */
-    public static function validateValue($mixValue, $obField, $obResult)
+    public static function validateValue(string $mixValue, \Local\Core\Inner\Robofeed\SchemeFields\ScalarField $obField, \Bitrix\Main\Result $obResult)
     {
 
         $obValidResult = new \Bitrix\Main\ORM\Data\AddResult();
@@ -45,6 +48,8 @@ class Validate
             */
             self::sendErrorByCodeToResult($obErrorsFields[0]->getCode(), $obField, $obResult);
         }
+
+        return $obValidResult->isSuccess();
     }
 
     /**

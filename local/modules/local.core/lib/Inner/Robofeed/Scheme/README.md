@@ -114,6 +114,7 @@ catch( \Exception $e )
 ```php
 $obResult = new \Bitrix\Main\Result();
 
+# Начало цикла проверок. Представим что тут foreach
 $mixVal = 'http://example.com';
 
 $obField = new \Local\Core\Inner\Robofeed\SchemeFields\TextField(
@@ -126,12 +127,22 @@ $obField = new \Local\Core\Inner\Robofeed\SchemeFields\TextField(
     ]
 );
 
-\Local\Core\Inner\Robofeed\Scheme\Validate::validateValue(
+$boolCheckResult = \Local\Core\Inner\Robofeed\Scheme\Validate::validateValue(
     $mixVal,
     $obField,
     $obResult
 );
 
+// Применяется для извлечения значения
+if( $boolCheckResult )
+{
+    echo 'success';
+    echo $obField->getValidValue($mixVal);
+}
+# Конец тела проверок
+
+// Применяется в конце цикла проверок, что бы понять
+// были ли ошибки при проверку цикла.
 if( !$obResult->isSuccess() )
 {
     print_r( $obResult->getErrorMessages() );
@@ -139,7 +150,6 @@ if( !$obResult->isSuccess() )
 else
 {
     echo 'success';
-    echo $obFields->getValidValue($mixVal);
 }
 ```
 

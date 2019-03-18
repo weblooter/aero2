@@ -61,9 +61,9 @@ $arLocalRoutes = [
                 }
         ],
     ],
-    'site'    => [
+    'store'    => [
         'list'   => [
-            'URL'         => '/personal/company/#COMPANY_ID#/site/',
+            'URL'         => '/personal/company/#COMPANY_ID#/store/',
             'BREADCRUMBS' => function($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs(
@@ -74,7 +74,7 @@ $arLocalRoutes = [
                     $GLOBALS['APPLICATION']->AddChainItem(
                         "Список сайтов",
                         \Local\Core\Inner\Route::getRouteTo(
-                            'site',
+                            'store',
                             'list',
                             ['#COMPANY_ID#' => $arParams['COMPANY_ID']]
                         )
@@ -82,31 +82,31 @@ $arLocalRoutes = [
                 }
         ],
         'detail' => [
-            'URL'         => '/personal/company/#COMPANY_ID#/site/#SITE_ID#/',
+            'URL'         => '/personal/company/#COMPANY_ID#/store/#STORE_ID#/',
             'BREADCRUMBS' => function($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs(
-                        'site',
+                        'store',
                         'list',
                         ['COMPANY_ID' => $arParams['COMPANY_ID']]
                     );
 
                     $GLOBALS['APPLICATION']->AddChainItem(
-                        \Local\Core\Inner\Site\Base::getSiteName($arParams['SITE_ID']),
+                        \Local\Core\Inner\Store\Base::getStoreName($arParams['STORE_ID']),
                         \Local\Core\Inner\Route::getRouteTo(
-                            'site',
+                            'store',
                             'detail',
-                            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#SITE_ID#' => $arParams['SITE_ID']]
+                            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']]
                         )
                     );
                 }
         ],
         'add'    => [
-            'URL'         => '/personal/company/#COMPANY_ID#/site/add/',
+            'URL'         => '/personal/company/#COMPANY_ID#/store/add/',
             'BREADCRUMBS' => function($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs(
-                        'site',
+                        'store',
                         'list',
                         ['COMPANY_ID' => $arParams['COMPANY_ID']]
                     );
@@ -114,7 +114,7 @@ $arLocalRoutes = [
                     $GLOBALS['APPLICATION']->AddChainItem(
                         "Добавление сайта",
                         \Local\Core\Inner\Route::getRouteTo(
-                            'site',
+                            'store',
                             'add',
                             ['#COMPANY_ID#' => $arParams['COMPANY_ID']]
                         )
@@ -122,23 +122,23 @@ $arLocalRoutes = [
                 }
         ],
         'edit'   => [
-            'URL'         => '/personal/company/#COMPANY_ID#/site/#SITE_ID#/edit/',
+            'URL'         => '/personal/company/#COMPANY_ID#/store/#STORE_ID#/edit/',
             'BREADCRUMBS' => function($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs(
-                        'site',
+                        'store',
                         'list',
                         ['COMPANY_ID' => $arParams['COMPANY_ID']]
                     );
 
                     $GLOBALS['APPLICATION']->AddChainItem(
-                        "Редактирование ".\Local\Core\Inner\Site\Base::getSiteName($arParams['SITE_ID']),
+                        "Редактирование ".\Local\Core\Inner\Store\Base::getStoreName($arParams['STORE_ID']),
                         \Local\Core\Inner\Route::getRouteTo(
-                            'site',
+                            'store',
                             'edit',
                             [
                                 '#COMPANY_ID#' => $arParams['COMPANY_ID'],
-                                '#SITE_ID#'    => $arParams['SITE_ID']
+                                '#STORE_ID#'    => $arParams['STORE_ID']
                             ]
                         )
                     );
