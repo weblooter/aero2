@@ -16,6 +16,7 @@ use \Bitrix\Main\ORM\Fields;
  */
 class CurrencyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 {
+    use \Local\Core\Inner\Traits\Reference\ClearReferenceCache;
 
     public static function getTableName()
     {
@@ -116,5 +117,20 @@ class CurrencyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
         self::_OnBeforeUpdateBase($event, $result, $arModifiedFields);
 
         return $result;
+    }
+
+    public static function OnAfterAdd(\Bitrix\Main\ORM\Event $event)
+    {
+        self::clearReferenceCache();
+    }
+
+    public static function OnAfterUpdate(\Bitrix\Main\ORM\Event $event)
+    {
+        self::clearReferenceCache();
+    }
+
+    public static function OnAfterDelete(\Bitrix\Main\ORM\Event $event)
+    {
+        self::clearReferenceCache();
     }
 }

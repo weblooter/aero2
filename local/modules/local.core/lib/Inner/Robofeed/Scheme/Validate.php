@@ -95,6 +95,15 @@ class Validate
                 $strErrorText = 'В поле "'.$obField->getTitle().'" из всех тегов разрешены только &lt;h3&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;p&gt;, &lt;br/&gt;';
                 break;
 
+            case 'LOCAL_CORE_INVALID_VALUE_REF_CLASS_NOT_EXIST':
+                $strErrorText = 'Поле "'.$obField->getTitle().'" не может быть проверено, т.к. справочник не доступен. Пожалуйста, напишите на info@robofeed.ru что бы мы исправили ошибку, вероятно мы еще не курсе!';
+                // TODO сделал записть в логер о критической ошибке
+                break;
+
+            case 'LOCAL_CORE_REF_INVALID_VALUE':
+                $strErrorText = 'Поле "'.$obField->getTitle().'" должно содержать значение из справочника. Пожалуйста, изучите справочники https://robofeed.ru/development/references/';
+                break;
+
             default:
                 $strErrorText = 'Поле "'.$obField->getTitle().'" - произошла иная ошибка.';
                 break;

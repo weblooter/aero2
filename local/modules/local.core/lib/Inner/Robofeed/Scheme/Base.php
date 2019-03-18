@@ -43,21 +43,21 @@ class Base
             'robofeed' => [
                 '@attr' => [
                     'date' => new SchemeFields\DatetimeField(
-                        'date', [
-                        'title' => 'Дата создания фида',
-                        'required' => true,
-                        'xml_path' => 'robofeed->@attr->date'
-                    ]
+                        'robofeed__@date', [
+                            'title' => 'Дата создания фида',
+                            'required' => true,
+                            'xml_path' => 'robofeed->@date'
+                        ]
                     ),
                     'version' => new SchemeFields\EnumField(
-                        'version', [
-                        'title' => 'Версия фида',
-                        'required' => true,
-                        'values' => [
-                            '1'
-                        ],
-                        'xml_path' => 'robofeed->@attr->version'
-                    ]
+                        'robofeed__@version', [
+                            'title' => 'Версия фида',
+                            'required' => true,
+                            'values' => [
+                                '1'
+                            ],
+                            'xml_path' => 'robofeed->@version'
+                        ]
                     )
                 ]
             ]
