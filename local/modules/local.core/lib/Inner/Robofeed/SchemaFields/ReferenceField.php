@@ -1,13 +1,13 @@
 <?php
 
-namespace Local\Core\Inner\Robofeed\SchemeFields;
+namespace Local\Core\Inner\Robofeed\SchemaFields;
 
 use Local\Core\Inner\Cache;
 
 /**
  * Field для связи со справочниками
  *
- * @package Local\Core\Inner\Robofeed\SchemeFields
+ * @package Local\Core\Inner\Robofeed\SchemaFields
  */
 class ReferenceField extends ScalarField
 {
@@ -17,21 +17,22 @@ class ReferenceField extends ScalarField
 
     public function __construct($name, $parameters = array())
     {
-        parent::__construct($name, $parameters);
-
         if( isset($parameters['class']) )
         {
             $this->strReferenceClass = $parameters['class'];
         }
 
-        if( isset($parameters['column_name']) )
+        if( isset($parameters['ref_column_name']) )
         {
-            $this->strReferenceColumnName = $parameters['column_name'];
+            $this->strReferenceColumnName = $parameters['ref_column_name'];
         }
+
+        parent::__construct($name, $parameters);
     }
 
     public function getValidators()
     {
+
         $validators[] = function($value, $primary, $row, $obField)
             {
                 if( $value === '' )
@@ -90,7 +91,7 @@ class ReferenceField extends ScalarField
 
         $arResult = [];
 
-        if( !class_exists($strClass) )
+        if( class_exists($strClass) )
         {
             $obCache = \Bitrix\Main\Application::getInstance()
                 ->getCache();

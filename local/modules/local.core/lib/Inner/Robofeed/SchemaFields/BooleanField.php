@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Core\Inner\Robofeed\SchemeFields;
+namespace Local\Core\Inner\Robofeed\SchemaFields;
 
 
 class BooleanField extends ScalarField
@@ -10,7 +10,7 @@ class BooleanField extends ScalarField
      * @var array
      */
 
-    protected $xml_expected_type = 'true, или false';
+    protected $xml_expected_type = 'true или false';
 
     protected $values = [
         'true',
@@ -25,11 +25,6 @@ class BooleanField extends ScalarField
         'TRUE' => 'Y',
         'FALSE' => 'N',
     ];
-
-    function __construct($name, $parameters = array())
-    {
-        parent::__construct($name, $parameters);
-    }
 
     public function getValidators()
     {

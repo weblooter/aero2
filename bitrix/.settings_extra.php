@@ -65,6 +65,18 @@ $conf = [
         ],
         'readonly' => true
     ],
+
+    /**
+     * Конфиг для работы Robofeed
+     */
+    'robofeed' => [
+        'value' => [
+            'XMLReader' => [
+                'max_offers_error_count_in_validation' => 5
+            ]
+        ],
+        'readonly' => true
+    ]
 ];
 
 return $conf;

@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Корневой элемент. Обязательно должен быть robofeed.
-@date * - Дата создания робофида.
-  Допустимый формат - YYYY-MM-DD HH:MM:SS
-@version * - Номер версии робофида.
-  На текущий момент доступен только робофид версии 1, поэтому значение - 1.
 -->
-<robofeed date="2019-02-28 14:58:00" version="1">
+<robofeed>
+  <!--
+  * Дата создания робофида.
+    Это поле учавствует в проверке актуализации робофида.
+    Данное поле обязано быть первым.
+    Допустимый формат - YYYY-MM-DD HH:MM:SS
+  -->
+  <lastModified>2019-02-28 14:58:00</lastModified>
+  <!--
+  * Номер версии робофида
+    Данное поле обязано быть вторым.
+    На текущий момент доступен только робофид версии 1, поэтому значение - 1.
+  -->
+  <version>1</version>
   <!--
   Группа условий по умолчанию. Примеряется в товаре, если не указано иное значение.
-  Необязательный элемент, но если таковой будет - он должен быть в самом начале робофида!
+  Необязательный элемент, но если таковой будет - он должен быть третьим в робофиде!
   -->
   <defaultValues>
     <!--
     Значения по умолчанию для элемента товара.
-    Допустимы ВСЕ поля, перечисленные в robofeed->offers->offer, кроме аттрибутов самого offer.
+    Допустимы все поля, перечисленные в robofeed->offers->offer, кроме аттрибутов самого offer и
+     полей <article>, <param> и <image>.
     Стоит заметить, что элемент из robofeed->defaultValues применяются в том случае, если он не
-     описан в корне элемента offer. Аттрибуты и дочеркии элементы не переносятся.
+     описан в корне элемента offer. Аттрибуты и вложенные элементы не переносятся, поле либо берется
+     от сюда полностью, либо не берется вовсе.
     -->
     <offer>
       <!--
@@ -41,7 +52,8 @@
     </offer>
   </defaultValues>
   <!--
-  * Группа категорий товаров
+  * Группа категорий товаров.
+    Обязано быть четвертым.
     Здесь необходимо перечислить все категории, которые используются в robofeed->offers->offer
    -->
   <categories>
@@ -60,8 +72,9 @@
     <category id="6">Эротические костюмы</category>
   </categories>
   <!--
-  * Группа товаров
+  * Группа товаров.
     В этой группе перечисляются товары.
+    Обязано быть пятым.
 
     В нашем робофид-файле мы передаем 5 товаров:
      - Смартфон Apple iPhone 8S 64GB
@@ -199,18 +212,13 @@
       -->
       <categoryId>2</categoryId>
       <!--
-        Группа ссылок на изображения
+        Ссылка на изображение.
+        Допускается несколько изображений, но не более 10ти.
+        Длина ссылки не должна быть длинее 255 символов.
       -->
-      <images>
-        <!--
-          Ссылка на изображение.
-          Допускается несколько изоюражений
-          Длина ссылки не должна быть длинее 255 символов.
-        -->
-        <image>https://example.shop/smartfon-apple-iphone-8-64gb/img_id4161693246034904662.jpeg</image>
-        <image>https://example.shop/smartfon-apple-iphone-8-64gb/img_id1698359813517033546.jpeg</image>
-        <image>https://example.shop/smartfon-apple-iphone-8-64gb/img_id3320545052765094004.jpeg</image>
-      </images>
+      <image>https://example.shop/smartfon-apple-iphone-8-64gb/img_id4161693246034904662.jpeg</image>
+      <image>https://example.shop/smartfon-apple-iphone-8-64gb/img_id1698359813517033546.jpeg</image>
+      <image>https://example.shop/smartfon-apple-iphone-8-64gb/img_id3320545052765094004.jpeg</image>
       <!--
         Символьный код страны производства.
         Указывается значение из справочника стран.
@@ -438,8 +446,8 @@
            вариант самовывоза был актуален. Указывать необходимо в формате 24 часов.
            Допускаются только целые числа, длиной до 2 символов.
         -->
-        <option price="0" currencyCode="RUB" supplyFrom="0" daysTo="0" orderBefore="13"></option>
-        <option price="0" currencyCode="RUB" supplyFrom="1" daysTo="1" orderAfter="13"></option>
+        <option price="0" currencyCode="RUB" supplyFrom="0" supplyTo="0" orderBefore="13"></option>
+        <option price="0" currencyCode="RUB" supplyFrom="1" supplyTo="1" orderAfter="13"></option>
       </pickup>
       <!--
       * Товар есть в наличии
@@ -455,28 +463,19 @@
       -->
       <salesNotes>Требуется 100% предоплата.</salesNotes>
       <!--
-        Группа параметров.
-        Хоть оно и не является обязательным, но стоит заметить, что чем больше и
-         чем качественнее передать значения, тем выше будет вероятность успешно
-         пройти проверку фида на торговых площадках у данного товара, а так же
-         выше вероятность, что его купят.
+        Параметр.
+        Допускается несколько параметров.
+        В значениях и аттрибутах не допускаются html теги и CDATA. Длина значения не
+         должна быть более 255 символов.
+        @code * - Символьный код параметра.
+         Ожидаемое значение должно соответствовать регулярному выражению /^[A-Z0-9\_]{1,50}$/ и
+          не должно быть длинее 50 символов.
+        @name * - Название параметра, не более 100 символов.
       -->
-      <params>
-        <!--
-        * Параметр.
-          Обязателен, если создана группа <params>.
-          В значениях и аттрибутах не допускаются html теги и CDATA. Длина значения не
-           должна быть более 255 символов.
-          @code * - Символьный код параметра.
-           Ожидаемое значение должно соответствовать регулярному выражению /^[A-Z0-9\_]{1,50}$/ и
-            не должно быть длинее 50 символов.
-          @name * - Название параметра, не более 100 символов.
-        -->
-        <param code="OPERATION_SYSTEM" name="Операционная система">iOS 11</param>
-        <param code="MATERIAL" name="Материал корпуса">стекло</param>
-        <param code="SCREEN_SIZE" name="Размер изображения">1334x750</param>
-        <param code="DIAGONAL" name="Диагональ">4.7"</param>
-      </params>
+      <param code="OPERATION_SYSTEM" name="Операционная система">iOS 11</param>
+      <param code="MATERIAL" name="Материал корпуса">стекло</param>
+      <param code="SCREEN_SIZE" name="Размер изображения">1334x750</param>
+      <param code="DIAGONAL" name="Диагональ">4.7&quot;</param>
     </offer>
       <offer id="87559" groupId="99987559">
           <article>87559</article>
@@ -490,9 +489,7 @@
           <unitOfMeasure>GRM</unitOfMeasure>
           <minQuantity>1</minQuantity>
           <categoryId>5</categoryId>
-          <images>
-            <image>https://example.shop/kofe-v-zernakh-paulig-arabica-100-arabika-razves/87560.png</image>
-          </images>
+          <image>https://example.shop/kofe-v-zernakh-paulig-arabica-100-arabika-razves/87560.png</image>
           <countryOfProductionCode>RUS</countryOfProductionCode>
           <description>
               Кофе зерновой Paulig Arabica — это интересно сбалансированная смесь тщательно
@@ -505,11 +502,9 @@
           <expiryPeriodCode>MON</expiryPeriodCode>
           <pickup available="false"></pickup>
           <inStock>true</inStock>
-          <params>
-            <param code="TYPE_OF_GRAIN" name="Сорт зерна">100% арабика</param>
-            <param code="DEGREE_OF_ROAST" name="Степень обжарки">средняя</param>
-            <param code="TYPE_OF_PACKAGING" name="Тип упаковки">вакуумный пакет</param>
-          </params>
+          <param code="TYPE_OF_GRAIN" name="Сорт зерна">100% арабика</param>
+          <param code="DEGREE_OF_ROAST" name="Степень обжарки">средняя</param>
+          <param code="TYPE_OF_PACKAGING" name="Тип упаковки">вакуумный пакет</param>
       </offer>
       <offer id="87560" groupId="99987559">
           <article>87560</article>
@@ -523,9 +518,7 @@
           <unitOfMeasure>PCS</unitOfMeasure>
           <minQuantity>1</minQuantity>
           <categoryId>5</categoryId>
-          <images>
-            <image>https://example.shop/kofe-v-zernakh-paulig-arabica-200-gr/87560.png</image>
-          </images>
+          <image>https://example.shop/kofe-v-zernakh-paulig-arabica-200-gr/87560.png</image>
           <countryOfProductionCode>RUS</countryOfProductionCode>
           <description>
               Кофе зерновой Paulig Arabica — это интересно сбалансированная смесь тщательно
@@ -538,11 +531,9 @@
           <expiryPeriodCode>MON</expiryPeriodCode>
           <pickup available="false"></pickup>
           <inStock>true</inStock>
-          <params>
-            <param code="TYPE_OF_GRAIN" name="Сорт зерна">100% арабика</param>
-            <param code="DEGREE_OF_ROAST" name="Степень обжарки">средняя</param>
-            <param code="TYPE_OF_PACKAGING" name="Тип упаковки">вакуумный пакет</param>
-          </params>
+          <param code="TYPE_OF_GRAIN" name="Сорт зерна">100% арабика</param>
+          <param code="DEGREE_OF_ROAST" name="Степень обжарки">средняя</param>
+          <param code="TYPE_OF_PACKAGING" name="Тип упаковки">вакуумный пакет</param>
       </offer>
       <offer id="87561" groupId="99987559">
           <article>87561</article>
@@ -559,9 +550,7 @@
           -->
           <minQuantity>4</minQuantity>
           <categoryId>5</categoryId>
-          <images>
-            <image>https://example.shop/kofe-v-zernakh-paulig-arabica-500-gr/87560.png</image>
-          </images>
+          <image>https://example.shop/kofe-v-zernakh-paulig-arabica-500-gr/87560.png</image>
           <countryOfProductionCode>RUS</countryOfProductionCode>
           <description>
               Кофе зерновой Paulig Arabica — это интересно сбалансированная смесь тщательно
@@ -574,11 +563,9 @@
           <expiryPeriodCode>MON</expiryPeriodCode>
           <pickup available="false"></pickup>
           <inStock>true</inStock>
-          <params>
-            <param code="TYPE_OF_GRAIN" name="Сорт зерна">100% арабика</param>
-            <param code="DEGREE_OF_ROAST" name="Степень обжарки">средняя</param>
-            <param code="TYPE_OF_PACKAGING" name="Тип упаковки">вакуумный пакет</param>
-          </params>
+          <param code="TYPE_OF_GRAIN" name="Сорт зерна">100% арабика</param>
+          <param code="DEGREE_OF_ROAST" name="Степень обжарки">средняя</param>
+          <param code="TYPE_OF_PACKAGING" name="Тип упаковки">вакуумный пакет</param>
       </offer>
       <offer id="951000">
           <article>951000</article>
@@ -593,10 +580,8 @@
           <unitOfMeasure>PCS</unitOfMeasure>
           <minQuantity>1</minQuantity>
           <categoryId>6</categoryId>
-          <images>
-            <image>https://example.shop/eroticheskij-kostyum-erolanta-cherno-rozovyj-kostyum-koshechki/1.png</image>
-            <image>https://example.shop/eroticheskij-kostyum-erolanta-cherno-rozovyj-kostyum-koshechki/2.png</image>
-          </images>
+          <image>https://example.shop/eroticheskij-kostyum-erolanta-cherno-rozovyj-kostyum-koshechki/1.png</image>
+          <image>https://example.shop/eroticheskij-kostyum-erolanta-cherno-rozovyj-kostyum-koshechki/2.png</image>
           <countryOfProductionCode>RUS</countryOfProductionCode>
           <description>
             <![CDATA[
@@ -610,10 +595,8 @@
           <isSex>true</isSex>
           <pickup available="false"></pickup>
           <inStock>true</inStock>
-          <params>
-            <param code="COLOR" name="Цвет">черный с розовым</param>
-            <param code="MATERIAL" name="Материал">82% нейлон, 18% эластан</param>
-          </params>
+          <param code="COLOR" name="Цвет">черный с розовым</param>
+          <param code="MATERIAL" name="Материал">82% нейлон, 18% эластан</param>
       </offer>
   </offers>
 </robofeed>

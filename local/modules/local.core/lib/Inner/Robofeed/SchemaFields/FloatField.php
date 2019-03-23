@@ -1,16 +1,21 @@
 <?php
 
-namespace Local\Core\Inner\Robofeed\SchemeFields;
+namespace Local\Core\Inner\Robofeed\SchemaFields;
 
 
-class IntegerField extends ScalarField
+class FloatField extends ScalarField
 {
-    protected $xml_expected_type = 'целое число (integer)';
+    protected $scale;
+    protected $xml_expected_type = 'число с плавующей точкой (float)';
     protected $size = 11;
 
     public function __construct($name, $parameters = array())
     {
-        parent::__construct($name, $parameters);
+
+        if( isset($parameters['scale']) )
+        {
+            $this->scale = intval($parameters['scale']);
+        }
 
         if( !is_null($parameters['size']) )
         {
@@ -18,6 +23,8 @@ class IntegerField extends ScalarField
         }
 
         $this->xml_expected_type .= ' длиной до '.$this->size.' символов';
+
+        parent::__construct($name, $parameters);
     }
 
 
@@ -34,22 +41,33 @@ class IntegerField extends ScalarField
                 }
                 else
                 {
-                    if( preg_match('/^[\d]{1,}$/', $value, $matches) !== 1 )
+                    if( preg_match('/^[\d]{1,}\.[\d]{1,}$/', $value, $matches) !== 1 )
                     {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                     }
 
-                    $value = (int)$value;
+                    $value = floatval($value);
 
-                    if( !is_integer($value) )
+                    if( !is_float($value) )
                     {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                     }
 
-                    if( strlen($matches[1]) > $this->size )
+                    if( !is_null($this->scale) )
                     {
-                        return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
+                        if( strlen(round($value, $this->scale)) > $this->size )
+                        {
+                            return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
+                        }
                     }
+                    else
+                    {
+                        if( strlen($matches[1]) > $this->size )
+                        {
+                            return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
+                        }
+                    }
+
                 }
 
                 return true;
@@ -67,7 +85,12 @@ class IntegerField extends ScalarField
         }
         else
         {
-            $mixEnterValue = (int)$mixEnterValue;
+            $mixEnterValue = floatval($mixEnterValue);
+
+            if( !is_null($this->scale) )
+            {
+                $mixEnterValue = round($mixEnterValue, $this->scale);
+            }
         }
 
         return $mixEnterValue;

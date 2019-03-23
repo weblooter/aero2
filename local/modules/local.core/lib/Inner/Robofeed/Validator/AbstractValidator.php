@@ -1,32 +1,32 @@
 <?php
 
-namespace Local\Core\Inner\Robofeed\Scheme;
+namespace Local\Core\Inner\Robofeed\Validator;
 
+use Local\Core\Inner\Exception\FatalException;
 
-/**
- * Класс для валидации схемы
- *
- * @package Local\Core\Inner\Robofeed\Scheme
- */
-class Validate
+abstract class AbstractValidator
 {
+    use \Local\Core\Inner\Robofeed\Traites\AbstractClass;
+
     /**
      * Производит валидацию значения и в случае ошибки сообщает в $obResult
      *
-     * @param string                                              $mixValue
-     * @param \Local\Core\Inner\Robofeed\SchemeFields\ScalarField $obField
+     * @param string                                              $strValue
+     * @param \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField
      * @param \Bitrix\Main\Result                                 $obResult
      *
      * @return bool
-     * @throws \Bitrix\Main\SystemException
+     * @throws FatalException
      */
-    public static function validateValue(string $mixValue, \Local\Core\Inner\Robofeed\SchemeFields\ScalarField $obField, \Bitrix\Main\Result $obResult)
+    public static function validateValue(string $strValue, $obField, \Bitrix\Main\Result &$obResult)
     {
+        if( !in_array(\Local\Core\Inner\Robofeed\Interfaces\ScalarField::class, class_implements(get_class($obField)) ) )
+            throw new FatalException('Поля, описывающие схему валидации, должны быть потомками '.\Local\Core\Inner\Robofeed\SchemaFields\ScalarField::class.'. Поле - '.$obField->getName());
 
         $obValidResult = new \Bitrix\Main\ORM\Data\AddResult();
 
         $obField->validateValue(
-            $mixValue,
+            $strValue,
             null,
             [],
             $obValidResult
@@ -52,14 +52,15 @@ class Validate
         return $obValidResult->isSuccess();
     }
 
+
     /**
      * Отправляет описание ошибки в $obResult по ее коду
      *
      * @param string                                              $strErrorCode Код ошибки
-     * @param \Local\Core\Inner\Robofeed\SchemeFields\ScalarField $obField      Объект скалярного поля
+     * @param \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField      Объект скалярного поля
      * @param \Bitrix\Main\Result                                 $obResult     Объект результата ORM битрикса
      */
-    private static function sendErrorByCodeToResult($strErrorCode, $obField, $obResult)
+    public static function sendErrorByCodeToResult($strErrorCode, $obField, &$obResult)
     {
         $strErrorText = '';
 
@@ -88,7 +89,7 @@ class Validate
                 break;
 
             case 'LOCAL_CORE_INVALID_VALUE_CANT_HTML':
-                $strErrorText = 'Поле "'.$obField->getTitle().'" не должно иметь символов \', ", &, < и >. Замените их на &amp;apos; , &amp;quot; , &amp;amp; , &amp;lt; и &amp;gt; соответственно';
+                $strErrorText = 'Поле "'.$obField->getTitle().'" html тэгов';
                 break;
 
             case 'LOCAL_CORE_INVALID_VALUE_CDATA_LIMIT':
@@ -102,6 +103,54 @@ class Validate
 
             case 'LOCAL_CORE_REF_INVALID_VALUE':
                 $strErrorText = 'Поле "'.$obField->getTitle().'" должно содержать значение из справочника. Пожалуйста, изучите справочники https://robofeed.ru/development/references/';
+                break;
+
+            case 'LOCAL_CORE_DELIVERY_EMPTY':
+                $strErrorText = 'Вы отметили доставку как возможную, но не перечислили ни одного условия доставки';
+                break;
+
+            case 'LOCAL_CORE_DELIVERY_NO_ONE_OPTION_NOT_VALID':
+                $strErrorText = 'Вы отметили доставку как возможную, перечислили условия доставки, но ни одно из них не валидно';
+                break;
+
+            case 'LOCAL_CORE_PICKUP_EMPTY':
+                $strErrorText = 'Вы отметили самовывоз как возможный, но не перечислили ни одного условия самовывоза';
+                break;
+
+            case 'LOCAL_CORE_PICKUP_NO_ONE_OPTION_NOT_VALID':
+                $strErrorText = 'Вы отметили самовывоз как возможную, перечислили условия самовывоза, но ни одно из них не валидно';
+                break;
+
+            case 'LOCAL_CORE_UNDEFINED_CATEGORY':
+                $strErrorText = 'Поле "'.$obField->getTitle().'" описано в товаре, но этого ID нет среди списка категорий';
+                break;
+
+            case 'LOCAL_CORE_NOT_UNIT_WEIGHT':
+                $strErrorText = 'Указан вес товара, но не указана единица измерения';
+                break;
+
+            case 'LOCAL_CORE_NOT_UNIT_WIDTH':
+                $strErrorText = 'Указана ширина товара, но не указана единица измерения';
+                break;
+
+            case 'LOCAL_CORE_NOT_UNIT_HEIGHT':
+                $strErrorText = 'Указана высота товара, но не указана единица измерения';
+                break;
+
+            case 'LOCAL_CORE_NOT_UNIT_LENGTH':
+                $strErrorText = 'Указана длина товара, но не указана единица измерения';
+                break;
+
+            case 'LOCAL_CORE_NOT_UNIT_VOLUME':
+                $strErrorText = 'Указан объем товара, но не указана единица измерения';
+                break;
+
+            case 'LOCAL_CORE_NOT_UNIT_WARRANTY':
+                $strErrorText = 'Указан срок гарантии товара, но не указана единица измерения';
+                break;
+
+            case 'LOCAL_CORE_NOT_UNIT_EXPIRY':
+                $strErrorText = 'Указан срок годности товара, но не указана единица измерения';
                 break;
 
             default:
@@ -120,5 +169,24 @@ class Validate
         }
 
         $obResult->addError(new \Bitrix\Main\Error($strErrorText));
+    }
+
+    /**
+     * Извлекает аттрибуты элемента.
+     * @param \SimpleXMLElement $obElem
+     *
+     * @return array
+     */
+    protected function getAttrs(\SimpleXMLElement $obElem)
+    {
+        $arAttrs = [];
+        if( $obElem instanceof \SimpleXMLElement)
+        {
+            foreach($obElem->attributes() as $k=>$v)
+            {
+                $arAttrs[$k] = (string)$v;
+            }
+        }
+        return $arAttrs;
     }
 }

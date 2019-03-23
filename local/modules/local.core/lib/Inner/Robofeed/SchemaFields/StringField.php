@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Core\Inner\Robofeed\SchemeFields;
+namespace Local\Core\Inner\Robofeed\SchemaFields;
 
 
 class StringField extends ScalarField
@@ -51,7 +51,6 @@ class StringField extends ScalarField
 
     function __construct($name, $parameters = array())
     {
-        parent::__construct($name, $parameters);
 
         if( !empty($parameters['format']) )
         {
@@ -73,6 +72,8 @@ class StringField extends ScalarField
         {
             $this->xml_expected_type .= ' и соответствующее регулярному выражению '.$this->format;
         }
+
+        parent::__construct($name, $parameters);
     }
 
 
@@ -111,19 +112,7 @@ class StringField extends ScalarField
 
                     if( !$this->htmlAccess )
                     {
-                        if( strlen($value) != strlen(str_replace(['\'', '"', '>', '<'], '', $value)) )
-                        {
-                            return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE_CANT_HTML');
-                        }
-
-                        if(
-                            stripos($value, '&apos;', 0) === false
-                            && stripos($value, '&quot;', 0) === false
-                            && stripos($value, '&amp;', 0) === false
-                            && stripos($value, '&lt;', 0) === false
-                            && stripos($value, '&gt;', 0) === false
-                            && stripos($value, '&', 0) !== false
-                        )
+                        if( strlen($value) != strlen(strip_tags($value)) )
                         {
                             return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE_CANT_HTML');
                         }

@@ -82,6 +82,6 @@ DOCHERE
         Обязательные поля помечены звездочкой *.<br/>
         Если у поля есть аттрибуты - они описываются и обязательные тоже помечаются звездочкой *.
     </p>
-    <pre><code data-language="html"><?=htmlspecialchars(\Local\Core\Inner\Robofeed\Scheme\V1\SchemeBody::getXmlExample());?></code></pre>
+    <pre><code data-language="html"><?=htmlspecialchars(\Local\Core\Inner\Robofeed\Schema\Factory::factory(1)->getXmlExample());?></code></pre>
 </div>
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

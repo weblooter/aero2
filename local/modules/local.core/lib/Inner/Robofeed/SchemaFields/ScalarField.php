@@ -1,9 +1,9 @@
 <?php
 
-namespace Local\Core\Inner\Robofeed\SchemeFields;
+namespace Local\Core\Inner\Robofeed\SchemaFields;
 
 
-abstract class ScalarField extends \Bitrix\Main\ORM\Fields\ScalarField
+abstract class ScalarField extends \Bitrix\Main\ORM\Fields\ScalarField implements \Local\Core\Inner\Robofeed\Interfaces\ScalarField
 {
     protected $xml_path;
     protected $xml_expected_type;

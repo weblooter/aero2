@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Core\Inner\Robofeed\SchemeFields;
+namespace Local\Core\Inner\Robofeed\SchemaFields;
 
 
 class NumericField extends ScalarField
@@ -11,8 +11,6 @@ class NumericField extends ScalarField
 
     public function __construct($name, $parameters = array())
     {
-        parent::__construct($name, $parameters);
-
         if( isset($parameters['scale']) )
         {
             $this->scale = intval($parameters['scale']);
@@ -24,6 +22,8 @@ class NumericField extends ScalarField
         }
 
         $this->xml_expected_type .= ' длиной до '.$this->size.' символов';
+
+        parent::__construct($name, $parameters);
     }
 
 
