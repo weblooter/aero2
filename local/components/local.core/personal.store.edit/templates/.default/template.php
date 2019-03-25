@@ -67,11 +67,12 @@ $funIsRequired = function($strCode) use ($arResult)
         <div class="form-group">
             <label>Ссылка на файл XML *</label>
             <input type="text" class="form-control" name="STORE_FIELD[FILE_LINK]" value="<?=$arResult['FIELDS']['FILE_LINK']['VALUE']?>" />
-            <small class="form-text text-muted">Ссылка должна вести на файл формата <b>.xml</b>. Так же стоит
+            <small class="form-text text-muted">Ссылка должна вести на Robofeed XML. Так же стоит
                 учитывать, что мы не принимаем файлы, генерируемые "на лету", т.к. время ожидания и скачивания файла
                 ограничено!<br />
-                Ограничение по размеру - <?=$component->intMaxDownloadXMLFileSizeMb?> Мб.
-            </small>сайтам
+                Ограничение по размеру - <?=$component->intMaxDownloadXMLFileSizeMb?> Мб.<br/>
+                <a href="/development/robofeed-v1/" target="_blank">Что такое Robofeed XML?</a>
+            </small>
         </div>
         <div class="form-group">
             <div class="custom-control custom-switch">
@@ -104,11 +105,30 @@ $funIsRequired = function($strCode) use ($arResult)
                 <input type="file" class="custom-file-input" name="STORE_FIELD[FILE]" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
             </div>
-            <small class="form-text text-muted">Может быть загружен только XML. Ограничение по размеру
-                - <?=$component->intMaxUploadXMLFileSizeMb?> Мб.
+            <small class="form-text text-muted">Может быть загружен только Robofeed XML. Ограничение по размеру
+                - <?=$component->intMaxUploadXMLFileSizeMb?> Мб.<br/>
+                <a href="/development/robofeed-v1/" target="_blank">Что такое Robofeed XML?</a>
             </small>
         </div>
 
+    </div>
+
+
+    <div class="form-group">
+        <label>Поведение импорта при ошибке <?=( $funIsRequired('BEHAVIOR_IMPORT_ERROR') ? '*' : '' )?></label>
+        <select name="STORE_FIELD[BEHAVIOR_IMPORT_ERROR]" class="custom-select mb-3" required>
+            <?foreach(\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR') as $val => $text):?>
+                <option value="<?=$val?>" <?=$arResult['FIELDS']['BEHAVIOR_IMPORT_ERROR']['VALUE'] == $val ? 'selected' : ''?> ><?=$text?></option>
+            <?endforeach;?>
+        </select>
+    </div>
+    <div class="alert alert-warning" role="alert">
+        Во время импорта Robofeed XML автоматически проходит предварительную проверку.<br/>
+        Данным параметром необходимо задать сценарий действий, в случае выявления ошибки при валидации Robofeed XML.<br/>
+        <b>Не актуализировать данные</b> - прекращает работу импорта, в работе остаются старые данные.<br/>
+        <b>Актуализировать только валидные</b> - продолжает импорт, но импортирует только валидные данные.<br/>
+        Мы считаем, что появившиеся ошибки в Robofeed XML говорят о нарушении в работе системы Вашего сайт, которые могут понести за собой финансовые потери, поэтому рекомендуем использовать "<b>Не актуализировать данные</b>". К тому же валидные данные могут быть не полными, что повлияет на дальнейшее генерирование файлов на их основании.<br/>
+        Вне зависимости от выбранного поведения мы проинформируем Вас о проблемах, если таковые появятся.
     </div>
 
     <div class="form-group">

@@ -67,12 +67,10 @@ abstract class AbstractValidator
         switch( $strErrorCode )
         {
             case 'LOCAL_CORE_FIELD_IS_REQUIRED':
-            case \Bitrix\Main\ORM\Fields\FieldError::EMPTY_REQUIRED:
                 $strErrorText = 'Обязательное поле "'.$obField->getTitle().'" не заполнено.';
                 break;
 
             case 'LOCAL_CORE_INVALID_VALUE':
-            case \Bitrix\Main\ORM\Fields\FieldError::INVALID_VALUE:
                 $strErrorText = 'Поле "'.$obField->getTitle().'" имеет недопустимое значение.';
                 break;
 

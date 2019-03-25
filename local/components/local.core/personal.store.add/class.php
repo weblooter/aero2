@@ -57,6 +57,7 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
             $arAddFields['DOMAIN'] = $arFields['DOMAIN'];
             $arAddFields['RESOURCE_TYPE'] = $arFields['RESOURCE_TYPE'];
             $arAddFields['COMPANY_ID'] = $this->arParams['COMPANY_ID'];
+            $arAddFields['BEHAVIOR_IMPORT_ERROR'] = $arFields['BEHAVIOR_IMPORT_ERROR'];
 
 
             try

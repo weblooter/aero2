@@ -178,6 +178,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "NAME" => self::$fields["HTTP_AUTH_PASS"],
                 "TYPE" => "TEXT",
             ],
+            "BEHAVIOR_IMPORT_ERROR" => [
+                "NAME" => self::$fields["BEHAVIOR_IMPORT_ERROR"],
+                "TYPE" => "SELECT",
+                "VARIANTS" => StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')
+            ]
         ];
     }
 
@@ -218,10 +223,18 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                     case "ACTIVE":
                     case "HTTP_AUTH":
                         if(
-                        in_array(
-                            $value,
-                            ['Y', 'N']
+                            in_array(
+                                $value,
+                                ['Y', 'N']
+                            )
                         )
+                        {
+                            $arFilter["=".$code] = trim($value);
+                        }
+                        break;
+
+                    case "BEHAVIOR_IMPORT_ERROR":
+                        if( in_array( $value, StoreTable::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'))
                         )
                         {
                             $arFilter["=".$code] = trim($value);

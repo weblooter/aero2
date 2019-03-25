@@ -3,8 +3,7 @@
 namespace Local\Core\Inner\Robofeed\XMLReader;
 
 
-use Local\Core\Inner\Exception\FatalException,
-    \Local\Core\Inner\Robofeed\Validator\AbstractValidator;
+use Local\Core\Inner\Exception\FatalException, \Local\Core\Inner\Robofeed\Validator\AbstractValidator;
 
 /**
  * Абстрактный класс ридера.<br/>
@@ -142,7 +141,8 @@ abstract class AbstractXMLReader
             $this->obImporter = \Local\Core\Inner\Robofeed\Importer\Factory::factory(static::getVersion());
             $this->obResult = new \Bitrix\Main\Result();
 
-            $this->intMaxOffersErrorCountInValidation = \Bitrix\Main\Config\Configuration::getInstance()->get('robofeed')['XMLReader']['max_offers_error_count_in_validation'] ?? 5;
+            $this->intMaxOffersErrorCountInValidation = \Bitrix\Main\Config\Configuration::getInstance()
+                                                            ->get('robofeed')['XMLReader']['max_offers_error_count_in_validation'] ?? 5;
         }
         catch( \Exception $e )
         {
@@ -213,104 +213,84 @@ abstract class AbstractXMLReader
 
     /**
      * Получает версию робофида, извлекая ее из файла.
-     * Возвращает \Bitrix\Main\Result с единственным полем 'VERSION', либо ошибкой.
      *
-     * @return \Bitrix\Main\Result
+     * @return string
+     * @throws \Local\Core\Inner\Exception\FatalException
      */
     public function getRobofeedVersion()
     {
+        $intVersion = null;
+
         $obResult = new \Bitrix\Main\Result();
 
-        try
-        {
-            $this->checkFilledXmlPath();
 
-            $obReader = new \SimpleXMLReader();
-            $obReader->registerCallback(
-                '/robofeed/version',
-                function($reader) use ($obResult)
+        $this->checkFilledXmlPath();
+
+        $obReader = new \SimpleXMLReader();
+        $obReader->registerCallback(
+            '/robofeed/version',
+            function($reader) use ($obResult, &$intVersion)
+                {
+                    $obElement = $reader->expandSimpleXml();
+                    /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
+                    $obField = $this->arSchema['robofeed']['version'];
+                    if( AbstractValidator::validateValue((string)$obElement, $obField, $obResult) )
                     {
-                        $obElement = $reader->expandSimpleXml();
-                        /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
-                        $obField = $this->arSchema['robofeed']['version'];
-                        if( AbstractValidator::validateValue((string)$obElement, $obField, $obResult) )
-                        {
-                            $obResult->setData(
-                                [
-                                    'VERSION' => $obField->getValidValue((string)$obElement)
-                                ]
-                            );
-                        }
+                        $intVersion = $obField->getValidValue((string)$obElement);
                     }
-            );
-            $obReader->open($this->strXmlFilePath);
-            $obReader->parse();
-            $obReader->close();
-        }
-        catch( FatalException $e )
-        {
-            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
-        }
-        catch( \Exception $e )
-        {
-            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
-        }
+                }
+        );
+        $obReader->open($this->strXmlFilePath);
+        $obReader->parse();
+        $obReader->close();
 
-        return $obResult;
+        if( is_null($intVersion) )
+            throw new FatalException(implode('<br/>', $obResult->getErrorMessages() ));
+
+        return $intVersion;
     }
 
 
     /**
      * Получает дату создания робофида, извлекая ее из файла.
-     * Возвращает \Bitrix\Main\Result с единственным полем 'DATE', либо ошибкой.
      *
-     * @return \Bitrix\Main\Result
-     * @throws FatalException
+     * @return string
+     * @throws \Local\Core\Inner\Exception\FatalException
      */
     public function getRobofeedLastModified()
     {
         $obResult = new \Bitrix\Main\Result();
+        $strDate = null;
 
-        try
-        {
-            $this->checkFilledXmlPath();
+        $this->checkFilledXmlPath();
 
-            $obReader = new \SimpleXMLReader();
-            $obReader->registerCallback(
-                '/robofeed/lastModified',
-                function($reader) use ($obResult)
+        $obReader = new \SimpleXMLReader();
+        $obReader->registerCallback(
+            '/robofeed/lastModified',
+            function($reader) use ($obResult, &$strDate)
+                {
+                    $obElement = $reader->expandSimpleXml();
+                    /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
+                    $obField = $this->arSchema['robofeed']['lastModified'];
+                    if( AbstractValidator::validateValue((string)$obElement, $obField, $obResult) )
                     {
-                        $obElement = $reader->expandSimpleXml();
-                        /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
-                        $obField = $this->arSchema['robofeed']['lastModified'];
-                        if( AbstractValidator::validateValue((string)$obElement, $obField, $obResult) )
-                        {
-                            $obResult->setData(
-                                [
-                                    'DATE' => $obField->getValidValue((string)$obElement)
-                                ]
-                            );
-                        }
+                        $strDate = $obField->getValidValue((string)$obElement);
                     }
-            );
-            $obReader->open($this->strXmlFilePath);
-            $obReader->parse();
-            $obReader->close();
-        }
-        catch( FatalException $e )
-        {
-            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
-        }
-        catch( \Exception $e )
-        {
-            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
-        }
+                }
+        );
+        $obReader->open($this->strXmlFilePath);
+        $obReader->parse();
+        $obReader->close();
 
-        return $obResult;
+        if( is_null($strDate) )
+            throw new FatalException(implode('<br/>', $obResult->getErrorMessages() ));
+
+        return $strDate;
     }
 
     /**
      * Извлекает аттрибуты элемента.
+     *
      * @param \SimpleXMLElement $obElem
      *
      * @return array
@@ -318,9 +298,9 @@ abstract class AbstractXMLReader
     protected function getAttrs(\SimpleXMLElement $obElem)
     {
         $arAttrs = [];
-        if( $obElem instanceof \SimpleXMLElement)
+        if( $obElem instanceof \SimpleXMLElement )
         {
-            foreach($obElem->attributes() as $k=>$v)
+            foreach( $obElem->attributes() as $k => $v )
             {
                 $arAttrs[$k] = (string)$v;
             }
@@ -329,5 +309,6 @@ abstract class AbstractXMLReader
     }
 
     abstract protected function getValidator();
+
     abstract protected function getImporter();
 }

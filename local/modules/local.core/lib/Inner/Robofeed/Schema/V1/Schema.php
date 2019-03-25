@@ -113,7 +113,7 @@ class Schema extends \Local\Core\Inner\Robofeed\Schema\AbstractSchema
             'fullName' => new SchemaFields\StringField(
                 $name.'__fullName', [
                     'required' => true,
-                    'title' => 'Полное название товара.',
+                    'title' => 'Полное название товара',
                     'xml_path' => $path.'->fullName'
                 ]
             ),
@@ -482,7 +482,7 @@ class Schema extends \Local\Core\Inner\Robofeed\Schema\AbstractSchema
                     'orderBefore' => new SchemaFields\IntegerField(
                         $name.'__delivery__option__@orderBefore', [
                             'required' => false,
-                            'title' => 'временные рамки "сделать заказ до N часов", что бы вариант доставки был актуален',
+                            'title' => 'Временные рамки "сделать заказ до N часов", что бы вариант доставки был актуален',
                             'xml_path' => $path.'->delivery->option->@orderBefore',
                             'size' => 2,
                         ]
@@ -490,7 +490,7 @@ class Schema extends \Local\Core\Inner\Robofeed\Schema\AbstractSchema
                     'orderAfter' => new SchemaFields\IntegerField(
                         $name.'__delivery__option__@orderAfter', [
                             'required' => false,
-                            'title' => 'временные рамки "сделать заказ после N часов", что бы вариант доставки был актуален',
+                            'title' => 'Временные рамки "сделать заказ после N часов", что бы вариант доставки был актуален',
                             'xml_path' => $path.'->delivery->option->@orderAfter',
                             'size' => 2,
                         ]
@@ -498,7 +498,7 @@ class Schema extends \Local\Core\Inner\Robofeed\Schema\AbstractSchema
                     'deliveryRegion' => new SchemaFields\EnumField(
                         $name.'__delivery__option__@deliveryRegion', [
                             'required' => true,
-                            'title' => 'признак региона, на которое распространяется правило',
+                            'title' => 'Признак региона, на которое распространяется правило',
                             'xml_path' => $path.'->delivery->option->@deliveryRegion',
                             'values' => [
                                 'in',
@@ -560,7 +560,7 @@ class Schema extends \Local\Core\Inner\Robofeed\Schema\AbstractSchema
                     'orderBefore' => new SchemaFields\StringField(
                         $name.'__pickup__option__@orderBefore', [
                             'required' => false,
-                            'title' => 'временные рамки "сделать заказ до N часов", что бы вариант самовывоза был актуален',
+                            'title' => 'Временные рамки "сделать заказ до N часов", что бы вариант самовывоза был актуален',
                             'xml_path' => $path.'->pickup->option->@orderBefore',
                             'size' => 2
                         ]
@@ -568,7 +568,7 @@ class Schema extends \Local\Core\Inner\Robofeed\Schema\AbstractSchema
                     'orderAfter' => new SchemaFields\StringField(
                         $name.'__pickup__@orderAfter', [
                             'required' => false,
-                            'title' => 'временные рамки "сделать заказ после N часов", что бы вариант самовывоза был актуален',
+                            'title' => 'Временные рамки "сделать заказ после N часов", что бы вариант самовывоза был актуален',
                             'xml_path' => $path.'->pickup->option->@orderAfter',
                             'size' => 2
                         ]

@@ -24,7 +24,7 @@ DOCHERE
 ?>
 <div class="col-12">
     <h2>Robofeed XML v1</h2>
-    <h4>Требования к Robofeed xml</h4>
+    <h4>Требования к Robofeed XML</h4>
     <ol>
         <li>
             Допустимые кодировки Robofeed-файла: UTF-8, windows-1251.
@@ -72,12 +72,13 @@ DOCHERE
             Иные теги, а так же любые аттрибуты будут удалены!
         </li>
     </ol>
-    <h4>Правочники Robofeed xml</h4>
+    <h4>Справочники Robofeed XML</h4>
     <ul>
         <li><a href="/development/references/#measure">Справочник единиц измерений</a></li>
         <li><a href="/development/references/#currency">Справочник валют</a></li>
         <li><a href="/development/references/#country">Справочник стран</a></li>
     </ul>
+    <h4>Пример Robofeed XML с комментариями</h4>
     <p>
         Обязательные поля помечены звездочкой *.<br/>
         Если у поля есть аттрибуты - они описываются и обязательные тоже помечаются звездочкой *.

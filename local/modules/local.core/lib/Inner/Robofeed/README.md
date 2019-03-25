@@ -244,3 +244,19 @@ $obReader->setScript(\Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader::SCR
 $obReader->setStoreId(1);
 $obReader->setXmlPath( $_SERVER['DOCUMENT_ROOT'].'/example.xml' );
 ```
+
+#### Запуска импорта рободифа магазина
+В конечном итоге мы пришли к запуску воркера. Это удобно и логично.
+Воркер запускается импорт робофида по магазину.
+```php
+$obResult = \Local\Core\Inner\Robofeed\ImportData::execute(13);
+echo '<hr/>';
+dump($obResult->isSuccess());
+if( !$obResult->isSuccess() )
+{
+    foreach($obResult->getErrorMessages() as $errorMessage)
+    {
+        echo $errorMessage.'<hr/>';
+    }
+}
+```

@@ -23,6 +23,9 @@ use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
  */
 class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 {
+    const BEHAVIOR_IMPORT_ERROR_STOP_IMPORT = 'STOP_IMPORT';
+    const BEHAVIOR_IMPORT_ERROR_IMPORT_ONLY_VALID = 'IMPORT_ONLY_VALID';
+
     public static function getTableName()
     {
         return 'a_model_data_store';
@@ -37,7 +40,11 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         'HTTP_AUTH' => [
             'Y' => 'Да',
             'N' => 'Нет'
-        ]
+        ],
+        'BEHAVIOR_IMPORT_ERROR' => [
+            'STOP_IMPORT' => 'Не актуализировать данные',
+            'IMPORT_ONLY_VALID' => 'Актуализировать только валидные',
+        ],
     ];
 
     public static function getMap()
@@ -175,6 +182,16 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                 'HTTP_AUTH_PASS', [
                     'required' => false,
                     'title' => 'Пароль для авторизации',
+                ]
+            ),
+
+            new Fields\EnumField(
+                'BEHAVIOR_IMPORT_ERROR',
+                [
+                    'required' => true,
+                    'title' => 'Поведение импорта при ошибке',
+                    'values' => self::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'),
+                    'default_value' => 'STOP_IMPORT'
                 ]
             ),
 

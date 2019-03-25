@@ -3,7 +3,7 @@
 class CLocalCore
 {
     /**
-     * Создает таблицу по ORM
+     * Создает таблицу по ORM.
      *
      * @param \Bitrix\Main\ORM\Data\DataManager $ormClassTable
      *
@@ -12,8 +12,7 @@ class CLocalCore
     public static function createDBTableByGetMap($ormClassTable)
     {
 
-        foreach( $ormClassTable::getEntity()
-                     ->compileDbTableStructureDump() as $sqlString )
+        foreach( $ormClassTable::getEntity()->compileDbTableStructureDump() as $sqlString )
         {
             $sqlString = str_replace(
                 ' NOT NULL',
@@ -26,7 +25,7 @@ class CLocalCore
     }
 
     /**
-     * Удаляет ORM талицу
+     * Удаляет ORM талицум
      *
      * @param \Bitrix\Main\ORM\Data\DataManager $ormClassTable
      *
@@ -34,16 +33,21 @@ class CLocalCore
      */
     public static function dropDBTableByGetMap($ormClassTable)
     {
-        $sqlString = $ormClassTable::getTableName();
-        if( !empty($sqlString) )
+        if(
+            \Bitrix\Main\Application::getConnection()->isTableExists($ormClassTable::getTableName())
+        )
         {
-            \Bitrix\Main\Application::getConnection()
-                ->dropTable($sqlString);
+            $sqlString = $ormClassTable::getTableName();
+            if( !empty($sqlString) )
+            {
+                \Bitrix\Main\Application::getConnection()
+                    ->dropTable($sqlString);
+            }
         }
     }
 
     /**
-     * Удаляет ORM талицу
+     * Удаляет ORM талицу.
      *
      * @param \Bitrix\Main\ORM\Data\DataManager $ormClassTable
      *
@@ -51,7 +55,13 @@ class CLocalCore
      */
     public static function resetDBTableByGetMap($ormClassTable)
     {
-        static::dropDBTableByGetMap($ormClassTable);
+        if(
+        \Bitrix\Main\Application::getConnection()
+            ->isTableExists($ormClassTable::getTableName())
+        )
+        {
+            static::dropDBTableByGetMap($ormClassTable);
+        }
         static::createDBTableByGetMap($ormClassTable);
     }
 

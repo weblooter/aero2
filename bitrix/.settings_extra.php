@@ -73,6 +73,9 @@ $conf = [
         'value' => [
             'XMLReader' => [
                 'max_offers_error_count_in_validation' => 5
+            ],
+            'ImportLogTable' => [
+                'max_last_log_count' => 30
             ]
         ],
         'readonly' => true

@@ -283,8 +283,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                     $columnName['DOMAIN'], 'DOMAIN'
                 ) )->setEditable(
                     $canEdit
-                )
-                    ->setRequired(false),
+                ),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Select(
                     $columnName["RESOURCE_TYPE"], "RESOURCE_TYPE"
@@ -294,28 +293,29 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\SimpleText(
                     $columnName['FILE_ID'], 'FILE_ID', $strHtmlFileValue
-                ) )->setEditable(false)
-                    ->setRequired(false),
+                ) )->setEditable(false),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['FILE_LINK'], 'FILE_LINK'
-                ) )->setEditable($canEdit)
-                    ->setRequired(false),
+                ) )->setEditable($canEdit),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Checkbox(
                     $columnName['HTTP_AUTH'], 'HTTP_AUTH'
-                ) )->setEditable($canEdit)
-                    ->setRequired(false),
+                ) )->setEditable($canEdit),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['HTTP_AUTH_LOGIN'], 'HTTP_AUTH_LOGIN'
-                ) )->setEditable($canEdit)
-                    ->setRequired(false),
+                ) )->setEditable($canEdit),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['HTTP_AUTH_PASS'], 'HTTP_AUTH_PASS'
-                ) )->setEditable($canEdit)
-                    ->setRequired(false),
+                ) )->setEditable($canEdit),
+
+                ( new \Local\Core\Inner\AdminHelper\EditField\Select(
+                    $columnName['BEHAVIOR_IMPORT_ERROR'], 'BEHAVIOR_IMPORT_ERROR'
+                ) )->setVariants(StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR'))
+                    ->setEditable($canEdit)
+                    ->setRequired(true),
             ],
         ];
     }
@@ -346,6 +346,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             'HTTP_AUTH' => trim($request->getPost('HTTP_AUTH')) ?? 'N',
             'HTTP_AUTH_LOGIN' => trim($request->getPost('HTTP_AUTH_LOGIN')),
             'HTTP_AUTH_PASS' => trim($request->getPost('HTTP_AUTH_PASS')),
+            'BEHAVIOR_IMPORT_ERROR' => trim($request->getPost('BEHAVIOR_IMPORT_ERROR')),
         ];
 
         if( (int)$id > 0 )
