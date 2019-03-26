@@ -48,6 +48,8 @@ class ImportData
             $arLoggerData['ROBOFEED_DATE'] = new \Bitrix\Main\Type\DateTime($obReader->getRobofeedLastModified(), 'Y-m-d H:i:s');
             $arLoggerData['BEHAVIOR_IMPORT_ERROR'] = $arStore['BEHAVIOR_IMPORT_ERROR'];
 
+            // TODO раскомментировать после проверки
+            /*
             $rsLastLog = ImportLogTable::getList([
                 'filter' => [
                     'STORE_ID' => $arLoggerData['STORE_ID'],
@@ -60,6 +62,7 @@ class ImportData
             {
                 throw new \Exception('Время и версия в Robofeed XML не изменились, файл не нуждается в актуализации');
             }
+            */
 
             $obValidateResult = self::validateRobofeed($arLoggerData['ROBOFEED_VERSION'], $strFilePath);
             if(
@@ -67,6 +70,9 @@ class ImportData
                 || ( !$obValidateResult->isSuccess() && $arStore['BEHAVIOR_IMPORT_ERROR'] == 'IMPORT_ONLY_VALID' )
             )
             {
+                \Bitrix\Main\Diag\Debug::endTimeLabel('b1');
+                \Bitrix\Main\Diag\Debug::startTimeLabel('c1');
+
                 if( !$obValidateResult->isSuccess() )
                 {
                     $obWarning->addErrors($obValidateResult->getErrors());
@@ -125,7 +131,9 @@ class ImportData
         {
             case 'LINK':
                 $obHttp = new \Bitrix\Main\Web\HttpClient();
-
+                $obHttp->setStreamTimeout( \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['connect_timeout'] ?? 30 );
+                $intMaxFileSize = \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['max_size_mb'] ?? 300;
+                $obHttp->setBodyLengthMax( $intMaxFileSize * 1024 * 1024 );
                 if( empty($arStore['FILE_LINK']) )
                 {
                     throw new FatalException('Не указана ссылка на Robofeed XML');
@@ -156,7 +164,14 @@ class ImportData
                 }
                 else
                 {
-                    throw new FatalException('Не удалось скачать Robofeed XML. Ответ сервера - '.$obHttp->getStatus());
+                    if( $obHttp->getStatus() == 200 )
+                    {
+                        throw new FatalException('Не удалось скачать Robofeed XML. Напоминаем про ограничение скачиваемого файла по размеру ( до '.$intMaxFileSize.' мб ) и времени скачивания файла ( '.( \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['connect_timeout'] ?? 30 ).' сек. ). Проверьте размер и время отдачи файла.');
+                    }
+                    else
+                    {
+                        throw new FatalException('Не удалось скачать Robofeed XML. Ответ сервера - '.$obHttp->getStatus());
+                    }
                 }
                 break;
 

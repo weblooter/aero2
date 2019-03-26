@@ -90,8 +90,6 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
         $arAddOffer['DELIVERY_AVAILABLE'] = $arFields['@value']['delivery']['@attr']['available'];
         $arAddOffer['PICKUP_AVAILABLE'] = $arFields['@value']['pickup']['@attr']['available'];
 
-        dump($arAddOffer);
-
         $obAddResult = $obOrmStoreProductTable::add($arAddOffer);
 
         if( $obAddResult->isSuccess() )

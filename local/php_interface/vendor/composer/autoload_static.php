@@ -188,6 +188,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\JobQueue\\Job' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Job.php',
         'Local\\Core\\Inner\\JobQueue\\Runner' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Runner.php',
         'Local\\Core\\Inner\\JobQueue\\Worker\\Example' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/Example.php',
+        'Local\\Core\\Inner\\Robofeed\\Converter\\YML' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Robofeed/Converter/YML.php',
         'Local\\Core\\Inner\\Robofeed\\ImportData' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Robofeed/ImportData.php',
         'Local\\Core\\Inner\\Robofeed\\Importer\\AbstractImporter' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Robofeed/Importer/AbstractImporter.php',
         'Local\\Core\\Inner\\Robofeed\\Importer\\Factory' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Robofeed/Importer/Factory.php',

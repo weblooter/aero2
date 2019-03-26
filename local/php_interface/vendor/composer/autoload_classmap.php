@@ -97,6 +97,7 @@ return array(
     'Local\\Core\\Inner\\JobQueue\\Job' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Job.php',
     'Local\\Core\\Inner\\JobQueue\\Runner' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Runner.php',
     'Local\\Core\\Inner\\JobQueue\\Worker\\Example' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Worker/Example.php',
+    'Local\\Core\\Inner\\Robofeed\\Converter\\YML' => $baseDir . '/../modules/local.core/lib/Inner/Robofeed/Converter/YML.php',
     'Local\\Core\\Inner\\Robofeed\\ImportData' => $baseDir . '/../modules/local.core/lib/Inner/Robofeed/ImportData.php',
     'Local\\Core\\Inner\\Robofeed\\Importer\\AbstractImporter' => $baseDir . '/../modules/local.core/lib/Inner/Robofeed/Importer/AbstractImporter.php',
     'Local\\Core\\Inner\\Robofeed\\Importer\\Factory' => $baseDir . '/../modules/local.core/lib/Inner/Robofeed/Importer/Factory.php',
