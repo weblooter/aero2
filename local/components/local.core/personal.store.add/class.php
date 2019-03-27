@@ -147,16 +147,19 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                 $this->arResult['ERROR_TEXT'][] = $e->getMessage();
             }
 
-            /** @var \Bitrix\Main\ORM\Data\AddResult $obRes */
-            $obRes = \Local\Core\Model\Data\StoreTable::add($arAddFields);
-            if( $obRes->isSuccess() )
+            if( is_null($this->arResult['ADD_STATUS']) )
             {
-                $this->arResult['ADD_STATUS'] = 'SUCCESS';
-            }
-            else
-            {
-                $this->arResult['ADD_STATUS'] = 'ERROR';
-                $this->arResult['ERROR_TEXT'] = $obRes->getErrorMessages();
+                /** @var \Bitrix\Main\ORM\Data\AddResult $obRes */
+                $obRes = \Local\Core\Model\Data\StoreTable::add($arAddFields);
+                if( $obRes->isSuccess() )
+                {
+                    $this->arResult['ADD_STATUS'] = 'SUCCESS';
+                }
+                else
+                {
+                    $this->arResult['ADD_STATUS'] = 'ERROR';
+                    $this->arResult['ERROR_TEXT'] = $obRes->getErrorMessages();
+                }
             }
 
         }

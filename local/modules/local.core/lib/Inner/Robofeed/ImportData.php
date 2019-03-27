@@ -70,8 +70,6 @@ class ImportData
                 || ( !$obValidateResult->isSuccess() && $arStore['BEHAVIOR_IMPORT_ERROR'] == 'IMPORT_ONLY_VALID' )
             )
             {
-                \Bitrix\Main\Diag\Debug::endTimeLabel('b1');
-                \Bitrix\Main\Diag\Debug::startTimeLabel('c1');
 
                 if( !$obValidateResult->isSuccess() )
                 {

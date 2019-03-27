@@ -15,6 +15,8 @@ class ReferenceField extends ScalarField
     private $strReferenceColumnName = 'CODE';
     protected $xml_expected_type = 'значение из справочника';
 
+    private static $ormValues = [];
+
     public function __construct($name, $parameters = array())
     {
         if( isset($parameters['class']) )
@@ -89,57 +91,63 @@ class ReferenceField extends ScalarField
     private static function __getOrmValues(string $strClass, string $strColumnName)
     {
 
-        $arResult = [];
-
-        if( class_exists($strClass) )
+        if( is_null(self::$ormValues[ $strClass ]) )
         {
-            $obCache = \Bitrix\Main\Application::getInstance()
-                ->getCache();
-            if(
-            $obCache->startDataCache(
-                60 * 60 * 24 * 7,
-                '\Local\Core\Inner\Robofeed\SchemeFields\ReferenceField_class='.$strClass,
-                Cache::getCachePath(
-                    [
-                        'Robofeed',
-                        'Scheme',
-                        'ReferenceField'
-                    ],
-                    [
-                        'class='.( implode('_', array_slice(explode('\\', $strClass), -2)) ),
-                        'column_name='.$strColumnName
-                    ]
-                )
-            )
-            )
-            {
-                /** @var \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager $strClass */
+            $arResult = [];
 
-                $rs = $strClass::getList(
-                    [
-                        'order' => ['SORT' => 'ASC'],
-                        'select' => [$strColumnName]
-                    ]
-                );
-                if( $rs->getSelectedRowsCount() < 1 )
+            if( class_exists($strClass) )
+            {
+                $obCache = \Bitrix\Main\Application::getInstance()
+                    ->getCache();
+                if(
+                $obCache->startDataCache(
+                    60 * 60 * 24 * 7,
+                    '\Local\Core\Inner\Robofeed\SchemeFields\ReferenceField_class='.$strClass,
+                    Cache::getCachePath(
+                        [
+                            'Robofeed',
+                            'Scheme',
+                            'ReferenceField'
+                        ],
+                        [
+                            'class='.( implode('_', array_slice(explode('\\', $strClass), -2)) ),
+                            'column_name='.$strColumnName
+                        ]
+                    )
+                )
+                )
                 {
-                    $obCache->abortDataCache();
+                    /** @var \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager $strClass */
+
+                    $rs = $strClass::getList(
+                        [
+                            'order' => ['SORT' => 'ASC'],
+                            'select' => [$strColumnName]
+                        ]
+                    );
+                    if( $rs->getSelectedRowsCount() < 1 )
+                    {
+                        $obCache->abortDataCache();
+                    }
+                    else
+                    {
+                        while( $ar = $rs->fetch() )
+                        {
+                            $arResult[] = $ar[$strColumnName];
+                        }
+                        $obCache->endDataCache($arResult);
+                    }
                 }
                 else
                 {
-                    while( $ar = $rs->fetch() )
-                    {
-                        $arResult[] = $ar[$strColumnName];
-                    }
-                    $obCache->endDataCache($arResult);
+                    $arResult = $obCache->getVars();
                 }
             }
-            else
-            {
-                $arResult = $obCache->getVars();
-            }
+
+            self::$ormValues[ $strClass ] = $arResult;
         }
 
-        return $arResult;
+
+        return self::$ormValues[ $strClass ];
     }
 }

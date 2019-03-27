@@ -36,7 +36,7 @@ class Arrays
      *
      * @param $data
      *
-     * @return array|string
+     * @return array|Strings
      */
     public static function dump($data)
     {
@@ -64,7 +64,7 @@ class Arrays
      *
      * @param $res
      *
-     * @return array|mixed|string
+     * @return array|mixed|Strings
      */
     public static function recursive_htmlspecialcharsbx($res)
     {

@@ -20,10 +20,10 @@ class UserField
     /**
      * Записать значение пользовательского свойства
      *
-     * @param string $entity_id Имя объекта
-     * @param string $value_id  Идентификатор элемента
-     * @param string $uf_id     Имя пользовательского свойства
-     * @param string $uf_value  Значение, которое сохраняем
+     * @param Strings $entity_id Имя объекта
+     * @param Strings $value_id  Идентификатор элемента
+     * @param Strings $uf_id     Имя пользовательского свойства
+     * @param Strings $uf_value  Значение, которое сохраняем
      *
      * @return mixed
      */
@@ -40,9 +40,9 @@ class UserField
     /**
      * Получить значение пользовательского свойства
      *
-     * @param string $entity_id Имя объекта
-     * @param string $value_id  Идентификатор элемента
-     * @param string $uf_id     Имя пользовательского свойства
+     * @param Strings $entity_id Имя объекта
+     * @param Strings $value_id  Идентификатор элемента
+     * @param Strings $uf_id     Имя пользовательского свойства
      *
      * @return mixed
      */
@@ -57,8 +57,8 @@ class UserField
     }
 
     /**
-     * @param string $entity_id Имя объекта
-     * @param string $value_id  Идентификатор элемента
+     * @param Strings $entity_id Имя объекта
+     * @param Strings $value_id  Идентификатор элемента
      *
      * @return mixed
      */
@@ -74,8 +74,8 @@ class UserField
     /**
      * Возвращает значения
      *
-     * @param string $entity_id Имя объекта
-     * @param string $value_id  Идентификатор элемента
+     * @param Strings $entity_id Имя объекта
+     * @param Strings $value_id  Идентификатор элемента
      *
      * @return array
      */

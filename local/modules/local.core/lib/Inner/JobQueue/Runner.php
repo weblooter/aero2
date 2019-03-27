@@ -40,12 +40,12 @@ final class Runner
     {
         $arRes = [];
         exec(
-            'ps aux | grep "'.$this->getProcessName().'" | grep -v grep',
+            'ps aux | grep "'.self::getProcessName().'" | grep -v grep',
             $arRes
         );
         if( empty($arRes) )
         {
-            cli_set_process_title($this->getProcessName());
+            cli_set_process_title(self::getProcessName());
             $this->startDaemon();
         }
     }
@@ -54,9 +54,26 @@ final class Runner
      * Возвращает имя процесса
      * @return string
      */
-    private function getProcessName()
+    private static function getProcessName()
     {
-        return 'kd_queue_job_runner';
+        return 'robofeed_queue_job_runner';
+    }
+
+    /**
+     * Возвращает насройки и текущий статус раннера
+     *
+     * @return array
+     */
+    public static function getRunnerStatus()
+    {
+        $arReturn = [
+            'MAXIMUM_WORKERS' => \Bitrix\Main\Config\Configuration::getInstance()->get('job_queue')['MAXIMUM_WORKERS'] ?? self::MAXIMUM_WORKERS,
+            'MAX_CYCLES_COUNT' => \Bitrix\Main\Config\Configuration::getInstance()->get('job_queue')['MAX_CYCLES_COUNT'] ?? self::MAX_CYCLES_COUNT,
+            'TIME_BETWEEN_CYCLES' => \Bitrix\Main\Config\Configuration::getInstance()->get('job_queue')['TIME_BETWEEN_CYCLES'] ?? self::TIME_BETWEEN_CYCLES,
+            'COMMAND' => 'ps aux | grep "'.self::getProcessName().'" | grep -v grep'
+        ];
+        $arReturn['STATUS'] = exec($arReturn['COMMAND']);
+        return $arReturn;
     }
 
     /**
@@ -67,17 +84,20 @@ final class Runner
         $counter = 0;
         while( true )
         {
-            $counter++;
-            if( self::MAX_CYCLES_COUNT > 0 )
+            $MAX_CYCLES_COUNT = \Bitrix\Main\Config\Configuration::getInstance()->get('job_queue')['MAX_CYCLES_COUNT'] ?? self::MAX_CYCLES_COUNT;
+            $TIME_BETWEEN_CYCLES = \Bitrix\Main\Config\Configuration::getInstance()->get('job_queue')['TIME_BETWEEN_CYCLES'] ?? self::TIME_BETWEEN_CYCLES;
+
+            if( $MAX_CYCLES_COUNT > 0 )
             {
-                if( $counter >= self::MAX_CYCLES_COUNT )
+                $counter++;
+                if( $counter >= $MAX_CYCLES_COUNT )
                 {
                     die;
                 }
             }
 
             $this->executeJobs();
-            sleep(self::TIME_BETWEEN_CYCLES);
+            sleep($TIME_BETWEEN_CYCLES);
         }
     }
 
@@ -249,7 +269,7 @@ final class Runner
     {
         $arReturn = [];
         $arReturn[] = "/usr/bin/php -d mbstring.func_overload=2";
-        $arReturn[] = "{$_SERVER['DOCUMENT_ROOT']}/local/tools/console";
+        $arReturn[] = \Bitrix\Main\Application::getDocumentRoot()."/local/tools/console";
         $arReturn[] = "worker";
         $arReturn[] = (string)$jobID;
         $arReturn[] = $executorID;

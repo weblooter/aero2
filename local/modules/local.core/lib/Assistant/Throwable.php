@@ -31,11 +31,11 @@ class Throwable
     }
 
     /**
-     * @param Main\Result $result
+     * @param Main\Result  $result
      * @param Main\Error[]
-     * @param array       $arCustomData
-     * @param null|string $file
-     * @param null|int    $line
+     * @param array        $arCustomData
+     * @param null|Strings $file
+     * @param null|int     $line
      */
     public static function addError(Main\Result $result, $arErrorCollection, $arCustomData = [], $file = null, $line = null)
     {

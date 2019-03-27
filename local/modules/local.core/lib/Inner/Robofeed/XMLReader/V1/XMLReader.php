@@ -205,6 +205,7 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
 
                 if( $obOfferValidateResult->isSuccess() )
                 {
+
                     if(
                     $this->getImporter()
                         ->importOffer($arOfferFields)

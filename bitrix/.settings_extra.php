@@ -61,7 +61,9 @@ $conf = [
      */
     'job_queue' => [
         'value' => [
-            'MAXIMUM_WORKERS' => 2 // Максимальное кол-во одновременно запущенных воркеров
+            'MAXIMUM_WORKERS' => 2, // Максимальное кол-во одновременно запущенных воркеров
+            'MAX_CYCLES_COUNT' => -1, // Максимальное кол-во циклов. Если -1 - бесконечный воркер
+            'TIME_BETWEEN_CYCLES' => 10, // Время в секундах между запускамициклов
         ],
         'readonly' => true
     ],
@@ -72,14 +74,34 @@ $conf = [
     'robofeed' => [
         'value' => [
             'XMLReader' => [
-                'max_offers_error_count_in_validation' => 5
+                'max_offers_error_count_in_validation' => 5, // Максимальное кол-во ошибок среди товаров в валидаторе, после которого валидация прекращается
             ],
             'ImportLogTable' => [
-                'max_last_log_count' => 30
+                'max_last_log_count' => 30, // Какое кол-во логов импорта хранить для магазина
+            ],
+            'convert' => [
+                'upload_file_max_size' => 100, // Максимальный развер файла для конвертера в мб
+                'delete_file_after' => 240, // Удалять файл после конвертирования через N минут
+                'max_in_queue' => 1, // Максимальное кол-во файлов в очереди на обработку
             ]
         ],
         'readonly' => true
-    ]
+    ],
+
+    /**
+     * Конфиг для почты
+     */
+    'mail' => [
+        'value' => [
+            'smtp' => [
+                'host' => 'smtp.yandex.ru',
+                'login' => 'info@robofeed.ru',
+                'password' => 'G=YDV{55w>u-eYH;',
+                'name' => 'info@robofeed.ru',
+            ]
+        ],
+        'readonly' => true
+    ],
 ];
 
 return $conf;

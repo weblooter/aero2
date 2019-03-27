@@ -33,7 +33,6 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             new Fields\EnumField(
                 'ACTIVE', [
                     'title' => 'Активность',
-                    'required' => false,
                     'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
                 ]
@@ -41,7 +40,6 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             new Fields\DatetimeField(
                 'DATE_CREATE', [
                     'title' => 'Дата создания',
-                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();
@@ -51,7 +49,6 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             new Fields\DatetimeField(
                 'DATE_MODIFIED', [
                     'title' => 'Дата последнего изменения',
-                    'required' => false,
                     'default_value' => function()
                         {
                             return new \Bitrix\Main\Type\DateTime();

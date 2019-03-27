@@ -27,8 +27,16 @@ class StoreProductDeliveryTable extends \Local\Core\Inner\BxModified\Main\ORM\Da
     }
     public function __construct()
     {
-        self::$arEnumFieldsValues['CURRENCY_CODE'] = $this->__getOrmValues(Reference\CurrencyTable::class, 'CODE');
-        self::$arEnumFieldsValues['CURRENCY_CODE'] = array_combine(self::$arEnumFieldsValues['CURRENCY_CODE'], self::$arEnumFieldsValues['CURRENCY_CODE']);
+        if( empty(self::$arEnumFieldsValues) )
+        {
+            self::$arEnumFieldsValues['CURRENCY_CODE'] = $this->__getOrmValues(Reference\CurrencyTable::class, 'CODE');
+            self::$arEnumFieldsValues['CURRENCY_CODE'] = array_combine(self::$arEnumFieldsValues['CURRENCY_CODE'], self::$arEnumFieldsValues['CURRENCY_CODE']);
+            self::$arEnumFieldsValues['DELIVERY_REGION'] = [
+                'in' => 'in',
+                'out' => 'out',
+                'all' => 'all'
+            ];
+        }
     }
 
     private static function __getOrmValues(string $strClass, string $strColumnName)
@@ -89,13 +97,7 @@ class StoreProductDeliveryTable extends \Local\Core\Inner\BxModified\Main\ORM\Da
     }
 
     /** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */
-    public static $arEnumFieldsValues = [
-        'DELIVERY_REGION' => [
-            'in' => 'in',
-            'out' => 'out',
-            'all' => 'all'
-        ]
-    ];
+    public static $arEnumFieldsValues = [];
 
 
     public static function getMap()

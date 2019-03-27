@@ -32,8 +32,26 @@ class CFile extends \CFile
             $arFile['old_file'] = $intOldFileId;
         }
 
-        $strNewSavePath = '';
-        if( empty(trim($strSavePath)) )
+        $strNewSavePath = static::makeLocalCorePath($strSavePath);
+
+        return parent::SaveFile(
+            $arFile,
+            $strNewSavePath
+        );
+    }
+
+    /**
+     * Формирует путь сохранения от upload/local.core/
+     *
+     * @param string $strPath Путь
+     * @param bool $boolDocumentRoot Выдать с DOCUMENT_ROOT
+     * @param bool $boolMkdir Создать директорию
+     *
+     * @return string
+     */
+    public static function makeLocalCorePath( string $strPath = '', bool $boolDocumentRoot = false, bool $boolMkdir = false)
+    {
+        if( empty(trim($strPath)) )
         {
             $strNewSavePath = ['local.core', 'tmp'];
         }
@@ -41,7 +59,7 @@ class CFile extends \CFile
         {
             $strNewSavePath = explode(
                 '/',
-                $strSavePath
+                $strPath
             );
             $strNewSavePath = array_diff(
                 $strNewSavePath,
@@ -63,10 +81,20 @@ class CFile extends \CFile
                 $strNewSavePath
             ).'/';
 
-        return parent::SaveFile(
-            $arFile,
-            $strNewSavePath
-        );
+        if( $boolMkdir )
+        {
+            if( !file_exists(\Bitrix\Main\Application::getInstance()->getContext()->getServer()->getDocumentRoot().$strNewSavePath) )
+            {
+                mkdir(\Bitrix\Main\Application::getInstance()->getContext()->getServer()->getDocumentRoot().$strNewSavePath, 0777, true);
+            }
+        }
+
+        if( $boolDocumentRoot )
+        {
+            $strNewSavePath = \Bitrix\Main\Application::getInstance()->getContext()->getServer()->getDocumentRoot().$strNewSavePath;
+        }
+
+        return $strNewSavePath;
     }
 
     /**

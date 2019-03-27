@@ -11,12 +11,6 @@ class YML
     private $isYML = null;
     private $strWriteTo;
 
-    public function __construct()
-    {
-        $this->strWriteTo = $_SERVER['DOCUMENT_ROOT'].'/tmp.xml';
-        file_put_contents($this->strWriteTo, '');
-    }
-
     public function addToWrite($str)
     {
         file_put_contents($this->strWriteTo, $str, FILE_APPEND);
@@ -31,14 +25,33 @@ class YML
     private $tagCategories;
     private $tagOffers;
 
+    /**
+     * @return int
+     * @throws FatalException
+     */
     public function execute()
     {
+
         if( is_null($this->strFilePath) )
         {
             throw new FatalException('Необходимо задать путь до файла');
         }
+        $this->strWriteTo = \Local\Core\Inner\BxModified\CFile::makeLocalCorePath('', true, true).sha1($this->strFilePath).'.xml';
+        if( file_exists($this->strWriteTo) )
+        {
+            unlink($this->strWriteTo);
+        }
 
         $this->begin();
+
+        $intFileId = \Local\Core\Inner\BxModified\CFile::saveFile(\CFile::MakeFileArray($this->strWriteTo), '/robofeed/convert/export_file/');
+        if( $intFileId < 1 )
+        {
+            throw new FatalException('Не удалось сохранить сконвертрованный файл');
+        }
+        copy($this->strWriteTo, $_SERVER['DOCUMENT_ROOT'].'/tmp2.xml');
+//        unlink($this->strWriteTo);
+        return $intFileId;
     }
 
     private function begin()
@@ -60,7 +73,7 @@ DOCHERE
         }
         else
         {
-            throw new FatalException('Файл не является YML файлом, в теге "yml_catalog" не указан аттрибут "date" удалось найти тег "yml_catalog" в первых 300 символах файла.');
+            throw new FatalException('Файл не является YML файлом - в теге "yml_catalog" не указан аттрибут "date" или не удалось найти тег "yml_catalog" в первых 300 символах файла. Так же проверьте, что бы в начале файла не было <u>&lt;!DOCTYPE yml_catalog SYSTEM &quot;shops.dtd&quot;&gt;</u>');
         }
 
         $this->addToWrite('<?xml version="1.0" encoding="UTF-8"?><robofeed><version>1</version><lastModified>'.date('Y-m-d H:i:s', strtotime($matches[sizeof($matches) - 2])).'</lastModified>');
@@ -160,39 +173,39 @@ DOCHERE
         $arAttr = [];
         foreach( $obElement->attributes() as $k => $v )
         {
-            $arAttr[$k] = (string)$v;
+            $arAttr[$k] = substr((string)$v, 0, 9);
         }
 
         $str = '<offer id="'.$arAttr['id'].'" '.( !is_null($arAttr['group_id']) ? 'group_id="'.$arAttr['group_id'].'"' : '' ).'>';
 
         $str .= '<inStock>'.( !empty($arAttr['available']) ? $arAttr['available'] : 'true' ).'</inStock>';
 
-        if( trim($arAttr['type']) == 'vendor.model' )
+        if( trim($arAttr['type']) == substr('vendor.model', 0, 9) )
         {
-            $str .= '<fullName>'.htmlspecialchars(substr((string)$obElement->model, 0, 255)).'</fullName>';
-            $str .= '<simpleName>'.htmlspecialchars(substr((string)$obElement->model, 0, 255)).'</simpleName>';
+            $str .= '<fullName>'.substr(htmlspecialchars((string)$obElement->model), 0, 255).'</fullName>';
+            $str .= '<simpleName>'.substr(htmlspecialchars((string)$obElement->model), 0, 255).'</simpleName>';
         }
         else
         {
-            $str .= '<fullName>'.htmlspecialchars(substr((string)$obElement->name, 0, 255)).'</fullName>';
-            $str .= '<simpleName>'.htmlspecialchars(substr((string)$obElement->name, 0, 255)).'</simpleName>';
+            $str .= '<fullName>'.substr(htmlspecialchars((string)$obElement->name), 0, 255).'</fullName>';
+            $str .= '<simpleName>'.substr(htmlspecialchars((string)$obElement->name), 0, 255).'</simpleName>';
         }
 
-        $str .= '<manufacturer>'.htmlspecialchars((string)$obElement->vendor).'</manufacturer>';
-        $str .= '<manufacturerCode>'.htmlspecialchars((string)$obElement->vendorCode).'</manufacturerCode>';
+        $str .= '<manufacturer>'.htmlspecialchars(substr((string)$obElement->vendor, 0, 255)).'</manufacturer>';
+        $str .= '<manufacturerCode>'.htmlspecialchars(substr((string)$obElement->vendorCode, 0, 255)).'</manufacturerCode>';
 
-        if( !empty( htmlspecialchars((string)$obElement->vendorCode) ) )
+        if( !empty(htmlspecialchars((string)$obElement->vendorCode)) )
         {
-            $str .= '<article>'.htmlspecialchars((string)$obElement->vendorCode).'</article>';
+            $str .= '<article>'.htmlspecialchars(substr((string)$obElement->vendorCode, 0, 255)).'</article>';
         }
         else
         {
-            $str .= '<article>'.$arAttr['id'].'</article>';
+            $str .= '<article>'.substr($arAttr['id'], 0, 9).'</article>';
         }
 
-        $str .= '<url>'.htmlspecialchars((string)$obElement->url).'</url>';
-        $str .= '<price>'.(string)$obElement->price.'</price>';
-        $str .= '<oldPrice>'.(string)$obElement->oldprice.'</oldPrice>';
+        $str .= '<url>'.htmlspecialchars(substr((string)$obElement->url, 0, 255)).'</url>';
+        $str .= '<price>'.substr((string)$obElement->price, 0, 11).'</price>';
+        $str .= '<oldPrice>'.substr((string)$obElement->oldprice, 0, 11).'</oldPrice>';
         $str .= '<currencyCode>';
         switch( (string)$obElement->currencyId )
         {
@@ -208,26 +221,32 @@ DOCHERE
                 break;
         }
         $str .= '</currencyCode>';
-        $str .= '<categoryId>'.(string)$obElement->categoryId.'</categoryId>';
+        $str .= '<categoryId>'.substr((string)$obElement->categoryId, 0, 9).'</categoryId>';
 
         foreach( $obElement->picture as $obPicture )
         {
-            $str .= '<image>'.htmlspecialchars((string)$obPicture).'</image>';
+            $str .= '<image>'.substr(htmlspecialchars((string)$obPicture), 0, 255).'</image>';
         }
 
-        $str .= '<salesNotes>'.htmlspecialchars((string)$obElement->{'sales_notes'}).'</salesNotes>';
+        $str .= '<salesNotes>'.substr(htmlspecialchars((string)$obElement->{'sales_notes'}), 0, 50).'</salesNotes>';
 
         $str .= '<quantity>1</quantity><unitOfMeasure>PCS</unitOfMeasure>';
-        $str .= '<minQuantity>'.( !empty((string)$obElement->{'min-quantity'}) ? (string)$obElement->{'min-quantity'} : 1 ).'</minQuantity>';
+        $str .= '<minQuantity>'.( !empty((string)$obElement->{'min-quantity'}) ? substr((string)$obElement->{'min-quantity'}, 0, 9) : 1 ).'</minQuantity>';
 
         $str .= '<description>'.htmlspecialchars(substr(strip_tags((string)$obElement->description), 0, 3000)).'</description>';
-        $str .= '<isSex>'.(string)$obElement->adult.'</isSex>';
-        $str .= '<manufacturerWarranty>'.( !empty( (string)$obElement->{'manufacturer_warranty'} ) ? (string)$obElement->{'manufacturer_warranty'} : 'true' ).'</manufacturerWarranty>';
-        $str .= '<isSoftware>'.(string)$obElement->{'downloadable'}.'</isSoftware>';
+        if( !empty((string)$obElement->adult) )
+        {
+            $str .= '<isSex>'.(string)$obElement->adult.'</isSex>';
+        }
+        $str .= '<manufacturerWarranty>'.( !empty((string)$obElement->{'manufacturer_warranty'}) ? (string)$obElement->{'manufacturer_warranty'} : 'true' ).'</manufacturerWarranty>';
+        if( !empty((string)$obElement->{'downloadable'}) )
+        {
+            $str .= '<isSoftware>'.(string)$obElement->{'downloadable'}.'</isSoftware>';
+        }
 
         if( !empty((string)$obElement->weight) )
         {
-            $str .= '<weight>'.(string)$obElement->weight.'</weight>';
+            $str .= '<weight>'.substr((string)$obElement->weight, 0, 9).'</weight>';
             $str .= '<weightUnitCode>KGM</weightUnitCode>';
         }
 
@@ -236,20 +255,20 @@ DOCHERE
             $ardimensions = explode('/', (string)$obElement->dimensions);
             $ardimensions = array_map('trim', $ardimensions);
 
-            $str .= '<length>'.$ardimensions[0].'</length>';
+            $str .= '<length>'.substr($ardimensions[0], 0, 9).'</length>';
             $str .= '<lengthUnitCode>CMT</lengthUnitCode>';
-            $str .= '<width>'.$ardimensions[1].'</width>';
+            $str .= '<width>'.substr($ardimensions[1], 0, 9).'</width>';
             $str .= '<widthUnitCode>CMT</widthUnitCode>';
-            $str .= '<height>'.$ardimensions[2].'</height>';
+            $str .= '<height>'.substr($ardimensions[], 0, 9).'</height>';
             $str .= '<heightUnitCode>CMT</heightUnitCode>';
         }
 
         foreach( $obElement->param as $obParam )
         {
             $name = $obParam->attributes();
-            $name = trim((string)$name['name']);
-            $code = strtoupper(\Cutil::translit(trim($name), "ru", array("replace_space" => "_", "replace_other" => "_")));
-            $str .= '<param name="'.htmlspecialchars($name).'" code="'.htmlspecialchars($code).'">'.htmlspecialchars((string)$obParam).'</param>';
+            $name = substr(htmlspecialchars(trim((string)$name['name'])), 0, 100);
+            $code = substr(strtoupper(\Cutil::translit($name, "ru", array("replace_space" => "_", "replace_other" => "_"))), 0, 50);
+            $str .= '<param name="'.$name.'" code="'.$code.'">'.substr(htmlspecialchars((string)$obParam), 0, 255).'</param>';
         }
 
         if( !empty((string)$obElement->delivery) )
@@ -265,12 +284,12 @@ DOCHERE
                 }
 
                 $strOption .= '<option';
-                $strOption .= ' priceFrom="'.(string)$obOption->attributes()['cost'].'"';
-                $strOption .= ' priceTo="'.(string)$obOption->attributes()['cost'].'"';
+                $strOption .= ' priceFrom="'.substr((string)$obOption->attributes()['cost'], 0, 9).'"';
+                $strOption .= ' priceTo="'.substr((string)$obOption->attributes()['cost'], 0, 9).'"';
                 $strOption .= ' currencyCode="RUB"';
-                $strOption .= ' daysFrom="'.$strDays[1].'"';
-                $strOption .= ' daysTo="'.$strDays[2].'"';
-                $strOption .= ' orderBefore="'.(string)$obOption->attributes()['order-before'].'"';
+                $strOption .= ' daysFrom="'.substr($strDays[1], 0, 2).'"';
+                $strOption .= ' daysTo="'.substr($strDays[2], 0, 2).'"';
+                $strOption .= ' orderBefore="'.substr((string)$obOption->attributes()['order-before'], 0, 2).'"';
                 $strOption .= ' deliveryRegion="all"';
                 $strOption .= '></option>';
             }
@@ -305,11 +324,11 @@ DOCHERE
                 }
 
                 $strOption .= '<option';
-                $strOption .= ' price="'.(string)$obOption->attributes()['cost'].'"';
+                $strOption .= ' price="'.substr((string)$obOption->attributes()['cost'], 0, 9).'"';
                 $strOption .= ' currencyCode="RUB"';
-                $strOption .= ' supplyFrom="'.$strDays[1].'"';
-                $strOption .= ' supplyTo="'.$strDays[2].'"';
-                $strOption .= ' orderBefore="'.(string)$obOption->attributes()['order-before'].'"';
+                $strOption .= ' supplyFrom="'.substr($strDays[1], 0, 2).'"';
+                $strOption .= ' supplyTo="'.substr($strDays[2], 0, 2).'"';
+                $strOption .= ' orderBefore="'.substr((string)$obOption->attributes()['order-before'], 0, 2).'"';
                 $strOption .= '></option>';
             }
 

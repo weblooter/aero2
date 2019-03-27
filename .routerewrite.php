@@ -145,6 +145,17 @@ $arLocalRoutes = [
                 }
         ],
     ],
+    'development' => [
+        'robofeed' => [
+            'URL' => '/development/robofeed-v1/'
+        ],
+        'references' => [
+            'URL' => '/development/references/'
+        ],
+        'convert' => [
+            'URL' => '/development/convert/'
+        ],
+    ],
     'bill'    => [
         'list'   => [
             'URL' => '/personal/company/#COMPANY_ID#/bill/'

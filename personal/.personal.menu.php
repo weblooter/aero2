@@ -14,5 +14,12 @@ $aMenuLinks = Array(
         Array(),
         ""
     ),
+    Array(
+        "Конвертер",
+        "/personal/convert/",
+        Array(),
+        Array(),
+        ""
+    )
 );
 ?>

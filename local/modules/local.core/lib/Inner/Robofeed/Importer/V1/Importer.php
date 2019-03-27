@@ -1,4 +1,5 @@
 <?php
+
 namespace Local\Core\Inner\Robofeed\Importer\V1;
 
 
@@ -11,13 +12,15 @@ use Local\Core\Model\Robofeed\StoreProductPickupFactory;
 
 class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
 {
+    private $arOfferColumnConnection = [];
+
     /** @inheritdoc */
     public static function getVersion()
     {
         return 1;
     }
 
-    /** @deprecated  */
+    /** @deprecated */
     public function run()
     {
     }
@@ -30,11 +33,13 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
     public function importCategories($arFields)
     {
         if( is_null($this->intStoreId) )
+        {
             throw new FatalException('Необходимо задать STORE_ID');
+        }
 
         $obOrmStoreCategoryTable = ( StoreCategoryFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
 
-        foreach($arFields as $arField)
+        foreach( $arFields as $arField )
         {
             $arAdd = [
                 'ROBOFEED_VERSION' => self::getVersion(),
@@ -55,7 +60,9 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
     public function importOffer($arFields)
     {
         if( is_null($this->intStoreId) )
+        {
             throw new FatalException('Необходимо задать STORE_ID');
+        }
 
         $obOrmStoreProductTable = ( StoreProductFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
 
@@ -64,12 +71,15 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
             'PRODUCT_ID' => $arFields['@attr']['id'],
             'PRODUCT_GROUP_ID' => $arFields['@attr']['groupId'],
         ];
-        foreach($arFields['@value'] as $key=>$val)
+        foreach( $arFields['@value'] as $key => $val )
         {
-            preg_match_all('/([a-z]+|[A-Z][a-z]+)/', $key, $matches);
-            $strFieldCode = implode('_', array_map('strtoupper', $matches[1]));
+            if( is_null($this->arOfferColumnConnection[$key]) )
+            {
+                preg_match_all('/([a-z]+|[A-Z][a-z]+)/', $key, $matches);
+                $this->arOfferColumnConnection[$key] = implode('_', array_map('strtoupper', $matches[1]));
+            }
 
-            switch($key)
+            switch( $key )
             {
                 case 'delivery':
                 case 'pickup':
@@ -78,11 +88,11 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
                     break;
 
                 case 'image':
-                    $arAddOffer[ $strFieldCode ] = implode("\r\n", $val);
+                    $arAddOffer[$this->arOfferColumnConnection[$key]] = implode("\r\n", $val);
                     break;
 
                 default:
-                    $arAddOffer[ $strFieldCode ] = $val;
+                    $arAddOffer[$this->arOfferColumnConnection[$key]] = $val;
                     break;
             }
         }
@@ -115,7 +125,7 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
     {
         $obOrmStoreProductParamTable = ( StoreProductParamFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
 
-        foreach($arFields as $arProductParam)
+        foreach( $arFields as $arProductParam )
         {
             $arAddParam = [
                 'ROBOFEED_VERSION' => self::getVersion(),
@@ -130,9 +140,9 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
 
     private function importDelivery($arFields, $intProductTableId)
     {
-        $obOrmStoreProductDeliveryTable = ( StoreProductDeliveryFactory::factory( self::getVersion() ) )->setStoreId($this->intStoreId);
+        $obOrmStoreProductDeliveryTable = ( StoreProductDeliveryFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
 
-        foreach($arFields as $arOption)
+        foreach( $arFields as $arOption )
         {
             $arAddDelivery = [
                 'ROBOFEED_VERSION' => self::getVersion(),
@@ -152,9 +162,9 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
 
     private function importPickup($arFields, $intProductTableId)
     {
-        $obOrmStoreProductPickupTable = ( StoreProductPickupFactory::factory( self::getVersion() ) )->setStoreId($this->intStoreId);
+        $obOrmStoreProductPickupTable = ( StoreProductPickupFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
 
-        foreach($arFields as $arOption)
+        foreach( $arFields as $arOption )
         {
             $arAddPickup = [
                 'ROBOFEED_VERSION' => self::getVersion(),
@@ -174,21 +184,23 @@ class Importer extends \Local\Core\Inner\Robofeed\Importer\AbstractImporter
     public function resetTables()
     {
         if( is_null($this->intStoreId) )
+        {
             throw new FatalException('Необходимо задать STORE_ID');
+        }
 
-        $obOrmStoreCategoryTable = ( StoreCategoryFactory::factory( self::getVersion() ) )->setStoreId($this->intStoreId);
+        $obOrmStoreCategoryTable = ( StoreCategoryFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
         \CLocalCore::resetDBTableByGetMap($obOrmStoreCategoryTable);
 
-        $obOrmStoreProductTable = ( StoreProductFactory::factory( self::getVersion() ) )->setStoreId($this->intStoreId);
+        $obOrmStoreProductTable = ( StoreProductFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
         \CLocalCore::resetDBTableByGetMap($obOrmStoreProductTable);
 
-        $obOrmStoreProductParamTable = ( StoreProductParamFactory::factory( self::getVersion() ) )->setStoreId($this->intStoreId);
+        $obOrmStoreProductParamTable = ( StoreProductParamFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
         \CLocalCore::resetDBTableByGetMap($obOrmStoreProductParamTable);
 
-        $obOrmStoreProductDeliveryTable = ( StoreProductDeliveryFactory::factory( self::getVersion() ) )->setStoreId($this->intStoreId);
+        $obOrmStoreProductDeliveryTable = ( StoreProductDeliveryFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
         \CLocalCore::resetDBTableByGetMap($obOrmStoreProductDeliveryTable);
 
-        $obOrmStoreProductPickupTable = ( StoreProductPickupFactory::factory( self::getVersion() ) )->setStoreId($this->intStoreId);
+        $obOrmStoreProductPickupTable = ( StoreProductPickupFactory::factory(self::getVersion()) )->setStoreId($this->intStoreId);
         \CLocalCore::resetDBTableByGetMap($obOrmStoreProductPickupTable);
     }
 }

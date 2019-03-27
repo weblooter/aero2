@@ -43,7 +43,7 @@ use Local\Core\Console\Command\StepCounter;
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 
-$application = new Application('Консоль feed.weblooter.ru');
+$application = new Application('Консоль robofeed.ru');
 
 // Регистрация всех доступных команд
 $application->add(new DemoConsole(true));

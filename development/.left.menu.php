@@ -7,12 +7,12 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
-	Array(
-		"Справочники",
-		"/development/references/",
-		Array(),
-		Array(),
-		""
-	)
+    Array(
+        "Справочники",
+        "/development/references/",
+        Array(),
+        Array(),
+        ""
+    )
 );
 ?>

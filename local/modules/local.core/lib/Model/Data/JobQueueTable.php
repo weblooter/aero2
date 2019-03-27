@@ -53,7 +53,7 @@ class JobQueueTable extends Entity\DataManager
      */
     const STATUS_ENUM_FAIL = 'F';
 
-    const EXECUTE_BY_DEFAULT = 'NONE';
+    const EXECUTE_BY_DEFAULT = 'RUNNER';
 
     /**
      * @inheritdoc

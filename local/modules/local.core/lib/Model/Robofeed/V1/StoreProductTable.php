@@ -30,22 +30,35 @@ class StoreProductTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataM
 
     public function __construct()
     {
-        self::$arEnumFieldsValues['CURRENCY_CODE'] = $this->__getOrmValues(Reference\CurrencyTable::class, 'CODE');
-        self::$arEnumFieldsValues['CURRENCY_CODE'] = array_combine(self::$arEnumFieldsValues['CURRENCY_CODE'], self::$arEnumFieldsValues['CURRENCY_CODE']);
+        if( empty(self::$arEnumFieldsValues) )
+        {
+            self::$arEnumFieldsValues['CURRENCY_CODE'] = $this->__getOrmValues(Reference\CurrencyTable::class, 'CODE');
+            self::$arEnumFieldsValues['CURRENCY_CODE'] = array_combine(self::$arEnumFieldsValues['CURRENCY_CODE'], self::$arEnumFieldsValues['CURRENCY_CODE']);
 
-        self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE'] = $this->__getOrmValues(Reference\CountryTable::class, 'CODE');
-        self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE'] = array_combine(self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE'], self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE']);
+            self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE'] = $this->__getOrmValues(Reference\CountryTable::class, 'CODE');
+            self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE'] = array_combine(self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE'], self::$arEnumFieldsValues['COUNTRY_OF_PRODUCTION_CODE']);
 
-        self::$arEnumFieldsValues['UNIT_OF_MEASURE'] = $this->__getOrmValues(Reference\MeasureTable::class, 'CODE');
-        self::$arEnumFieldsValues['UNIT_OF_MEASURE'] = array_combine(self::$arEnumFieldsValues['UNIT_OF_MEASURE'], self::$arEnumFieldsValues['UNIT_OF_MEASURE']);
+            self::$arEnumFieldsValues['UNIT_OF_MEASURE'] = $this->__getOrmValues(Reference\MeasureTable::class, 'CODE');
+            self::$arEnumFieldsValues['UNIT_OF_MEASURE'] = array_combine(self::$arEnumFieldsValues['UNIT_OF_MEASURE'], self::$arEnumFieldsValues['UNIT_OF_MEASURE']);
 
-        self::$arEnumFieldsValues['WEIGHT_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
-        self::$arEnumFieldsValues['WIDTH_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
-        self::$arEnumFieldsValues['HEIGHT_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
-        self::$arEnumFieldsValues['LENGTH_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
-        self::$arEnumFieldsValues['VOLUME_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
-        self::$arEnumFieldsValues['WARRANTY_PERIOD_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
-        self::$arEnumFieldsValues['EXPIRY_PERIOD_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+            self::$arEnumFieldsValues['WEIGHT_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+            self::$arEnumFieldsValues['WIDTH_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+            self::$arEnumFieldsValues['HEIGHT_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+            self::$arEnumFieldsValues['LENGTH_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+            self::$arEnumFieldsValues['VOLUME_UNIT_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+            self::$arEnumFieldsValues['WARRANTY_PERIOD_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+            self::$arEnumFieldsValues['EXPIRY_PERIOD_CODE'] = self::$arEnumFieldsValues['UNIT_OF_MEASURE'];
+
+            self::$arEnumFieldsValues['MANUFACTURER_WARRANTY'] = [
+                'Y' => 'Да',
+                'N' => 'Нет'
+            ];
+            self::$arEnumFieldsValues['IS_SEX'] = self::$arEnumFieldsValues['MANUFACTURER_WARRANTY'];
+            self::$arEnumFieldsValues['IS_SOFTWARE'] = self::$arEnumFieldsValues['MANUFACTURER_WARRANTY'];
+            self::$arEnumFieldsValues['IN_STOCK'] = self::$arEnumFieldsValues['MANUFACTURER_WARRANTY'];
+            self::$arEnumFieldsValues['DELIVERY'] = self::$arEnumFieldsValues['MANUFACTURER_WARRANTY'];
+            self::$arEnumFieldsValues['PICKUP'] = self::$arEnumFieldsValues['MANUFACTURER_WARRANTY'];
+        }
     }
 
     private static function __getOrmValues(string $strClass, string $strColumnName)
@@ -106,32 +119,7 @@ class StoreProductTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataM
     }
 
     /** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */
-    public static $arEnumFieldsValues = [
-        'MANUFACTURER_WARRANTY' => [
-            'Y' => 'Да',
-            'N' => 'Нет'
-        ],
-        'IS_SEX' => [
-            'Y' => 'Да',
-            'N' => 'Нет'
-        ],
-        'IS_SOFTWARE' => [
-            'Y' => 'Да',
-            'N' => 'Нет'
-        ],
-        'IN_STOCK' => [
-            'Y' => 'Да',
-            'N' => 'Нет'
-        ],
-        'DELIVERY' => [
-            'Y' => 'Да',
-            'N' => 'Нет'
-        ],
-        'PICKUP' => [
-            'Y' => 'Да',
-            'N' => 'Нет'
-        ],
-    ];
+    public static $arEnumFieldsValues = [];
 
     public static function getMap()
     {

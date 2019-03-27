@@ -23,7 +23,8 @@ class Cleaner
      * @var array $__arOrmWithFiles
      */
     private static $__arOrmWithFiles = [
-        \Local\Core\Model\Data\StoreTable::class
+        \Local\Core\Model\Data\StoreTable::class,
+        \Local\Core\Model\Robofeed\ConvertTable::class
     ];
 
     /**
