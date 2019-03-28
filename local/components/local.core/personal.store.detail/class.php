@@ -1,6 +1,6 @@
 <?php
 
-class PersonalSiteDetailComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
+class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public function executeComponent()
     {
@@ -14,12 +14,12 @@ class PersonalSiteDetailComponent extends \Local\Core\Inner\BxModified\CBitrixCo
             $GLOBALS['USER']->GetID()
         );
 
-        $this->__getAndSetResult();
+        $this->__fillResult();
 
         $this->includeComponentTemplate();
     }
 
-    private function __getAndSetResult()
+    private function __fillResult()
     {
         $arResult = [];
         $obCache = \Bitrix\Main\Application::getInstance()
@@ -47,8 +47,12 @@ class PersonalSiteDetailComponent extends \Local\Core\Inner\BxModified\CBitrixCo
                         'ID' => $this->arParams['STORE_ID']
                     ],
                     'select' => [
-                        '*'
+                        '*',
+                        'LOGS'
                     ],
+                    'order' => ['LOCAL_CORE_MODEL_DATA_STORE_LOGS_DATE_CREATE' => 'DESC'],
+                    'limit' => 10,
+                    'offset' => 0
                 ]
             );
 
@@ -59,10 +63,42 @@ class PersonalSiteDetailComponent extends \Local\Core\Inner\BxModified\CBitrixCo
             }
             else
             {
-                while( $ar = $rs->fetch() )
+                $rs = $rs->fetchObject();
+
+                $arMapFields = [];
+                foreach(\Local\Core\Model\Data\StoreTable::getMap() as $obField)
                 {
-                    $arResult['ITEM'] = $ar;
+                    if( $obField instanceof \Bitrix\Main\ORM\Fields\ScalarField )
+                    {
+                        $arResult['ITEM'][ $obField->getName() ] = $rs->get( $obField->getName() );
+                    }
                 }
+
+                $arMapLog = [];
+                foreach(\Local\Core\Model\Robofeed\ImportLogTable::getMap() as $obField)
+                {
+                    if( $obField instanceof \Bitrix\Main\ORM\Fields\ScalarField )
+                    {
+                        $arMapLog[] = $obField->getName();
+                    }
+                }
+
+                foreach($rs['LOGS'] as $obLog)
+                {
+                    if( $obLog->getId() > 0 )
+                    {
+                        $arTmp = [];
+
+                        foreach($arMapLog as $strField)
+                        {
+                            $arTmp[ $strField ] = $obLog->get($strField);
+                        }
+
+                        $arResult['LOG'][$arTmp['ID']] = $arTmp;
+                    }
+                }
+
+                $arResult['LOG'] = array_reverse($arResult['LOG'], true);
 
                 $obCache->endDataCache($arResult);
             }

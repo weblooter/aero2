@@ -1,6 +1,6 @@
 <?php
 
-class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
+class PersonalStoreAddComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public $intMaxUploadXMLFileSizeMb;
     public $intMaxDownloadXMLFileSizeMb;

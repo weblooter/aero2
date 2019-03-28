@@ -11,6 +11,12 @@ $arComponentParameters = array(
             'NAME' => 'ID компании',
             'TYPE' => 'STRING',
             'DEFAULT_VALUE' => 0
+        ],
+        'STORES_COUNT' => [
+            'PARENT' => 'BASE',
+            'NAME' => 'Кол-во магазинов компании на странице',
+            'TYPE' => 'STRING',
+            'DEFAULT_VALUE' => 5
         ]
     )
 );

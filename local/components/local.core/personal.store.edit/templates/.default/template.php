@@ -3,7 +3,7 @@
  * @global CMain                  $APPLICATION
  * @var array                     $arParams
  * @var array                     $arResult
- * @var \PersonalSiteAddComponent $component
+ * @var \PersonalStoreEditComponent $component
  * @var \CBitrixComponentTemplate $this
  * @var string                    $templateName
  * @var string                    $componentPath
@@ -125,9 +125,9 @@ $funIsRequired = function($strCode) use ($arResult)
     <div class="alert alert-warning" role="alert">
         Во время импорта Robofeed XML автоматически проходит предварительную проверку.<br/>
         Данным параметром необходимо задать сценарий действий, в случае выявления ошибки при валидации Robofeed XML.<br/>
-        <b>Не актуализировать данные</b> - прекращает работу импорта, в работе остаются старые данные.<br/>
-        <b>Актуализировать только валидные</b> - продолжает импорт, но импортирует только валидные данные.<br/>
-        Мы считаем, что появившиеся ошибки в Robofeed XML говорят о нарушении в работе системы Вашего сайт, которые могут понести за собой финансовые потери, поэтому рекомендуем использовать "<b>Не актуализировать данные</b>". К тому же валидные данные могут быть не полными, что повлияет на дальнейшее генерирование файлов на их основании.<br/>
+        <b><?=\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[ \Local\Core\Model\Data\StoreTable::BEHAVIOR_IMPORT_ERROR_STOP_IMPORT ]?></b> - прекращает работу импорта, в работе остаются старые данные.<br/>
+        <b><?=\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[ \Local\Core\Model\Data\StoreTable::BEHAVIOR_IMPORT_ERROR_IMPORT_ONLY_VALID ]?></b> - продолжает импорт, но импортирует только валидные данные.<br/>
+        Мы считаем, что появившиеся ошибки в Robofeed XML говорят о нарушении в логике работы формирования Robofeed XML со стороны Вашего сайта, которые могут понести за собой финансовые потери, поэтому рекомендуем использовать "<b><?=\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[ \Local\Core\Model\Data\StoreTable::BEHAVIOR_IMPORT_ERROR_STOP_IMPORT ]?></b>". К тому же валидные данные могут быть не полными, что повлияет на дальнейшее генерирование файлов на их основании.<br/>
         Вне зависимости от выбранного поведения мы проинформируем Вас о проблемах, если таковые появятся.
     </div>
 

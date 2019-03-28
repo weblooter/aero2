@@ -8,7 +8,7 @@ use Local\Core\Model\Robofeed\ConvertTable;
 
 /**
  * Базовый класс конвертера.
- * Он же раннер.ы
+ * Он же раннер.
  *
  * @package Local\Core\Inner\Robofeed\Converter
  */
@@ -153,5 +153,23 @@ DOCHERE;
         }
 
         return $obResult;
+    }
+
+    public static function deleteOldCovert()
+    {
+        $rs = \Local\Core\Model\Robofeed\ConvertTable::getList(
+            [
+                'filter' => [
+                    '<=DATE_MODIFIED' => ( new \Bitrix\Main\Type\DateTime() )->add('-'.( \Bitrix\Main\Config\Configuration::getInstance()->get('robofeed')['convert']['delete_file_after'] ?? 240 ).' minutes')
+                ],
+                'select' => [
+                    'ID'
+                ]
+            ]
+        );
+        while($ar = $rs->fetch())
+        {
+            ConvertTable::delete($ar['ID']);
+        }
     }
 }

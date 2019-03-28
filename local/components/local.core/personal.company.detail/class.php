@@ -16,10 +16,8 @@ class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitri
 
     public function onPrepareComponentParams($arParams)
     {
-        if( $arParams['ELEM_COUNT'] < 1 )
-        {
-            $arParams['ELEM_COUNT'] = 10;
-        }
+        if( $arParams['STORES_COUNT'] < 1 )
+            $arParams['STORES_COUNT'] = 5;
 
         if( $arParams['COMPANY_ID'] < 1 )
         {
@@ -63,11 +61,41 @@ class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitri
                         'VERIFIED_NOTE',
                         'COMPANY_INN',
                         'COMPANY_NAME_SHORT',
+                        'STORES'
                     ]
                 ]
             );
 
-            $arResult['COMPANY'] = $rsCompany->fetch();
+            $arTmpCompany = $rsCompany->fetchObject();
+
+            $arCompany = [
+                'ID' => $arTmpCompany['ID'],
+                'ACTIVE' => $arTmpCompany['ACTIVE'],
+                'DATE_CREATE' => $arTmpCompany['DATE_CREATE'],
+                'VERIFIED' => $arTmpCompany['VERIFIED'],
+                'VERIFIED_NOTE' => $arTmpCompany['VERIFIED_NOTE'],
+                'COMPANY_INN' => $arTmpCompany['COMPANY_INN'],
+                'COMPANY_NAME_SHORT' => $arTmpCompany['COMPANY_NAME_SHORT'],
+                'STORES' => [],
+            ];
+
+            foreach($arTmpCompany['STORES'] as $obStore)
+            {
+                if( $obStore->getId() > 0 )
+                {
+                    $arTmp = [
+                        'ID' => $obStore->getId(),
+                        'NAME' => $obStore->getName(),
+                        'DOMAIN' => $obStore->getDomain(),
+                        'ACTIVE' => $obStore->getActive(),
+                    ];
+                    $arCompany['STORES'][ $arTmp['ID'] ] = $arTmp;
+                    if( sizeof($arCompany['STORES']) >= $this->arParams['STORES_COUNT'] )
+                        break;
+                }
+            }
+
+            $arResult['COMPANY'] = $arCompany;
 
             $obCache->endDataCache($arResult);
         }

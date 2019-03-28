@@ -49,8 +49,7 @@ class YML
         {
             throw new FatalException('Не удалось сохранить сконвертрованный файл');
         }
-        copy($this->strWriteTo, $_SERVER['DOCUMENT_ROOT'].'/tmp2.xml');
-//        unlink($this->strWriteTo);
+        unlink($this->strWriteTo);
         return $intFileId;
     }
 

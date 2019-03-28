@@ -161,7 +161,7 @@ class CLocalCore
     public static function addAgent($strAgentClassName, $intPeriod = 3600)
     {
         \CAgent::AddAgent(
-            $strAgentClassName.'::init()',
+            $strAgentClassName.'::init();',
             'local.core',
             'N',
             $intPeriod,

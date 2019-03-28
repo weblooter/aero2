@@ -4,13 +4,20 @@ namespace Local\Core\Inner\Robofeed;
 
 
 use Local\Core\Inner\Exception\FatalException;
+use Local\Core\Model\Data\CompanyTable;
 use Local\Core\Model\Data\StoreTable;
 use Local\Core\Model\Robofeed\ImportLogTable;
-use Local\Core\Model\Robofeed\StoreCategoryFactory;
-use Local\Core\Model\Robofeed\StoreProductFactory;
 
 class ImportData
 {
+    /**
+     * Импортирует базу
+     *
+     * @param $intStoreId
+     *
+     * @return \Bitrix\Main\Result
+     * @throws \Bitrix\Main\ObjectException
+     */
     public static function execute($intStoreId)
     {
         $obResult = new \Bitrix\Main\Result();
@@ -23,100 +30,114 @@ class ImportData
 
         $strDownloadPath = $_SERVER['DOCUMENT_ROOT'].'/upload/tmp/local.core/robofeed/store_'.$intStoreId.'.xml';
 
-        try
+        $rsStore = StoreTable::getById($intStoreId);
+        if( $rsStore->getSelectedRowsCount() > 0 )
         {
-
-            $rsStore = StoreTable::getById($intStoreId);
-            if( $rsStore->getSelectedRowsCount() < 1 )
-            {
-                throw new \Exception('Магазин с ID "'.$intStoreId.'" не обнаружен');
-            }
-
             $arStore = $rsStore->fetch();
-
-            if( $arStore['ACTIVE'] != 'Y' )
+            try
             {
-                throw new \Exception('Для актуализации данных необходимо активировать магазин');
-            }
-
-            $strFilePath = self::getFilePath($arStore, $strDownloadPath);
-
-            $obReader = \Local\Core\Inner\Robofeed\XMLReader\Factory::factory(1);
-            $obReader->setXmlPath($strFilePath);
-
-            $arLoggerData['ROBOFEED_VERSION'] = $obReader->getRobofeedVersion();
-            $arLoggerData['ROBOFEED_DATE'] = new \Bitrix\Main\Type\DateTime($obReader->getRobofeedLastModified(), 'Y-m-d H:i:s');
-            $arLoggerData['BEHAVIOR_IMPORT_ERROR'] = $arStore['BEHAVIOR_IMPORT_ERROR'];
-
-            // TODO раскомментировать после проверки
-            /*
-            $rsLastLog = ImportLogTable::getList([
-                'filter' => [
-                    'STORE_ID' => $arLoggerData['STORE_ID'],
-                    'ROBOFEED_VERSION' => $arLoggerData['ROBOFEED_VERSION'],
-                    'ROBOFEED_DATE' => $arLoggerData['ROBOFEED_DATE'],
-                ]
-            ]);
-
-            if( $rsLastLog->getSelectedRowsCount() > 0 )
-            {
-                throw new \Exception('Время и версия в Robofeed XML не изменились, файл не нуждается в актуализации');
-            }
-            */
-
-            $obValidateResult = self::validateRobofeed($arLoggerData['ROBOFEED_VERSION'], $strFilePath);
-            if(
-                $obValidateResult->isSuccess()
-                || ( !$obValidateResult->isSuccess() && $arStore['BEHAVIOR_IMPORT_ERROR'] == 'IMPORT_ONLY_VALID' )
-            )
-            {
-
-                if( !$obValidateResult->isSuccess() )
+                if( $arStore['ACTIVE'] != 'Y' )
                 {
-                    $obWarning->addErrors($obValidateResult->getErrors());
+                    throw new \Exception('Для актуализации данных необходим активный магазин.');
                 }
 
+                $strFilePath = self::getFilePath($arStore, $strDownloadPath);
 
-                \Local\Core\Inner\Robofeed\Importer\Factory::factory($arLoggerData['ROBOFEED_VERSION'])
-                    ->setStoreId($intStoreId)
-                    ->resetTables();
+                $obReader = \Local\Core\Inner\Robofeed\XMLReader\Factory::factory(1);
+                $obReader->setXmlPath($strFilePath);
 
-                $obImportResult = self::importRobofeed($intStoreId, $arLoggerData['ROBOFEED_VERSION'], $strFilePath);
-                $arImportResult = $obImportResult->getData();
-                $arLoggerData['PRODUCT_TOTAL_COUNT'] = $arImportResult['PRODUCT_TOTAL_COUNT'];
-                $arLoggerData['PRODUCT_SUCCESS_IMPORT'] = $arImportResult['PRODUCT_SUCCESS_IMPORT'];
+                $arLoggerData['ROBOFEED_VERSION'] = $obReader->getRobofeedVersion();
+                $arLoggerData['ROBOFEED_DATE'] = new \Bitrix\Main\Type\DateTime($obReader->getRobofeedLastModified(), 'Y-m-d H:i:s');
+                $arLoggerData['BEHAVIOR_IMPORT_ERROR'] = $arStore['BEHAVIOR_IMPORT_ERROR'];
+
+                $rsLastLog = ImportLogTable::getList([
+                    'filter' => [
+                        'STORE_ID' => $arLoggerData['STORE_ID'],
+                        'ROBOFEED_VERSION' => $arLoggerData['ROBOFEED_VERSION'],
+                        'ROBOFEED_DATE' => $arLoggerData['ROBOFEED_DATE'],
+                    ]
+                ]);
+
+                if( $rsLastLog->getSelectedRowsCount() > 0 )
+                {
+                    throw new \Exception('Время и версия в Robofeed XML не изменились, файл не нуждается в актуализации.');
+                }
+
+                $obValidateResult = self::validateRobofeed($arLoggerData['ROBOFEED_VERSION'], $strFilePath);
+                if(
+                    $obValidateResult->isSuccess()
+                    || ( !$obValidateResult->isSuccess() && $arStore['BEHAVIOR_IMPORT_ERROR'] == 'IMPORT_ONLY_VALID' )
+                )
+                {
+
+                    if( !$obValidateResult->isSuccess() )
+                    {
+                        $obWarning->addErrors($obValidateResult->getErrors());
+                    }
+
+
+                    \Local\Core\Inner\Robofeed\Importer\Factory::factory($arLoggerData['ROBOFEED_VERSION'])
+                        ->setStoreId($intStoreId)
+                        ->resetTables();
+
+                    $obImportResult = self::importRobofeed($intStoreId, $arLoggerData['ROBOFEED_VERSION'], $strFilePath);
+                    $arImportResult = $obImportResult->getData();
+                    $arLoggerData['PRODUCT_TOTAL_COUNT'] = $arImportResult['PRODUCT_TOTAL_COUNT'];
+                    $arLoggerData['PRODUCT_SUCCESS_IMPORT'] = $arImportResult['PRODUCT_SUCCESS_IMPORT'];
+                }
+                else
+                {
+                    throw new \Exception(implode('<br/>', $obValidateResult->getErrorMessages()));
+                }
+
+                $arLoggerData['IMPORT_COMPLETED'] = 'Y';
             }
-            else
+            catch( FatalException $e )
             {
-                throw new \Exception(implode('<br/>', $obValidateResult->getErrorMessages()));
+                $arLoggerData['ERROR_TEXT'] = $e->getMessage();
+                $obResult->addError(new \Bitrix\Main\Error('Критическая ошибка:'));
+                $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
+                $arLoggerData['IMPORT_COMPLETED'] = 'E';
+            }
+            catch( \Throwable $e )
+            {
+                $arLoggerData['ERROR_TEXT'] = $e->getMessage();
+                $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
+                $arLoggerData['IMPORT_COMPLETED'] = 'E';
+            }
+            finally
+            {
+                if( !$obWarning->isSuccess() )
+                {
+                    $arLoggerData['ERROR_TEXT'] = implode('<br/>', $obWarning->getErrorMessages());
+                }
+                if( file_exists($strDownloadPath) )
+                {
+                    unlink($strDownloadPath);
+                }
+                ImportLogTable::add($arLoggerData);
             }
 
-            $arLoggerData['IMPORT_COMPLETED'] = 'Y';
-        }
-        catch( FatalException $e )
-        {
-            $arLoggerData['ERROR_TEXT'] = $e->getMessage();
-            $obResult->addError(new \Bitrix\Main\Error('Критическая ошибка'));
-            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
-            $arLoggerData['IMPORT_COMPLETED'] = 'E';
-        }
-        catch( \Exception $e )
-        {
-            $arLoggerData['ERROR_TEXT'] = $e->getMessage();
-            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
-            $arLoggerData['IMPORT_COMPLETED'] = 'E';
-        }
-        finally
-        {
-            if( !$obWarning->isSuccess() )
+
+            if( $arLoggerData['IMPORT_COMPLETED'] == 'E' )
             {
-                $arLoggerData['ERROR_TEXT'] = implode('<br/>', $obWarning->getErrorMessages());
+                $arCompany = \Local\Core\Model\Data\CompanyTable::getByPrimary($arStore['COMPANY_ID'], ['select' => ['USER_OWN_ID']])->fetch();
+                if( !empty( $arCompany['USER_OWN_ID'] ) )
+                {
+                    $arUser = \Bitrix\Main\UserTable::getByPrimary($arCompany['USER_OWN_ID'], ['select' => ['EMAIL']])->fetch();
+                    \Bitrix\Main\Mail\Event::send(
+                        array(
+                            "EVENT_NAME" => "LOCAL_IMPORT_ROBOFEED_ERROR",
+                            "LID" => "s1",
+                            "C_FIELDS" => array(
+                                "EMAIL" => $arUser['EMAIL'],
+                                'STORE_NAME' => $arStore['NAME'],
+                                'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
+                            )
+                        )
+                    );
+                }
             }
-            if( file_exists($strDownloadPath) )
-            {
-                unlink($strDownloadPath);
-            }
-            ImportLogTable::add($arLoggerData);
         }
 
         return $obResult;
@@ -129,7 +150,7 @@ class ImportData
         {
             case 'LINK':
                 $obHttp = new \Bitrix\Main\Web\HttpClient();
-                $obHttp->setStreamTimeout( \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['connect_timeout'] ?? 30 );
+                $obHttp->setStreamTimeout( \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['connect_timeout'] ?? 60 );
                 $intMaxFileSize = \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['max_size_mb'] ?? 300;
                 $obHttp->setBodyLengthMax( $intMaxFileSize * 1024 * 1024 );
                 if( empty($arStore['FILE_LINK']) )
@@ -142,7 +163,7 @@ class ImportData
                     $obHttp->setAuthorization($arStore['HTTP_AUTH_LOGIN'], $arStore['HTTP_AUTH_PASS']);
                 }
 
-                if( $obHttp->download($arStore['FILE_LINK'], $strDownloadPath) )
+                if( $qqres = $obHttp->download($arStore['FILE_LINK'], $strDownloadPath) )
                 {
                     switch( $obHttp->getStatus() )
                     {
@@ -162,15 +183,16 @@ class ImportData
                 }
                 else
                 {
-                    if( $obHttp->getStatus() == 200 )
+                    if( $obHttp->getStatus() == 200 || $obHttp->getStatus() == 0 )
                     {
-                        throw new FatalException('Не удалось скачать Robofeed XML. Напоминаем про ограничение скачиваемого файла по размеру ( до '.$intMaxFileSize.' мб ) и времени скачивания файла ( '.( \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['connect_timeout'] ?? 30 ).' сек. ). Проверьте размер и время отдачи файла.');
+                        throw new FatalException('Не удалось скачать Robofeed XML. Напоминаем про ограничение скачиваемого файла по размеру ( до '.$intMaxFileSize.' мб ) и времени скачивания файла ( '.( \Bitrix\Main\Config\Configuration::getInstance()->get('store')['download_xml']['connect_timeout'] ?? 60 ).' сек. ). Проверьте размер и время отдачи файла.');
                     }
                     else
                     {
                         throw new FatalException('Не удалось скачать Robofeed XML. Ответ сервера - '.$obHttp->getStatus());
                     }
                 }
+
                 break;
 
             case 'FILE':
@@ -210,5 +232,55 @@ class ImportData
         $obReader->setXmlPath($strFilePath);
 
         return $obReader->run();
+    }
+
+    /**
+     * Ищет и создает очередь на импорт
+     */
+    public static function createQueueToImportProducts()
+    {
+        $intTimeoutBetweenImportsInMin = \Bitrix\Main\Config\Configuration::getInstance()->get('robofeed')['import']['timeout_between_import_robofeed'] ?? 180;
+        $intTimestamp = ( new \Bitrix\Main\Type\DateTime() )->add('-'.$intTimeoutBetweenImportsInMin.' minutes')->getTimestamp();
+
+        $rsStoreToQueue = \Local\Core\Model\Data\StoreTable::getList([
+            'filter' => [
+                'ACTIVE' => 'Y'
+            ],
+            'select' => [
+                'ID',
+            ],
+            'order' => [
+                'DATE_CREATE' => 'DESC',
+            ],
+        ]);
+
+        while($arStore = $rsStoreToQueue->fetch())
+        {
+            $boolNeedCreateJob = false;
+
+            $arLastLog = \Local\Core\Model\Robofeed\ImportLogTable::getList([
+                'filter' => ['STORE_ID' => $arStore['ID']],
+                'select' => ['ID', 'DATE_CREATE'],
+                'order' => ['DATE_CREATE'=>'DESC']
+            ])->fetch();
+            if( !empty( $arLastLog['DATE_CREATE'] ) )
+            {
+                if( $arLastLog['DATE_CREATE']->getTimestamp() < $intTimestamp )
+                {
+                    $boolNeedCreateJob = true;
+                }
+            }
+            else
+            {
+                $boolNeedCreateJob = true;
+            }
+
+            if( $boolNeedCreateJob )
+            {
+                $worker = new \Local\Core\Inner\JobQueue\Worker\StoreRobofeedImport(['STORE_ID' => $arStore['ID']]);
+                $dateTime = new \Bitrix\Main\Type\DateTime();
+                \Local\Core\Inner\JobQueue\Job::add($worker, $dateTime, 2);
+            }
+        }
     }
 }

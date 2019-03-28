@@ -6,12 +6,12 @@ use \Local\Core\Inner;
 use \Bitrix\Main;
 
 /**
- * Воркер конвертера файла в робофид
+ * Воркер импорта робофида в систему
  *
  * {@inheritdoc}
  * @package Local\Core\Inner\JobQueue\Worker
  */
-class RobofeedConvert extends Inner\JobQueue\Abstracts\Worker implements Inner\Interfaces\UseInDb
+class StoreRobofeedImport extends Inner\JobQueue\Abstracts\Worker implements Inner\Interfaces\UseInDb
 {
     /**
      * {@inheritdoc}
@@ -21,7 +21,7 @@ class RobofeedConvert extends Inner\JobQueue\Abstracts\Worker implements Inner\I
         $result = new Main\Result();
         $arInputData = $this->getInputData();
 
-        \Local\Core\Inner\Robofeed\Converter\Base::execute($arInputData['ID']);
+        \Local\Core\Inner\Robofeed\ImportData::execute($arInputData['STORE_ID']);
 
         return $result;
     }

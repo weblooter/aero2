@@ -78,20 +78,27 @@
 </div>
 
 <div class="col-6 mb-3">
-    // TODO Магазины компании
-    <ul class="list-group mb-3">
-        <li class="list-group-item"><a href="#">https://example.com</a></li>
-        <li class="list-group-item"><a href="#">https://example.com</a></li>
-        <li class="list-group-item"><a href="#">https://example.com</a></li>
-        <li class="list-group-item"><a href="#">https://example.com</a></li>
-    </ul>
-    <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-        'store',
-        'list',
-        ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
-    )?>" class="btn btn-warning">
-        <ion-icon name="reorder"></ion-icon>
-        Магазины компании</a>
+    <b>Магазины компании</b>
+    <? if( !empty($arResult['COMPANY']['STORES']) ): ?>
+        <ul class="list-group mb-3">
+            <? foreach( $arResult['COMPANY']['STORES'] as $arStore ): ?>
+                <li class="list-group-item <?=( $arStore['ACTIVE'] == 'Y' ? 'list-group-item-success' : 'list-group-item-dark' )?>">
+                    <ion-icon name="<?=$arStore['ACTIVE'] == 'Y' ? 'done-all' : 'close'?>" title="<?=$arStore['ACTIVE'] == 'Y' ? 'Активе' : 'Деактивирован'?>"></ion-icon>
+                    <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arResult['COMPANY']['ID'], '#STORE_ID#' => $arStore['ID']])?>">
+                        <?=$arStore['NAME'].( !empty($arStore['DOMAIN']) ? ' ('.$arStore['DOMAIN'].')' : '' )?>
+                    </a>
+                </li>
+            <? endforeach; ?>
+        </ul>
+        <a href="<?=\Local\Core\Inner\Route::getRouteTo(
+            'store',
+            'list',
+            ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
+        )?>" class="btn btn-warning">
+            <ion-icon name="reorder"></ion-icon>
+            Все магазины</a>
+    <? endif; ?>
+    <br />
     <a href="<?=\Local\Core\Inner\Route::getRouteTo(
         'store',
         'add',
@@ -105,21 +112,4 @@
     <div class="alert alert-warning" role="alert">
         // TODO нотификации, типа новый инвойс или сайт прошел проверку
     </div>
-</div>
-
-<div class="col-6 mb-3">
-    // TODO Счета компании
-    <ul class="list-group mb-3">
-        <li class="list-group-item"><a href="#">№123456_1 от 2019.01.29</a></li>
-        <li class="list-group-item"><a href="#">№123456_1 от 2019.01.29</a></li>
-        <li class="list-group-item"><a href="#">№123456_1 от 2019.01.29</a></li>
-        <li class="list-group-item"><a href="#">№123456_1 от 2019.01.29</a></li>
-    </ul>
-    <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-        'bill',
-        'list',
-        ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
-    )?>" class="btn btn-warning">
-        <ion-icon name="wallet"></ion-icon>
-        Счета компании</a>
 </div>

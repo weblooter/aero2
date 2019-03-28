@@ -99,6 +99,8 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
     public static $classMap = array (
         'Local\\Core\\Agent\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/Base.php',
         'Local\\Core\\Agent\\Fileman\\ClearUnregisteredLocalCoreFiles' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/Fileman/ClearUnregisteredLocalCoreFiles.php',
+        'Local\\Core\\Agent\\Robofeed\\CreateQueueToImportProducts' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/Robofeed/CreateQueueToImportProducts.php',
+        'Local\\Core\\Agent\\Robofeed\\DeleteOldConvert' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/Robofeed/DeleteOldConvert.php',
         'Local\\Core\\Assistant\\Arrays' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/Arrays.php',
         'Local\\Core\\Assistant\\Cache' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/Cache.php',
         'Local\\Core\\Assistant\\HighLoadBlock\\HighLoadBlock' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/HighLoadBlock/HighLoadBlock.php',
@@ -190,6 +192,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\JobQueue\\Runner' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Runner.php',
         'Local\\Core\\Inner\\JobQueue\\Worker\\Example' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/Example.php',
         'Local\\Core\\Inner\\JobQueue\\Worker\\RobofeedConvert' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/RobofeedConvert.php',
+        'Local\\Core\\Inner\\JobQueue\\Worker\\StoreRobofeedImport' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/StoreRobofeedImport.php',
         'Local\\Core\\Inner\\Mail' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Mail.php',
         'Local\\Core\\Inner\\Robofeed\\Converter\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Robofeed/Converter/Base.php',
         'Local\\Core\\Inner\\Robofeed\\Converter\\YML' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Robofeed/Converter/YML.php',

@@ -72,7 +72,7 @@ $arLocalRoutes = [
                         ['COMPANY_ID' => $arParams['COMPANY_ID']]
                     );
                     $GLOBALS['APPLICATION']->AddChainItem(
-                        "Список сайтов",
+                        "Список магазинов",
                         \Local\Core\Inner\Route::getRouteTo(
                             'store',
                             'list',

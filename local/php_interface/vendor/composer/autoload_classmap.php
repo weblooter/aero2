@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Local\\Core\\Agent\\Base' => $baseDir . '/../modules/local.core/lib/Agent/Base.php',
     'Local\\Core\\Agent\\Fileman\\ClearUnregisteredLocalCoreFiles' => $baseDir . '/../modules/local.core/lib/Agent/Fileman/ClearUnregisteredLocalCoreFiles.php',
+    'Local\\Core\\Agent\\Robofeed\\CreateQueueToImportProducts' => $baseDir . '/../modules/local.core/lib/Agent/Robofeed/CreateQueueToImportProducts.php',
+    'Local\\Core\\Agent\\Robofeed\\DeleteOldConvert' => $baseDir . '/../modules/local.core/lib/Agent/Robofeed/DeleteOldConvert.php',
     'Local\\Core\\Assistant\\Arrays' => $baseDir . '/../modules/local.core/lib/Assistant/Arrays.php',
     'Local\\Core\\Assistant\\Cache' => $baseDir . '/../modules/local.core/lib/Assistant/Cache.php',
     'Local\\Core\\Assistant\\HighLoadBlock\\HighLoadBlock' => $baseDir . '/../modules/local.core/lib/Assistant/HighLoadBlock/HighLoadBlock.php',
@@ -99,6 +101,7 @@ return array(
     'Local\\Core\\Inner\\JobQueue\\Runner' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Runner.php',
     'Local\\Core\\Inner\\JobQueue\\Worker\\Example' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Worker/Example.php',
     'Local\\Core\\Inner\\JobQueue\\Worker\\RobofeedConvert' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Worker/RobofeedConvert.php',
+    'Local\\Core\\Inner\\JobQueue\\Worker\\StoreRobofeedImport' => $baseDir . '/../modules/local.core/lib/Inner/JobQueue/Worker/StoreRobofeedImport.php',
     'Local\\Core\\Inner\\Mail' => $baseDir . '/../modules/local.core/lib/Inner/Mail.php',
     'Local\\Core\\Inner\\Robofeed\\Converter\\Base' => $baseDir . '/../modules/local.core/lib/Inner/Robofeed/Converter/Base.php',
     'Local\\Core\\Inner\\Robofeed\\Converter\\YML' => $baseDir . '/../modules/local.core/lib/Inner/Robofeed/Converter/YML.php',

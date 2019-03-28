@@ -1,6 +1,6 @@
 <?php
 
-class PersonalSiteListComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
+class PersonalStoreListComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public function executeComponent()
     {

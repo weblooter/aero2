@@ -203,6 +203,12 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                     'title' => 'ORM: Компания'
                 ]
             ),
+
+            new Fields\Relations\OneToMany(
+                'LOGS',
+                \Local\Core\Model\Robofeed\ImportLogTable::class,
+                'STORE_DATA'
+            )
         ];
     }
 
@@ -481,13 +487,24 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
      */
     public static function clearComponentsCache($arFields)
     {
-        // Удаляет кэш списка у текущей компании
-        \Local\Core\Inner\Cache::deleteComponentCache(
-            ['personal.store.list'],
-            ['company_id='.$arFields['COMPANY_ID']]
-        );
+        if( !empty( $arFields['COMPANY_ID'] ) )
+        {
+            // Удаляет кэш списка у компании на странице списка магазинов
+            \Local\Core\Inner\Cache::deleteComponentCache(
+                ['personal.store.list'],
+                ['company_id='.$arFields['COMPANY_ID']]
+            );
 
-        // Удаляет кэш деталки сайта
+            // Удаляет кэш деталки компании
+            \Local\Core\Inner\Cache::deleteComponentCache(
+                ['personal.company.detail'],
+                [
+                    'company_id='.$arFields['COMPANY_ID']
+                ]
+            );
+        }
+
+        // Удаляет кэш деталки магазина
         \Local\Core\Inner\Cache::deleteComponentCache(
             ['personal.store.detail'],
             [
@@ -498,13 +515,20 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         if( self::$__arStoreIdToOldCompanyId[$arFields['ID']] != $arFields['COMPANY_ID'] )
         {
             /*
-             * Сменилась компания сайта
+             * Сменилась компания магазина
              */
 
             // Удаляет кэш списка у старой компании, если сменился владелец
             \Local\Core\Inner\Cache::deleteComponentCache(
                 ['personal.store.list'],
                 ['company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]]
+            );
+            // Удаляет кэш деталки старой компании
+            \Local\Core\Inner\Cache::deleteComponentCache(
+                ['personal.company.detail'],
+                [
+                    'company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]
+                ]
             );
         }
     }

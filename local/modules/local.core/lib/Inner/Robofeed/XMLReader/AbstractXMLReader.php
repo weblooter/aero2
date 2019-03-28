@@ -244,8 +244,15 @@ abstract class AbstractXMLReader
         $obReader->parse();
         $obReader->close();
 
+        if( !$obResult->isSuccess() )
+        {
+            throw new FatalException(implode('<br/>', $obResult->getErrorMessages()));
+        }
+
         if( is_null($intVersion) )
-            throw new FatalException(implode('<br/>', $obResult->getErrorMessages() ));
+        {
+            throw new FatalException('Не удалось определить версию Robofeed XML. Проверьте, что бы значение по пути robofeed->version было заполнено');
+        }
 
         return $intVersion;
     }
@@ -282,8 +289,16 @@ abstract class AbstractXMLReader
         $obReader->parse();
         $obReader->close();
 
+
+        if( !$obResult->isSuccess() )
+        {
+            throw new FatalException(implode('<br/>', $obResult->getErrorMessages()));
+        }
+
         if( is_null($strDate) )
-            throw new FatalException(implode('<br/>', $obResult->getErrorMessages() ));
+        {
+            throw new FatalException('Не удалось определить дату создания Robofeed XML. Проверьте, что бы значение по пути robofeed->lastModified было заполнено');
+        }
 
         return $strDate;
     }

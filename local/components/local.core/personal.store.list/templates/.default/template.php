@@ -3,7 +3,7 @@
  * @global CMain                   $APPLICATION
  * @var array                      $arParams
  * @var array                      $arResult
- * @var \PersonalSiteListComponent $component
+ * @var \PersonalStoreListComponent $component
  * @var CBitrixComponentTemplate   $this
  * @var string                     $templateName
  * @var string                     $componentPath

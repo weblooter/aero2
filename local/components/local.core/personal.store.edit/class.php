@@ -1,6 +1,6 @@
 <?php
 
-class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
+class PersonalStoreEditComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public $intMaxUploadXMLFileSizeMb;
     public $intMaxDownloadXMLFileSizeMb;
@@ -63,6 +63,7 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                 ->getPost('STORE_FIELD');
 
             $arUpdateFields = [];
+            $arUpdateFields['NAME'] = $arFields['NAME'];
             $arUpdateFields['DOMAIN'] = $arFields['DOMAIN'];
             $arUpdateFields['RESOURCE_TYPE'] = $arFields['RESOURCE_TYPE'];
             $arUpdateFields['COMPANY_ID'] = $this->arParams['COMPANY_ID'];
@@ -143,7 +144,7 @@ class PersonalSiteAddComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
 
                         $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile(
                             $arFile,
-                            '/personal.site/xml/'
+                            '/personal.store/xml/'
                         );
                         if( $intFileSave < 1 )
                         {
