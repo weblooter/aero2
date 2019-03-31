@@ -306,6 +306,62 @@ $arLocalRoutes = [
 Предполагается вызывать его из **component_epilog.php**
 
 ---
+
+### Ajax
+Все ajax отправляются на **/ajax/**. Для работы с ajax следует использовать библиотеку **axios** ввиду ее легковесности, удобства настройки и Promise.
+
+В **/ajax/routes/index.php** следует настроить правило обработки роута. По текущим реализациям там все понятно. Отправляя ajax надо передавать sessid. По умолчанию в axios его передача настроена, поэтому вписывать его каждый раз не имеет нужды.
+
+Настроив роут в /ajax/routes/index.php нужный путь следует разместить обработчик в **/Local/Core/Ajax/Handler/** . Вызываемые методы должны быть статичны и публичны.
+
+При написания хэндлера можно отталкиваться от Example.php, который там размещен там же, но на всякий продублируем сюда кусок код по удалению компании.
+```php
+public static function delete(\Bitrix\Main\HttpRequest $request, \Local\Core\Inner\BxModified\HttpResponse $response, $args)
+{
+    $arResult = [];
+
+    if( !empty($args['company_id']) )
+    {
+        $intCompanyId = $args['company_id'];
+
+        $ar = CompanyTable::getByPrimary($intCompanyId, ['filter' => ['USER_OWN_ID' => $GLOBALS['USER']->GetId()], 'select' => ['ID']])->fetch();
+        if( !empty($ar['ID']) )
+        {
+            CompanyTable::delete($ar['ID']);
+            $arResult['result'] = 'SUCCESS';
+        }
+    }
+
+    if( empty($arResult['result']) )
+    {
+        $arResult['result'] = 'error';
+    }
+
+    $response->setContentJson($arResult);
+}
+```
+Как видно из примера единственный способ отдать информацию из обработчика - это передача в **$response**. Из этого можно сделать вывод, что **все ответы ajax должен отдавать в формате JSON**, которые следует обработать на входе.
+
+Пример функции, которая отправляет запрос ajax и обрабатывает его
+```js
+<script type="text/javascript">
+    function wblDeleteCompany(intId) {
+        axios.post('/ajax/company/delete/'+intId+'/')
+            .then(function (response) {
+                if( response.data.result == 'SUCCESS' )
+                {
+                    alert('OK!');
+                }
+                else
+                {
+                    alert('ERROR!')
+                }
+            })
+    }
+</script>
+```
+
+---
 ## API | MEDIUM
 
 ### local/tools/console
@@ -341,7 +397,7 @@ ex: php console kd:demo 'MyName'
 $worker = new \Local\Core\Inner\JobQueue\Worker\Example(['твоиДанные'=>'воВремя','исполнения','воркерв']);
 $dateTime = new \Bitrix\Main\Type\DateTime();
 $dateTime->add('+ 3600 sec');
-$rs = \Local\Core\Inner\JobQueue\Job::add($worker, $dateTime, 2);
+$rs = \Local\Core\Inner\JobQueue\Job::addIfNotExist($worker, $dateTime, 2);
 if ($rs->isSuccess()) {
     //...
 }

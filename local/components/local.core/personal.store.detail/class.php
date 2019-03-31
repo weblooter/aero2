@@ -14,6 +14,8 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
             $GLOBALS['USER']->GetID()
         );
 
+        $this->__checkDownloadQuery();
+
         $this->__fillResult();
 
         $this->includeComponentTemplate();
@@ -65,7 +67,6 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
             {
                 $rs = $rs->fetchObject();
 
-                $arMapFields = [];
                 foreach(\Local\Core\Model\Data\StoreTable::getMap() as $obField)
                 {
                     if( $obField instanceof \Bitrix\Main\ORM\Fields\ScalarField )
@@ -109,5 +110,29 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
         }
 
         $this->arResult = $arResult;
+    }
+
+    private function __checkDownloadQuery()
+    {
+        if( !empty( \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('getRobofeedXml') ) )
+        {
+            if( file_exists(\Bitrix\Main\Application::getDocumentRoot().\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('getRobofeedXml')) )
+            {
+                $GLOBALS['APPLICATION']->RestartBuffer();
+                $file = \Bitrix\Main\Application::getDocumentRoot().\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('getRobofeedXml');
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename='.basename($file));
+                header('Content-Transfer-Encoding: binary');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                header('Pragma: public');
+                header('Content-Length: '.filesize($file));
+                ob_clean();
+                flush();
+                readfile($file);
+                die();
+            }
+        }
     }
 }

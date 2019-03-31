@@ -18,7 +18,7 @@ $intStoreId = \Bitrix\Main\Application::getInstance()
 
                 <?
                 $APPLICATION->IncludeComponent(
-                    "local.core:personal.store.edit",
+                    "local.core:personal.store.form",
                     ".default",
                     array(
                         "COMPANY_ID" => $intCompanyId,

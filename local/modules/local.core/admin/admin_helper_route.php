@@ -40,6 +40,12 @@ $arRouteRules = [
         "edit" => \Local\Core\Inner\AdminHelper\Reference\Country\AdminEdit::class,
     ],
 
+    // Tariff
+    "model_data_tariff" => [
+        "list" => \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Data\Tariff\AdminEdit::class,
+    ],
+
 ];
 
 

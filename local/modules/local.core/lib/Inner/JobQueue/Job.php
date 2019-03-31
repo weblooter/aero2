@@ -34,6 +34,7 @@ class Job
             'EXECUTE_AT' => $executeAt,
             'ATTEMPTS_LEFT' => $attempts
         ];
+
         $rs = \Local\Core\Model\Data\JobQueueTable::add($addData);
         if( $rs->isSuccess() )
         {
@@ -94,7 +95,7 @@ class Job
 
         $findJob = $rows->fetch();
 
-        if( is_array($findJob) )
+        if( is_array($findJob) && !empty( $findJob ) )
         {
             $result->setJobID($findJob['ID']);
             $result->setData(['jobData' => $findJob]);

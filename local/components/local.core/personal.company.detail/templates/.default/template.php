@@ -40,12 +40,29 @@
             )?>" title="Редактировать">
                 <ion-icon name="create"></ion-icon>
             </a>
-            <a href="#" title="Удалить">
+            <a href="javascript:void(0)" onclick="wblDeleteCompany(<?=$arResult['COMPANY']['ID']?>)" title="Удалить">
                 <ion-icon name="trash"></ion-icon>
             </a>
         </div>
-        <?=$strIcon?> <b>[<?=$arResult['COMPANY']['ID']?>] <?=$arResult['COMPANY']['COMPANY_NAME_SHORT']?>
-            (ИНН: <?=$arResult['COMPANY']['COMPANY_INN']?>)</b><br />
+        <?=$strIcon?>
+        <?
+        switch($arResult['COMPANY']['TYPE'])
+        {
+            case 'FI':
+                ?>
+                <b><?=$arResult['COMPANY']['NAME']?></b>
+                <?
+                break;
+            case 'UR':
+                ?>
+                <b><?=$arResult['COMPANY']['NAME']?></b><br/>
+                Сокращеное название огранизации: <?=$arResult['COMPANY']['COMPANY_NAME_SHORT']?><br/>
+                ИНН: <?=$arResult['COMPANY']['COMPANY_INN']?>
+                <?
+                break;
+        }
+        ?>
+        <br />
         Дата создания: <?=date(
             'Y.m.d H:i:s',
             $arResult['COMPANY']['DATE_CREATE']->getTimestamp()
@@ -85,7 +102,7 @@
                 <li class="list-group-item <?=( $arStore['ACTIVE'] == 'Y' ? 'list-group-item-success' : 'list-group-item-dark' )?>">
                     <ion-icon name="<?=$arStore['ACTIVE'] == 'Y' ? 'done-all' : 'close'?>" title="<?=$arStore['ACTIVE'] == 'Y' ? 'Активе' : 'Деактивирован'?>"></ion-icon>
                     <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arResult['COMPANY']['ID'], '#STORE_ID#' => $arStore['ID']])?>">
-                        <?=$arStore['NAME'].( !empty($arStore['DOMAIN']) ? ' ('.$arStore['DOMAIN'].')' : '' )?>
+                        <?=$arStore['NAME'].( ( !empty($arStore['DOMAIN']) && $arStore['DOMAIN'] != $arStore['NAME'] ) ? ' ('.$arStore['DOMAIN'].')' : '' )?>
                     </a>
                 </li>
             <? endforeach; ?>
@@ -113,3 +130,22 @@
         // TODO нотификации, типа новый инвойс или сайт прошел проверку
     </div>
 </div>
+
+<script type="text/javascript">
+    function wblDeleteCompany(intId) {
+        if( confirm('Удалить?') )
+        {
+            axios.post('/ajax/company/delete/'+intId+'/')
+                .then(function (response) {
+                    if( response.data.result == 'SUCCESS' )
+                    {
+                        alert('OK!');
+                    }
+                    else
+                    {
+                        alert('ERROR!')
+                    }
+                })
+        }
+    }
+</script>

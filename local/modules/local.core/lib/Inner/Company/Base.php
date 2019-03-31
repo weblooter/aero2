@@ -30,7 +30,8 @@ class Base
                     'filter' => ['ID' => $intCompanyId],
                     'select' => [
                         'ID',
-                        'COMPANY_NAME_SHORT',
+                        'TYPE',
+                        'NAME',
                         'USER_OWN_ID',
                         'VERIFIED'
                     ]
@@ -153,6 +154,6 @@ class Base
     public static function getCompanyName($intCompanyId)
     {
         $ar = self::__getCompanyRegister($intCompanyId);
-        return $ar['COMPANY_NAME_SHORT'];
+        return $ar['NAME'];
     }
 }

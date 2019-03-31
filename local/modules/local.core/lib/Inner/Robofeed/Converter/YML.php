@@ -72,7 +72,7 @@ DOCHERE
         }
         else
         {
-            throw new FatalException('Файл не является YML файлом - в теге "yml_catalog" не указан аттрибут "date" или не удалось найти тег "yml_catalog" в первых 300 символах файла. Так же проверьте, что бы в начале файла не было <u>&lt;!DOCTYPE yml_catalog SYSTEM &quot;shops.dtd&quot;&gt;</u>');
+            throw new FatalException('Файл не является YML файлом - в теге "yml_catalog" не указан аттрибут "date" или не удалось найти тег "yml_catalog" в первых 300 символах файла.');
         }
 
         $this->addToWrite('<?xml version="1.0" encoding="UTF-8"?><robofeed><version>1</version><lastModified>'.date('Y-m-d H:i:s', strtotime($matches[sizeof($matches) - 2])).'</lastModified>');

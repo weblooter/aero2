@@ -29,7 +29,7 @@ use Local\Core\Inner\Client\Dadata\Exception\ArgumentException;
  * @see     JobQueueTable::STATUS_ENUM_ERROR
  * @see     JobQueueTable::STATUS_ENUM_FAIL
  */
-class JobQueueTable extends Entity\DataManager
+class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 {
     /**
      * Алгоритм вычисления хеша задания
@@ -73,6 +73,24 @@ class JobQueueTable extends Entity\DataManager
                 'ID', [
                     'primary' => true,
                     'autocomplete' => true,
+                ]
+            ),
+            new Orm\Fields\DatetimeField(
+                'DATE_CREATE', [
+                    'title' => 'Дата создания',
+                    'default_value' => function()
+                        {
+                            return new \Bitrix\Main\Type\DateTime();
+                        }
+                ]
+            ),
+            new Orm\Fields\DatetimeField(
+                'DATE_MODIFIED', [
+                    'title' => 'Дата последнего изменения',
+                    'default_value' => function()
+                        {
+                            return new \Bitrix\Main\Type\DateTime();
+                        }
                 ]
             ),
             new Orm\Fields\StringField(
@@ -120,37 +138,36 @@ class JobQueueTable extends Entity\DataManager
                 ]
             ),
             new Orm\Fields\DatetimeField('LAST_EXECUTE_START'),
-            new Orm\Fields\DatetimeField('DATE_ADD'),
-            new Orm\Fields\DatetimeField('DATE_UPDATE'),
         );
     }
 
-    public static function onBeforeAdd(Entity\Event $event)
+    public static function onBeforeAdd($event)
     {
         $data = $event->getParameter("fields");
 
         $result = new \Bitrix\Main\Entity\EventResult();
-        $result->unsetFields(['DATE_UPDATE', 'UPDATED_BY']);
 
-        $result->modifyFields(
-            [
-                'HASH' => self::hash(
-                    $data['WORKER_CLASS_NAME'],
-                    $data['INPUT_DATA']
-                ),
-            ]
-        );
+        $arModifiedFields = [
+            'HASH' => self::hash(
+                $data['WORKER_CLASS_NAME'],
+                $data['INPUT_DATA']
+            ),
+        ];
+
+        # Вызывается строго в конце
+        self::_OnBeforeUpdateBase($event, $result, $arModifiedFields);
 
         return $result;
     }
 
-    public static function onBeforeUpdate(Entity\Event $event)
+    public static function onBeforeUpdate( $event)
     {
         $primary = $event->getParameter("primary");
         $data = $event->getParameter("fields");
+        $arModifiedFields = [];
 
         $result = new \Bitrix\Main\Entity\EventResult();
-        $result->unsetFields(['DATE_ADD', 'ADDED_BY']);
+        $result->unsetFields(['ADDED_BY']);
 
         $class = key_exists(
             'WORKER_CLASS_NAME',
@@ -170,15 +187,17 @@ class JobQueueTable extends Entity\DataManager
                     ->fetch();
             }
 
-            $result->modifyFields(
-                [
+            $arModifiedFields = [
                     'HASH' => self::hash(
                         ( $data['WORKER_CLASS_NAME'] ? : @$source['WORKER_CLASS_NAME'] ),
                         ( $data['INPUT_DATA'] ? : @$source['INPUT_DATA'] )
                     ),
-                ]
-            );
+                ];
         }
+
+        # Вызывается строго в конце
+        self::_OnBeforeUpdateBase($event, $result, $arModifiedFields);
+
         return $result;
     }
 

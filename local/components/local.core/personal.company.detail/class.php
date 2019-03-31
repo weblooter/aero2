@@ -54,32 +54,27 @@ class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitri
                     ],
                     'order' => ['DATE_CREATE' => 'DESC'],
                     'select' => [
-                        'ID',
-                        'ACTIVE',
-                        'DATE_CREATE',
-                        'VERIFIED',
-                        'VERIFIED_NOTE',
-                        'COMPANY_INN',
-                        'COMPANY_NAME_SHORT',
+                        '*',
                         'STORES'
                     ]
                 ]
             );
 
-            $arTmpCompany = $rsCompany->fetchObject();
+            $rsCompany = $rsCompany->fetchObject();
 
             $arCompany = [
-                'ID' => $arTmpCompany['ID'],
-                'ACTIVE' => $arTmpCompany['ACTIVE'],
-                'DATE_CREATE' => $arTmpCompany['DATE_CREATE'],
-                'VERIFIED' => $arTmpCompany['VERIFIED'],
-                'VERIFIED_NOTE' => $arTmpCompany['VERIFIED_NOTE'],
-                'COMPANY_INN' => $arTmpCompany['COMPANY_INN'],
-                'COMPANY_NAME_SHORT' => $arTmpCompany['COMPANY_NAME_SHORT'],
                 'STORES' => [],
             ];
 
-            foreach($arTmpCompany['STORES'] as $obStore)
+            foreach(\Local\Core\Model\Data\CompanyTable::getMap() as $obField)
+            {
+                if( $obField instanceof \Bitrix\Main\ORM\Fields\ScalarField )
+                {
+                    $arCompany[ $obField->getName() ] = $rsCompany->get( $obField->getName() );
+                }
+            }
+
+            foreach($rsCompany['STORES'] as $obStore)
             {
                 if( $obStore->getId() > 0 )
                 {

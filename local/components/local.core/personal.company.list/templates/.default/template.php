@@ -39,16 +39,36 @@
                     )?>" title="Редактировать">
                         <ion-icon name="create"></ion-icon>
                     </a>
-                    <a href="#" title="Удалить">
+                    <a href="javascript:void(0)" onclick="wblDeleteCompany(<?=$arItem['ID']?>)" title="Удалить">
                         <ion-icon name="trash"></ion-icon>
                     </a>
                 </div>
-                <b><a href="<?=\Local\Core\Inner\Route::getRouteTo(
-                        'company',
-                        'detail',
-                        ['#COMPANY_ID#' => $arItem['ID']]
-                    )?>">[<?=$arItem['ID']?>
-                        ] <?=$arItem['COMPANY_NAME_SHORT']?> (ИНН: <?=$arItem['COMPANY_INN']?>)</a></b><br />
+                <?
+                switch( $arItem['TYPE'] )
+                {
+                    case 'FI':
+                        ?>
+                        <b><a href="<?=\Local\Core\Inner\Route::getRouteTo(
+                                'company',
+                                'detail',
+                                ['#COMPANY_ID#' => $arItem['ID']]
+                            )?>"><?=$arItem['NAME']?></a></b>
+                        <?
+                        break;
+                    case 'UR':
+                        ?>
+                        <b><a href="<?=\Local\Core\Inner\Route::getRouteTo(
+                                'company',
+                                'detail',
+                                ['#COMPANY_ID#' => $arItem['ID']]
+                            )?>"><?=$arItem['NAME']?></a></b><br />
+                        Сокращеное название огранизации: <?=$arItem['COMPANY_NAME_SHORT']?><br />
+                        ИНН: <?=$arItem['COMPANY_INN']?>
+                        <?
+                        break;
+                }
+                ?>
+                <br />
                 Дата создания: <?=date(
                     'Y.m.d H:i:s',
                     $arItem['DATE_CREATE']->getTimestamp()
@@ -100,3 +120,18 @@
     ?>
 
 </div>
+
+<script type="text/javascript">
+    function wblDeleteCompany(intId) {
+        if (confirm('Удалить?')) {
+            axios.post('/ajax/company/delete/' + intId + '/')
+                .then(function (response) {
+                    if (response.data.result == 'SUCCESS') {
+                        alert('OK!');
+                    } else {
+                        alert('ERROR!')
+                    }
+                })
+        }
+    }
+</script>

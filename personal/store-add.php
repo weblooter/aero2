@@ -12,7 +12,7 @@ $intCompanyId = \Bitrix\Main\Application::getInstance()
             <div class="col-12">
                 <?
                 $APPLICATION->IncludeComponent(
-                    "local.core:personal.store.add",
+                    "local.core:personal.store.form",
                     ".default",
                     array(
                         "COMPANY_ID" => $intCompanyId,

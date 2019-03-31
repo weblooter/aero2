@@ -23,7 +23,7 @@ $arLocalRoutes = [
                         'list'
                     );
                     $GLOBALS['APPLICATION']->AddChainItem(
-                        "Добавление компании",
+                        "Создание компании",
                         \Local\Core\Inner\Route::getRouteTo(
                             'company',
                             'add'
@@ -153,7 +153,7 @@ $arLocalRoutes = [
             'URL' => '/development/references/'
         ],
         'convert' => [
-            'URL' => '/development/convert/'
+            'URL' => '/personal/convert/'
         ],
     ],
     'bill'    => [

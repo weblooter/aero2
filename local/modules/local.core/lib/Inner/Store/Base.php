@@ -2,6 +2,9 @@
 
 namespace Local\Core\Inner\Store;
 
+use Local\Core\Model\Data\StoreTable;
+use Local\Core\Model\Robofeed\ImportLogTable;
+
 /**
  * Класс для работы с магазинами
  *

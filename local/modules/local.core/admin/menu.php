@@ -48,6 +48,19 @@ $arModelReferences = [];
 );
 
 
+/* ********** */
+/* Model\Data */
+/* ********** */
+$arModelTariff = [];
+
+\CLocalCore::addItemToMenu(
+    $arModelTariff,
+    \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList::class,
+    \Local\Core\Inner\AdminHelper\Data\Tariff\AdminEdit::class,
+    'Тарифы'
+);
+
+
 /*
  * Для примера
 $aMenu = [
@@ -91,6 +104,19 @@ if( !empty($arModelData) )
         "icon" => "iblock_menu_icon_types",
         "sort" => 1,
         'items' => $arModelData
+    ];
+}
+
+if( !empty($arModelReferences) )
+{
+    $aMenu[] = [
+        "parent_menu" => "global_menu_local_core",
+        "text" => "Тарифы",
+        'url' => '',
+        "items_id" => "model_tariff",
+        "icon" => "promo_https_menu_icon",
+        "sort" => 2,
+        'items' => $arModelTariff
     ];
 }
 

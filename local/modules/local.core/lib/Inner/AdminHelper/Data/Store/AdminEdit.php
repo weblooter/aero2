@@ -3,6 +3,7 @@
 namespace Local\Core\Inner\AdminHelper\Data\Store;
 
 use Local\Core\Model\Data\StoreTable;
+use Local\Core\Model\Robofeed\ImportLogTable;
 
 /**
  * Class AdminList
@@ -98,7 +99,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                         "select" => [
                             "*",
                             'COMPANY_DATA_' => 'COMPANY',
-                            'FILE_DATA_' => 'B_FILE'
+                            'FILE_DATA_' => 'B_FILE',
+                            'TARIFF_DATA_' => 'TARIFF'
                         ],
                         "filter" => [
                             "=ID" => (int)$request->get("id")
@@ -213,6 +215,16 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 "TAB" => "Основное",
                 "TITLE" => "Основное"
             ],
+            [
+                "DIV" => "last_import",
+                "TAB" => "Данные по импорту",
+                "TITLE" => "Данные по импорту"
+            ],
+            [
+                "DIV" => "import_logs",
+                "TAB" => "Логи импортов",
+                "TITLE" => "Логи импортов"
+            ],
         ];
     }
 
@@ -241,8 +253,30 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             }
         }
 
-        $strHtmlFileValue = '<a href="'.$this->data['FILE_DATA_SUBDIR'].$this->data['FILE_DATA_FILE_NAME'].'" target="_blank" >['.$this->data['FILE_ID'].'] '.$this->data['FILE_DATA_SUBDIR']
+        $strHtmlFileValue = '<a href="/upload'.$this->data['FILE_DATA_SUBDIR'].$this->data['FILE_DATA_FILE_NAME'].'" target="_blank" >['.$this->data['FILE_ID'].'] /upload'.$this->data['FILE_DATA_SUBDIR']
                             .$this->data['FILE_DATA_FILE_NAME'].'</a>';
+
+        $strImportLogs = '';
+        $rsImportLogs = ImportLogTable::getList([
+            'filter' => ['STORE_ID' => $this->id],
+            'order' => ['ID' => 'DESC']
+        ]);
+        while($ar = $rsImportLogs->fetch())
+        {
+            $tt = '<b>Дата создания:</b><br/>'.$ar['DATE_CREATE']->format('Y-m-d H:i:s').'<br/>';
+            $tt .= '<br/><b>Дата изменения:</b><br/>'.$ar['DATE_MODIFIED']->format('Y-m-d H:i:s').'<br/>';
+            $tt .= '<br/><b>Результат импорта:</b><br/>'.ImportLogTable::getEnumFieldHtmlValues('IMPORT_RESULT')[ $ar['IMPORT_RESULT'] ].'<br/>';
+            $tt .= '<br/><b>Поведение импорта при ошибке:</b><br/>'.ImportLogTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[ $ar['BEHAVIOR_IMPORT_ERROR'] ].'<br/>';
+            $tt .= '<br/><b>Воспринимать не обновленный Robofeed XML как ошибку?:</b><br/>'.ImportLogTable::getEnumFieldHtmlValues('NOT_UPDATED_XML_IS_ERROR')[ $ar['NOT_UPDATED_XML_IS_ERROR'] ].'<br/>';
+            $tt .= '<br/><b>Кол-во товаров в Robofeed XML:</b><br/>'.$ar['PRODUCT_TOTAL_COUNT'].'<br/>';
+            $tt .= '<br/><b>Кол-во валидных товаров в Robofeed XML:</b><br/>'.$ar['PRODUCT_SUCCESS_IMPORT'].'<br/>';
+            if( !empty( $ar['ERROR_TEXT'] ))
+            {
+                $tt .= '<br/><b>Ошибка</b><br/>'.$ar['ERROR_TEXT'].'<br/>';
+            }
+
+            $strImportLogs .= $tt.'<hr/>';
+        }
 
         return [
             "main" => [
@@ -316,6 +350,37 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 ) )->setVariants(StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR'))
                     ->setEditable($canEdit)
                     ->setRequired(true),
+
+                ( new \Local\Core\Inner\AdminHelper\EditField\Select(
+                    $columnName['NOT_UPDATED_XML_IS_ERROR'], 'NOT_UPDATED_XML_IS_ERROR'
+                ) )->setVariants(StoreTable::getEnumFieldHtmlValues('NOT_UPDATED_XML_IS_ERROR'))
+                    ->setEditable($canEdit)
+                    ->setRequired(true),
+
+            ],
+
+            'last_import' => [
+                new \Local\Core\Inner\AdminHelper\EditField\Html(
+                    $columnName["DATE_LAST_IMPORT"], "DATE_LAST_IMPORT"
+                ),
+                new \Local\Core\Inner\AdminHelper\EditField\Html(
+                    $columnName["LAST_IMPORT_RESULT"], "LAST_IMPORT_RESULT", StoreTable::getEnumFieldHtmlValues('LAST_IMPORT_RESULT')[ $this->data['LAST_IMPORT_RESULT'] ]
+                ),
+                new \Local\Core\Inner\AdminHelper\EditField\Html(
+                    $columnName["DATE_LAST_SUCCESS_IMPORT"], "DATE_LAST_SUCCESS_IMPORT"
+                ),
+                new \Local\Core\Inner\AdminHelper\EditField\Html(
+                    $columnName["PRODUCT_TOTAL_COUNT"], "PRODUCT_TOTAL_COUNT"
+                ),
+                new \Local\Core\Inner\AdminHelper\EditField\Html(
+                    $columnName["PRODUCT_SUCCESS_IMPORT"], "PRODUCT_SUCCESS_IMPORT"
+                ),
+            ],
+
+            'import_logs' => [
+                new \Local\Core\Inner\AdminHelper\EditField\Html(
+                    'Логи последних импортов', "", $strImportLogs
+                ),
             ],
         ];
     }

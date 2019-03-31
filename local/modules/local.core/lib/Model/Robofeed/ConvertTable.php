@@ -6,8 +6,9 @@ use Bitrix\Main\ORM\Event;
 use \Bitrix\Main\ORM\Fields;
 
 /**
- * Базовый Orm класс.<br/>
- * Существует для копирования и создании на его основе Model\Data
+ * Класс ORM конвертера
+ *
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [30.03.2019 18:52:55] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [30.03.2019 18:52:55] | Fields\DatetimeField</li><li>USER_ID - ID пользователя [1] | Fields\IntegerField</li><li>HANDLER - Обработчик | Fields\EnumField<br/>&emsp;YML => Яндекс YML (.xml)<br/></li><li>STATUS - Статус работы [WA] | Fields\EnumField<br/>&emsp;WA => Ожидается конвертация<br/>&emsp;IN => В процессе<br/>&emsp;SU => Успешно сконвертирован<br/>&emsp;ER => Не удалось сконвертировать<br/></li><li>ORIGINAL_FILE_ID - ID изначального файла | Fields\IntegerField</li><li>ORIGINAL_FILE_NAME - Название файла | Fields\StringField</li><li>EXPORT_FILE_ID - ID готового файла | Fields\IntegerField</li><li>ERROR_MESSAGE - Сообщение об ошибке конвертации | Fields\TextField</li><li>VALID_ERROR_MESSAGE - Сообщение об ошибке валидации | Fields\TextField</li></ul>
  *
  * @package Local\Core\Model\Data
  */
@@ -165,7 +166,7 @@ class ConvertTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
         {
             $worker = new \Local\Core\Inner\JobQueue\Worker\RobofeedConvert(['ID' => $intId]);
             $dateTime = new \Bitrix\Main\Type\DateTime();
-            \Local\Core\Inner\JobQueue\Job::add($worker, $dateTime, 2);
+            \Local\Core\Inner\JobQueue\Job::addIfNotExist($worker, $dateTime, 1);
         }
     }
 

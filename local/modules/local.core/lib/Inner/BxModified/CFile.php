@@ -33,6 +33,7 @@ class CFile extends \CFile
         }
 
         $strNewSavePath = static::makeLocalCorePath($strSavePath);
+        $strNewSavePath = str_replace('/upload/', '/', $strNewSavePath);
 
         return parent::SaveFile(
             $arFile,
@@ -76,7 +77,7 @@ class CFile extends \CFile
             );
         }
 
-        $strNewSavePath = '/'.implode(
+        $strNewSavePath = '/upload/'.implode(
                 '/',
                 $strNewSavePath
             ).'/';

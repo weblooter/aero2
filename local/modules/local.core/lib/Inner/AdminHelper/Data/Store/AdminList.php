@@ -4,6 +4,7 @@ namespace Local\Core\Inner\AdminHelper\Data\Store;
 
 
 use Local\Core\Model\Data\StoreTable;
+use Local\Core\Model\Data\TariffTable;
 
 /**
  * Class AdminList
@@ -125,6 +126,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getFilterSearchFields()
     {
+        $rsTariff = TariffTable::getList([
+            'order' => ['ACTIVE' => 'DESC', 'CODE' => 'ASC'],
+            'select' => ['CODE', 'NAME', 'ACTIVE']
+        ]);
+        $arTariff = [];
+        while($ar = $rsTariff->fetch())
+        {
+            $arTariff[ $ar['CODE'] ] = $ar['ACTIVE'].' ['.$ar['CODE'].'] '.$ar['NAME'];
+        }
+
         return [
             "ID" => [
                 "NAME" => self::$fields["ID"],
@@ -182,6 +193,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "NAME" => self::$fields["BEHAVIOR_IMPORT_ERROR"],
                 "TYPE" => "SELECT",
                 "VARIANTS" => StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')
+            ],
+            'TARIFF_CODE' => [
+                "NAME" => self::$fields["TARIFF_CODE"],
+                "TYPE" => "SELECT",
+                "VARIANTS" => $arTariff
             ]
         ];
     }
@@ -203,6 +219,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
 
                     case "ID":
                     case "COMPANY_ID":
+                    case "TARIFF_CODE":
                         $arFilter["=".$code] = trim($value);
                         break;
 
@@ -270,7 +287,8 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             [
                 "select" => [
                     "*",
-                    'COMPANY_DATA_' => 'COMPANY'
+                    'COMPANY_DATA_' => 'COMPANY',
+                    'TARIFF_DATA_' => 'TARIFF'
                 ],
                 "filter" => $this->filterList,
                 "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
@@ -321,6 +339,12 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $row->AddViewField(
             "HTTP_AUTH",
             StoreTable::getEnumFieldHtmlValues('HTTP_AUTH')[$fields["HTTP_AUTH"]]
+        );
+
+        $row->AddViewField(
+            "TARIFF",
+            '<a href="'.( ( new \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList() )->getEditLink(['CODE' => $fields["TARIFF"]]) ).'" target="_blank">['.$fields["TARIFF"].'] '
+            .$fields['TARIFF_DATA_TARIFF_NAME'].'</a>'
         );
     }
 

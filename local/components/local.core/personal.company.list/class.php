@@ -56,13 +56,7 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
                     ],
                     'order' => ['DATE_CREATE' => 'DESC'],
                     'select' => [
-                        'ID',
-                        'ACTIVE',
-                        'DATE_CREATE',
-                        'VERIFIED',
-                        'VERIFIED_NOTE',
-                        'COMPANY_INN',
-                        'COMPANY_NAME_SHORT',
+                        '*'
                     ],
                     "count_total" => true,
                     "offset" => $nav->getOffset(),

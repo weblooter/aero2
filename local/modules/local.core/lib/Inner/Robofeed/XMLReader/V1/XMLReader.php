@@ -192,7 +192,7 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
             case self::SCRIPT_XSD_VALIDATE:
                 if( $this->intOffersErrorCount >= $this->intMaxOffersErrorCountInValidation )
                 {
-                    $this->obResult->addError(new \Bitrix\Main\Error('Дальнейшая проверка товаров в робофиде прекращена. Исправьте ошибки и попробуйте еще раз.'));
+                    $this->obResult->addError(new \Bitrix\Main\Error('Дальнейшая проверка товаров в Robofeed XML прекращена. Исправьте ошибки и попробуйте еще раз.'));
                     return false;
                 }
                 else

@@ -1,0 +1,44 @@
+<?php
+/**
+ * Допускается указание handler'а в формате '<class_name>:<method_name>'
+ */
+return [
+    /*
+    'cart' => [
+        'path' => '/cart',
+        'handler' => \Local\Core\Ajax\Handler\CartHandler::class . ':list',
+    ],
+    'cart_update' => [
+        'path' => '/cart/{basket_id}',
+        'methods' => ['PUT'],
+        'handler' => \Local\Core\Ajax\Handler\CartHandler::class . ':update',
+        'args' => [
+            'basket_id' => '[0-9]+'
+        ],
+    ],
+    'transport_modification' => [
+        'path' => '/reference/transport/{man_id}/{model_id}/{body_id}/{year_from}/{year_to}/modification',
+        'handler' => \Local\Core\Ajax\Handler\Reference\TransportHandler::class . ':modification',
+        'args' => [
+            'man_id' => '[0-9]+',
+            'model_id' => '[0-9]+',
+            'body_id' => '[0-9]+',
+            'year_from' => '[0-9]+',
+            'year_to' => '[0-9]{0,}',
+        ]
+    ],
+    */
+
+    'company_delete' => [
+        'path' => '/company/delete/{company_id}/',
+        'methods' => ['POST'],
+        'args' => ['company_id' => '[0-9]+'],
+        'handler' => \Local\Core\Ajax\Handler\Company::class.':delete'
+    ],
+    'store_delete' => [
+        'path' => '/store/delete/{store_id}/',
+        'methods' => ['POST'],
+        'args' => ['store_id' => '[0-9]+'],
+        'handler' => \Local\Core\Ajax\Handler\Store::class.':delete'
+    ]
+];

@@ -3,6 +3,8 @@
 namespace Local\Core\Inner\Robofeed\Validator\V1;
 
 
+use Local\Core\Inner\Robofeed\Validator\AbstractValidator;
+
 class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
 {
     /** @inheritdoc */

@@ -19,7 +19,7 @@
                 <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'edit', ['#COMPANY_ID#' => $arResult['ITEM']['COMPANY_ID'], '#STORE_ID#' => $arResult['ITEM']['ID']])?>" title="Редактировать">
                     <ion-icon name="create" role="img" class="hydrated" aria-label="create"></ion-icon>
                 </a>
-                <a href="#" title="Удалить">
+                <a href="javascript:void(0)" onclick="wblDeleteStore(<?=$arResult['ITEM']['ID']?>)" title="Удалить">
                     <ion-icon name="trash" role="img" class="hydrated" aria-label="trash"></ion-icon>
                 </a>
             </div>
@@ -49,81 +49,63 @@
                     <?
                     $strFileLink = \Local\Core\Inner\BxModified\CFile::GetPath($arResult['ITEM']['FILE_ID']);
                     ?>
-                    Файл: <a href="<?=$strFileLink?>" target="_blank"><?=$strFileLink?></a><br />
+                    Файл: <a href="<?=\Bitrix\Main\Application::getInstance()
+                    ->getContext()
+                    ->getRequest()
+                    ->getRequestedPageDirectory()?>/?getRobofeedXml=<?=urlencode($strFileLink)?>" target="_blank" class="btn btn-warning">Скачать загруженный Robofeed XML</a><br />
                     <?
                     break;
             }
             ?>
-
-            <?
-            if( !empty($arResult['LOG']) && is_array($arResult['LOG']) )
+            Дата последнего импорта: <?=( !is_null($arResult['ITEM']['DATE_LAST_IMPORT']) ) ? $arResult['ITEM']['DATE_LAST_IMPORT']->format('Y-m-d H:i:s') : 'Импорт не проводился'?><br />
+            Дата последнего успешного импорта: <?=( !is_null($arResult['ITEM']['DATE_LAST_SUCCESS_IMPORT']) ) ? $arResult['ITEM']['DATE_LAST_SUCCESS_IMPORT']->format(
+                'Y-m-d H:i:s'
+            ) : 'Импорт не проводился'?><br />
+            Текущее состояние Robofeed XML: <?
+            switch( $arResult['ITEM']['LAST_IMPORT_RESULT'] )
             {
-                $arLastLog = end($arResult['LOG']);
-
-                switch( $arLastLog['IMPORT_COMPLETED'] )
-                {
-                    case 'Y':
-                        ?>
-                        <div class="alert alert-success" role="alert">
-                            Статус последнего импорта - импорт успешен.
+                case 'SU':
+                    ?>
+                    <span class="badge badge-success">Импорт успешен</span><br/>
+                    Общее кол-во товаров в Robofeed XML составляет <?=number_format($arResult['ITEM']['PRODUCT_TOTAL_COUNT'], 0, '.', ' ')?> шт., из них валидных - <?=number_format(
+                    $arResult['ITEM']['PRODUCT_SUCCESS_IMPORT'],
+                    0,
+                    '.',
+                    ' '
+                )?> шт.
+                    <?
+                    break;
+                case 'ER':
+                    ?>
+                    <span class="badge badge-danger">Ошибка импорта</span><br />
+                    <?
+                    if( !is_null($arResult['ITEM']['DATE_LAST_SUCCESS_IMPORT']) ):?>
+                        <div class="alert alert-warning" role="alert">
+                            В работе с торговыми площадками используюся данные от последнего успешного импорта.<br />
+                            Дата последнего успешного импорта: <?=$arResult['ITEM']['DATE_LAST_SUCCESS_IMPORT']->format('Y-m-d H:i:s')?><br />
+                            Общее кол-во товаров в Robofeed XML составляет <?=number_format($arResult['ITEM']['PRODUCT_TOTAL_COUNT'], 0, '.', ' ')?> шт., из них валидных - <?=number_format(
+                                $arResult['ITEM']['PRODUCT_SUCCESS_IMPORT'],
+                                0,
+                                '.',
+                                ' '
+                            )?> шт.
                         </div>
-                        <?
-                        if( !empty($arLastLog['ERROR_TEXT']) && $arLastLog['BEHAVIOR_IMPORT_ERROR'] == \Local\Core\Model\Robofeed\ImportLogTable::BEHAVIOR_IMPORT_ERROR_IMPORT_ONLY_VALID ):?>
-                            <div class="alert alert-danger" role="alert">
-                                Во время последнего импорта был выставлен режим обработки ошибок "<?=\Local\Core\Model\Robofeed\ImportLogTable::getEnumFieldHtmlValues(
-                                    'BEHAVIOR_IMPORT_ERROR'
-                                )[$arLastLog['BEHAVIOR_IMPORT_ERROR']]?>" и вынесено предупреждение.<br />
-                                <details>
-                                    <summary><u>Читать предупреждение</u></summary>
-                                    <div>
-                                        <?=$arLastLog['ERROR_TEXT']?>
-                                    </div>
-                                </details>
-                            </div>
-                        <?endif; ?>
-                        <?
-                        break;
-                    case 'E':
-                        $arLastSuccessProduct = [];
-                        if(
-                        \Bitrix\Main\Application::getConnection()
-                            ->isTableExists(( \Local\Core\Model\Robofeed\StoreProductFactory::factory(1) )->setStoreId($arResult['ITEM']['ID'])::getTableName())
-                        )
-                        {
-                            $arLastSuccessProduct = ( \Local\Core\Model\Robofeed\StoreProductFactory::factory(1) )->setStoreId($arResult['ITEM']['ID'])::getList(
-                                [
-                                    'order' => ['DATE_CREATE' => 'ASC'],
-                                    'limit' => 1,
-                                    'offset' => 0,
-                                    'select' => ['DATE_CREATE', 'ROBOFEED_VERSION']
-                                ]
-                            )
-                                ->fetch();
-                        }
-                        ?>
+                    <? else:?>
                         <div class="alert alert-danger" role="alert">
-                            Статус последнего импорта - во время импорта обнаружена ошибка.<br />
-                            <?=$arLastLog['ERROR_TEXT'];?><br/>
-                            <?
-                            if( !empty($arLastSuccessProduct) ):?>
-                                В работе с торговыми площадками учавствуют товары от импорта <?=$arLastSuccessProduct['DATE_CREATE']?>, Robofeed XML версии "<?=$arLastSuccessProduct['ROBOFEED_VERSION']?>"
-                            <? else:?>
-                                На текущий момент не было ни одного удачного импорта.
-                            <?endif; ?>
+                            На текущий момент не было ни одного успешного импорта.
                         </div>
-                        <?
-                        break;
-                }
+                    <?endif; ?>
+
+                    <?
+                    break;
+                default:
+                    ?>
+                    <span class="badge badge-dark">Импорт не проводился</span>
+                    <?
+                    break;
             }
-            else
-            {
-                ?>
-                <div class="alert alert-dark" role="alert">
-                    Статус последнего импорта - импорт еще не проводился.
-                </div>
-                <?
-            }
-            ?>
+            ?><br />
+            <br />
 
             <? if( $arResult['ITEM']['BEHAVIOR_IMPORT_ERROR'] == \Local\Core\Model\Data\StoreTable::BEHAVIOR_IMPORT_ERROR_IMPORT_ONLY_VALID ): ?>
                 <div class="alert alert-warning" role="alert">
@@ -152,10 +134,13 @@
                         date('m-d H:i', $arLog['DATE_CREATE']->getTimestamp()),
                         $arLog['PRODUCT_TOTAL_COUNT'],
                         $arLog['PRODUCT_SUCCESS_IMPORT'],
-                        ( $arLog['IMPORT_COMPLETED'] == 'Y' ? 'Успех' : 'Ошибка' )
+                        \Local\Core\Model\Robofeed\ImportLogTable::getEnumFieldHtmlValues('IMPORT_RESULT')[$arLog['IMPORT_RESULT']]
                     ];
 
-                    if( $arLog['IMPORT_COMPLETED'] == 'E' )
+                    if(
+                        $arLog['IMPORT_RESULT'] == 'ER'
+                        || ( $arLog['IMPORT_RESULT'] == 'NU' && $arLog['NOT_UPDATED_XML_IS_ERROR'] == 'Y' )
+                    )
                     {
                         $arErrorsLog[] = $arLog;
                     }
@@ -180,6 +165,7 @@
                 </script>
                 <div id="chart_div" style="width: 100%; height: 500px;"></div>
                 <? if( !empty($arErrorsLog) ): ?>
+                    <? $arErrorsLog = array_reverse($arErrorsLog) ?>
                     <br />
                     <br />
                     <h4>Последние ошибки:</h4>
@@ -188,8 +174,14 @@
                             <summary><?=date('Y-m-d H:i', $arLog['DATE_CREATE']->getTimestamp())?></summary>
                             <div>
                                 Тип обработки ошибок: <?=\Local\Core\Model\Robofeed\ImportLogTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[$arLog['BEHAVIOR_IMPORT_ERROR']]?><br />
+                                Воспринимать не обновленный Robofeed XML как ошибку?: <?=\Local\Core\Model\Robofeed\ImportLogTable::getEnumFieldHtmlValues(
+                                    'NOT_UPDATED_XML_IS_ERROR'
+                                )[$arLog['NOT_UPDATED_XML_IS_ERROR']]?><br />
                                 Версия Robofeed XML: <?=( $arLog['ROBOFEED_VERSION'] > 0 ) ? $arLog['ROBOFEED_VERSION'] : 'Не удалось определить'?><br />
-                                Время в Robofeed XML: <?=( $arLog['ROBOFEED_DATE'] instanceof \Bitrix\Main\Type\DateTime ) ? date('Y-m-d H:i', $arLog['ROBOFEED_DATE']->getTimestamp()) : 'Не удалось определить'?><br />
+                                Время в Robofeed XML: <?=( $arLog['ROBOFEED_DATE'] instanceof \Bitrix\Main\Type\DateTime ) ? date(
+                                    'Y-m-d H:i',
+                                    $arLog['ROBOFEED_DATE']->getTimestamp()
+                                ) : 'Не удалось определить'?><br />
                                 Описание ошибки:<br />
                                 <?=$arLog['ERROR_TEXT']?>
                             </div>
@@ -218,3 +210,23 @@
 
     </div>
 </div>
+
+
+<script type="text/javascript">
+    function wblDeleteStore(intId) {
+        if( confirm('Удалить?') )
+        {
+            axios.post('/ajax/store/delete/'+intId+'/')
+                .then(function (response) {
+                    if( response.data.result == 'SUCCESS' )
+                    {
+                        alert('OK!');
+                    }
+                    else
+                    {
+                        alert('ERROR!')
+                    }
+                })
+        }
+    }
+</script>

@@ -30,7 +30,7 @@
                         )?>" title="Редактировать">
                             <ion-icon name="create"></ion-icon>
                         </a>
-                        <a href="#" title="Удалить">
+                        <a href="javascript:void(0)" onclick="wblDeleteStore(<?=$arItem['ID']?>)" title="Удалить">
                             <ion-icon name="trash"></ion-icon>
                         </a>
                     </div>
@@ -88,3 +88,22 @@
     ?>
 
 </div>
+
+<script type="text/javascript">
+    function wblDeleteStore(intId) {
+        if( confirm('Удалить?') )
+        {
+            axios.post('/ajax/store/delete/'+intId+'/')
+                .then(function (response) {
+                    if( response.data.result == 'SUCCESS' )
+                    {
+                        alert('OK!');
+                    }
+                    else
+                    {
+                        alert('ERROR!')
+                    }
+                })
+        }
+    }
+</script>

@@ -16,8 +16,14 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
         ->addJs('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
         ->addJs('https://unpkg.com/ionicons@4.4.4/dist/ionicons.js');
+
+    \Bitrix\Main\Page\Asset::getInstance()
+        ->addJs('https://unpkg.com/axios/dist/axios.min.js');
     ?>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <script type="text/javascript">
+        axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
+    </script>
 </head>
 <body>
 <div id="panel">
