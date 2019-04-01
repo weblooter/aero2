@@ -242,6 +242,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Model\\Data\\CompanyTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/CompanyTable.php',
         'Local\\Core\\Model\\Data\\JobQueueTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/JobQueueTable.php',
         'Local\\Core\\Model\\Data\\StoreTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/StoreTable.php',
+        'Local\\Core\\Model\\Data\\StoreTariffChangeLogTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/StoreTariffChangeLogTable.php',
         'Local\\Core\\Model\\Data\\TariffTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/TariffTable.php',
         'Local\\Core\\Model\\Reference\\BaseOrmTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Reference/BaseOrmTable.php',
         'Local\\Core\\Model\\Reference\\CountryTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Reference/CountryTable.php',

@@ -136,8 +136,9 @@ $funIsRequired = function($strCode) use ($arResult)
                 </div>
                 <small class="form-text text-muted">Может быть загружен только Robofeed XML. Ограничение по размеру
                     - <?=$component->intMaxUploadXMLFileSizeMb?> Мб.<br />
-                    <a href="/development/robofeed-v1/" target="_blank">Что такое Robofeed XML?</a>
+                    <a href="<?=\Local\Core\Inner\Route::getRouteTo('development', 'robofeed')?>" target="_blank">Что такое Robofeed XML?</a>
                 </small>
+                <input type="hidden" name="STORE_FIELD[OLD_FILE]" value="<?=$arResult['FIELDS']['FILE_ID']['VALUE']?>" />
             </div>
 
         </div>

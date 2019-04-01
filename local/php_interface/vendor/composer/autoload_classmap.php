@@ -151,6 +151,7 @@ return array(
     'Local\\Core\\Model\\Data\\CompanyTable' => $baseDir . '/../modules/local.core/lib/Model/Data/CompanyTable.php',
     'Local\\Core\\Model\\Data\\JobQueueTable' => $baseDir . '/../modules/local.core/lib/Model/Data/JobQueueTable.php',
     'Local\\Core\\Model\\Data\\StoreTable' => $baseDir . '/../modules/local.core/lib/Model/Data/StoreTable.php',
+    'Local\\Core\\Model\\Data\\StoreTariffChangeLogTable' => $baseDir . '/../modules/local.core/lib/Model/Data/StoreTariffChangeLogTable.php',
     'Local\\Core\\Model\\Data\\TariffTable' => $baseDir . '/../modules/local.core/lib/Model/Data/TariffTable.php',
     'Local\\Core\\Model\\Reference\\BaseOrmTable' => $baseDir . '/../modules/local.core/lib/Model/Reference/BaseOrmTable.php',
     'Local\\Core\\Model\\Reference\\CountryTable' => $baseDir . '/../modules/local.core/lib/Model/Reference/CountryTable.php',

@@ -50,9 +50,9 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
                     ],
                     'select' => [
                         '*',
-                        'LOGS'
+                        'IMPORT_LOGS'
                     ],
-                    'order' => ['LOCAL_CORE_MODEL_DATA_STORE_LOGS_DATE_CREATE' => 'DESC'],
+                    'order' => ['LOCAL_CORE_MODEL_DATA_STORE_IMPORT_LOGS_DATE_CREATE' => 'DESC'],
                     'limit' => 10,
                     'offset' => 0
                 ]
@@ -84,7 +84,7 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
                     }
                 }
 
-                foreach($rs['LOGS'] as $obLog)
+                foreach($rs['IMPORT_LOGS'] as $obLog)
                 {
                     if( $obLog->getId() > 0 )
                     {

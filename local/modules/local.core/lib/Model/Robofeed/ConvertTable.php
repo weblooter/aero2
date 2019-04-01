@@ -126,25 +126,19 @@ class ConvertTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             $arFields['USER_ID'] = $GLOBALS['USER']->GetId();
         }
 
-        \AddMessage2Log(print_r($arFields, true));
-
         $intNowInQueue = self::getList(
             [
                 'filter' => [
                     'USER_ID' => $arFields['USER_ID'],
-                    'STATUS' => 'WA'
+                    'STATUS' => 'WA', 'IN'
                 ],
                 'select' => ['ID']
             ]
         )
             ->getSelectedRowsCount();
 
-        \AddMessage2Log($intNowInQueue);
-
         $intMaxInQueue = \Bitrix\Main\Config\Configuration::getInstance()
                              ->get('robofeed')['convert']['max_in_queue'] ?? 1;
-
-        \AddMessage2Log($intMaxInQueue);
 
         if( $intNowInQueue >= $intMaxInQueue )
         {

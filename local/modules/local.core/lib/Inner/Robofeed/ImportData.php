@@ -35,10 +35,13 @@ class ImportData
         $arStoreImportData = [];
         $arStoreImportData['DATE_LAST_IMPORT'] = $arLoggerData['DATE_CREATE'];
 
-        $rsStore = StoreTable::getByPrimary($intStoreId, ['filter' => ['ACTIVE' => 'Y']]);
+        $rsStore = StoreTable::getByPrimary($intStoreId, ['filter' => ['ACTIVE' => 'Y'], 'select' => ['*', 'TARIFF_DATA_' => 'TARIFF']]);
         if( $rsStore->getSelectedRowsCount() > 0 )
         {
             $arStore = $rsStore->fetch();
+
+            $intImportProductLimitByTariff = !empty( $arStore['TARIFF_DATA_LIMIT_IMPORT_PRODUCTS'] ) ? $arStore['TARIFF_DATA_LIMIT_IMPORT_PRODUCTS'] : 50;
+
             try
             {
                 $strFilePath = self::getFilePath($arStore, $strDownloadPath);
@@ -63,6 +66,7 @@ class ImportData
                     ]
                 );
                 $isDouble = false;
+                $isTariffChanged = false;
                 if( $rsLastLog->getSelectedRowsCount() > 0 )
                 {
                     $arDouble = $rsLastLog->fetch();
@@ -74,11 +78,22 @@ class ImportData
                         if( $arDouble['ROBOFEED_DATE']->getTimestamp() == $arLoggerData['ROBOFEED_DATE']->getTimestamp() )
                         {
                             $isDouble = true;
+
+                            $arLastTariffLog = \Local\Core\Model\Data\StoreTariffChangeLogTable::getList([
+                                'filter' => ['STORE_ID' => $intStoreId],
+                                'select' => ['DATE_CREATE'],
+                                'order' => ['ID' => 'DESC'],
+                                'limit' => 1,
+                                'offset' => 0,
+                            ])->fetch();
+
+                            $isTariffChanged = ( $arStore['DATE_LAST_IMPORT']->getTimestamp() <= $arLastTariffLog['DATE_CREATE']->getTimeStamp() );
+
                         }
                     }
                 }
 
-                if( $isDouble )
+                if( $isDouble && !$isTariffChanged )
                 {
                     switch( $arStore['NOT_UPDATED_XML_IS_ERROR'] )
                     {
@@ -111,7 +126,7 @@ class ImportData
                             ->setStoreId($intStoreId)
                             ->resetTables();
 
-                        $obImportResult = self::importRobofeed($intStoreId, $arLoggerData['ROBOFEED_VERSION'], $strFilePath);
+                        $obImportResult = self::importRobofeed($intStoreId, $arLoggerData['ROBOFEED_VERSION'], $strFilePath, $intImportProductLimitByTariff);
                         $arImportResult = $obImportResult->getData();
                         $arLoggerData['PRODUCT_TOTAL_COUNT'] = $arImportResult['PRODUCT_TOTAL_COUNT'];
                         $arLoggerData['PRODUCT_SUCCESS_IMPORT'] = $arImportResult['PRODUCT_SUCCESS_IMPORT'];
@@ -260,7 +275,7 @@ class ImportData
                 }
             }
 
-            StoreTable::update(
+            $rr = StoreTable::update(
                 $arStore['ID'],
                 $arStoreImportData
             );
@@ -358,11 +373,12 @@ class ImportData
         return $obReader->run();
     }
 
-    private static function importRobofeed($intStoreId, $intVersion, $strFilePath)
+    private static function importRobofeed($intStoreId, $intVersion, $strFilePath, $intImportProductLimitByTariff = 50)
     {
         $obReader = \Local\Core\Inner\Robofeed\XMLReader\Factory::factory($intVersion);
         $obReader->setScript(\Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader::SCRIPT_IMPORT);
         $obReader->setStoreId($intStoreId);
+        $obReader->setImportProductLimit($intImportProductLimitByTariff);
         $obReader->setXmlPath($strFilePath);
 
         return $obReader->run();

@@ -78,6 +78,22 @@ abstract class AbstractXMLReader
         return $this;
     }
 
+    /** @var int $intImportProductLimit Лимит по кол-ву товаров в процессе импорта */
+    protected $intImportProductLimit = 50;
+
+    /**
+     * Метод задает лимит по кол-ву товаров в процессе импорта
+     *
+     * @param int $intLimit
+     *
+     * @return $this
+     */
+    public function setImportProductLimit($intLimit)
+    {
+        $this->intImportProductLimit = $intLimit;
+        return $this;
+    }
+
     /** @var \SimpleXMLReader $obReader */
     protected $obReader;
 

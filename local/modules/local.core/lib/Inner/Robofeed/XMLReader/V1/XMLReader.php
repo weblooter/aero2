@@ -75,7 +75,17 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
             function($reader)
                 {
                     $this->intProductTotal++;
-                    return $this->callOffer($reader);
+                    if(
+                        $this->intProductImportSuccess >= $this->intImportProductLimit
+                        && $this->constScript == self::SCRIPT_IMPORT
+                    )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return $this->callOffer($reader);
+                    }
                 }
         );
 
@@ -89,7 +99,7 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
         {
             $this->obResult->addError(
                 new \Bitrix\Main\Error(
-                    'Во время проверки робофид XML произошла критическая ошибка. Убедитесь, что в Вашем робофиде XML нет ошибки, а теги закрыты. Самый быстрый способ найти ошибку - откройте робофид XML в браузере.'
+                    'Во время проверки Robofeed XML произошла критическая ошибка. Убедитесь, что в Вашем Robofeed XML нет ошибки и все теги закрыты.'
                 )
             );
         }
@@ -192,7 +202,7 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
             case self::SCRIPT_XSD_VALIDATE:
                 if( $this->intOffersErrorCount >= $this->intMaxOffersErrorCountInValidation )
                 {
-                    $this->obResult->addError(new \Bitrix\Main\Error('Дальнейшая проверка товаров в Robofeed XML прекращена. Исправьте ошибки и попробуйте еще раз.'));
+                    $this->obResult->addError(new \Bitrix\Main\Error('Дальнейшая проверка товаров в Robofeed XML прекращена.'));
                     return false;
                 }
                 else

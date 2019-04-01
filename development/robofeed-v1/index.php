@@ -78,7 +78,7 @@ DOCHERE
         <li><a href="/development/references/#currency">Справочник валют</a></li>
         <li><a href="/development/references/#country">Справочник стран</a></li>
     </ul>
-    <h4>Пример Robofeed XML с комментариями</h4>
+    <h4>Структуа Robofeed XML с комментариями</h4>
     <p>
         Обязательные поля помечены звездочкой *.<br/>
         Если у поля есть аттрибуты - они описываются и обязательные тоже помечаются звездочкой *.

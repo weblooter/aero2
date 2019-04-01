@@ -3,6 +3,8 @@
 namespace Local\Core\Inner\AdminHelper\Data\Store;
 
 use Local\Core\Model\Data\StoreTable;
+use Local\Core\Model\Data\StoreTariffChangeLogTable;
+use Local\Core\Model\Data\TariffTable;
 use Local\Core\Model\Robofeed\ImportLogTable;
 
 /**
@@ -225,6 +227,11 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 "TAB" => "Логи импортов",
                 "TITLE" => "Логи импортов"
             ],
+            [
+                "DIV" => "tariff_logs",
+                "TAB" => "Логи тарифов",
+                "TITLE" => "Логи тарифов"
+            ],
         ];
     }
 
@@ -277,6 +284,33 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
             $strImportLogs .= $tt.'<hr/>';
         }
+
+        $arTariffes = [];
+        $rsTariffes = TariffTable::getList([]);
+        while($ar = $rsTariffes->fetch())
+        {
+            $arTariffes[ $ar['CODE'] ] = $ar;
+        }
+
+        $strTariffLog = '';
+        $rsTariffLog = StoreTariffChangeLogTable::getList([
+            'filter' => [
+                'STORE_ID' => $this->id
+            ],
+            'order' => [
+                'ID' => 'DESC'
+            ]
+        ]);
+        while($ar = $rsTariffLog->fetch())
+        {
+            $tariffLink = ( new \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList() )->getEditLink($arTariffes[ $ar['TARIFF_CODE'] ]);
+
+            $tt = '<b>Дата создания:</b><br/>'.$ar['DATE_CREATE']->format('Y-m-d H:i:s').'<br/>';
+            $tt .= '<b>Тариф:</b><br/><a href="'.$tariffLink.'" target="_blank">'.$arTariffes[ $ar['TARIFF_CODE'] ]['NAME'].'</a> ['.$arTariffes[ $ar['TARIFF_CODE'] ]['CODE'].']<br/>';
+            $strTariffLog .= $tt.'<hr/>';
+        }
+
+        $strCurrentTariff = '<a href="'.( ( new \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList() )->getEditLink($arTariffes[ $this->data['TARIFF_CODE'] ]) ).'" target="_blank">'.$arTariffes[ $this->data['TARIFF_CODE'] ]['NAME'].'</a> ['.$arTariffes[ $this->data['TARIFF_CODE'] ]['CODE'].']';
 
         return [
             "main" => [
@@ -382,6 +416,15 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                     'Логи последних импортов', "", $strImportLogs
                 ),
             ],
+
+            'tariff_logs' => [
+                new \Local\Core\Inner\AdminHelper\EditField\SimpleText(
+                    'Текущий тариф', "", $strCurrentTariff
+                ),
+                new \Local\Core\Inner\AdminHelper\EditField\SimpleText(
+                    'Логи тарифов', "", $strTariffLog
+                ),
+            ]
         ];
     }
 

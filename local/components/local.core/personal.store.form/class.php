@@ -94,63 +94,71 @@ class PersonalStoreFormComponent extends \Local\Core\Inner\BxModified\CBitrixCom
                     case 'FILE': // Загрузить файл
 
                         if(
-                        empty(
-                        \Bitrix\Main\Application::getInstance()
-                            ->getContext()
-                            ->getRequest()
-                            ->getFile('STORE_FIELD')['name']['FILE']
-                        )
+                            empty(
+                            \Bitrix\Main\Application::getInstance()
+                                ->getContext()
+                                ->getRequest()
+                                ->getFile('STORE_FIELD')['name']['FILE']
+                            )
+                            && ( $this->arParams['STORE_ID'] < 1 || $arFields['OLD_FILE'] < 1 )
                         )
                         {
                             throw new \Exception('Вы не выбрали файл');
                         }
 
-                        $arFile = array_combine(
-                            array_keys(
-                                \Bitrix\Main\Application::getInstance()
-                                    ->getContext()
-                                    ->getRequest()
-                                    ->getFile('STORE_FIELD')
-                            ),
-                            array_column(
-                                \Bitrix\Main\Application::getInstance()
-                                    ->getContext()
-                                    ->getRequest()
-                                    ->getFile('STORE_FIELD'),
-                                'FILE'
+                        if( \Bitrix\Main\Application::getInstance()
+                                ->getContext()
+                                ->getRequest()
+                                ->getFile('STORE_FIELD')['size']['FILE'] > 0 )
+                        {
+                            $arFile = array_combine(
+                                array_keys(
+                                    \Bitrix\Main\Application::getInstance()
+                                        ->getContext()
+                                        ->getRequest()
+                                        ->getFile('STORE_FIELD')
+                                ),
+                                array_column(
+                                    \Bitrix\Main\Application::getInstance()
+                                        ->getContext()
+                                        ->getRequest()
+                                        ->getFile('STORE_FIELD'),
+                                    'FILE'
+                                )
+                            );
+
+                            if(
+                            !\Local\Core\Inner\BxModified\CFile::checkExtension(
+                                $arFile,
+                                '.xml'
                             )
-                        );
+                            )
+                            {
+                                throw new \Exception('Файл должен быть XML');
+                            }
 
-                        if(
-                        !\Local\Core\Inner\BxModified\CFile::checkExtension(
-                            $arFile,
-                            '.xml'
-                        )
-                        )
-                        {
-                            throw new \Exception('Файл должен быть XML');
+                            if(
+                                round(
+                                    ( $arFile['size'] / 1000 / 1000 ),
+                                    3
+                                ) > $this->intMaxUploadXMLFileSizeMb
+                            )
+                            {
+                                throw new \Exception('Максимальный размер файла - '.$this->intMaxUploadXMLFileSizeMb.'Мб');
+                            }
+
+                            $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile(
+                                $arFile,
+                                '/personal.store/xml/',
+                                $arFields['OLD_FILE']
+                            );
+                            if( $intFileSave < 1 )
+                            {
+                                throw new \Exception('Не удалось сохранить файл');
+                            }
+
+                            $arUpdateFields['FILE_ID'] = $intFileSave;
                         }
-
-                        if(
-                            round(
-                                ( $arFile['size'] / 1000 / 1000 ),
-                                3
-                            ) > $this->intMaxUploadXMLFileSizeMb
-                        )
-                        {
-                            throw new \Exception('Максимальный размер файла - '.$this->intMaxUploadXMLFileSizeMb.'Мб');
-                        }
-
-                        $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile(
-                            $arFile,
-                            '/personal.store/xml/'
-                        );
-                        if( $intFileSave < 1 )
-                        {
-                            throw new \Exception('Не удалось сохранить файл');
-                        }
-
-                        $arUpdateFields['FILE_ID'] = $intFileSave;
 
                         break;
                 }
@@ -183,7 +191,7 @@ class PersonalStoreFormComponent extends \Local\Core\Inner\BxModified\CBitrixCom
                 else
                 {
                     /** @var \Bitrix\Main\ORM\Data\AddResult $obRes */
-                    $obRes = \Local\Core\Model\Data\StoreTable::add( $arUpdateFields );
+                    $obRes = \Local\Core\Model\Data\StoreTable::add($arUpdateFields);
                     if( $obRes->isSuccess() )
                     {
                         $this->arResult['STATUS'] = 'SUCCESS_ADD';
@@ -214,9 +222,9 @@ class PersonalStoreFormComponent extends \Local\Core\Inner\BxModified\CBitrixCom
             ->getRequest()
             ->getPost('STORE_FIELD');
 
-        if( !empty( $arRequestFields ) )
+        if( !empty($arRequestFields) )
         {
-            foreach($arRequestFields as $k => $v)
+            foreach( $arRequestFields as $k => $v )
             {
                 $arDefaultValues[$k] = $v;
             }
