@@ -40,5 +40,11 @@ return [
         'methods' => ['POST'],
         'args' => ['store_id' => '[0-9]+'],
         'handler' => \Local\Core\Ajax\Handler\Store::class.':delete'
+    ],
+    'store_change_tariff' => [
+        'path' => '/store/change_tariff/{store_id}/{tariff_code}/',
+        'methods' => ['POST'],
+        'args' => ['store_id' => '[0-9]+', 'tariff_code' => '[A-Z0-9\_]+'],
+        'handler' => \Local\Core\Ajax\Handler\Store::class.':changeTariff'
     ]
 ];

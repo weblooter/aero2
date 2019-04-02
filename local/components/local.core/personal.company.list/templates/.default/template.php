@@ -129,7 +129,7 @@
                     if (response.data.result == 'SUCCESS') {
                         alert('OK!');
                     } else {
-                        alert('ERROR!')
+                        alert(response.data['error_text'])
                     }
                 })
         }

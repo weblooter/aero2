@@ -9,7 +9,7 @@ use Local\Core\Model\Data\StoreTable;
 /**
  * Класс для логрования результатов импорта Robofeed XML
  *
-<ul><li>ID - ID | Fields\IntegerField</li><li>DATE_CREATE - Дата создания [31.03.2019 13:05:47] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [31.03.2019 13:05:47] | Fields\DatetimeField</li><li>STORE_ID - ID магазина | Fields\IntegerField</li><li>ROBOFEED_VERSION - Версия Robofeed XML | Fields\IntegerField</li><li>ROBOFEED_DATE - Дата создания Robofeed XML | Fields\DatetimeField</li><li>BEHAVIOR_IMPORT_ERROR - Поведение импорта при ошибке | Fields\EnumField<br/>&emsp;STOP_IMPORT => Не актуализировать данные<br/>&emsp;IMPORT_ONLY_VALID => Актуализировать только валидные<br/></li><li>NOT_UPDATED_XML_IS_ERROR - Воспринимать не обновленный Robofeed XML как ошибку? [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>PRODUCT_TOTAL_COUNT - Кол-во товаров в Robofeed XML | Fields\IntegerField</li><li>PRODUCT_SUCCESS_IMPORT - Кол-во валидных товаров в Robofeed XML | Fields\IntegerField</li><li>IMPORT_RESULT - Результат импорта | Fields\EnumField<br/>&emsp;SU => Успех<br/>&emsp;ER => Ошибка<br/>&emsp;NU => Robofeed XML не изменялся<br/></li><li>ERROR_TEXT - Ошибка | Fields\TextField</li><li>STORE_DATA - \Local\Core\Model\Data\Store | Fields\Relations\Reference</li></ul>
+<ul><li>ID - ID | Fields\IntegerField</li><li>DATE_CREATE - Дата создания [31.03.2019 13:05:47] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [31.03.2019 13:05:47] | Fields\DatetimeField</li><li>STORE_ID - ID магазина | Fields\IntegerField</li><li>ROBOFEED_VERSION - Версия Robofeed XML | Fields\IntegerField</li><li>ROBOFEED_DATE - Дата создания Robofeed XML | Fields\DatetimeField</li><li>BEHAVIOR_IMPORT_ERROR - Поведение импорта при ошибке | Fields\EnumField<br/>&emsp;STOP_IMPORT => Не актуализировать данные<br/>&emsp;IMPORT_ONLY_VALID => Актуализировать только валидные<br/></li><li>ALERT_IF_XML_NOT_MODIFIED - Информировать о не изменившемся Robofeed XML? [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>PRODUCT_TOTAL_COUNT - Кол-во товаров в Robofeed XML | Fields\IntegerField</li><li>PRODUCT_SUCCESS_IMPORT - Кол-во валидных товаров в Robofeed XML | Fields\IntegerField</li><li>IMPORT_RESULT - Результат импорта | Fields\EnumField<br/>&emsp;SU => Успех<br/>&emsp;ER => Ошибка<br/>&emsp;NU => Robofeed XML не изменялся<br/></li><li>ERROR_TEXT - Ошибка | Fields\TextField</li><li>STORE_DATA - \Local\Core\Model\Data\Store | Fields\Relations\Reference</li></ul>
  *
  * @package Local\Core\Model\Robofeed
  */
@@ -17,8 +17,8 @@ class ImportLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMana
 {
     const BEHAVIOR_IMPORT_ERROR_STOP_IMPORT = 'STOP_IMPORT';
     const BEHAVIOR_IMPORT_ERROR_IMPORT_ONLY_VALID = 'IMPORT_ONLY_VALID';
-    const NOT_UPDATED_XML_IS_ERROR_Y = 'Y';
-    const NOT_UPDATED_XML_IS_ERROR_N = 'N';
+    const ALERT_IF_XML_NOT_MODIFIED_Y = 'Y';
+    const ALERT_IF_XML_NOT_MODIFIED_N = 'N';
 
     public static function getTableName()
     {
@@ -36,7 +36,7 @@ class ImportLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMana
             'STOP_IMPORT' => 'Не актуализировать данные',
             'IMPORT_ONLY_VALID' => 'Актуализировать только валидные',
         ],
-        'NOT_UPDATED_XML_IS_ERROR' => [
+        'ALERT_IF_XML_NOT_MODIFIED' => [
             'Y' => 'Да',
             'N' => 'Нет',
         ],
@@ -98,11 +98,11 @@ class ImportLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMana
                 ]
             ),
             new Fields\EnumField(
-                'NOT_UPDATED_XML_IS_ERROR',
+                'ALERT_IF_XML_NOT_MODIFIED',
                 [
                     'required' => false,
-                    'title' => 'Воспринимать не обновленный Robofeed XML как ошибку?',
-                    'values' => self::getEnumFieldValues('NOT_UPDATED_XML_IS_ERROR'),
+                    'title' => 'Информировать о не изменившемся Robofeed XML?',
+                    'values' => self::getEnumFieldValues('ALERT_IF_XML_NOT_MODIFIED'),
                     'default_value' => 'Y'
                 ]
             ),

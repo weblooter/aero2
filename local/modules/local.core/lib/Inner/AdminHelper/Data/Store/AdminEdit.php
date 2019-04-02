@@ -274,7 +274,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             $tt .= '<br/><b>Дата изменения:</b><br/>'.$ar['DATE_MODIFIED']->format('Y-m-d H:i:s').'<br/>';
             $tt .= '<br/><b>Результат импорта:</b><br/>'.ImportLogTable::getEnumFieldHtmlValues('IMPORT_RESULT')[ $ar['IMPORT_RESULT'] ].'<br/>';
             $tt .= '<br/><b>Поведение импорта при ошибке:</b><br/>'.ImportLogTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[ $ar['BEHAVIOR_IMPORT_ERROR'] ].'<br/>';
-            $tt .= '<br/><b>Воспринимать не обновленный Robofeed XML как ошибку?:</b><br/>'.ImportLogTable::getEnumFieldHtmlValues('NOT_UPDATED_XML_IS_ERROR')[ $ar['NOT_UPDATED_XML_IS_ERROR'] ].'<br/>';
+            $tt .= '<br/><b>Информировать о не изменившемся Robofeed XML?:</b><br/>'.ImportLogTable::getEnumFieldHtmlValues('ALERT_IF_XML_NOT_MODIFIED')[ $ar['ALERT_IF_XML_NOT_MODIFIED'] ].'<br/>';
             $tt .= '<br/><b>Кол-во товаров в Robofeed XML:</b><br/>'.$ar['PRODUCT_TOTAL_COUNT'].'<br/>';
             $tt .= '<br/><b>Кол-во валидных товаров в Robofeed XML:</b><br/>'.$ar['PRODUCT_SUCCESS_IMPORT'].'<br/>';
             if( !empty( $ar['ERROR_TEXT'] ))
@@ -386,8 +386,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                     ->setRequired(true),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Select(
-                    $columnName['NOT_UPDATED_XML_IS_ERROR'], 'NOT_UPDATED_XML_IS_ERROR'
-                ) )->setVariants(StoreTable::getEnumFieldHtmlValues('NOT_UPDATED_XML_IS_ERROR'))
+                    $columnName['ALERT_IF_XML_NOT_MODIFIED'], 'ALERT_IF_XML_NOT_MODIFIED'
+                ) )->setVariants(StoreTable::getEnumFieldHtmlValues('ALERT_IF_XML_NOT_MODIFIED'))
                     ->setEditable($canEdit)
                     ->setRequired(true),
 

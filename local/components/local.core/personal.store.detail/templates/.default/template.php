@@ -14,7 +14,7 @@
 <div class="container-fluid">
     <div class="row">
 
-        <div class="col-12">
+        <div class="col-9">
             <div class="pull-right">
                 <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'edit', ['#COMPANY_ID#' => $arResult['ITEM']['COMPANY_ID'], '#STORE_ID#' => $arResult['ITEM']['ID']])?>" title="Редактировать">
                     <ion-icon name="create" role="img" class="hydrated" aria-label="create"></ion-icon>
@@ -26,7 +26,6 @@
 
             Название: <?=$arResult['ITEM']['NAME'];?><br />
             Сайт: <?=$arResult['ITEM']['DOMAIN'];?><br />
-            Активность: <?=$arResult['ITEM']['ACTIVE'] == 'Y' ? 'Да' : 'Нет';?><br />
             <?
             switch( $arResult['ITEM']['RESOURCE_TYPE'] )
             {
@@ -67,7 +66,7 @@
                 case 'SU':
                     ?>
                     <span class="badge badge-success">Импорт успешен</span><br/>
-                    Общее кол-во товаров в Robofeed XML составляет <?=number_format($arResult['ITEM']['PRODUCT_TOTAL_COUNT'], 0, '.', ' ')?> шт., из них валидных - <?=number_format(
+                    Общее кол-во товаров в Robofeed XML составляет <?=number_format($arResult['ITEM']['PRODUCT_TOTAL_COUNT'], 0, '.', ' ')?> шт., из них импортировано - <?=number_format(
                     $arResult['ITEM']['PRODUCT_SUCCESS_IMPORT'],
                     0,
                     '.',
@@ -83,7 +82,7 @@
                         <div class="alert alert-warning" role="alert">
                             В работе с торговыми площадками используюся данные от последнего успешного импорта.<br />
                             Дата последнего успешного импорта: <?=$arResult['ITEM']['DATE_LAST_SUCCESS_IMPORT']->format('Y-m-d H:i:s')?><br />
-                            Общее кол-во товаров в Robofeed XML составляет <?=number_format($arResult['ITEM']['PRODUCT_TOTAL_COUNT'], 0, '.', ' ')?> шт., из них валидных - <?=number_format(
+                            Общее кол-во товаров в Robofeed XML составляет <?=number_format($arResult['ITEM']['PRODUCT_TOTAL_COUNT'], 0, '.', ' ')?> шт., из них импортировано - <?=number_format(
                                 $arResult['ITEM']['PRODUCT_SUCCESS_IMPORT'],
                                 0,
                                 '.',
@@ -121,6 +120,35 @@
             <? endif; ?>
 
         </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">
+                    <small>Тариф</small>
+                </div>
+                <div class="card-body">
+                    <b class="card-title"><?=$arResult['TARIFF']['CURRENT']['NAME']?></b>
+                    <p class="card-text">
+                        <small>
+                            На данном тарифе действую ограничение в <?=$arResult['TARIFF']['CURRENT']['LIMIT_IMPORT_PRODUCTS']?> товаров.<br/>
+                            <?if( $arResult['TARIFF']['CURRENT']['DATE_ACTIVE_TO'] instanceof \Bitrix\Main\Type\DateTime):?>
+                                Данный тариф активен до <?=$arResult['TARIFF']['CURRENT']['DATE_ACTIVE_TO']->format('Y-m-d H:i')?>. Далее он будет автоматически переключен на <b>"<?=$arResult['TARIFF']['NEXT']['NAME']?>"</b><br/>
+                            <?endif;?>
+                        </small>
+                    </p>
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Изменить тариф
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <?$component->printTariffListHtml()?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Действует с <?=$arResult['TARIFF']['CHANGED_DATE']->format('Y-m-d H:i')?></small>
+                </div>
+            </div>
+        </div>
         <? if( !empty($arResult['LOG']) ): ?>
             <div class="col-12">
                 <?
@@ -139,7 +167,7 @@
 
                     if(
                         $arLog['IMPORT_RESULT'] == 'ER'
-                        || ( $arLog['IMPORT_RESULT'] == 'NU' && $arLog['NOT_UPDATED_XML_IS_ERROR'] == 'Y' )
+                        || ( $arLog['IMPORT_RESULT'] == 'NU' && $arLog['ALERT_IF_XML_NOT_MODIFIED'] == 'Y' )
                     )
                     {
                         $arErrorsLog[] = $arLog;
@@ -174,9 +202,9 @@
                             <summary><?=date('Y-m-d H:i', $arLog['DATE_CREATE']->getTimestamp())?></summary>
                             <div>
                                 Тип обработки ошибок: <?=\Local\Core\Model\Robofeed\ImportLogTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[$arLog['BEHAVIOR_IMPORT_ERROR']]?><br />
-                                Воспринимать не обновленный Robofeed XML как ошибку?: <?=\Local\Core\Model\Robofeed\ImportLogTable::getEnumFieldHtmlValues(
-                                    'NOT_UPDATED_XML_IS_ERROR'
-                                )[$arLog['NOT_UPDATED_XML_IS_ERROR']]?><br />
+                                Информировать о не изменившемся Robofeed XML?: <?=\Local\Core\Model\Robofeed\ImportLogTable::getEnumFieldHtmlValues(
+                                    'ALERT_IF_XML_NOT_MODIFIED'
+                                )[$arLog['ALERT_IF_XML_NOT_MODIFIED']]?><br />
                                 Версия Robofeed XML: <?=( $arLog['ROBOFEED_VERSION'] > 0 ) ? $arLog['ROBOFEED_VERSION'] : 'Не удалось определить'?><br />
                                 Время в Robofeed XML: <?=( $arLog['ROBOFEED_DATE'] instanceof \Bitrix\Main\Type\DateTime ) ? date(
                                     'Y-m-d H:i',
@@ -224,7 +252,29 @@
                     }
                     else
                     {
-                        alert('ERROR!')
+                        alert(response.data['error_text'])
+                    }
+                })
+        }
+    }
+
+    function changeTariff($intStoreId, $strTariffCode, $planDirection) {
+        var obTextes = {
+            up: 'Выбранный тариф дороже текущего. Мы спишем с Вашего счета средства разницу пропорционально оставшемуся оставшемуся времени до конца расчетного периода. Сменить тариф?',
+            down: 'Выбранный тариф дешевле текущего. Средства, оплаченные за текущий тариф, не будут возвращены. Сменить тариф?'
+        };
+        if( confirm( obTextes[$planDirection] ) )
+        {
+            axios.post('/ajax/store/change_tariff/'+$intStoreId+'/'+$strTariffCode+'/')
+                .then(function (response) {
+                    if( response.data.result == 'SUCCESS' )
+                    {
+                        alert('Тариф успешно изменен!');
+                        location.href=location.href;
+                    }
+                    else
+                    {
+                        alert(response.data['error_text'])
                     }
                 })
         }

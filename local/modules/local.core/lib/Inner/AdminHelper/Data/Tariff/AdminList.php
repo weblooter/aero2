@@ -354,6 +354,8 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             "SWITCH_AFTER_ACTIVE_TO",
             self::$SWITCH_AFTER_ACTIVE_TO[$fields["SWITCH_AFTER_ACTIVE_TO"]]
         );
+
+        $row->AddInputField('SORT');
     }
 
     /**
@@ -434,7 +436,8 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             try
             {
                 $arFields = [
-                    "ACTIVE" => $fields["ACTIVE"] ?? "N"
+                    "ACTIVE" => $fields["ACTIVE"] ?? "N",
+                    "SORT" => $fields["SORT"] ?? 50
                 ];
 
                 $res = \Local\Core\Model\Data\TariffTable::update(

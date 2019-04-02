@@ -6,9 +6,7 @@ use \Bitrix\Main\ORM\Fields;
 
 /**
  * Класс ORM с тарифами пользователей
- *
- *
-<ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [31.03.2019 13:18:10] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [31.03.2019 13:18:10] | Fields\DatetimeField</li><li>DATE_ACTIVE_FROM - Активен с | Fields\DatetimeField</li><li>DATE_ACTIVE_TO - Активен до | Fields\DatetimeField</li><li>NAME - Название | Fields\StringField</li><li>CODE - Символьный код | Fields\StringField</li><li>LIMIT_TRADING_PLATFORM - Лимит торговых площадок [1000] | Fields\IntegerField</li><li>LIMIT_IMPORT_PRODUCTS - Лимит импортируемых товаров [50] | Fields\IntegerField</li><li>PRICE_PER_TRADING_PLATFORM - Стоимость за торговую площадку [500] | Fields\IntegerField</li><li>IS_DEFAULT - Тариф по умолчанию [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>TYPE - Тип тарифа [PER] | Fields\EnumField<br/>&emsp;PUB => Публичный<br/>&emsp;PER => Индивидуальный<br/></li><li>SWITCH_AFTER_ACTIVE_TO - Тариф, на который переключать после "Активен до" (симв. код) | Fields\StringField</li></ul>
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [02.04.2019 14:37:27] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [02.04.2019 14:37:27] | Fields\DatetimeField</li><li>SORT - Сортировка [50] | Fields\IntegerField</li><li>DATE_ACTIVE_FROM - Активен с | Fields\DatetimeField</li><li>DATE_ACTIVE_TO - Активен до | Fields\DatetimeField</li><li>NAME - Название | Fields\StringField</li><li>CODE - Символьный код | Fields\StringField</li><li>LIMIT_TRADING_PLATFORM - Лимит торговых площадок [1000] | Fields\IntegerField</li><li>LIMIT_IMPORT_PRODUCTS - Лимит импортируемых товаров [50] | Fields\IntegerField</li><li>PRICE_PER_TRADING_PLATFORM - Стоимость за торговую площадку [500] | Fields\IntegerField</li><li>IS_DEFAULT - Тариф по умолчанию [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>TYPE - Тип тарифа [PER] | Fields\EnumField<br/>&emsp;PUB => Публичный<br/>&emsp;PER => Индивидуальный<br/></li><li>PERSONAL_BY_STORE - ID магазина, для которого тариф персонализирован | Fields\IntegerField</li><li>SWITCH_AFTER_ACTIVE_TO - Тариф, на который переключать после "Активен до" (симв. код) | Fields\StringField</li></ul>
  *
  * @package Local\Core\Model\Data
  */
@@ -67,6 +65,22 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                 ]
             ),
 
+            new Fields\IntegerField(
+                'SORT', [
+                    'required' => false,
+                    'title' => 'Сортировка',
+                    'default_value' => 50,
+                    'save_data_modification' => function()
+                        {
+                            return [
+                                function($value)
+                                    {
+                                        return ( $value > 0 ) ? $value : 50;
+                                    }
+                            ];
+                        }
+                ]
+            ),
             new Fields\DatetimeField(
                 'DATE_ACTIVE_FROM', [
                     'title' => 'Активен с',
@@ -77,11 +91,14 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                     'title' => 'Активен до',
                 ]
             ),
-            new Fields\StringField('NAME', [
+            new Fields\StringField(
+                'NAME', [
                 'title' => 'Название',
                 'required' => true
-            ]),
-            new Fields\StringField('CODE', [
+            ]
+            ),
+            new Fields\StringField(
+                'CODE', [
                 'unique' => true,
                 'title' => 'Символьный код',
                 'required' => true,
@@ -89,9 +106,9 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                     {
                         return [
                             new \Bitrix\Main\ORM\Fields\Validators\RegExpValidator('/[A-Z0-9\_]+/'),
-                            function ($value, $primary, $row, $field)
+                            function($value, $primary, $row, $field)
                                 {
-                                    $rsCurrentCode = self::getList(['filter' => [ $field->getName() => $value ], 'select' => ['ID']]);
+                                    $rsCurrentCode = self::getList(['filter' => [$field->getName() => $value], 'select' => ['ID']]);
                                     $arCurrentCode = $rsCurrentCode->fetch();
                                     if(
                                         $rsCurrentCode->getSelectedRowsCount() > 1
@@ -107,23 +124,31 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                                 }
                         ];
                     }
-            ]),
-            new Fields\IntegerField('LIMIT_TRADING_PLATFORM', [
+            ]
+            ),
+            new Fields\IntegerField(
+                'LIMIT_TRADING_PLATFORM', [
                 'title' => 'Лимит торговых площадок',
                 'required' => true,
                 'default_value' => 1000
-            ]),
-            new Fields\IntegerField('LIMIT_IMPORT_PRODUCTS', [
+            ]
+            ),
+            new Fields\IntegerField(
+                'LIMIT_IMPORT_PRODUCTS', [
                 'title' => 'Лимит импортируемых товаров',
                 'required' => true,
                 'default_value' => 50
-            ]),
-            new Fields\IntegerField('PRICE_PER_TRADING_PLATFORM', [
+            ]
+            ),
+            new Fields\IntegerField(
+                'PRICE_PER_TRADING_PLATFORM', [
                 'title' => 'Стоимость за торговую площадку',
                 'required' => true,
                 'default_value' => 500
-            ]),
-            new Fields\EnumField('IS_DEFAULT', [
+            ]
+            ),
+            new Fields\EnumField(
+                'IS_DEFAULT', [
                 'title' => 'Тариф по умолчанию',
                 'required' => true,
                 'values' => self::getEnumFieldValues('IS_DEFAULT'),
@@ -131,32 +156,42 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                 'validation' => function()
                     {
                         return [
-                            function ($value, $primary, $row, $field)
-                            {
-                                $arCurrentDefaultTariff = self::getList(['filter' => [ $field->getName() => 'Y' ], 'select' => ['ID']])->fetch();
-                                if(
-                                    empty($arCurrentDefaultTariff)
-                                    || ($value == 'Y' && $arCurrentDefaultTariff['ID'] == $primary['ID'] )
-                                    || $value == 'N'
-                                )
+                            function($value, $primary, $row, $field)
                                 {
-                                    return true;
+                                    $arCurrentDefaultTariff = self::getList(['filter' => [$field->getName() => 'Y'], 'select' => ['ID']])
+                                        ->fetch();
+                                    if(
+                                        empty($arCurrentDefaultTariff)
+                                        || ( $value == 'Y' && $arCurrentDefaultTariff['ID'] == $primary['ID'] )
+                                        || $value == 'N'
+                                    )
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        return 'Может быть только 1 "тариф по умолчанию"!';
+                                    }
                                 }
-                                else
-                                {
-                                    return 'Может быть только 1 "тариф по умолчанию"!';
-                                }
-                            }
                         ];
                     }
-            ]),
-            new Fields\EnumField('TYPE', [
+            ]
+            ),
+            new Fields\EnumField(
+                'TYPE', [
                 'title' => 'Тип тарифа',
                 'required' => true,
                 'values' => self::getEnumFieldValues('TYPE'),
                 'default_value' => 'PER'
-            ]),
-            new Fields\StringField('SWITCH_AFTER_ACTIVE_TO', [
+            ]
+            ),
+            new Fields\IntegerField(
+                'PERSONAL_BY_STORE', [
+                    'title' => 'ID магазина, для которого тариф персонализирован'
+                ]
+            ),
+            new Fields\StringField(
+                'SWITCH_AFTER_ACTIVE_TO', [
                 'title' => 'Тариф, на который переключать после "Активен до" (симв. код)',
                 'validation' => function()
                     {
@@ -164,7 +199,8 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                             new \Bitrix\Main\ORM\Fields\Validators\RegExpValidator('/([A-Z0-9\_]+)?/')
                         ];
                     }
-            ])
+            ]
+            )
 
         ];
     }

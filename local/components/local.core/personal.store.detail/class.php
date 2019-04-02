@@ -50,7 +50,8 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
                     ],
                     'select' => [
                         '*',
-                        'IMPORT_LOGS'
+                        'IMPORT_LOGS',
+                        'TARIFF'
                     ],
                     'order' => ['LOCAL_CORE_MODEL_DATA_STORE_IMPORT_LOGS_DATE_CREATE' => 'DESC'],
                     'limit' => 10,
@@ -74,6 +75,8 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
                         $arResult['ITEM'][ $obField->getName() ] = $rs->get( $obField->getName() );
                     }
                 }
+
+                $arResult['TARIFF'] = $this->__fillTariff($rs);
 
                 $arMapLog = [];
                 foreach(\Local\Core\Model\Robofeed\ImportLogTable::getMap() as $obField)
@@ -133,6 +136,72 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
                 readfile($file);
                 die();
             }
+        }
+    }
+
+    private function __fillTariff($obStore)
+    {
+        foreach(\Local\Core\Model\Data\TariffTable::getMap() as $obField)
+        {
+            if( $obField instanceof \Bitrix\Main\ORM\Fields\ScalarField )
+            {
+                $arResult['CURRENT'][ $obField->getName() ] = $obStore['TARIFF']->get( $obField->getName() );
+            }
+        }
+
+        if( !is_null($arResult['CURRENT']['DATE_ACTIVE_TO']) )
+        {
+            $strNextTariff = ( !empty( $arResult['CURRENT']['SWITCH_AFTER_ACTIVE_TO'] ) ) ? $arResult['CURRENT']['SWITCH_AFTER_ACTIVE_TO'] : \Local\Core\Inner\Tariff\Base::getDefaultTariff()['CODE'];
+            $arResult['NEXT'] = \Local\Core\Inner\Tariff\Base::getTariffByCode($strNextTariff);
+        }
+
+        $arResult['CHANGED_DATE'] = \Local\Core\Model\Data\StoreTariffChangeLogTable::getList([
+            'filter' => [
+                'STORE_ID' => $obStore->get('ID'),
+            ],
+            'order' => ['ID' => 'DESC'],
+            'select' => ['DATE_CREATE']
+        ])->fetch()['DATE_CREATE'];
+
+        return $arResult;
+    }
+
+    public function printTariffListHtml()
+    {
+        $rs = \Local\Core\Model\Data\TariffTable::getList([
+            'filter' => [
+                'ACTIVE' => 'Y',
+                'IS_DEFAULT' => 'N',
+                [
+                    'LOGIC' => 'OR',
+                    ['TYPE' => 'PUB'],
+                    ['TYPE' => 'PER', 'PERSONAL_BY_STORE' => $this->arResult['ITEM']['ID']],
+                ]
+            ],
+            'order' => [
+                'SORT' => 'ASC',
+                'TYPE' => 'ASC'
+            ],
+            'select' => [
+                'NAME',
+                'CODE',
+                'LIMIT_IMPORT_PRODUCTS',
+                'PRICE_PER_TRADING_PLATFORM',
+                'DATE_ACTIVE_TO',
+            ]
+        ]);
+        while($ar = $rs->fetch())
+        {
+            $isSelected = ( $ar['CODE'] == $this->arResult['TARIFF']['CURRENT']['CODE'] );
+            ?>
+            <a href="javascript:void(0)"
+               class="dropdown-item <?=$isSelected ? 'active' : ''?>"
+               <?=!$isSelected ? 'onclick="changeTariff('.$this->arResult['ITEM']['ID'].', \''.$ar['CODE'].'\', \''.( $ar['PRICE_PER_TRADING_PLATFORM'] > $this->arResult['TARIFF']['CURRENT']['PRICE_PER_TRADING_PLATFORM'] ? 'up' : 'down' ).'\')"' : ''?>
+                ><?=$ar['NAME']?>,
+                <?=number_format($ar['PRICE_PER_TRADING_PLATFORM'], 0, '.', ' ')?> руб./мес. за ТП,
+                до <?=number_format($ar['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' ')?> товаров
+                <?=( !is_null($ar['DATE_ACTIVE_TO']) ? ' (Доступен до '.$ar['DATE_ACTIVE_TO']->format('Y-m-d').')' : '' )?></a>
+            <?
         }
     }
 }

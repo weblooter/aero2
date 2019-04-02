@@ -29,6 +29,13 @@ class Base
             [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']
         );
 
+        /** @see \Local\Core\EventHandlers\Main\OnBeforeEventSend::executeCondition() */
+        $eventManager->addEventHandler(
+            'main',
+            'OnBeforeEventSend',
+            [Main\OnBeforeEventSend::class, 'executeCondition']
+        );
+
     }
 
     /**

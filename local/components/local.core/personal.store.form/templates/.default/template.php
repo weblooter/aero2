@@ -168,10 +168,10 @@ $funIsRequired = function($strCode) use ($arResult)
 
 
         <div class="form-group">
-            <label>Воспринимать не обновленный Robofeed XML как ошибку? <?=( $funIsRequired('NOT_UPDATED_XML_IS_ERROR') ? '*' : '' )?></label>
-            <select name="STORE_FIELD[NOT_UPDATED_XML_IS_ERROR]" class="custom-select mb-3" required>
-                <? foreach( \Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('NOT_UPDATED_XML_IS_ERROR') as $val => $text ): ?>
-                    <option value="<?=$val?>" <?=$arResult['FIELDS']['NOT_UPDATED_XML_IS_ERROR']['VALUE'] == $val ? 'selected' : ''?> ><?=$text?></option>
+            <label>Информировать о не изменившемся Robofeed XML? <?=( $funIsRequired('ALERT_IF_XML_NOT_MODIFIED') ? '*' : '' )?></label>
+            <select name="STORE_FIELD[ALERT_IF_XML_NOT_MODIFIED]" class="custom-select mb-3" required>
+                <? foreach( \Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('ALERT_IF_XML_NOT_MODIFIED') as $val => $text ): ?>
+                    <option value="<?=$val?>" <?=$arResult['FIELDS']['ALERT_IF_XML_NOT_MODIFIED']['VALUE'] == $val ? 'selected' : ''?> ><?=$text?></option>
                 <? endforeach; ?>
             </select>
         </div>
@@ -181,8 +181,8 @@ $funIsRequired = function($strCode) use ($arResult)
             часа.<br />
             Но некоторые магазины обновляют Robofeed XML раз в день или еще реже.<br />
             Нам необходимо понимать как относиться к ситуации, когда Robofeed XML не изменился - является ли это ошибкой, означающей проблемы на Вашем магазине, или же это нормальная ситуация.<br />
-            При выборе <b>"Да"</b> Вы будете немедлено проинформированны о данной ситуации, а результат импорта будет помечен как "Импорт с ошибкой".<br />
-            При выборе <b>"Нет"</b> мы будем воспринимать такую ситуацию, как допустимую, Вы не будете проинформированны, а импорт будет помечен как "Успешный".<br />
+            При выборе <b>"Да"</b> Вы будете немедлено проинформированны о данной ситуации.<br />
+            При выборе <b>"Нет"</b> мы будем воспринимать такую ситуацию, как допустимую и Вы не будете проинформированны.<br />
             <b>"Да"</b> следует выбрать, если выбран источник данных "Ссылка на файл" и Вы обновляете Robofeed XML каждые 3 часа или чаще. В остальных случаях рекомендуем выставить <b>"Нет"</b>.
         </div>
 

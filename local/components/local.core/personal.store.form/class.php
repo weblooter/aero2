@@ -66,7 +66,7 @@ class PersonalStoreFormComponent extends \Local\Core\Inner\BxModified\CBitrixCom
             $arUpdateFields['RESOURCE_TYPE'] = $arFields['RESOURCE_TYPE'];
             $arUpdateFields['COMPANY_ID'] = $this->arParams['COMPANY_ID'];
             $arUpdateFields['BEHAVIOR_IMPORT_ERROR'] = $arFields['BEHAVIOR_IMPORT_ERROR'];
-            $arUpdateFields['NOT_UPDATED_XML_IS_ERROR'] = $arFields['NOT_UPDATED_XML_IS_ERROR'];
+            $arUpdateFields['ALERT_IF_XML_NOT_MODIFIED'] = $arFields['ALERT_IF_XML_NOT_MODIFIED'];
 
             try
             {

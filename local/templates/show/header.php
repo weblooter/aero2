@@ -13,6 +13,10 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
     \Bitrix\Main\Page\Asset::getInstance()
         ->addCss('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
     \Bitrix\Main\Page\Asset::getInstance()
+        ->addJs('https://code.jquery.com/jquery-3.3.1.slim.min.js');
+    \Bitrix\Main\Page\Asset::getInstance()
+        ->addJs('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js');
+    \Bitrix\Main\Page\Asset::getInstance()
         ->addJs('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
         ->addJs('https://unpkg.com/ionicons@4.4.4/dist/ionicons.js');

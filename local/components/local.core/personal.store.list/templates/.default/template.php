@@ -101,7 +101,7 @@
                     }
                     else
                     {
-                        alert('ERROR!')
+                        alert(response.data['error_text'])
                     }
                 })
         }

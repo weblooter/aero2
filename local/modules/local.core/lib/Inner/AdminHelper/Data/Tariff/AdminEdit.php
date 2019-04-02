@@ -283,6 +283,11 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 ) )->setEditable(false),
 
                 ( new \Local\Core\Inner\AdminHelper\EditField\Text(
+                    $columnName['SORT'], 'SORT'
+                ) )->setEditable($canEdit)
+                    ->setRequired(true),
+
+                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
                     $columnName['NAME'], 'NAME'
                 ) )->setEditable($canEdit)
                     ->setRequired(true),
@@ -307,6 +312,10 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 ) )->setEditable($canEdit)
                     ->setRequired(true)
                     ->setVariants(TariffTable::getEnumFieldHtmlValues('TYPE')),
+
+                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
+                    $columnName['PERSONAL_BY_STORE'], 'PERSONAL_BY_STORE'
+                ) )->setEditable($canEdit),
             ],
 
             'limit' => [
@@ -367,6 +376,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
         $id = (int)$request->getPost("ID");
         $arFields = [
+            'SORT' => $request->getPost("SORT") ?? 50,
             'ACTIVE' => $request->getPost("ACTIVE") ?? "N",
             'DATE_ACTIVE_FROM' => ( !empty( trim($request->getPost('DATE_ACTIVE_FROM')) ) ? new \Bitrix\Main\Type\DateTime(trim($request->getPost('DATE_ACTIVE_FROM')), 'd.m.Y H:i:s') : '' ),
             'DATE_ACTIVE_TO' => ( !empty( trim($request->getPost('DATE_ACTIVE_TO')) ) ? new \Bitrix\Main\Type\DateTime(trim($request->getPost('DATE_ACTIVE_TO')), 'd.m.Y H:i:s') : '' ),
@@ -376,6 +386,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             'PRICE_PER_TRADING_PLATFORM' => trim($request->getPost('PRICE_PER_TRADING_PLATFORM')),
             'IS_DEFAULT' => trim($request->getPost('IS_DEFAULT')) ?? 'N',
             'TYPE' => trim($request->getPost('TYPE')),
+            'PERSONAL_BY_STORE' => trim($request->getPost('PERSONAL_BY_STORE')),
             'SWITCH_AFTER_ACTIVE_TO' => trim($request->getPost('SWITCH_AFTER_ACTIVE_TO')),
         ];
 

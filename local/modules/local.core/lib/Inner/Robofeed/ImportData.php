@@ -52,7 +52,7 @@ class ImportData
                 $arLoggerData['ROBOFEED_VERSION'] = $obReader->getRobofeedVersion();
                 $arLoggerData['ROBOFEED_DATE'] = new \Bitrix\Main\Type\DateTime($obReader->getRobofeedLastModified(), 'Y-m-d H:i:s');
                 $arLoggerData['BEHAVIOR_IMPORT_ERROR'] = $arStore['BEHAVIOR_IMPORT_ERROR'];
-                $arLoggerData['NOT_UPDATED_XML_IS_ERROR'] = $arStore['NOT_UPDATED_XML_IS_ERROR'];
+                $arLoggerData['ALERT_IF_XML_NOT_MODIFIED'] = $arStore['ALERT_IF_XML_NOT_MODIFIED'];
 
                 $rsLastLog = ImportLogTable::getList(
                     [
@@ -95,16 +95,7 @@ class ImportData
 
                 if( $isDouble && !$isTariffChanged )
                 {
-                    switch( $arStore['NOT_UPDATED_XML_IS_ERROR'] )
-                    {
-                        case 'Y':
-                            throw new RobofeedNotUpdatedException('Время и версия в Robofeed XML не изменились, файл не нуждается в актуализации.');
-                            break;
-                        case 'N':
-                            $arLoggerData['IMPORT_RESULT'] = 'NU';
-                            $arLoggerData['ERROR_TEXT'] = 'Время и версия в Robofeed XML не изменились, файл не нуждается в актуализации.';
-                            break;
-                    }
+                    $arLoggerData['IMPORT_RESULT'] = 'NU';
                 }
                 else
                 {
@@ -148,12 +139,6 @@ class ImportData
                 $arLoggerData['IMPORT_RESULT'] = 'ER';
                 $arStoreImportData['LAST_IMPORT_RESULT'] = 'ER';
             }
-            catch(RobofeedNotUpdatedException $e)
-            {
-                $arLoggerData['ERROR_TEXT'] = $e->getMessage();
-                $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
-                $arLoggerData['IMPORT_RESULT'] = 'ER';
-            }
             catch( \Throwable $e )
             {
                 $arLoggerData['ERROR_TEXT'] = $e->getMessage();
@@ -177,91 +162,61 @@ class ImportData
 
             $arCompany = \Local\Core\Model\Data\CompanyTable::getByPrimary($arStore['COMPANY_ID'], ['select' => ['USER_OWN_ID']])
                 ->fetch();
-            $arUser = [];
-            if( !empty($arCompany['USER_OWN_ID']) )
-            {
-                $arUser = \Bitrix\Main\UserTable::getByPrimary($arCompany['USER_OWN_ID'], ['select' => ['EMAIL']])
-                    ->fetch();
-            }
+            $arUser = \Bitrix\Main\UserTable::getByPrimary($arCompany['USER_OWN_ID'], ['select' => ['EMAIL']])
+                ->fetch();
 
             switch( $arLoggerData['IMPORT_RESULT'] )
             {
                 case 'ER':
-                    if( !empty($arUser['EMAIL']) )
-                    {
-                        \Bitrix\Main\Mail\Event::send(
-                            array(
-                                "EVENT_NAME" => "LOCAL_IMPORT_ROBOFEED_ERROR",
-                                "LID" => "s1",
-                                "C_FIELDS" => array(
-                                    "EMAIL" => $arUser['EMAIL'],
-                                    'STORE_NAME' => $arStore['NAME'],
-                                    'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
-                                )
-                            )
-                        );
-                    }
+                    \Local\Core\Inner\TriggerMail\Robofeed\Import::error(
+                        [
+                            "EMAIL" => $arUser['EMAIL'],
+                            'STORE_NAME' => $arStore['NAME'],
+                            'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
+                        ]
+                    );
                     break;
                 case 'SU':
                     $arStoreImportData['DATE_LAST_SUCCESS_IMPORT'] = $arLoggerData['DATE_CREATE'];
                     $arStoreImportData['PRODUCT_TOTAL_COUNT'] = $arLoggerData['PRODUCT_TOTAL_COUNT'];
                     $arStoreImportData['PRODUCT_SUCCESS_IMPORT'] = $arLoggerData['PRODUCT_SUCCESS_IMPORT'];
 
-                    if( !empty($arUser['EMAIL']) )
+                    if( !empty($arLoggerData['ERROR_TEXT']) )
+                    {
+                        \Local\Core\Inner\TriggerMail\Robofeed\Import::successWithWarning(
+                            [
+                                "EMAIL" => $arUser['EMAIL'],
+                                'STORE_NAME' => $arStore['NAME'],
+                                'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
+                            ]
+                        );
+                    }
+                    else
                     {
 
-                        if( !empty($arLoggerData['ERROR_TEXT']) )
+                        if( $arStore['LAST_IMPORT_RESULT'] != 'SU' )
                         {
-                            \Bitrix\Main\Mail\Event::send(
-                                array(
-                                    "EVENT_NAME" => "LOCAL_IMPORT_ROBOFEED_SUCCESS_WITH_WARNING",
-                                    "LID" => "s1",
-                                    "C_FIELDS" => array(
-                                        "EMAIL" => $arUser['EMAIL'],
-                                        'STORE_NAME' => $arStore['NAME'],
-                                        'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
-                                    )
-                                )
-                            );
-                        }
-                        else
-                        {
-                            $intCount = 0;
-                            $rs = ImportLogTable::getList(
+                            \Local\Core\Inner\TriggerMail\Robofeed\Import::success(
                                 [
-                                    'filter' => [
-                                        'STORE_ID' => $arStore['ID']
-                                    ],
-                                    'order' => ['ID' => 'DESC'],
-                                    'limit' => 3,
-                                    'offset' => 0,
-                                    'select' => ['IMPORT_RESULT']
+                                    "EMAIL" => $arUser['EMAIL'],
+                                    'STORE_NAME' => $arStore['NAME'],
+                                    'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']])
                                 ]
                             );
-
-                            while($a = $rs->fetch())
-                            {
-                                if( $a['IMPORT_RESULT'] == 'SU' )
-                                    $intCount++;
-                            }
-
-                            if( $intCount == '1' )
-                            {
-                                \Bitrix\Main\Mail\Event::send(
-                                    array(
-                                        "EVENT_NAME" => "LOCAL_IMPORT_ROBOFEED_AGAIN_SUCCESS",
-                                        "LID" => "s1",
-                                        "C_FIELDS" => array(
-                                            "EMAIL" => $arUser['EMAIL'],
-                                            'STORE_NAME' => $arStore['NAME'],
-                                            'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']])
-                                        )
-                                    )
-                                );
-                            }
                         }
                     }
 
+                    break;
+                case 'NU':
+                    if( $arStore['ALERT_IF_XML_NOT_MODIFIED'] == 'Y' )
+                    {
+                        \Local\Core\Inner\TriggerMail\Robofeed\Import::xmlNotModified(
+                            [
+                                "EMAIL" => $arUser['EMAIL'],
+                                'STORE_NAME' => $arStore['NAME']
+                            ]
+                        );
+                    }
                     break;
             }
 
@@ -275,7 +230,7 @@ class ImportData
                 }
             }
 
-            $rr = StoreTable::update(
+            StoreTable::update(
                 $arStore['ID'],
                 $arStoreImportData
             );
