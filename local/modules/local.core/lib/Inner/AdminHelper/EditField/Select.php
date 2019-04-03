@@ -16,13 +16,7 @@ class Select extends Base
             "reference_id" => array_keys($this->variants),
         ];
 
-        return SelectBoxFromArray(
-            $this->getCode(),
-            $variants,
-            $this->getValue(),
-            "Не выбрано",
-            ""
-        );
+        return SelectBoxFromArray($this->getCode(), $variants, $this->getValue(), "Не выбрано", "");
     }
 
     /**
@@ -32,11 +26,9 @@ class Select extends Base
     {
         $result = "";
 
-        if( !empty($this->getValue()) )
-        {
+        if (!empty($this->getValue())) {
 
-            if( isset($this->variants[$this->getValue()]) )
-            {
+            if (isset($this->variants[$this->getValue()])) {
 
                 $result = "{$this->variants[$this->getValue()]}[{$this->getValue()}]";
             }

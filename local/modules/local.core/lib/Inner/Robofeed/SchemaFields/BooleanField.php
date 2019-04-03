@@ -28,19 +28,14 @@ class BooleanField extends ScalarField
 
     public function getValidators()
     {
-        $validators[] = function($value, $primary, $row, $obField)
+        $validators[] = function ($value, $primary, $row, $obField)
             {
-                if( $value === '' )
-                {
-                    if( $this->isRequired() )
-                    {
+                if ($value === '') {
+                    if ($this->isRequired()) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($this, '', 'LOCAL_CORE_FIELD_IS_REQUIRED');
                     }
-                }
-                else
-                {
-                    if( !in_array($value, $this->values) )
-                    {
+                } else {
+                    if (!in_array($value, $this->values)) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($this, '', 'LOCAL_CORE_INVALID_VALUE');
                     }
                 }

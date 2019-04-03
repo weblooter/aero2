@@ -29,24 +29,10 @@ class StepCounter extends Command
     {
         $this->setName('kd:step-counter')
             ->setDescription('Счетчик')
-            ->setHelp(
-                "Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kdd:stepcounter --help"
-            )
-            ->addArgument(
-                'start',
-                InputArgument::REQUIRED,
-                'Начать с'
-            )
-            ->addArgument(
-                'step',
-                InputArgument::REQUIRED,
-                'С шагом'
-            )
-            ->addArgument(
-                'iterations',
-                InputArgument::REQUIRED,
-                'Количество повторений'
-            );
+            ->setHelp("Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kdd:stepcounter --help")
+            ->addArgument('start', InputArgument::REQUIRED, 'Начать с')
+            ->addArgument('step', InputArgument::REQUIRED, 'С шагом')
+            ->addArgument('iterations', InputArgument::REQUIRED, 'Количество повторений');
     }
 
     /**
@@ -62,8 +48,7 @@ class StepCounter extends Command
 
         $counter = 0;
 
-        while( true )
-        {
+        while (true) {
             $counter++;
             $output->writeln('Процесс: '.getmypid().' - '.$start);
             //            \Local\Core\Inner\ContainerDI::getInstance()->get( 'logger.service' )->alert( 'Процесс: '.getmypid().' - '.$start );
@@ -71,8 +56,7 @@ class StepCounter extends Command
             $start += $step;
             sleep(1);
 
-            if( $counter >= $iterations )
-            {
+            if ($counter >= $iterations) {
                 return;
             }
         }

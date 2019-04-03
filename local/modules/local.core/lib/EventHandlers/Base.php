@@ -23,18 +23,10 @@ class Base
         $eventManager = EventManager::getInstance();
 
         /** @see \Local\Core\EventHandlers\Main\OnBuildGlobalMenu::addGlobalMenu(); */
-        $eventManager->addEventHandler(
-            'main',
-            'OnBuildGlobalMenu',
-            [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']
-        );
+        $eventManager->addEventHandler('main', 'OnBuildGlobalMenu', [Main\OnBuildGlobalMenu::class, 'addGlobalMenu']);
 
         /** @see \Local\Core\EventHandlers\Main\OnBeforeEventSend::executeCondition() */
-        $eventManager->addEventHandler(
-            'main',
-            'OnBeforeEventSend',
-            [Main\OnBeforeEventSend::class, 'executeCondition']
-        );
+        $eventManager->addEventHandler('main', 'OnBeforeEventSend', [Main\OnBeforeEventSend::class, 'executeCondition']);
 
     }
 
@@ -43,19 +35,14 @@ class Base
      */
     private static function registerIblock()
     {
-        if( \Bitrix\Main\Loader::includeModule('iblock') )
-        {
+        if (\Bitrix\Main\Loader::includeModule('iblock')) {
             $eventManager = EventManager::getInstance();
 
             /** @see \Local\Core\EventHandlers\Iblock\OnIBlockPropertyBuildList::getLinkToORM(); */
-            $eventManager->addEventHandler(
-                'iblock',
-                'OnIBlockPropertyBuildList',
-                [
+            $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', [
                     Iblock\OnIBlockPropertyBuildList::class,
                     'getLinkToORM'
-                ]
-            );
+                ]);
         }
     }
 }

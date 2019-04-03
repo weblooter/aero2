@@ -19,13 +19,11 @@ class ReferenceField extends ScalarField
 
     public function __construct($name, $parameters = array())
     {
-        if( isset($parameters['class']) )
-        {
+        if (isset($parameters['class'])) {
             $this->strReferenceClass = $parameters['class'];
         }
 
-        if( isset($parameters['ref_column_name']) )
-        {
+        if (isset($parameters['ref_column_name'])) {
             $this->strReferenceColumnName = $parameters['ref_column_name'];
         }
 
@@ -35,26 +33,20 @@ class ReferenceField extends ScalarField
     public function getValidators()
     {
 
-        $validators[] = function($value, $primary, $row, $obField)
+        $validators[] = function ($value, $primary, $row, $obField)
             {
-                if( $value === '' )
-                {
-                    if( $this->isRequired() )
-                    {
+                if ($value === '') {
+                    if ($this->isRequired()) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($this, '', 'LOCAL_CORE_FIELD_IS_REQUIRED');
                     }
-                }
-                else
-                {
+                } else {
 
-                    if( !class_exists($this->strReferenceClass) )
-                    {
+                    if (!class_exists($this->strReferenceClass)) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE_REF_CLASS_NOT_EXIST');
                     }
 
                     $arValues = self::__getOrmValues($this->strReferenceClass, $this->strReferenceColumnName);
-                    if( !in_array($value, $arValues) )
-                    {
+                    if (!in_array($value, $arValues)) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_REF_INVALID_VALUE');
                     }
 
@@ -69,8 +61,7 @@ class ReferenceField extends ScalarField
     public function getValidValue($mixEnterValue)
     {
 
-        if( $mixEnterValue === '' )
-        {
+        if ($mixEnterValue === '') {
             $mixEnterValue = null;
         }
 
@@ -91,63 +82,45 @@ class ReferenceField extends ScalarField
     private static function __getOrmValues(string $strClass, string $strColumnName)
     {
 
-        if( is_null(self::$ormValues[ $strClass ]) )
-        {
+        if (is_null(self::$ormValues[$strClass])) {
             $arResult = [];
 
-            if( class_exists($strClass) )
-            {
+            if (class_exists($strClass)) {
                 $obCache = \Bitrix\Main\Application::getInstance()
                     ->getCache();
-                if(
-                $obCache->startDataCache(
-                    60 * 60 * 24 * 7,
-                    '\Local\Core\Inner\Robofeed\SchemeFields\ReferenceField_class='.$strClass,
-                    Cache::getCachePath(
-                        [
-                            'Robofeed',
-                            'Scheme',
-                            'ReferenceField'
-                        ],
-                        [
-                            'class='.( implode('_', array_slice(explode('\\', $strClass), -2)) ),
-                            'column_name='.$strColumnName
-                        ]
-                    )
-                )
-                )
-                {
+                if (
+                $obCache->startDataCache(60 * 60 * 24 * 7, '\Local\Core\Inner\Robofeed\SchemeFields\ReferenceField_class='.$strClass, Cache::getCachePath([
+                    'Robofeed',
+                    'Scheme',
+                    'ReferenceField'
+                ], [
+                        'class='.(implode('_', array_slice(explode('\\', $strClass), -2))),
+                        'column_name='.$strColumnName
+                    ]))
+                ) {
                     /** @var \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager $strClass */
 
-                    $rs = $strClass::getList(
-                        [
+                    $rs = $strClass::getList([
                             'order' => ['SORT' => 'ASC'],
                             'select' => [$strColumnName]
-                        ]
-                    );
-                    if( $rs->getSelectedRowsCount() < 1 )
-                    {
+                        ]);
+                    if ($rs->getSelectedRowsCount() < 1) {
                         $obCache->abortDataCache();
-                    }
-                    else
-                    {
-                        while( $ar = $rs->fetch() )
-                        {
+                    } else {
+                        while ($ar = $rs->fetch()) {
                             $arResult[] = $ar[$strColumnName];
                         }
                         $obCache->endDataCache($arResult);
                     }
-                }
-                else
-                {
+                } else {
                     $arResult = $obCache->getVars();
                 }
             }
 
-            self::$ormValues[ $strClass ] = $arResult;
+            self::$ormValues[$strClass] = $arResult;
         }
 
 
-        return self::$ormValues[ $strClass ];
+        return self::$ormValues[$strClass];
     }
 }

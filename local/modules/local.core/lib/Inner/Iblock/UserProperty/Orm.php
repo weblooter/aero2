@@ -27,42 +27,28 @@ class Orm
             "MODULES" => [],
         ];
 
-        if( !empty($property["USER_TYPE_SETTINGS"]) && is_array($property["USER_TYPE_SETTINGS"]) )
-        {
-            if( isset($property["USER_TYPE_SETTINGS"]["ORM_ENTITY"]) )
-            {
+        if (!empty($property["USER_TYPE_SETTINGS"]) && is_array($property["USER_TYPE_SETTINGS"])) {
+            if (isset($property["USER_TYPE_SETTINGS"]["ORM_ENTITY"])) {
                 $data["ORM_ENTITY"] = (string)$property["USER_TYPE_SETTINGS"]["ORM_ENTITY"];
             }
-            if( isset($property["USER_TYPE_SETTINGS"]["ENTITY_ID_COLUMN"]) )
-            {
+            if (isset($property["USER_TYPE_SETTINGS"]["ENTITY_ID_COLUMN"])) {
                 $data["ENTITY_ID_COLUMN"] = (string)$property["USER_TYPE_SETTINGS"]["ENTITY_ID_COLUMN"];
             }
-            if( isset($property["USER_TYPE_SETTINGS"]["ENTITY_NAME_COLUMN"]) )
-            {
+            if (isset($property["USER_TYPE_SETTINGS"]["ENTITY_NAME_COLUMN"])) {
                 $data["ENTITY_NAME_COLUMN"] = (string)$property["USER_TYPE_SETTINGS"]["ENTITY_NAME_COLUMN"];
             }
-            if( isset($property["USER_TYPE_SETTINGS"]["MODULES"]) )
-            {
+            if (isset($property["USER_TYPE_SETTINGS"]["MODULES"])) {
 
                 $includedModules = [];
-                if( isset($property["USER_TYPE_SETTINGS"]["MODULES"]) && !empty($property["USER_TYPE_SETTINGS"]["MODULES"]) )
-                {
-                    if( is_array($property["USER_TYPE_SETTINGS"]["MODULES"]) )
-                    {
+                if (isset($property["USER_TYPE_SETTINGS"]["MODULES"]) && !empty($property["USER_TYPE_SETTINGS"]["MODULES"])) {
+                    if (is_array($property["USER_TYPE_SETTINGS"]["MODULES"])) {
                         $includedModules = $property["USER_TYPE_SETTINGS"]["MODULES"];
-                    }
-                    else
-                    {
-                        $includedModules = explode(
-                            ",",
-                            $property["USER_TYPE_SETTINGS"]["MODULES"]
-                        );
+                    } else {
+                        $includedModules = explode(",", $property["USER_TYPE_SETTINGS"]["MODULES"]);
                     }
                 }
-                if( !empty($includedModules) )
-                {
-                    foreach( $includedModules as $module )
-                    {
+                if (!empty($includedModules)) {
+                    foreach ($includedModules as $module) {
                         $data["MODULES"][] = trim($module);
                     }
                 }
@@ -96,10 +82,7 @@ class Orm
         ];
 
         $settings = self::PrepareSettings($property);
-        $modules = implode(
-            ",",
-            $settings["MODULES"]
-        );
+        $modules = implode(",", $settings["MODULES"]);
 
         return <<<"HIBSELECT"
 <tr>
@@ -144,10 +127,7 @@ HIBSELECT;
     {
 
         $html = "<select name=\"{$HTMLControlName["VALUE"]}\">";
-        $html .= self::GetOptionsHtml(
-            $property,
-            [$value["VALUE"]]
-        );
+        $html .= self::GetOptionsHtml($property, [$value["VALUE"]]);
         $html .= "</select>";
 
         return $html;
@@ -168,50 +148,33 @@ HIBSELECT;
     {
         $max_n = 0;
         $values = [];
-        if( is_array($value) )
-        {
+        if (is_array($value)) {
             $match = [];
-            foreach( $value as $valueId => $arValue )
-            {
+            foreach ($value as $valueId => $arValue) {
                 $values[$valueId] = $arValue["VALUE"];
-                if(
-                preg_match(
-                    "/^n(\\d+)$/",
-                    $valueId,
-                    $match
-                )
-                )
-                {
-                    if( $match[1] > $max_n )
-                    {
+                if (
+                preg_match("/^n(\\d+)$/", $valueId, $match)
+                ) {
+                    if ($match[1] > $max_n) {
                         $max_n = intval($match[1]);
                     }
                 }
             }
         }
-        if(
+        if (
             end($values) != ""
-            || substr(
-                   key($values),
-                   0,
-                   1
-               ) != "n"
-        )
-        {
-            $values["n".( $max_n + 1 )] = "";
+            || substr(key($values), 0, 1) != "n"
+        ) {
+            $values["n".($max_n + 1)] = "";
         }
 
 
         $name = $HTMLControlName["VALUE"]."VALUE";
         $html = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"nopadding\" width=\"100%\" id=\"tb".md5($name)."\">";
-        foreach( $values as $valueId => $value )
-        {
+        foreach ($values as $valueId => $value) {
             $html .= "<tr><td>";
             $html .= "<select name=\"{$HTMLControlName["VALUE"]}[{$valueId}][VALUE]\" >";
-            $html .= self::GetOptionsHtml(
-                $property,
-                [$value]
-            );
+            $html .= self::GetOptionsHtml($property, [$value]);
             $html .= "</select>";
             $html .= "</td></tr>";
         }
@@ -235,13 +198,10 @@ HIBSELECT;
      */
     public static function GetPublicEditHTML($property, $value, $HTMLControlName)
     {
-        $multi = ( isset($property["MULTIPLE"]) && $property["MULTIPLE"] == "Y" );
+        $multi = (isset($property["MULTIPLE"]) && $property["MULTIPLE"] == "Y");
 
-        $html = "<select ".( $multi ? "multiple" : "" )." name=\"{$HTMLControlName["VALUE"]}".( $multi ? "[]" : "" )."\">";
-        $html .= self::GetOptionsHtml(
-            $property,
-            $value
-        );
+        $html = "<select ".($multi ? "multiple" : "")." name=\"{$HTMLControlName["VALUE"]}".($multi ? "[]" : "")."\">";
+        $html .= self::GetOptionsHtml($property, $value);
         $html .= "</select>";
 
         return $html;
@@ -261,10 +221,7 @@ HIBSELECT;
     public static function GetPublicEditHTMLMultiple($property, $value, $HTMLControlName)
     {
         $html = "<select multiple name=\"{$HTMLControlName["VALUE"]}[]\">";
-        $html .= self::GetOptionsHtml(
-            $property,
-            self::normalizeValue($value)
-        );
+        $html .= self::GetOptionsHtml($property, self::normalizeValue($value));
         $html .= "</select>";
 
         return $html;
@@ -284,28 +241,21 @@ HIBSELECT;
 
         #Подключаем модули при необходимости
         $modulesIncluded = true;
-        if( !empty($settings["MODULES"]) )
-        {
-            foreach( $settings["MODULES"] as $module )
-            {
-                try
-                {
-                    if( !Loader::includeModule(trim($module)) )
-                    {
+        if (!empty($settings["MODULES"])) {
+            foreach ($settings["MODULES"] as $module) {
+                try {
+                    if (!Loader::includeModule(trim($module))) {
                         $modulesIncluded = false;
                         break;
                     }
-                }
-                catch( LoaderException $e )
-                {
+                } catch (LoaderException $e) {
                     $modulesIncluded = false;
                     break;
                 }
             }
         }
 
-        if( $modulesIncluded === false )
-        {
+        if ($modulesIncluded === false) {
             return "";
         }
 
@@ -316,34 +266,22 @@ HIBSELECT;
         $ormEntityColumnID = $settings["ENTITY_ID_COLUMN"];
         $ormEntityColumnName = $settings["ENTITY_NAME_COLUMN"];
 
-        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
-        {
+        if (!empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName)) {
             #Получаем все записи из таблицы
-            if( empty(self::$dataCache[$ormEntityName]) )
-            {
-                self::$dataCache[$ormEntityName] = self::getEntityFieldsByFilter(
-                    $ormEntityName,
-                    $ormEntityColumnID,
-                    $ormEntityColumnName,
-                    [
+            if (empty(self::$dataCache[$ormEntityName])) {
+                self::$dataCache[$ormEntityName] = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
                         "select" => [$ormEntityColumnID, $ormEntityColumnName]
-                    ]
-                );
+                    ]);
             }
 
             #Формируем option'ы
             $ormOptions = [];
             $selectedValue = false;
-            foreach( self::$dataCache[$ormEntityName] as $data )
-            {
+            foreach (self::$dataCache[$ormEntityName] as $data) {
                 $selected = "";
-                if(
-                in_array(
-                    $data[$ormEntityColumnID],
-                    $values
-                )
-                )
-                {
+                if (
+                in_array($data[$ormEntityColumnID], $values)
+                ) {
                     $selected = "selected";
                     $selectedValue = true;
                 }
@@ -351,23 +289,15 @@ HIBSELECT;
                                 ."]</option>";
             }
 
-            $options = array_merge(
-                [
-                    "<option value=\"\" ".( $selectedValue ? "" : " selected" ).">(не установлено)</option>"
-                ],
-                $ormOptions
-            );
+            $options = array_merge([
+                "<option value=\"\" ".($selectedValue ? "" : " selected").">(не установлено)</option>"
+            ], $ormOptions);
 
-        }
-        else
-        {
+        } else {
             $options[] = "<option value=\"\" selected>(не установлено)</option>";
         }
 
-        return implode(
-            "",
-            $options
-        );
+        return implode("", $options);
     }
 
     /**
@@ -380,8 +310,7 @@ HIBSELECT;
      */
     public static function GetExtendedValue($property, $value)
     {
-        if( !isset($value["VALUE"]) || empty($value["VALUE"]) )
-        {
+        if (!isset($value["VALUE"]) || empty($value["VALUE"])) {
             return false;
         }
 
@@ -389,28 +318,21 @@ HIBSELECT;
 
         #Подключаем модули при необходимости
         $modulesIncluded = true;
-        if( !empty($settings["MODULES"]) )
-        {
-            foreach( $settings["MODULES"] as $module )
-            {
-                try
-                {
-                    if( !Loader::includeModule(trim($module)) )
-                    {
+        if (!empty($settings["MODULES"])) {
+            foreach ($settings["MODULES"] as $module) {
+                try {
+                    if (!Loader::includeModule(trim($module))) {
                         $modulesIncluded = false;
                         break;
                     }
-                }
-                catch( LoaderException $e )
-                {
+                } catch (LoaderException $e) {
                     $modulesIncluded = false;
                     break;
                 }
             }
         }
 
-        if( $modulesIncluded === false )
-        {
+        if ($modulesIncluded === false) {
             return false;
         }
 
@@ -418,32 +340,21 @@ HIBSELECT;
         $ormEntityColumnID = $settings["ENTITY_ID_COLUMN"];
         $ormEntityColumnName = $settings["ENTITY_NAME_COLUMN"];
 
-        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
-        {
+        if (!empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName)) {
 
-            if( !isset(self::$arItemCache[$ormEntityName]) )
-            {
+            if (!isset(self::$arItemCache[$ormEntityName])) {
                 self::$arItemCache[$ormEntityName] = [];
             }
 
             #Если нет кеша или множественное значение, то получаем значения
-            if( is_array($value["VALUE"]) || !isset(self::$arItemCache[$ormEntityName][$value["VALUE"]]) )
-            {
-                $data = self::getEntityFieldsByFilter(
-                    $ormEntityName,
-                    $ormEntityColumnID,
-                    $ormEntityColumnName,
-                    [
+            if (is_array($value["VALUE"]) || !isset(self::$arItemCache[$ormEntityName][$value["VALUE"]])) {
+                $data = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
                         "select" => array($ormEntityColumnID, $ormEntityColumnName),
                         "filter" => array("={$ormEntityColumnID}" => $value["VALUE"])
-                    ]
-                );
-                if( !empty($data) )
-                {
-                    foreach( $data as $item )
-                    {
-                        if( isset($item[$ormEntityColumnName]) )
-                        {
+                    ]);
+                if (!empty($data)) {
+                    foreach ($data as $item) {
+                        if (isset($item[$ormEntityColumnName])) {
                             $item["VALUE"] = $item[$ormEntityColumnName];
                             self::$arItemCache[$ormEntityName][$item[$ormEntityColumnID]] = $item;
                         }
@@ -452,35 +363,25 @@ HIBSELECT;
             }
 
             # Если множественное значение
-            if( is_array($value["VALUE"]) )
-            {
+            if (is_array($value["VALUE"])) {
 
                 $result = [];
-                foreach( $value["VALUE"] as $prop )
-                {
-                    if( isset(self::$arItemCache[$ormEntityName][$prop]) )
-                    {
+                foreach ($value["VALUE"] as $prop) {
+                    if (isset(self::$arItemCache[$ormEntityName][$prop])) {
                         $result[$prop] = self::$arItemCache[$ormEntityName][$prop];
-                    }
-                    else
-                    {
+                    } else {
                         $result[$prop] = false;
                     }
                 }
 
                 return $result;
-            }
-            #Если единичное значение
-            else
-            {
-                if( isset(self::$arItemCache[$ormEntityName][$value["VALUE"]]) )
-                {
+            } #Если единичное значение
+            else {
+                if (isset(self::$arItemCache[$ormEntityName][$value["VALUE"]])) {
                     return self::$arItemCache[$ormEntityName][$value["VALUE"]];
                 }
             }
-        }
-        else
-        {
+        } else {
             return false;
         }
 
@@ -501,12 +402,8 @@ HIBSELECT;
     public static function GetAdminListViewHTML($property, $value, $HTMLControlName)
     {
         $settings = self::PrepareSettings($property);
-        $data = self::GetExtendedValue(
-            $property,
-            $value
-        );
-        if( $data )
-        {
+        $data = self::GetExtendedValue($property, $value);
+        if ($data) {
             return htmlspecialcharsbx($data[$settings["ENTITY_NAME_COLUMN"]]);
         }
 
@@ -527,15 +424,10 @@ HIBSELECT;
     public static function GetPublicViewHTML($property, $value, $HTMLControlName)
     {
         $settings = self::PrepareSettings($property);
-        $data = self::GetExtendedValue(
-            $property,
-            $value
-        );
+        $data = self::GetExtendedValue($property, $value);
 
-        if( !empty($data) )
-        {
-            switch( $HTMLControlName["MODE"] ?? "" )
-            {
+        if (!empty($data)) {
+            switch ($HTMLControlName["MODE"] ?? "") {
                 case "CSV_EXPORT":
                     return $data[$settings["ENTITY_ID_COLUMN"]];
                     break;
@@ -570,19 +462,13 @@ HIBSELECT;
         $lAdmin->InitFilter([$HTMLControlName["VALUE"]]);
         $filterValue = $GLOBALS[$HTMLControlName["VALUE"]];
 
-        if( isset($filterValue) && is_array($filterValue) )
-        {
+        if (isset($filterValue) && is_array($filterValue)) {
             $values = $filterValue;
-        }
-        else
-        {
+        } else {
             $values = [];
         }
 
-        $options = self::GetOptionsHtml(
-            $property,
-            $values
-        );
+        $options = self::GetOptionsHtml($property, $values);
         $html = "<select name=\"{$HTMLControlName["VALUE"]}[]\" multiple>";
         $html .= $options;
         $html .= "</select>";
@@ -604,13 +490,9 @@ HIBSELECT;
     public static function GetSearchContent($property, $value, $HTMLControlName)
     {
         $settings = self::PrepareSettings($property);
-        $data = self::GetExtendedValue(
-            $property,
-            $value
-        );
+        $data = self::GetExtendedValue($property, $value);
 
-        if( !empty($data) )
-        {
+        if (!empty($data)) {
             return $data[$settings["ENTITY_NAME_COLUMN"]];
         }
 
@@ -632,34 +514,26 @@ HIBSELECT;
         $filtered = false;
         $values = array();
 
-        if( isset($_REQUEST[$HTMLControlName["VALUE"]]) )
-        {
-            $values = ( is_array($_REQUEST[$HTMLControlName["VALUE"]]) ? $_REQUEST[$HTMLControlName["VALUE"]] : array($_REQUEST[$HTMLControlName["VALUE"]]) );
-        }
-        else
-        {
-            if( isset($GLOBALS[$HTMLControlName["VALUE"]]) )
-            {
-                $values = ( is_array($GLOBALS[$HTMLControlName["VALUE"]]) ? $GLOBALS[$HTMLControlName["VALUE"]] : array($GLOBALS[$HTMLControlName["VALUE"]]) );
+        if (isset($_REQUEST[$HTMLControlName["VALUE"]])) {
+            $values = (is_array($_REQUEST[$HTMLControlName["VALUE"]]) ? $_REQUEST[$HTMLControlName["VALUE"]] : array($_REQUEST[$HTMLControlName["VALUE"]]));
+        } else {
+            if (isset($GLOBALS[$HTMLControlName["VALUE"]])) {
+                $values = (is_array($GLOBALS[$HTMLControlName["VALUE"]]) ? $GLOBALS[$HTMLControlName["VALUE"]] : array($GLOBALS[$HTMLControlName["VALUE"]]));
             }
         }
 
-        if( !empty($values) )
-        {
+        if (!empty($values)) {
             $clearValues = array();
-            foreach( $values as $oneValue )
-            {
+            foreach ($values as $oneValue) {
                 $oneValue = (string)$oneValue;
-                if( $oneValue != "" )
-                {
+                if ($oneValue != "") {
                     $clearValues[] = $oneValue;
                 }
             }
             $values = $clearValues;
             unset($oneValue, $clearValues);
         }
-        if( !empty($values) )
-        {
+        if (!empty($values)) {
             $filtered = true;
             $arFilter["=PROPERTY_".$property["ID"]] = $values;
         }
@@ -680,44 +554,35 @@ HIBSELECT;
     {
         $arResult = [];
 
-        if( !empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName) )
-        {
+        if (!empty($ormEntityName) && class_exists($ormEntityName) && new $ormEntityName() instanceof \Bitrix\Main\Entity\DataManager && !empty($ormEntityColumnID) && !empty($ormEntityColumnName)) {
 
-            if( !isset(self::$entityMapCache[$ormEntityName]) )
-            {
+            if (!isset(self::$entityMapCache[$ormEntityName])) {
                 /** @var $ormEntityName \Bitrix\Main\Entity\DataManager */
                 self::$entityMapCache[$ormEntityName] = $ormEntityName::getMap();
             }
 
             $getListParams["order"] = [];
-            if( isset(self::$entityMapCache[$ormEntityName]["SORT"]) )
-            {
+            if (isset(self::$entityMapCache[$ormEntityName]["SORT"])) {
                 $getListParams["order"]["SORT"] = "ASC";
                 $getListParams["select"][] = "SORT";
             }
 
-            if( isset(self::$entityMapCache[$ormEntityName][$ormEntityColumnName]) )
-            {
+            if (isset(self::$entityMapCache[$ormEntityName][$ormEntityColumnName])) {
                 $getListParams["order"][$ormEntityColumnName] = "ASC";
             }
 
-            if( isset(self::$entityMapCache[$ormEntityName][$ormEntityColumnID]) )
-            {
+            if (isset(self::$entityMapCache[$ormEntityName][$ormEntityColumnID])) {
                 $getListParams["order"][$ormEntityColumnID] = "ASC";
             }
 
-            try
-            {
+            try {
                 $rsData = $ormEntityName::getList($getListParams);
-                while( $arData = $rsData->fetch() )
-                {
+                while ($arData = $rsData->fetch()) {
                     $arResult[] = $arData;
                 }
                 unset($arData, $rsData);
 
-            }
-            catch( \Exception $e )
-            {
+            } catch (\Exception $e) {
                 return $arResult;
             }
         }
@@ -729,35 +594,24 @@ HIBSELECT;
     {
         $result = [];
 
-        if( !is_array($value) )
-        {
+        if (!is_array($value)) {
             $value = (string)$value;
-            if( $value !== "" )
-            {
+            if ($value !== "") {
                 $result[] = $value;
             }
-        }
-        else
-        {
-            if( !empty($value) )
-            {
-                foreach( $value as $row )
-                {
+        } else {
+            if (!empty($value)) {
+                foreach ($value as $row) {
                     $oneValue = "";
-                    if( is_array($row) )
-                    {
-                        if( isset($row["VALUE"]) )
-                        {
+                    if (is_array($row)) {
+                        if (isset($row["VALUE"])) {
                             $oneValue = (string)$row["VALUE"];
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $oneValue = (string)$row;
                     }
 
-                    if( $oneValue !== "" )
-                    {
+                    if ($oneValue !== "") {
                         $result[] = $oneValue;
                     }
                 }

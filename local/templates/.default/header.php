@@ -1,6 +1,5 @@
 <?
-if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
-{
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 ?>
@@ -15,10 +14,7 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
 <div id="panel">
     <? $APPLICATION->ShowPanel(); ?>
 </div>
-<? $APPLICATION->IncludeComponent(
-    "bitrix:menu",
-    ".default",
-    array(
+<? $APPLICATION->IncludeComponent("bitrix:menu", ".default", array(
         "ALLOW_MULTI_SELECT" => "N",
         "CHILD_MENU_TYPE" => "left",
         "DELAY" => "N",
@@ -31,6 +27,4 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
         "ROOT_MENU_TYPE" => "top",
         "USE_EXT" => "N",
         "COMPONENT_TEMPLATE" => "horizontal_multilevel"
-    ),
-    false
-); ?>
+    ), false); ?>

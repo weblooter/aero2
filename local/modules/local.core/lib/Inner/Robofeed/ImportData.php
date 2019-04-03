@@ -36,14 +36,12 @@ class ImportData
         $arStoreImportData['DATE_LAST_IMPORT'] = $arLoggerData['DATE_CREATE'];
 
         $rsStore = StoreTable::getByPrimary($intStoreId, ['filter' => ['ACTIVE' => 'Y'], 'select' => ['*', 'TARIFF_DATA_' => 'TARIFF']]);
-        if( $rsStore->getSelectedRowsCount() > 0 )
-        {
+        if ($rsStore->getSelectedRowsCount() > 0) {
             $arStore = $rsStore->fetch();
 
-            $intImportProductLimitByTariff = !empty( $arStore['TARIFF_DATA_LIMIT_IMPORT_PRODUCTS'] ) ? $arStore['TARIFF_DATA_LIMIT_IMPORT_PRODUCTS'] : 50;
+            $intImportProductLimitByTariff = !empty($arStore['TARIFF_DATA_LIMIT_IMPORT_PRODUCTS']) ? $arStore['TARIFF_DATA_LIMIT_IMPORT_PRODUCTS'] : 50;
 
-            try
-            {
+            try {
                 $strFilePath = self::getFilePath($arStore, $strDownloadPath);
 
                 $obReader = \Local\Core\Inner\Robofeed\XMLReader\Factory::factory(1);
@@ -54,8 +52,7 @@ class ImportData
                 $arLoggerData['BEHAVIOR_IMPORT_ERROR'] = $arStore['BEHAVIOR_IMPORT_ERROR'];
                 $arLoggerData['ALERT_IF_XML_NOT_MODIFIED'] = $arStore['ALERT_IF_XML_NOT_MODIFIED'];
 
-                $rsLastLog = ImportLogTable::getList(
-                    [
+                $rsLastLog = ImportLogTable::getList([
                         'filter' => [
                             'STORE_ID' => $arLoggerData['STORE_ID'],
                         ],
@@ -63,20 +60,16 @@ class ImportData
                         'select' => ['ROBOFEED_VERSION', 'ROBOFEED_DATE'],
                         'limit' => 1,
                         'offset' => 0
-                    ]
-                );
+                    ]);
                 $isDouble = false;
                 $isTariffChanged = false;
-                if( $rsLastLog->getSelectedRowsCount() > 0 )
-                {
+                if ($rsLastLog->getSelectedRowsCount() > 0) {
                     $arDouble = $rsLastLog->fetch();
-                    if(
+                    if (
                         $arDouble['ROBOFEED_VERSION'] == $arLoggerData['ROBOFEED_VERSION']
                         && !is_null($arDouble['ROBOFEED_DATE'])
-                    )
-                    {
-                        if( $arDouble['ROBOFEED_DATE']->getTimestamp() == $arLoggerData['ROBOFEED_DATE']->getTimestamp() )
-                        {
+                    ) {
+                        if ($arDouble['ROBOFEED_DATE']->getTimestamp() == $arLoggerData['ROBOFEED_DATE']->getTimestamp()) {
                             $isDouble = true;
 
                             $arLastTariffLog = \Local\Core\Model\Data\StoreTariffChangeLogTable::getList([
@@ -85,30 +78,26 @@ class ImportData
                                 'order' => ['ID' => 'DESC'],
                                 'limit' => 1,
                                 'offset' => 0,
-                            ])->fetch();
+                            ])
+                                ->fetch();
 
-                            $isTariffChanged = ( $arStore['DATE_LAST_IMPORT']->getTimestamp() <= $arLastTariffLog['DATE_CREATE']->getTimeStamp() );
+                            $isTariffChanged = ($arStore['DATE_LAST_IMPORT']->getTimestamp() <= $arLastTariffLog['DATE_CREATE']->getTimeStamp());
 
                         }
                     }
                 }
 
-                if( $isDouble && !$isTariffChanged )
-                {
+                if ($isDouble && !$isTariffChanged) {
                     $arLoggerData['IMPORT_RESULT'] = 'NU';
-                }
-                else
-                {
+                } else {
 
                     $obValidateResult = self::validateRobofeed($arLoggerData['ROBOFEED_VERSION'], $strFilePath);
-                    if(
+                    if (
                         $obValidateResult->isSuccess()
-                        || ( !$obValidateResult->isSuccess() && $arStore['BEHAVIOR_IMPORT_ERROR'] == 'IMPORT_ONLY_VALID' )
-                    )
-                    {
+                        || (!$obValidateResult->isSuccess() && $arStore['BEHAVIOR_IMPORT_ERROR'] == 'IMPORT_ONLY_VALID')
+                    ) {
 
-                        if( !$obValidateResult->isSuccess() )
-                        {
+                        if (!$obValidateResult->isSuccess()) {
                             $obWarning->addErrors($obValidateResult->getErrors());
                         }
 
@@ -121,39 +110,30 @@ class ImportData
                         $arImportResult = $obImportResult->getData();
                         $arLoggerData['PRODUCT_TOTAL_COUNT'] = $arImportResult['PRODUCT_TOTAL_COUNT'];
                         $arLoggerData['PRODUCT_SUCCESS_IMPORT'] = $arImportResult['PRODUCT_SUCCESS_IMPORT'];
-                    }
-                    else
-                    {
+                    } else {
                         throw new \Exception(implode('<br/>', $obValidateResult->getErrorMessages()));
                     }
 
                     $arLoggerData['IMPORT_RESULT'] = 'SU';
                     $arStoreImportData['LAST_IMPORT_RESULT'] = 'SU';
                 }
-            }
-            catch( FatalException $e )
-            {
+            } catch (FatalException $e) {
                 $arLoggerData['ERROR_TEXT'] = $e->getMessage();
                 $obResult->addError(new \Bitrix\Main\Error('Критическая ошибка:'));
                 $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
                 $arLoggerData['IMPORT_RESULT'] = 'ER';
                 $arStoreImportData['LAST_IMPORT_RESULT'] = 'ER';
-            }
-            catch( \Throwable $e )
-            {
+            } catch (\Throwable $e) {
                 $arLoggerData['ERROR_TEXT'] = $e->getMessage();
                 $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
                 $arLoggerData['IMPORT_RESULT'] = 'ER';
                 $arStoreImportData['LAST_IMPORT_RESULT'] = 'ER';
             }
-            finally
-            {
-                if( !$obWarning->isSuccess() )
-                {
+            finally {
+                if (!$obWarning->isSuccess()) {
                     $arLoggerData['ERROR_TEXT'] = implode('<br/>', $obWarning->getErrorMessages());
                 }
-                if( file_exists($strDownloadPath) )
-                {
+                if (file_exists($strDownloadPath)) {
                     unlink($strDownloadPath);
                 }
 
@@ -165,75 +145,56 @@ class ImportData
             $arUser = \Bitrix\Main\UserTable::getByPrimary($arCompany['USER_OWN_ID'], ['select' => ['EMAIL']])
                 ->fetch();
 
-            switch( $arLoggerData['IMPORT_RESULT'] )
-            {
+            switch ($arLoggerData['IMPORT_RESULT']) {
                 case 'ER':
-                    \Local\Core\Inner\TriggerMail\Robofeed\Import::error(
-                        [
+                    \Local\Core\Inner\TriggerMail\Robofeed\Import::error([
                             "EMAIL" => $arUser['EMAIL'],
                             'STORE_NAME' => $arStore['NAME'],
                             'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
-                        ]
-                    );
+                        ]);
                     break;
                 case 'SU':
                     $arStoreImportData['DATE_LAST_SUCCESS_IMPORT'] = $arLoggerData['DATE_CREATE'];
                     $arStoreImportData['PRODUCT_TOTAL_COUNT'] = $arLoggerData['PRODUCT_TOTAL_COUNT'];
                     $arStoreImportData['PRODUCT_SUCCESS_IMPORT'] = $arLoggerData['PRODUCT_SUCCESS_IMPORT'];
 
-                    if( !empty($arLoggerData['ERROR_TEXT']) )
-                    {
-                        \Local\Core\Inner\TriggerMail\Robofeed\Import::successWithWarning(
-                            [
+                    if (!empty($arLoggerData['ERROR_TEXT'])) {
+                        \Local\Core\Inner\TriggerMail\Robofeed\Import::successWithWarning([
                                 "EMAIL" => $arUser['EMAIL'],
                                 'STORE_NAME' => $arStore['NAME'],
                                 'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
-                            ]
-                        );
-                    }
-                    else
-                    {
+                            ]);
+                    } else {
 
-                        if( $arStore['LAST_IMPORT_RESULT'] != 'SU' )
-                        {
-                            \Local\Core\Inner\TriggerMail\Robofeed\Import::success(
-                                [
+                        if ($arStore['LAST_IMPORT_RESULT'] != 'SU') {
+                            \Local\Core\Inner\TriggerMail\Robofeed\Import::success([
                                     "EMAIL" => $arUser['EMAIL'],
                                     'STORE_NAME' => $arStore['NAME'],
                                     'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']])
-                                ]
-                            );
+                                ]);
                         }
                     }
 
                     break;
                 case 'NU':
-                    if( $arStore['ALERT_IF_XML_NOT_MODIFIED'] == 'Y' )
-                    {
-                        \Local\Core\Inner\TriggerMail\Robofeed\Import::xmlNotModified(
-                            [
+                    if ($arStore['ALERT_IF_XML_NOT_MODIFIED'] == 'Y') {
+                        \Local\Core\Inner\TriggerMail\Robofeed\Import::xmlNotModified([
                                 "EMAIL" => $arUser['EMAIL'],
                                 'STORE_NAME' => $arStore['NAME']
-                            ]
-                        );
+                            ]);
                     }
                     break;
             }
 
 
-            if( empty( $arStoreImportData['LAST_IMPORT_RESULT'] ) )
-            {
+            if (empty($arStoreImportData['LAST_IMPORT_RESULT'])) {
                 $arStoreImportData['LAST_IMPORT_RESULT'] = $arStore['LAST_IMPORT_RESULT'];
-                if( $arStoreImportData['LAST_IMPORT_RESULT'] == 'SU' )
-                {
+                if ($arStoreImportData['LAST_IMPORT_RESULT'] == 'SU') {
                     $arStoreImportData['DATE_LAST_SUCCESS_IMPORT'] = $arLoggerData['DATE_CREATE'];
                 }
             }
 
-            StoreTable::update(
-                $arStore['ID'],
-                $arStoreImportData
-            );
+            StoreTable::update($arStore['ID'], $arStoreImportData);
         }
 
         return $obResult;
@@ -242,31 +203,24 @@ class ImportData
     private static function getFilePath($arStore, $strDownloadPath)
     {
         $strFilePath = null;
-        switch( $arStore['RESOURCE_TYPE'] )
-        {
+        switch ($arStore['RESOURCE_TYPE']) {
             case 'LINK':
                 $obHttp = new \Bitrix\Main\Web\HttpClient();
-                $obHttp->setStreamTimeout(
-                    \Bitrix\Main\Config\Configuration::getInstance()
-                        ->get('store')['download_xml']['connect_timeout'] ?? 60
-                );
+                $obHttp->setStreamTimeout(\Bitrix\Main\Config\Configuration::getInstance()
+                                              ->get('store')['download_xml']['connect_timeout'] ?? 60);
                 $intMaxFileSize = \Bitrix\Main\Config\Configuration::getInstance()
                                       ->get('store')['download_xml']['max_size_mb'] ?? 300;
                 $obHttp->setBodyLengthMax($intMaxFileSize * 1024 * 1024);
-                if( empty($arStore['FILE_LINK']) )
-                {
+                if (empty($arStore['FILE_LINK'])) {
                     throw new FatalException('Не указана ссылка на Robofeed XML');
                 }
 
-                if( $arStore['HTTP_AUTH'] == 'Y' )
-                {
+                if ($arStore['HTTP_AUTH'] == 'Y') {
                     $obHttp->setAuthorization($arStore['HTTP_AUTH_LOGIN'], $arStore['HTTP_AUTH_PASS']);
                 }
 
-                if( $qqres = $obHttp->download($arStore['FILE_LINK'], $strDownloadPath) )
-                {
-                    switch( $obHttp->getStatus() )
-                    {
+                if ($qqres = $obHttp->download($arStore['FILE_LINK'], $strDownloadPath)) {
+                    switch ($obHttp->getStatus()) {
                         case '404':
                             throw new FatalException('Не удалось скачать Robofeed XML. Файл не обнаружен, ответ сервера - 404');
                             break;
@@ -280,19 +234,12 @@ class ImportData
                             throw new FatalException('Скачивание и обработка Robofeed XML отменена. Ожидаемый ответ сервера - 200, текущий ответ сервера - '.$obHttp->getStatus());
                             break;
                     }
-                }
-                else
-                {
-                    if( $obHttp->getStatus() == 200 || $obHttp->getStatus() == 0 )
-                    {
-                        throw new FatalException(
-                            'Не удалось скачать Robofeed XML. Напоминаем про ограничение скачиваемого файла по размеру ( до '.$intMaxFileSize.' мб ) и времени скачивания файла ( '
-                            .( \Bitrix\Main\Config\Configuration::getInstance()
-                                   ->get('store')['download_xml']['connect_timeout'] ?? 60 ).' сек. ). Проверьте размер и время отдачи файла.'
-                        );
-                    }
-                    else
-                    {
+                } else {
+                    if ($obHttp->getStatus() == 200 || $obHttp->getStatus() == 0) {
+                        throw new FatalException('Не удалось скачать Robofeed XML. Напоминаем про ограничение скачиваемого файла по размеру ( до '.$intMaxFileSize.' мб ) и времени скачивания файла ( '
+                                                 .(\Bitrix\Main\Config\Configuration::getInstance()
+                                                       ->get('store')['download_xml']['connect_timeout'] ?? 60).' сек. ). Проверьте размер и время отдачи файла.');
+                    } else {
                         throw new FatalException('Не удалось скачать Robofeed XML. Ответ сервера - '.$obHttp->getStatus());
                     }
                 }
@@ -300,8 +247,7 @@ class ImportData
                 break;
 
             case 'FILE':
-                if( $arStore['FILE_ID'] < 0 )
-                {
+                if ($arStore['FILE_ID'] < 0) {
                     throw new \Exception('У магазина выбран тип импорта "Загрузить файл", но файла не загружен');
                 }
 
@@ -309,8 +255,7 @@ class ImportData
                                    ->getContext()
                                    ->getServer()
                                    ->getDocumentRoot().\Local\Core\Inner\BxModified\CFile::GetPath($arStore['FILE_ID']);
-                if( !file_exists($strFilePath) )
-                {
+                if (!file_exists($strFilePath)) {
                     throw new \Exception('Файл по пути "'.$strFilePath.'" не обнаружен.');
                 }
                 break;
@@ -346,11 +291,10 @@ class ImportData
     {
         $intTimeoutBetweenImportsInMin = \Bitrix\Main\Config\Configuration::getInstance()
                                              ->get('robofeed')['import']['timeout_between_import_robofeed'] ?? 360;
-        $intTimestamp = ( new \Bitrix\Main\Type\DateTime() )->add('-'.$intTimeoutBetweenImportsInMin.' minutes')
+        $intTimestamp = (new \Bitrix\Main\Type\DateTime())->add('-'.$intTimeoutBetweenImportsInMin.' minutes')
             ->getTimestamp();
 
-        $rsStoreToQueue = \Local\Core\Model\Data\StoreTable::getList(
-            [
+        $rsStoreToQueue = \Local\Core\Model\Data\StoreTable::getList([
                 'filter' => [
                     'ACTIVE' => 'Y'
                 ],
@@ -360,35 +304,26 @@ class ImportData
                 'order' => [
                     'DATE_CREATE' => 'DESC',
                 ],
-            ]
-        );
+            ]);
 
-        while( $arStore = $rsStoreToQueue->fetch() )
-        {
+        while ($arStore = $rsStoreToQueue->fetch()) {
             $boolNeedCreateJob = false;
 
-            $arLastLog = \Local\Core\Model\Robofeed\ImportLogTable::getList(
-                [
+            $arLastLog = \Local\Core\Model\Robofeed\ImportLogTable::getList([
                     'filter' => ['STORE_ID' => $arStore['ID']],
                     'select' => ['ID', 'DATE_CREATE'],
                     'order' => ['DATE_CREATE' => 'DESC']
-                ]
-            )
+                ])
                 ->fetch();
-            if( !empty($arLastLog['DATE_CREATE']) )
-            {
-                if( $arLastLog['DATE_CREATE']->getTimestamp() < $intTimestamp )
-                {
+            if (!empty($arLastLog['DATE_CREATE'])) {
+                if ($arLastLog['DATE_CREATE']->getTimestamp() < $intTimestamp) {
                     $boolNeedCreateJob = true;
                 }
-            }
-            else
-            {
+            } else {
                 $boolNeedCreateJob = true;
             }
 
-            if( $boolNeedCreateJob )
-            {
+            if ($boolNeedCreateJob) {
                 $worker = new \Local\Core\Inner\JobQueue\Worker\StoreRobofeedImport(['STORE_ID' => $arStore['ID']]);
                 $dateTime = new \Bitrix\Main\Type\DateTime();
                 \Local\Core\Inner\JobQueue\Job::addIfNotExist($worker, $dateTime, 1);

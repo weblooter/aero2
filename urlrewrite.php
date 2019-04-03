@@ -65,5 +65,20 @@ $arUrlRewrite = array(
         "PATH" => "/personal/store-list.php",
         "SORT" => "240",
     ),
+
+    array(
+        "CONDITION" => "#^/personal/balance/(\?.*)?$#",
+        "RULE" => "",
+        "ID" => "",
+        "PATH" => "/personal/balance.php",
+        "SORT" => "310",
+    ),
+    array(
+        "CONDITION" => "#^/personal/balance/top-up/(\?.*)?$#",
+        "RULE" => "",
+        "ID" => "",
+        "PATH" => "/personal/balance-top-up.php",
+        "SORT" => "320",
+    ),
 );
 ?>

@@ -25,10 +25,7 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
     public function offsetExists($offset)
     {
         return isset($this->collection[$offset])
-               || array_key_exists(
-                   $offset,
-                   $this->collection
-               );
+               || array_key_exists($offset, $this->collection);
     }
 
     /**
@@ -36,14 +33,10 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function offsetGet($offset)
     {
-        if(
+        if (
             isset($this->collection[$offset])
-            || array_key_exists(
-                $offset,
-                $this->collection
-            )
-        )
-        {
+            || array_key_exists($offset, $this->collection)
+        ) {
             return $this->collection[$offset];
         }
 
@@ -55,12 +48,9 @@ abstract class CollectionBase implements \ArrayAccess, \Countable, \IteratorAggr
      */
     public function offsetSet($offset, $value)
     {
-        if( $offset === null )
-        {
+        if ($offset === null) {
             $this->collection[] = $value;
-        }
-        else
-        {
+        } else {
             $this->collection[$offset] = $value;
         }
     }

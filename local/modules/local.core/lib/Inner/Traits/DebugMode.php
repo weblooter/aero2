@@ -48,8 +48,7 @@ trait DebugMode
      */
     protected function addDebug($strMess, $intDepth = 0)
     {
-        if( $this->isDebugMode )
-        {
+        if ($this->isDebugMode) {
             $this->obDebug->add($strMess, $intDepth);
         }
     }

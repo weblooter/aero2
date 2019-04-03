@@ -1,6 +1,5 @@
 <?
-if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
-{
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 ?>
@@ -34,10 +33,7 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
     <? $APPLICATION->ShowPanel(); ?>
 </div>
 <img src="http://redmedusa.ru/sites/all/themes/mytheme/animations/site_dungeon_mouse.gif" class="pull-left" height="60" />
-<? $APPLICATION->IncludeComponent(
-    "bitrix:menu",
-    ".default",
-    array(
+<? $APPLICATION->IncludeComponent("bitrix:menu", ".default", array(
         "ALLOW_MULTI_SELECT" => "N",
         "CHILD_MENU_TYPE" => "left",
         "DELAY" => "N",
@@ -50,10 +46,7 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
         "ROOT_MENU_TYPE" => "top",
         "USE_EXT" => "N",
         "COMPONENT_TEMPLATE" => "horizontal_multilevel"
-    ),
-    false
-); ?>
-<h4 class="pull-right mt-3 mr-3">// TODO Ваш баланс - 1 488 руб.</h4>
+    ), false); ?>
 <div class="clearfix"></div>
 <hr />
 <div class="container" style="min-height: 70vh;">

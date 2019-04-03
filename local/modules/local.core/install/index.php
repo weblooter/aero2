@@ -1,7 +1,6 @@
 <?
 IncludeModuleLangFile(__FILE__);
-if( class_exists("local_core") )
-{
+if (class_exists("local_core")) {
     return;
 }
 
@@ -20,26 +19,14 @@ Class local_core extends CModule
     {
         $arModuleVersion = array();
 
-        $path = str_replace(
-            "\\",
-            "/",
-            __FILE__
-        );
-        $path = substr(
-            $path,
-            0,
-            strlen($path) - strlen("/index.php")
-        );
-        include( $path."/version.php" );
+        $path = str_replace("\\", "/", __FILE__);
+        $path = substr($path, 0, strlen($path) - strlen("/index.php"));
+        include($path."/version.php");
 
-        if(
+        if (
             is_array($arModuleVersion)
-            && array_key_exists(
-                "VERSION",
-                $arModuleVersion
-            )
-        )
-        {
+            && array_key_exists("VERSION", $arModuleVersion)
+        ) {
             $this->MODULE_VERSION = $arModuleVersion["VERSION"];
             $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
         }
@@ -59,14 +46,8 @@ Class local_core extends CModule
     {
         $this->errors = false;
 
-        if( $this->errors !== false )
-        {
-            $GLOBALS["APPLICATION"]->throwException(
-                implode(
-                    "",
-                    $this->errors
-                )
-            );
+        if ($this->errors !== false) {
+            $GLOBALS["APPLICATION"]->throwException(implode("", $this->errors));
 
             return false;
         }
@@ -85,14 +66,8 @@ Class local_core extends CModule
     {
         $this->errors = false;
 
-        if( $this->errors !== false )
-        {
-            $GLOBALS["APPLICATION"]->throwException(
-                implode(
-                    "",
-                    $this->errors
-                )
-            );
+        if ($this->errors !== false) {
+            $GLOBALS["APPLICATION"]->throwException(implode("", $this->errors));
 
             return false;
         }

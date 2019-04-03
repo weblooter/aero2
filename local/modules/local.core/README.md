@@ -389,7 +389,7 @@ public static function delete(\Bitrix\Main\HttpRequest $request, \Local\Core\Inn
 ```
 {{{IF #ACTIVE_FROM_TIMESTAMP#;<=;#ACTIVE_TO_TIMESTAMP#}}}
 ```
-Доступные операторы: = ( заменяется на == ), !=, >, >=, <, <=. 
+Доступные операторы: == ( можно использовать и = ), !=, >, >=, <, <=. 
 
 **Нельзя использовать вложенные условия.**
 

@@ -21,67 +21,42 @@ class SelectPlusTexts extends Select
 
         $value = $this->getValue();
 
-        if( !is_array($value) )
-        {
-            if( $this->valueModificator )
-            {
-                $value = call_user_func(
-                    $this->valueModificator,
-                    $value
-                );
+        if (!is_array($value)) {
+            if ($this->valueModificator) {
+                $value = call_user_func($this->valueModificator, $value);
             }
         }
 
         $return = [];
-        $return[] = SelectBoxFromArray(
-            $this->getCode().'[]',
-            $variants,
-            $value[0],
-            "Не выбрано",
-            ""
-        );
+        $return[] = SelectBoxFromArray($this->getCode().'[]', $variants, $value[0], "Не выбрано", "");
         $arInputs = [];
-        foreach( $this->inputs as $inputKey => $arInput )
-        {
+        foreach ($this->inputs as $inputKey => $arInput) {
             $i = ['<input'];
 
-            if( !$arInput['type'] )
-            {
+            if (!$arInput['type']) {
                 $arInput['type'] = 'text';
             }
 
-            if( !$arInput['name'] )
-            {
+            if (!$arInput['name']) {
                 $arInput['name'] = $this->getCode().'[]';
             }
 
-            if( $value[$inputKey + 1] )
-            {
+            if ($value[$inputKey + 1]) {
                 $arInput['value'] = $value[$inputKey + 1];
             }
 
-            foreach( $arInput as $k => $v )
-            {
+            foreach ($arInput as $k => $v) {
                 $i[] = "$k=\"$v\"";
             }
 
             $i[] = '/>';
-            $arInputs[] = join(
-                ' ',
-                $i
-            );
+            $arInputs[] = join(' ', $i);
 
         }
 
-        $return[] = join(
-            $this->inputSeparator,
-            $arInputs
-        );
+        $return[] = join($this->inputSeparator, $arInputs);
 
-        return join(
-            '&nbsp;',
-            $return
-        );
+        return join('&nbsp;', $return);
     }
 
     /**
@@ -93,11 +68,9 @@ class SelectPlusTexts extends Select
     {
         $result = "";
 
-        if( !empty($this->getValue()) )
-        {
+        if (!empty($this->getValue())) {
 
-            if( isset($this->variants[$this->getValue()]) )
-            {
+            if (isset($this->variants[$this->getValue()])) {
 
                 $result = "{$this->variants[$this->getValue()]}[{$this->getValue()}]";
             }

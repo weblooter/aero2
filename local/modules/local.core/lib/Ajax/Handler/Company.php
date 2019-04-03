@@ -1,4 +1,5 @@
 <?php
+
 namespace Local\Core\Ajax\Handler;
 
 
@@ -10,20 +11,18 @@ class Company
     {
         $arResult = [];
 
-        if( !empty($args['company_id']) )
-        {
+        if (!empty($args['company_id'])) {
             $intCompanyId = $args['company_id'];
 
-            $ar = CompanyTable::getByPrimary($intCompanyId, ['filter' => ['USER_OWN_ID' => $GLOBALS['USER']->GetId()], 'select' => ['ID']])->fetch();
-            if( !empty($ar['ID']) )
-            {
+            $ar = CompanyTable::getByPrimary($intCompanyId, ['filter' => ['USER_OWN_ID' => $GLOBALS['USER']->GetId()], 'select' => ['ID']])
+                ->fetch();
+            if (!empty($ar['ID'])) {
                 CompanyTable::delete($ar['ID']);
                 $arResult['result'] = 'SUCCESS';
             }
         }
 
-        if( empty($arResult['result']) )
-        {
+        if (empty($arResult['result'])) {
             $arResult['result'] = 'error';
         }
 

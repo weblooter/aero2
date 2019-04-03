@@ -23,10 +23,8 @@ class Base
      */
     private static function __fillCompanyRegister($intCompanyId)
     {
-        if( is_null(self::$__register[$intCompanyId]) )
-        {
-            $ar = \Local\Core\Model\Data\CompanyTable::getList(
-                [
+        if (is_null(self::$__register[$intCompanyId])) {
+            $ar = \Local\Core\Model\Data\CompanyTable::getList([
                     'filter' => ['ID' => $intCompanyId],
                     'select' => [
                         'ID',
@@ -35,8 +33,7 @@ class Base
                         'USER_OWN_ID',
                         'VERIFIED'
                     ]
-                ]
-            )
+                ])
                 ->fetch();
 
             self::$__register[$intCompanyId] = $ar;
@@ -74,7 +71,7 @@ class Base
     {
         $ar = self::__getCompanyRegister($intCompanyId);
 
-        return ( $ar['VERIFIED'] == 'Y' );
+        return ($ar['VERIFIED'] == 'Y');
     }
 
     /**
@@ -117,26 +114,19 @@ class Base
      */
     public static function checkUserAccess($intCompanyId, $intUserId = 0)
     {
-        if( $intUserId < 1 )
-        {
+        if ($intUserId < 1) {
             $intUserId = $GLOBALS['USER']->GetID();
         }
 
         $ar = self::__getCompanyRegister($intCompanyId);
 
-        if( !empty($ar) )
-        {
-            if( $ar['USER_OWN_ID'] == $intUserId )
-            {
+        if (!empty($ar)) {
+            if ($ar['USER_OWN_ID'] == $intUserId) {
                 return self::ACCESS_COMPANY_IS_MINE;
-            }
-            else
-            {
+            } else {
                 return self::ACCESS_COMPANY_NOT_MINE;
             }
-        }
-        else
-        {
+        } else {
             return self::ACCESS_COMPANY_NOT_FOUND;
         }
     }

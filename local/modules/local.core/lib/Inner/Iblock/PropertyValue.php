@@ -21,8 +21,7 @@ class PropertyValue extends CollectableEntity
      */
     public static function getCollectionArrayByIblockElementCollection(ElementCollection $collection, $select = false)
     {
-        if( !$select )
-        {
+        if (!$select) {
             return [];
         }
 
@@ -33,10 +32,8 @@ class PropertyValue extends CollectableEntity
         $collections = [];
 
         /** @var $item IblockElement */
-        foreach( $collection as $item )
-        {
-            if( !$iblock_id )
-            {
+        foreach ($collection as $item) {
+            if (!$iblock_id) {
                 $iblock_id = $item->getIblockId();
             }
 
@@ -54,42 +51,25 @@ class PropertyValue extends CollectableEntity
             'ACTIVE' => 'Y'
         ];
 
-        if(
-        !in_array(
-            '*',
-            $select
-        )
-        )
-        {
-            foreach( $select as $p )
-            {
-                if( is_scalar($p) )
-                {
-                    if( intval($p) > 0 )
-                    {
+        if (
+        !in_array('*', $select)
+        ) {
+            foreach ($select as $p) {
+                if (is_scalar($p)) {
+                    if (intval($p) > 0) {
                         $filter_props['ID'][] = intval($p);
-                    }
-                    else
-                    {
+                    } else {
                         $filter_props['CODE'][] = $p;
                     }
                 }
             }
         }
 
-        \CIBlockElement::GetPropertyValuesArray(
-            $arr_props,
-            $iblock_id,
-            $filter,
-            $filter_props
-        );
+        \CIBlockElement::GetPropertyValuesArray($arr_props, $iblock_id, $filter, $filter_props);
 
-        foreach( $arr_props as $element_id => $properties )
-        {
-            foreach( $properties as $prop )
-            {
-                if( !isset($collections[$element_id]) )
-                {
+        foreach ($arr_props as $element_id => $properties) {
+            foreach ($properties as $prop) {
+                if (!isset($collections[$element_id])) {
                     $collections[$element_id] = PropertyValueCollection::create();
                 }
 

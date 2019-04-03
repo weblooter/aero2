@@ -30,19 +30,14 @@ class CBitrixComponent extends \CBitrixComponent
     {
         $isSuccessAccess = true;
 
-        switch( \Local\Core\Inner\Company\Base::checkUserAccess(
-            $intCompanyId,
-            $intUserId
-        ) )
-        {
+        switch (\Local\Core\Inner\Company\Base::checkUserAccess($intCompanyId, $intUserId)) {
             case \Local\Core\Inner\Company\Base::ACCESS_COMPANY_NOT_FOUND:
             case \Local\Core\Inner\Company\Base::ACCESS_COMPANY_NOT_MINE:
                 $isSuccessAccess = false;
                 break;
         }
 
-        if( !$isSuccessAccess && $init404Process )
-        {
+        if (!$isSuccessAccess && $init404Process) {
             $this->_show404Page();
         }
 
@@ -52,7 +47,7 @@ class CBitrixComponent extends \CBitrixComponent
     /**
      * Проверка прав пользователя на сайт (проверяет по владельцу компании сайта)
      *
-     * @param  int $intStoreId      ID магазина
+     * @param  int $intStoreId     ID магазина
      * @param int  $intUserId      ID пользователя
      * @param bool $init404Process Запустить процесс 404й (true) или просто вернуть boolean (false), по умолчанию true
      *
@@ -66,19 +61,14 @@ class CBitrixComponent extends \CBitrixComponent
     {
         $isSuccessAccess = true;
 
-        switch( \Local\Core\Inner\Store\Base::checkUserAccess(
-            $intStoreId,
-            $intUserId
-        ) )
-        {
+        switch (\Local\Core\Inner\Store\Base::checkUserAccess($intStoreId, $intUserId)) {
             case \Local\Core\Inner\Store\Base::ACCESS_STORE_NOT_FOUND:
             case \Local\Core\Inner\Store\Base::ACCESS_STORE_NOT_MINE:
                 $isSuccessAccess = false;
                 break;
         }
 
-        if( !$isSuccessAccess && $init404Process )
-        {
+        if (!$isSuccessAccess && $init404Process) {
             $this->_show404Page();
         }
 
@@ -95,12 +85,6 @@ class CBitrixComponent extends \CBitrixComponent
     protected function _show404Page($strMessage = '')
     {
         \Bitrix\Main\Loader::includeModule('iblock');
-        \Bitrix\Iblock\Component\Tools::process404(
-            $strMessage,
-            true,
-            true,
-            true,
-            ""
-        );
+        \Bitrix\Iblock\Component\Tools::process404($strMessage, true, true, true, "");
     }
 }

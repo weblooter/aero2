@@ -66,10 +66,8 @@ class Matrix2 extends Base
         $result .= "<table id='js_radio_variants'>";
 
         $lastKey = 0;
-        if( !empty($values) )
-        {
-            foreach( $values as $key => $value )
-            {
+        if (!empty($values)) {
+            foreach ($values as $key => $value) {
                 $result .= "<tr class='js-variant'>";
                 $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][0]' value='".htmlspecialchars($value[0])."'/></td>";
                 $result .= "<td><input type='text' name='".$this->getCode()."[".$lastKey."][1]' value='".htmlspecialchars($value[1])."'/></td>";
@@ -98,10 +96,8 @@ class Matrix2 extends Base
     {
         $result = "<table id='js_radio_variants'>";
 
-        if( !empty($this->getValue()) )
-        {
-            foreach( $this->getValue() as $key => $value )
-            {
+        if (!empty($this->getValue())) {
+            foreach ($this->getValue() as $key => $value) {
 
                 $result .= "<tr class='js-variant'>";
                 $result .= "<td>".strip_tags($key)."</td>";

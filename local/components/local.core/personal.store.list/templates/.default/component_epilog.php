@@ -10,8 +10,4 @@
  * @var string                     $templateFolder
  */
 
-\Local\Core\Inner\Route::fillRouteBreadcrumbs(
-    'store',
-    'list',
-    ['COMPANY_ID' => $arParams['COMPANY_ID']]
-);
+\Local\Core\Inner\Route::fillRouteBreadcrumbs('store', 'list', ['COMPANY_ID' => $arParams['COMPANY_ID']]);

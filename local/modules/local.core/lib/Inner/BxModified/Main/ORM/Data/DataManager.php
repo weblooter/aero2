@@ -49,8 +49,7 @@ class DataManager extends \Bitrix\Main\ORM\Data\DataManager
     public static function getEnumFieldHtmlValues($strField)
     {
         $arValues = static::$arEnumFieldsValues[$strField] ?? [];
-        if( empty($arValues) && $strField == 'ACTIVE' )
-        {
+        if (empty($arValues) && $strField == 'ACTIVE') {
             $arValues = [
                 'Y' => 'Да',
                 'N' => 'Нет'
@@ -74,8 +73,7 @@ class DataManager extends \Bitrix\Main\ORM\Data\DataManager
     public static function getEnumFieldValues($strField)
     {
         $arReturn = [];
-        if( is_array(static::getEnumFieldHtmlValues($strField)) )
-        {
+        if (is_array(static::getEnumFieldHtmlValues($strField))) {
             $arReturn = array_keys(static::getEnumFieldHtmlValues($strField));
         }
         return $arReturn;
@@ -97,8 +95,7 @@ class DataManager extends \Bitrix\Main\ORM\Data\DataManager
         /** @var \Bitrix\Main\ORM\Event $event */
         $arFields = $event->getParameter('fields');
 
-        if( !empty($arFields) )
-        {
+        if (!empty($arFields)) {
             $arModifiedFields['DATE_MODIFIED'] = new \Bitrix\Main\Type\DateTime();
         }
 
@@ -122,13 +119,11 @@ class DataManager extends \Bitrix\Main\ORM\Data\DataManager
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if( !empty($arEventParams['primary']['ID']) )
-        {
+        if (!empty($arEventParams['primary']['ID'])) {
             $ar = static::getById($arEventParams['primary']['ID'])
-                ->fetchRaw();
+                ->fetch();
 
-            if( !empty($arAdditionalParams) )
-            {
+            if (!empty($arAdditionalParams)) {
                 $ar = array_merge($ar, $arAdditionalParams);
             }
 

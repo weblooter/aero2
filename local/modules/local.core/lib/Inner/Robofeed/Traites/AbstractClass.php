@@ -21,8 +21,7 @@ trait AbstractClass
      */
     public function setXmlPath($strXmlFilePath)
     {
-        if( !file_exists($strXmlFilePath) )
-        {
+        if (!file_exists($strXmlFilePath)) {
             throw new \Local\Core\Inner\Exception\FatalException('XML файл по пути '.$strXmlFilePath.' не найден!');
         }
 
@@ -56,8 +55,7 @@ trait AbstractClass
      */
     protected function checkFilledXmlPath()
     {
-        if( is_null($this->strXmlFilePath) )
-        {
+        if (is_null($this->strXmlFilePath)) {
             throw new \Local\Core\Inner\Exception\FatalException('Для дальнейшей работы необходимо задать путь до XML');
         }
     }

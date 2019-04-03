@@ -78,40 +78,29 @@ abstract class Worker
     final public function execute()
     {
         $this->getClearJobID();
-        if( !is_numeric($this->getJobID()) )
-        {
+        if (!is_numeric($this->getJobID())) {
             return; //TODO logWriter
         }
 
-        try
-        {
+        try {
             $this->markJobStart();
-            if( !$this->isCanContinue() )
-            {
+            if (!$this->isCanContinue()) {
                 return;
             }
             $result = $this->doJob();
 
-        }
-        catch( Inner\JobQueue\Exception\FailException $e )
-        {
+        } catch (Inner\JobQueue\Exception\FailException $e) {
             $this->markJobFail();
             return;
-        }
-        catch( \Throwable $t )
-        {
+        } catch (\Throwable $t) {
             $this->markJobError();
             throw $t;
         }
 
-        if( $result instanceof \Bitrix\Main\Result )
-        {
-            if( $result->isSuccess() )
-            {
+        if ($result instanceof \Bitrix\Main\Result) {
+            if ($result->isSuccess()) {
                 $this->markJobSuccess();
-            }
-            else
-            {
+            } else {
                 $this->markJobError();
             }
         }
@@ -119,19 +108,16 @@ abstract class Worker
 
     private function getClearJobID()
     {
-        $ar = JobQueueTable::getList(
-            [
+        $ar = JobQueueTable::getList([
                 'filter' => [
                     '=ID' => $this->dirtyJobID,
                     '=EXECUTE_BY' => $this->dirtyExecutorID,
                 ],
                 'select' => ['*'],
-            ]
-        )
+            ])
             ->fetch();
 
-        if( !empty($ar) )
-        {
+        if (!empty($ar)) {
             $this->setClearJobID($ar['ID']);
             $this->setCurrentJob($ar);
         }
@@ -166,22 +152,15 @@ abstract class Worker
                 'EXECUTE_BY' => $this->dirtyExecutorID,
             ],
             [
-                'ATTEMPTS_LEFT' => new Main\DB\SqlExpression(
-                    '?# - 1', 'ATTEMPTS_LEFT'
-                ),
+                'ATTEMPTS_LEFT' => new Main\DB\SqlExpression('?# - 1', 'ATTEMPTS_LEFT'),
                 'IS_EXECUTE_NOW' => 'Y',
                 'LAST_EXECUTE_START' => new Main\Type\DateTime(),
             ]
         ];
 
-        $rs = JobQueueTable::update(
-            ...
-            $updateData
-        );
-        $this->checkUpdateResult(
-            $rs,
-            $updateData
-        );
+        $rs = JobQueueTable::update(...
+            $updateData);
+        $this->checkUpdateResult($rs, $updateData);
     }
 
     final private function markJobFail()
@@ -199,14 +178,9 @@ abstract class Worker
             ]
         ];
 
-        $rs = JobQueueTable::update(
-            ...
-            $updateData
-        );
-        $this->checkUpdateResult(
-            $rs,
-            $updateData
-        );
+        $rs = JobQueueTable::update(...
+            $updateData);
+        $this->checkUpdateResult($rs, $updateData);
 
     }
 
@@ -224,14 +198,9 @@ abstract class Worker
                 'EXECUTE_AT' => $this->getNextExecuteAt(),
             ]
         ];
-        $rs = JobQueueTable::update(
-            ...
-            $updateData
-        );
-        $this->checkUpdateResult(
-            $rs,
-            $updateData
-        );
+        $rs = JobQueueTable::update(...
+            $updateData);
+        $this->checkUpdateResult($rs, $updateData);
     }
 
     final private function markJobSuccess()
@@ -249,33 +218,23 @@ abstract class Worker
             ]
         ];
 
-        $rs = JobQueueTable::update(
-            ...
-            $updateData
-        );
-        $this->checkUpdateResult(
-            $rs,
-            $updateData
-        );
+        $rs = JobQueueTable::update(...
+            $updateData);
+        $this->checkUpdateResult($rs, $updateData);
 
     }
 
     final private function checkUpdateResult(UpdateResult $result, $arData = [])
     {
-        if( $result->isSuccess() )
-        {
-            if( $result->getAffectedRowsCount() <> 1 )
-            {
+        if ($result->isSuccess()) {
+            if ($result->getAffectedRowsCount() <> 1) {
                 $this->canContinue = false;
                 #TODO logWriter
                 //                $this->getDefaultLogger()->addWarning('Job not update', ['TYPE' => 'WORKER', '__DATA' => $arData]);
             }
-        }
-        else
-        {
+        } else {
             /** @var \Bitrix\Main\Error $error */
-            foreach( $result->getErrorCollection() as $error )
-            {
+            foreach ($result->getErrorCollection() as $error) {
                 $this->canContinue = false;
                 #TODO logWriter
                 //                $this->getDefaultLogger()->addWarning($error->getMessage(), [

@@ -11,13 +11,11 @@ class NumericField extends ScalarField
 
     public function __construct($name, $parameters = array())
     {
-        if( isset($parameters['scale']) )
-        {
+        if (isset($parameters['scale'])) {
             $this->scale = intval($parameters['scale']);
         }
 
-        if( !is_null($parameters['size']) )
-        {
+        if (!is_null($parameters['size'])) {
             $this->size = $parameters['size'];
         }
 
@@ -29,64 +27,46 @@ class NumericField extends ScalarField
 
     public function getValidators()
     {
-        $validators[] = function($value, $primary, $row, $obField)
+        $validators[] = function ($value, $primary, $row, $obField)
             {
-                if( $value === '' )
-                {
-                    if( $this->isRequired() )
-                    {
+                if ($value === '') {
+                    if ($this->isRequired()) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($this, '', 'LOCAL_CORE_FIELD_IS_REQUIRED');
                     }
-                }
-                else
-                {
+                } else {
 
-                    if( preg_match('/^[\d]{1,}\.[\d]{1,}$/', $value, $matches) === 1 )
-                    {
+                    if (preg_match('/^[\d]{1,}\.[\d]{1,}$/', $value, $matches) === 1) {
                         // float
                         $value = floatval($value);
 
-                        if( !is_float($value) )
-                        {
+                        if (!is_float($value)) {
                             return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                         }
 
-                        if( !is_null($this->scale) )
-                        {
-                            if( strlen(round($value, $this->scale)) > $this->size )
-                            {
+                        if (!is_null($this->scale)) {
+                            if (strlen(round($value, $this->scale)) > $this->size) {
                                 return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                             }
-                        }
-                        else
-                        {
-                            if( strlen($matches[1]) > $this->size )
-                            {
+                        } else {
+                            if (strlen($matches[1]) > $this->size) {
                                 return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                             }
                         }
 
-                    }
-                    else
-                    {
-                        if( preg_match('/^[\d]{1,}$/', $value, $matches) === 1 )
-                        {
+                    } else {
+                        if (preg_match('/^[\d]{1,}$/', $value, $matches) === 1) {
                             // integer
                             $value = (int)$value;
 
-                            if( !is_integer($value) )
-                            {
+                            if (!is_integer($value)) {
                                 return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                             }
 
-                            if( strlen($matches[1]) > $this->size )
-                            {
+                            if (strlen($matches[1]) > $this->size) {
                                 return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                             }
 
-                        }
-                        else
-                        {
+                        } else {
                             return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                         }
                     }
@@ -102,21 +82,16 @@ class NumericField extends ScalarField
     public function getValidValue($mixEnterValue)
     {
 
-        if( $mixEnterValue === '' )
-        {
+        if ($mixEnterValue === '') {
             $mixEnterValue = null;
-        }
-        else
-        {
+        } else {
             $mixEnterValue = floatval($mixEnterValue);
 
-            if( !is_null($this->scale) )
-            {
+            if (!is_null($this->scale)) {
                 $mixEnterValue = round($mixEnterValue, $this->scale);
             }
 
-            if( strstr($mixEnterValue, '.', true) === false )
-            {
+            if (strstr($mixEnterValue, '.', true) === false) {
                 $mixEnterValue = (int)$mixEnterValue;
             }
         }

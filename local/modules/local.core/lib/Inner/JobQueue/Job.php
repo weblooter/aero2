@@ -25,7 +25,9 @@ class Job
      * @see \Local\Core\Inner\JobQueue\Worker\Example
      */
     public static function add(
-        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker, \Bitrix\Main\Type\DateTime $executeAt, int $attempts = 10
+        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker,
+        \Bitrix\Main\Type\DateTime $executeAt,
+        int $attempts = 10
     ){
         $result = new AddResult();
         $addData = [
@@ -36,18 +38,12 @@ class Job
         ];
 
         $rs = \Local\Core\Model\Data\JobQueueTable::add($addData);
-        if( $rs->isSuccess() )
-        {
+        if ($rs->isSuccess()) {
             $result->setJobID($rs->getId());
             $addData['ID'] = $rs->getId();
             $result->setData(['jobData' => $addData]);
-        }
-        else
-        {
-            \Local\Core\Assistant\Throwable::addError(
-                $result,
-                $rs->getErrorCollection()
-            );
+        } else {
+            \Local\Core\Assistant\Throwable::addError($result, $rs->getErrorCollection());
         }
         return $result;
     }
@@ -64,19 +60,17 @@ class Job
      * @throws \Local\Core\Inner\Client\Dadata\Exception\ArgumentException
      */
     public static function addIfNotExist(
-        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker, \Bitrix\Main\Type\DateTime $executeAt, int $attempts = 10
+        \Local\Core\Inner\JobQueue\Abstracts\Worker $worker,
+        \Bitrix\Main\Type\DateTime $executeAt,
+        int $attempts = 10
     ){
         $result = new AddResult();
         $class = $worker::getClassName();
         $input = $worker->getInputData();
-        $hash = JobQueueTable::hash(
-            $class,
-            $input
-        );
+        $hash = JobQueueTable::hash($class, $input);
 
         /** @var $rows \Bitrix\Main\ORM\Query\Result */
-        $rows = JobQueueTable::getList(
-            [
+        $rows = JobQueueTable::getList([
                 'select' => [
                     'ID',
                     'WORKER_CLASS_NAME',
@@ -90,23 +84,17 @@ class Job
                     'STATUS' => ['N', 'E']
                 ],
                 'limit' => 1,
-            ]
-        );
+            ]);
 
         $findJob = $rows->fetch();
 
-        if( is_array($findJob) && !empty( $findJob ) )
-        {
+        if (is_array($findJob) && !empty($findJob)) {
             $result->setJobID($findJob['ID']);
             $result->setData(['jobData' => $findJob]);
             $result->setIsAlreadyExist(true);
-        }
-        else
-        {
-            return self::add(
-                ...
-                func_get_args()
-            );
+        } else {
+            return self::add(...
+                func_get_args());
         }
         return $result;
     }

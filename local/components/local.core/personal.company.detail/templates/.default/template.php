@@ -15,8 +15,7 @@
     <?
     $strAlertClass = '';
     $strIcon = '';
-    switch( $arResult['COMPANY']['VERIFIED'] )
-    {
+    switch ($arResult['COMPANY']['VERIFIED']) {
         case 'Y':
             $strAlertClass = 'alert-success';
             $strIcon = '<ion-icon name="done-all"></ion-icon>';
@@ -33,11 +32,7 @@
     ?>
     <div class="alert <?=$strAlertClass?>">
         <div class="pull-right">
-            <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-                'company',
-                'edit',
-                ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
-            )?>" title="Редактировать">
+            <a href="<?=\Local\Core\Inner\Route::getRouteTo('company', 'edit', ['#COMPANY_ID#' => $arResult['COMPANY']['ID']])?>" title="Редактировать">
                 <ion-icon name="create"></ion-icon>
             </a>
             <a href="javascript:void(0)" onclick="wblDeleteCompany(<?=$arResult['COMPANY']['ID']?>)" title="Удалить">
@@ -46,8 +41,7 @@
         </div>
         <?=$strIcon?>
         <?
-        switch($arResult['COMPANY']['TYPE'])
-        {
+        switch ($arResult['COMPANY']['TYPE']) {
             case 'FI':
                 ?>
                 <b><?=$arResult['COMPANY']['NAME']?></b>
@@ -55,23 +49,19 @@
                 break;
             case 'UR':
                 ?>
-                <b><?=$arResult['COMPANY']['NAME']?></b><br/>
-                Сокращеное название огранизации: <?=$arResult['COMPANY']['COMPANY_NAME_SHORT']?><br/>
+                <b><?=$arResult['COMPANY']['NAME']?></b><br />
+                Сокращеное название огранизации: <?=$arResult['COMPANY']['COMPANY_NAME_SHORT']?><br />
                 ИНН: <?=$arResult['COMPANY']['COMPANY_INN']?>
                 <?
                 break;
         }
         ?>
         <br />
-        Дата создания: <?=date(
-            'Y.m.d H:i:s',
-            $arResult['COMPANY']['DATE_CREATE']->getTimestamp()
-        )?><br />
+        Дата создания: <?=date('Y.m.d H:i:s', $arResult['COMPANY']['DATE_CREATE']->getTimestamp())?><br />
         Активность: <?=$arResult['COMPANY']['ACTIVE'] == 'Y' ? 'Активна' : 'Деактивирована'?><br />
         Верификация:
         <?
-        switch( $arResult['COMPANY']['VERIFIED'] )
-        {
+        switch ($arResult['COMPANY']['VERIFIED']) {
             case 'Y':
                 ?>
                 Компания успешно верифицированна!
@@ -96,31 +86,23 @@
 
 <div class="col-6 mb-3">
     <b>Магазины компании</b>
-    <? if( !empty($arResult['COMPANY']['STORES']) ): ?>
+    <? if (!empty($arResult['COMPANY']['STORES'])): ?>
         <ul class="list-group mb-3">
-            <? foreach( $arResult['COMPANY']['STORES'] as $arStore ): ?>
-                <li class="list-group-item <?=( $arStore['ACTIVE'] == 'Y' ? 'list-group-item-success' : 'list-group-item-dark' )?>">
+            <? foreach ($arResult['COMPANY']['STORES'] as $arStore): ?>
+                <li class="list-group-item <?=($arStore['ACTIVE'] == 'Y' ? 'list-group-item-success' : 'list-group-item-dark')?>">
                     <ion-icon name="<?=$arStore['ACTIVE'] == 'Y' ? 'done-all' : 'close'?>" title="<?=$arStore['ACTIVE'] == 'Y' ? 'Активе' : 'Деактивирован'?>"></ion-icon>
                     <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arResult['COMPANY']['ID'], '#STORE_ID#' => $arStore['ID']])?>">
-                        <?=$arStore['NAME'].( ( !empty($arStore['DOMAIN']) && $arStore['DOMAIN'] != $arStore['NAME'] ) ? ' ('.$arStore['DOMAIN'].')' : '' )?>
+                        <?=$arStore['NAME'].((!empty($arStore['DOMAIN']) && $arStore['DOMAIN'] != $arStore['NAME']) ? ' ('.$arStore['DOMAIN'].')' : '')?>
                     </a>
                 </li>
             <? endforeach; ?>
         </ul>
-        <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-            'store',
-            'list',
-            ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
-        )?>" class="btn btn-warning">
+        <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'list', ['#COMPANY_ID#' => $arResult['COMPANY']['ID']])?>" class="btn btn-warning">
             <ion-icon name="reorder"></ion-icon>
             Все магазины</a>
     <? endif; ?>
     <br />
-    <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-        'store',
-        'add',
-        ['#COMPANY_ID#' => $arResult['COMPANY']['ID']]
-    )?>" class="btn btn-warning">
+    <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'add', ['#COMPANY_ID#' => $arResult['COMPANY']['ID']])?>" class="btn btn-warning">
         <ion-icon name="add-circle-outline"></ion-icon>
         Добавить магазин</a>
 </div>
@@ -133,16 +115,12 @@
 
 <script type="text/javascript">
     function wblDeleteCompany(intId) {
-        if( confirm('Удалить?') )
-        {
-            axios.post('/ajax/company/delete/'+intId+'/')
+        if (confirm('Удалить?')) {
+            axios.post('/ajax/company/delete/' + intId + '/')
                 .then(function (response) {
-                    if( response.data.result == 'SUCCESS' )
-                    {
+                    if (response.data.result == 'SUCCESS') {
                         alert('OK!');
-                    }
-                    else
-                    {
+                    } else {
                         alert(response.data['error_text'])
                     }
                 })

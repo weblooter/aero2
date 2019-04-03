@@ -47,14 +47,9 @@ class Strings
     public static function getAbsoluteClassName(string $className)
     {
         $className = trim($className);
-        if(
-            substr(
-                $className,
-                0,
-                1
-            ) !== '\\'
-        )
-        {
+        if (
+            substr($className, 0, 1) !== '\\'
+        ) {
             $className = '\\'.$className;
         }
         return $className;
@@ -69,14 +64,7 @@ class Strings
      */
     public static function getMysqlPassword($string)
     {
-        return '*'.strtoupper(
-                sha1(
-                    sha1(
-                        $string,
-                        true
-                    )
-                )
-            );
+        return '*'.strtoupper(sha1(sha1($string, true)));
     }
 
     /**
@@ -89,18 +77,13 @@ class Strings
      */
     public static function checkEmailByBitrixRules($emailString)
     {
-        if( strlen($emailString) < 3 )
-        {
+        if (strlen($emailString) < 3) {
             return false;
         }
 
-        if(
-        !check_email(
-            $emailString,
-            true
-        )
-        )
-        {
+        if (
+        !check_email($emailString, true)
+        ) {
             return false;
         }
 
@@ -131,48 +114,29 @@ class Strings
      */
     public static function loginIsPhoneNumber($login)
     {
-        $login = str_replace(
-            '+',
-            '',
-            trim($login)
-        );
+        $login = str_replace('+', '', trim($login));
 
-        if(
-            substr(
-                $login,
-                0,
-                1
-            ) == '8'
+        if (
+            substr($login, 0, 1) == '8'
             && strlen($login) == 11
             && is_numeric($login)
-        )
-        {
+        ) {
             return true;
         }
 
-        if(
-            substr(
-                $login,
-                0,
-                1
-            ) == '7'
+        if (
+            substr($login, 0, 1) == '7'
             && strlen($login) == 11
             && is_numeric($login)
-        )
-        {
+        ) {
             return true;
         }
 
-        if(
-            substr(
-                $login,
-                0,
-                1
-            ) == '375'
+        if (
+            substr($login, 0, 1) == '375'
             && strlen($login) == 12
             && is_numeric($login)
-        )
-        {
+        ) {
             return true;
         }
 
@@ -193,55 +157,29 @@ class Strings
     public static function formatPhoneNumber(string $string): ?string
     {
         $formatted = trim($string);
-        if(
-            substr(
-                $formatted,
-                0,
-                1
-            ) == '+'
-        )
-        {
-            $formatted = substr(
-                $formatted,
-                1
-            );
+        if (
+            substr($formatted, 0, 1) == '+'
+        ) {
+            $formatted = substr($formatted, 1);
         }
 
-        if(
-            substr(
-                $formatted,
-                0,
-                1
-            ) == '8'
-        )
-        {
-            $formatted = '7'.substr(
-                    $formatted,
-                    1
-                );
+        if (
+            substr($formatted, 0, 1) == '8'
+        ) {
+            $formatted = '7'.substr($formatted, 1);
         }
 
-        if(
-            substr(
-                $formatted,
-                0,
-                1
-            ) == '7'
+        if (
+            substr($formatted, 0, 1) == '7'
             && strlen($formatted) == 11
-        )
-        {
+        ) {
             return $formatted;
         }
 
-        if(
-            substr(
-                $formatted,
-                0,
-                3
-            ) == '375'
+        if (
+            substr($formatted, 0, 3) == '375'
             && strlen($formatted) == 12
-        )
-        {
+        ) {
             return $formatted;
         }
 
@@ -258,11 +196,7 @@ class Strings
      */
     public static function normalizeInnerBonusValue($value)
     {
-        $value = str_replace(
-            ',',
-            '.',
-            trim($value)
-        );
+        $value = str_replace(',', '.', trim($value));
         return Sale\PriceMaths::roundPrecision($value);
     }
 
@@ -277,25 +211,17 @@ class Strings
     {
         $string = "";
 
-        if( !empty($items) )
-        {
+        if (!empty($items)) {
             $data = [];
 
-            foreach( $items as $v )
-            {
-                if( strlen(trim($v)) > 0 )
-                {
+            foreach ($items as $v) {
+                if (strlen(trim($v)) > 0) {
                     $data[] = $v;
-                }
-                else
-                {
+                } else {
                     break;
                 }
             }
-            $string = '/'.join(
-                    '/',
-                    $data
-                ).'/';
+            $string = '/'.join('/', $data).'/';
         }
 
         return $string;

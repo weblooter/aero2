@@ -19,15 +19,12 @@ class Throwable
      */
     public static function registerShutdown(\Throwable $e)
     {
-        register_shutdown_function(
-            function(\Throwable $e)
-                {
-                    \Bitrix\Main\Application::getInstance()
-                        ->getExceptionHandler()
-                        ->handleException($e);
-                },
-            $e
-        );
+        register_shutdown_function(function (\Throwable $e)
+            {
+                \Bitrix\Main\Application::getInstance()
+                    ->getExceptionHandler()
+                    ->handleException($e);
+            }, $e);
     }
 
     /**
@@ -39,51 +36,30 @@ class Throwable
      */
     public static function addError(Main\Result $result, $arErrorCollection, $arCustomData = [], $file = null, $line = null)
     {
-        if( $arErrorCollection instanceof Main\Error )
-        {
+        if ($arErrorCollection instanceof Main\Error) {
             $arErrorCollection = [$arErrorCollection];
         }
-        if( is_null($file) || is_null($line) )
-        {
+        if (is_null($file) || is_null($line)) {
             $d = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         }
         $arCustomData['__info']['file'] = $file ?? $d[0]['file'];
         $arCustomData['__info']['line'] = $line ?? $d[0]['line'];
         $arCustomData['__info']['__:'] = $arCustomData['__info']['file'].':'.$arCustomData['__info']['line'];
-        $arCustomData['__info']['__::'] = chr(13).str_replace(
-                $_SERVER['DOCUMENT_ROOT'],
-                '',
-                $arCustomData['__info']['file'].':'.$arCustomData['__info']['line']
-            );
+        $arCustomData['__info']['__::'] = chr(13).str_replace($_SERVER['DOCUMENT_ROOT'], '', $arCustomData['__info']['file'].':'.$arCustomData['__info']['line']);
 
-        foreach( $arErrorCollection as $error )
-        {
+        foreach ($arErrorCollection as $error) {
             /** @var Main\Error $error */
             $custom = $error->getCustomData();
-            if( !is_null($custom) )
-            {
-                if( is_array($custom) )
-                {
-                    $arCustomData = array_merge(
-                        $error->getCustomData() ?? [],
-                        $arCustomData
-                    );
-                }
-                else
-                {
+            if (!is_null($custom)) {
+                if (is_array($custom)) {
+                    $arCustomData = array_merge($error->getCustomData() ?? [], $arCustomData);
+                } else {
                     $arCustomData['__data'] = $custom;
                 }
             }
-            if( $error instanceof Main\Error )
-            {
-                $result->addError(
-                    new Main\Error(
-                        $error->getMessage(), $error->getCode(), $arCustomData
-                    )
-                );
-            }
-            else
-            {
+            if ($error instanceof Main\Error) {
+                $result->addError(new Main\Error($error->getMessage(), $error->getCode(), $arCustomData));
+            } else {
 
                 p([$arErrorCollection, $arCustomData]);
             }
@@ -99,14 +75,9 @@ class Throwable
      */
     public static function mergeErrorCollection(Main\Result $result, Main\ErrorCollection $errorCollection)
     {
-        foreach( $errorCollection as $error )
-        {
+        foreach ($errorCollection as $error) {
             /** @var Main\Error $error */
-            $result->addError(
-                new Main\Error(
-                    $error->getMessage(), $error->getCode(), $error->getCustomData()
-                )
-            );
+            $result->addError(new Main\Error($error->getMessage(), $error->getCode(), $error->getCustomData()));
         }
     }
 }

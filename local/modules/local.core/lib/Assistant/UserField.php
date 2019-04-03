@@ -30,11 +30,7 @@ class UserField
     public static function set($entity_id, $value_id, $uf_id, $uf_value)
     {
         return self::getUserFieldManager()
-            ->Update(
-                $entity_id,
-                $value_id,
-                [$uf_id => $uf_value]
-            );
+            ->Update($entity_id, $value_id, [$uf_id => $uf_value]);
     }
 
     /**
@@ -49,10 +45,7 @@ class UserField
     public static function get($entity_id, $value_id, $uf_id)
     {
         $arUF = self::getUserFieldManager()
-            ->GetUserFields(
-                $entity_id,
-                $value_id
-            );
+            ->GetUserFields($entity_id, $value_id);
         return $arUF[$uf_id]["VALUE"];
     }
 
@@ -65,10 +58,7 @@ class UserField
     public static function getList($entity_id, $value_id)
     {
         return self::getUserFieldManager()
-            ->GetUserFields(
-                $entity_id,
-                $value_id
-            );
+            ->GetUserFields($entity_id, $value_id);
     }
 
     /**
@@ -81,12 +71,8 @@ class UserField
      */
     public static function getListValues($entity_id, $value_id)
     {
-        $ar = static::getList(
-            $entity_id,
-            $value_id
-        );
-        foreach( $ar as &$v )
-        {
+        $ar = static::getList($entity_id, $value_id);
+        foreach ($ar as &$v) {
             $v = $v['VALUE'];
         }
         unset($v);

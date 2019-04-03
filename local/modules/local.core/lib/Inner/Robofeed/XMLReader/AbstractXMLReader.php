@@ -65,8 +65,7 @@ abstract class AbstractXMLReader
      */
     public function setScript($constScript)
     {
-        switch( $constScript )
-        {
+        switch ($constScript) {
             case self::SCRIPT_IMPORT:
             case self::SCRIPT_XSD_VALIDATE:
                 $this->constScript = $constScript;
@@ -131,25 +130,18 @@ abstract class AbstractXMLReader
 
     public function __construct()
     {
-        try
-        {
+        try {
             $this->obReader = new \SimpleXMLReader();
-            $this->obReader->registerCallback(
-                '/robofeed/version',
-                function($reader)
-                    {
-                        $this->callRobofeedVersion($reader);
-                        return true;
-                    }
-            );
-            $this->obReader->registerCallback(
-                '/robofeed/lastModified',
-                function($reader)
-                    {
-                        $this->callRobofeedLastModified($reader);
-                        return true;
-                    }
-            );
+            $this->obReader->registerCallback('/robofeed/version', function ($reader)
+                {
+                    $this->callRobofeedVersion($reader);
+                    return true;
+                });
+            $this->obReader->registerCallback('/robofeed/lastModified', function ($reader)
+                {
+                    $this->callRobofeedLastModified($reader);
+                    return true;
+                });
 
             $this->arSchema = \Local\Core\Inner\Robofeed\Schema\Factory::factory(static::getVersion())
                 ->getSchemaMap();
@@ -159,9 +151,7 @@ abstract class AbstractXMLReader
 
             $this->intMaxOffersErrorCountInValidation = \Bitrix\Main\Config\Configuration::getInstance()
                                                             ->get('robofeed')['XMLReader']['max_offers_error_count_in_validation'] ?? 5;
-        }
-        catch( \Exception $e )
-        {
+        } catch (\Exception $e) {
             throw new FatalException('Во время создания ридера возникли проблемы: '.$e->getMessage());
         }
     }
@@ -181,15 +171,11 @@ abstract class AbstractXMLReader
 
         /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
         $obField = $this->arSchema['robofeed']['version'];
-        if( !AbstractValidator::validateValue((string)$obElement, $obField, $this->obResult) )
-        {
+        if (!AbstractValidator::validateValue((string)$obElement, $obField, $this->obResult)) {
             throw new FatalException($this->obResult->getErrorMessages()[0]);
-        }
-        else
-        {
+        } else {
             $value = $obField->getValidValue((string)$obElement);
-            if( (string)$value != static::getVersion() )
-            {
+            if ((string)$value != static::getVersion()) {
                 throw new FatalException('Версия выбранной XSD схемы ('.static::getVersion().') и версия Robofeed XML ('.$value.') различаются!');
             }
             $this->arRootValues['version'] = $value;
@@ -213,12 +199,9 @@ abstract class AbstractXMLReader
 
         /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
         $obField = $this->arSchema['robofeed']['lastModified'];
-        if( !AbstractValidator::validateValue((string)$obElement, $obField, $this->obResult) )
-        {
+        if (!AbstractValidator::validateValue((string)$obElement, $obField, $this->obResult)) {
             throw new FatalException($this->obResult->getErrorMessages()[0]);
-        }
-        else
-        {
+        } else {
             $value = $obField->getValidValue((string)$obElement);
             $this->arRootValues['lastModified'] = $value;
         }
@@ -243,30 +226,24 @@ abstract class AbstractXMLReader
         $this->checkFilledXmlPath();
 
         $obReader = new \SimpleXMLReader();
-        $obReader->registerCallback(
-            '/robofeed/version',
-            function($reader) use ($obResult, &$intVersion)
-                {
-                    $obElement = $reader->expandSimpleXml();
-                    /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
-                    $obField = $this->arSchema['robofeed']['version'];
-                    if( AbstractValidator::validateValue((string)$obElement, $obField, $obResult) )
-                    {
-                        $intVersion = $obField->getValidValue((string)$obElement);
-                    }
+        $obReader->registerCallback('/robofeed/version', function ($reader) use ($obResult, &$intVersion)
+            {
+                $obElement = $reader->expandSimpleXml();
+                /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
+                $obField = $this->arSchema['robofeed']['version'];
+                if (AbstractValidator::validateValue((string)$obElement, $obField, $obResult)) {
+                    $intVersion = $obField->getValidValue((string)$obElement);
                 }
-        );
+            });
         $obReader->open($this->strXmlFilePath);
         $obReader->parse();
         $obReader->close();
 
-        if( !$obResult->isSuccess() )
-        {
+        if (!$obResult->isSuccess()) {
             throw new FatalException(implode('<br/>', $obResult->getErrorMessages()));
         }
 
-        if( is_null($intVersion) )
-        {
+        if (is_null($intVersion)) {
             throw new FatalException('Не удалось определить версию Robofeed XML. Проверьте, что бы значение по пути robofeed->version было заполнено');
         }
 
@@ -288,31 +265,25 @@ abstract class AbstractXMLReader
         $this->checkFilledXmlPath();
 
         $obReader = new \SimpleXMLReader();
-        $obReader->registerCallback(
-            '/robofeed/lastModified',
-            function($reader) use ($obResult, &$strDate)
-                {
-                    $obElement = $reader->expandSimpleXml();
-                    /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
-                    $obField = $this->arSchema['robofeed']['lastModified'];
-                    if( AbstractValidator::validateValue((string)$obElement, $obField, $obResult) )
-                    {
-                        $strDate = $obField->getValidValue((string)$obElement);
-                    }
+        $obReader->registerCallback('/robofeed/lastModified', function ($reader) use ($obResult, &$strDate)
+            {
+                $obElement = $reader->expandSimpleXml();
+                /** @var \Local\Core\Inner\Robofeed\SchemaFields\ScalarField $obField */
+                $obField = $this->arSchema['robofeed']['lastModified'];
+                if (AbstractValidator::validateValue((string)$obElement, $obField, $obResult)) {
+                    $strDate = $obField->getValidValue((string)$obElement);
                 }
-        );
+            });
         $obReader->open($this->strXmlFilePath);
         $obReader->parse();
         $obReader->close();
 
 
-        if( !$obResult->isSuccess() )
-        {
+        if (!$obResult->isSuccess()) {
             throw new FatalException(implode('<br/>', $obResult->getErrorMessages()));
         }
 
-        if( is_null($strDate) )
-        {
+        if (is_null($strDate)) {
             throw new FatalException('Не удалось определить дату создания Robofeed XML. Проверьте, что бы значение по пути robofeed->lastModified было заполнено');
         }
 
@@ -329,10 +300,8 @@ abstract class AbstractXMLReader
     protected function getAttrs(\SimpleXMLElement $obElem)
     {
         $arAttrs = [];
-        if( $obElem instanceof \SimpleXMLElement )
-        {
-            foreach( $obElem->attributes() as $k => $v )
-            {
+        if ($obElem instanceof \SimpleXMLElement) {
+            foreach ($obElem->attributes() as $k => $v) {
                 $arAttrs[$k] = (string)$v;
             }
         }

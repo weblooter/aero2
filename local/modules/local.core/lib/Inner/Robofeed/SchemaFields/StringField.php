@@ -52,24 +52,20 @@ class StringField extends ScalarField
     function __construct($name, $parameters = array())
     {
 
-        if( !empty($parameters['format']) )
-        {
+        if (!empty($parameters['format'])) {
             $this->format = $parameters['format'];
         }
 
-        if( isset($parameters['size']) && intval($parameters['size']) > 0 )
-        {
+        if (isset($parameters['size']) && intval($parameters['size']) > 0) {
             $this->size = intval($parameters['size']);
         }
 
-        if( is_bool($parameters['html']) )
-        {
+        if (is_bool($parameters['html'])) {
             $this->htmlAccess = $parameters['html'];
         }
 
         $this->xml_expected_type = 'строка длиной не более '.$this->size.' символов';
-        if( !is_null($this->format) )
-        {
+        if (!is_null($this->format)) {
             $this->xml_expected_type .= ' и соответствующее регулярному выражению '.$this->format;
         }
 
@@ -79,41 +75,31 @@ class StringField extends ScalarField
 
     public function getValidators()
     {
-        $validators[] = function($value, $primary, $row, $obField)
+        $validators[] = function ($value, $primary, $row, $obField)
             {
-                if( $value === '' )
-                {
-                    if( $this->isRequired() )
-                    {
+                if ($value === '') {
+                    if ($this->isRequired()) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($this, '', 'LOCAL_CORE_FIELD_IS_REQUIRED');
                     }
-                }
-                else
-                {
-                    if( strlen($value) > $this->size )
-                    {
+                } else {
+                    if (strlen($value) > $this->size) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                     }
 
-                    if( !is_null($this->format) )
-                    {
-                        if( preg_match($this->format, $value) !== 1 )
-                        {
+                    if (!is_null($this->format)) {
+                        if (preg_match($this->format, $value) !== 1) {
                             return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                         }
                     }
 
-                    if(
+                    if (
                         strlen($value) != strlen(str_replace($this->arDisableASCIIChars, '', $value))
-                    )
-                    {
+                    ) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE_TABOO_ASCII_CHARS');
                     }
 
-                    if( !$this->htmlAccess )
-                    {
-                        if( strlen($value) != strlen(strip_tags($value)) )
-                        {
+                    if (!$this->htmlAccess) {
+                        if (strlen($value) != strlen(strip_tags($value))) {
                             return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE_CANT_HTML');
                         }
                     }
@@ -137,12 +123,9 @@ class StringField extends ScalarField
 
     public function getValidValue($mixEnterValue)
     {
-        if( $mixEnterValue === '' )
-        {
+        if ($mixEnterValue === '') {
             $mixEnterValue = null;
-        }
-        else
-        {
+        } else {
             $mixEnterValue = substr($mixEnterValue, 0, $this->size);
         }
 

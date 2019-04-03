@@ -11,12 +11,10 @@ class TextField extends StringField
     public function getValidators()
     {
         $validators = parent::getValidators();
-        $validators[] = function($value, $primary, $row, $obField)
+        $validators[] = function ($value, $primary, $row, $obField)
             {
-                if( $this->htmlAccess )
-                {
-                    if( strlen($value) != strlen(strip_tags($value, '<h3><ul><li><p><br>')) )
-                    {
+                if ($this->htmlAccess) {
+                    if (strlen($value) != strlen(strip_tags($value, '<h3><ul><li><p><br>'))) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE_CDATA_LIMIT');
                     }
                 }
@@ -29,12 +27,9 @@ class TextField extends StringField
 
     public function getValidValue($mixEnterValue)
     {
-        if( trim($mixEnterValue) === '' || is_null($mixEnterValue) )
-        {
+        if (trim($mixEnterValue) === '' || is_null($mixEnterValue)) {
             $mixEnterValue = null;
-        }
-        else
-        {
+        } else {
             $mixEnterValue = substr($mixEnterValue, 0, $this->size);
         }
 

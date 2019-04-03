@@ -19,8 +19,7 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
 
     public function __construct(array $values = null)
     {
-        if( $values !== null )
-        {
+        if ($values !== null) {
             $this->processValues($values);
 
             $this->values = $values;
@@ -54,8 +53,7 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function get($name)
     {
-        if( isset($this->values[$name]) )
-        {
+        if (isset($this->values[$name])) {
             return $this->values[$name];
         }
 
@@ -70,13 +68,9 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function set($name, $value)
     {
-        if(
-        $this->markChanged(
-            $name,
-            $value
-        )
-        )
-        {
+        if (
+        $this->markChanged($name, $value)
+        ) {
             $this->values[$name] = $value;
             return true;
         }
@@ -133,12 +127,8 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function setValues(array $values)
     {
-        foreach( $values as $name => $value )
-        {
-            $this->set(
-                $name,
-                $value
-            );
+        foreach ($values as $name => $value) {
+            $this->set($name, $value);
         }
     }
 
@@ -148,8 +138,7 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     public function resetValues(array $values)
     {
         $this->values = array();
-        if( $values !== null )
-        {
+        if ($values !== null) {
             $this->values = $values;
         }
     }
@@ -163,25 +152,18 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     protected function markChanged($name, $value)
     {
         $originalValuesIndex = array();
-        if( !empty($this->originalValues) )
-        {
-            foreach( array_keys($this->originalValues) as $originalKey )
-            {
+        if (!empty($this->originalValues)) {
+            foreach (array_keys($this->originalValues) as $originalKey) {
                 $originalValuesIndex[$originalKey] = true;
             }
         }
 
         $oldValue = $this->get($name);
-        if( $oldValue != $value || ( $oldValue === null && $value !== null ) )
-        {
-            if( !isset($originalValuesIndex[$name]) )
-            {
+        if ($oldValue != $value || ($oldValue === null && $value !== null)) {
+            if (!isset($originalValuesIndex[$name])) {
                 $this->originalValues[$name] = $this->get($name);
-            }
-            else
-            {
-                if( $this->originalValues[$name] == $value )
-                {
+            } else {
+                if ($this->originalValues[$name] == $value) {
                     unset($this->changedValues[$name]);
                     unset($this->originalValues[$name]);
                     return true;
@@ -209,10 +191,8 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     public function getChangedValues()
     {
         $r = array();
-        foreach( $this->values as $k => $v )
-        {
-            if( isset($this->changedValues[$k]) )
-            {
+        foreach ($this->values as $k => $v) {
+            if (isset($this->changedValues[$k])) {
                 $r[$k] = $v;
             }
         }
@@ -249,7 +229,7 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     public function valid()
     {
         $key = $this->key();
-        return ( $key != null );
+        return ($key != null);
     }
 
     /**
@@ -270,10 +250,7 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     public function offsetExists($offset)
     {
         return isset($this->values[$offset])
-               || array_key_exists(
-                   $offset,
-                   $this->values
-               );
+               || array_key_exists($offset, $this->values);
     }
 
     /**
@@ -296,10 +273,7 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function offsetSet($offset, $value)
     {
-        $this->set(
-            $offset,
-            $value
-        );
+        $this->set($offset, $value);
     }
 
     /**
@@ -310,8 +284,7 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     public function offsetUnset($offset)
     {
         unset($this->values[$offset]);
-        if( isset($this->changedValues[$offset]) )
-        {
+        if (isset($this->changedValues[$offset])) {
             unset($this->changedValues[$offset]);
         }
     }
@@ -333,16 +306,14 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
      */
     public function createClone(\SplObjectStorage $cloneEntity)
     {
-        if( $this->isClone() && $cloneEntity->contains($this) )
-        {
+        if ($this->isClone() && $cloneEntity->contains($this)) {
             return $cloneEntity[$this];
         }
 
         $fieldsClone = clone $this;
         $fieldsClone->isClone = true;
 
-        if( !$cloneEntity->contains($this) )
-        {
+        if (!$cloneEntity->contains($this)) {
             $cloneEntity[$this] = $fieldsClone;
         }
 
@@ -359,37 +330,22 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
 
     public function toArray()
     {
-        if( $incoming = func_get_arg(0) )
-        {
+        if ($incoming = func_get_arg(0)) {
             $tmp = $incoming;
-        }
-        else
-        {
+        } else {
             $tmp = $this->values;
         }
 
-        foreach( $tmp as $field => $val )
-        {
-            if( is_object($val) )
-            {
-                if(
-                method_exists(
-                    $val,
-                    'toArray'
-                )
-                )
-                {
+        foreach ($tmp as $field => $val) {
+            if (is_object($val)) {
+                if (
+                method_exists($val, 'toArray')
+                ) {
                     $tmp[$field] = $val->toArray($val);
-                }
-                else
-                {
-                    if(
-                    method_exists(
-                        $val,
-                        'toString'
-                    )
-                    )
-                    {
+                } else {
+                    if (
+                    method_exists($val, 'toString')
+                    ) {
                         $tmp[$field] = $val->toString();
                     }
                 }

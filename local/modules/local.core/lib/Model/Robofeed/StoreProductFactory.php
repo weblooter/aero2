@@ -13,8 +13,7 @@ class StoreProductFactory
 {
     public static function factory($intVersion)
     {
-        switch($intVersion)
-        {
+        switch ($intVersion) {
             case '1':
                 return new \Local\Core\Model\Robofeed\V1\StoreProductTable();
                 break;

@@ -28,30 +28,23 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
 
         $arCategories = [];
 
-        foreach( $obXml->category as $obXmlCategory )
-        {
+        foreach ($obXml->category as $obXmlCategory) {
             $obCategoryResult = new \Bitrix\Main\Result();
             $arCategory = [];
             $arAttrs = $this->getAttrs($obXmlCategory);
-            foreach( $obFields['@attr'] as $attrName => $obField )
-            {
-                if( self::validateValue($arAttrs[$attrName] ?? '', $obField, $obCategoryResult) )
-                {
+            foreach ($obFields['@attr'] as $attrName => $obField) {
+                if (self::validateValue($arAttrs[$attrName] ?? '', $obField, $obCategoryResult)) {
                     $arCategory['@attr'][$attrName] = $obField->getValidValue($arAttrs[$attrName] ?? '');
                 }
             }
 
-            if( self::validateValue((string)$obXmlCategory ?? '', $obFields['@value'], $obCategoryResult) )
-            {
+            if (self::validateValue((string)$obXmlCategory ?? '', $obFields['@value'], $obCategoryResult)) {
                 $arCategory['@value'] = $obFields['@value']->getValidValue((string)$obXmlCategory ?? '');
             }
 
-            if( $obCategoryResult->isSuccess() )
-            {
+            if ($obCategoryResult->isSuccess()) {
                 $arCategories[$arCategory['@attr']['id']] = $arCategory;
-            }
-            else
-            {
+            } else {
                 $obResult->addErrors($obCategoryResult->getErrors());
             }
         }
@@ -66,13 +59,10 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
         $obResult = new \Bitrix\Main\Result();
         $arDefaultValue = [];
 
-        foreach( $obFields as $elemName => $obField )
-        {
-            if( isset($obXml->$elemName) )
-            {
+        foreach ($obFields as $elemName => $obField) {
+            if (isset($obXml->$elemName)) {
 
-                switch( $elemName )
-                {
+                switch ($elemName) {
                     case 'article':
                     case 'param':
                     case 'image':
@@ -82,12 +72,10 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                     case 'delivery':
 
                         $obDeliveryValidResult = $this->validDelivery($obXml->$elemName, $obField, 'robofeed->defaultValues->offer');
-                        if( !empty($obDeliveryValidResult->getData()) )
-                        {
+                        if (!empty($obDeliveryValidResult->getData())) {
                             $arDefaultValue['delivery'] = $obDeliveryValidResult->getData();
                         }
-                        if( !$obDeliveryValidResult->isSuccess() )
-                        {
+                        if (!$obDeliveryValidResult->isSuccess()) {
                             $obResult->addErrors($obDeliveryValidResult->getErrors());
                         }
 
@@ -96,22 +84,18 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                     case 'pickup':
 
                         $obPickupValidResult = $this->validPickup($obXml->$elemName, $obField, 'robofeed->defaultValues->offer');
-                        if( !empty($obPickupValidResult->getData()) )
-                        {
+                        if (!empty($obPickupValidResult->getData())) {
                             $arDefaultValue['pickup'] = $obPickupValidResult->getData();
                         }
-                        if( !$obPickupValidResult->isSuccess() )
-                        {
+                        if (!$obPickupValidResult->isSuccess()) {
                             $obResult->addErrors($obPickupValidResult->getErrors());
                         }
 
                         break;
 
                     default:
-                        if( self::validateValue((string)$obXml->$elemName, $obField, $obResult) )
-                        {
-                            if( !is_null($obField->getValidValue((string)$obXml->$elemName)) )
-                            {
+                        if (self::validateValue((string)$obXml->$elemName, $obField, $obResult)) {
+                            if (!is_null($obField->getValidValue((string)$obXml->$elemName))) {
                                 $arDefaultValue[$elemName] = $obField->getValidValue((string)$obXml->$elemName);
                             }
                         }
@@ -135,40 +119,32 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
 
         $arOfferAttr = $this->getAttrs($obXml);
         // Проверка аттрибутов и запись, если импорт
-        foreach( $obFields['@attr'] as $attrName => $obField )
-        {
-            if( self::validateValue($arOfferAttr[$attrName] ?? '', $obField, $obOfferResult) )
-            {
+        foreach ($obFields['@attr'] as $attrName => $obField) {
+            if (self::validateValue($arOfferAttr[$attrName] ?? '', $obField, $obOfferResult)) {
                 $arOfferFields['@attr'][$attrName] = $obField->getValidValue($arOfferAttr[$attrName] ?? '');
             }
         }
 
         // Проверка всех полей и запись, если импорт
-        foreach( $obFields['@value'] as $elemName => $obField )
-        {
+        foreach ($obFields['@value'] as $elemName => $obField) {
             $obOfferValRes = new \Bitrix\Main\Result();
             $mixDefaultVal = $arDefaultValues[$elemName];
 
 
-            switch( $elemName )
-            {
+            switch ($elemName) {
 
                 case 'article':
-                    if( self::validateValue((string)$obXml->$elemName, $obField, $obOfferValRes) )
-                    {
+                    if (self::validateValue((string)$obXml->$elemName, $obField, $obOfferValRes)) {
                         $arOfferFields['@value'][$elemName] = (string)$obXml->$elemName;
                     }
                     break;
 
                 case 'image':
-                    if( sizeof($obXml->$elemName) > 0 )
-                    {
+                    if (sizeof($obXml->$elemName) > 0) {
                         $arImages = [];
 
-                        foreach( $obXml->$elemName as $obXmlImage )
-                        {
-                            if( self::validateValue((string)$obXmlImage, $obField, $obOfferValRes) )
-                            {
+                        foreach ($obXml->$elemName as $obXmlImage) {
+                            if (self::validateValue((string)$obXmlImage, $obField, $obOfferValRes)) {
                                 $arImages[] = $obField->getValidValue((string)$obXmlImage);
                             }
                         }
@@ -176,33 +152,25 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                     break;
 
                 case 'param':
-                    if( sizeof($obXml->$elemName) > 0 )
-                    {
-                        foreach( $obXml->$elemName as $obXmlParam )
-                        {
+                    if (sizeof($obXml->$elemName) > 0) {
+                        foreach ($obXml->$elemName as $obXmlParam) {
                             $arParamFields = [];
                             $obParamResult = new \Bitrix\Main\Result();
 
                             $arAttrParam = $this->getAttrs($obXmlParam);
-                            foreach( $obField['@attr'] as $k => $v )
-                            {
-                                if( self::validateValue($arAttrParam[$k] ?? '', $v, $obParamResult) )
-                                {
+                            foreach ($obField['@attr'] as $k => $v) {
+                                if (self::validateValue($arAttrParam[$k] ?? '', $v, $obParamResult)) {
                                     $arParamFields['@attr'][$k] = $v->getValidValue($arAttrParam[$k] ?? '');
                                 }
                             }
 
-                            if( self::validateValue((string)$obXmlParam, $obField['@value'], $obParamResult) )
-                            {
+                            if (self::validateValue((string)$obXmlParam, $obField['@value'], $obParamResult)) {
                                 $arParamFields['@value'] = $obField['@value']->getValidValue((string)$obXmlParam);
                             }
 
-                            if( $obParamResult->isSuccess() )
-                            {
+                            if ($obParamResult->isSuccess()) {
                                 $arOfferFields['@value'][$elemName][] = $arParamFields;
-                            }
-                            else
-                            {
+                            } else {
                                 $obOfferValRes->addErrors($obParamResult->getErrors());
                             }
                         }
@@ -210,97 +178,71 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                     break;
 
                 case 'delivery':
-                    if( isset($obXml->$elemName) )
-                    {
+                    if (isset($obXml->$elemName)) {
                         $obDeliveryValidResult = $this->validDelivery($obXml->$elemName, $obField, 'robofeed->offers->offer');
-                        if( !$obDeliveryValidResult->isSuccess() )
-                        {
+                        if (!$obDeliveryValidResult->isSuccess()) {
                             $obOfferValRes->addErrors($obDeliveryValidResult->getErrors());
                         }
-                        if( !empty($obDeliveryValidResult->getData()) )
-                        {
+                        if (!empty($obDeliveryValidResult->getData())) {
                             $arOfferFields['@value'][$elemName] = $obDeliveryValidResult->getData();
                         }
-                    }
-                    else if( !is_null($mixDefaultVal) )
-                    {
-                        $arOfferFields['@value'][$elemName] = $mixDefaultVal;
-                    }
-                    else
-                    {
-                        // Нет информации по доставке
-                        self::sendErrorByCodeToResult(
-                            'LOCAL_CORE_FIELD_IS_REQUIRED',
-                            new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                                'delivery__option', [
-                                    'title' => 'Группа доставки',
-                                    'reqired' => true,
-                                    'xml_path' => 'robofeed->offers->offer->delivery',
-                                    'xml_expected_type' => 'валидные условия самовывоза'
-                                ]
-                            ),
-                            $obOfferValRes
-                        );
+                    } else {
+                        if (!is_null($mixDefaultVal)) {
+                            $arOfferFields['@value'][$elemName] = $mixDefaultVal;
+                        } else {
+                            // Нет информации по доставке
+                            self::sendErrorByCodeToResult('LOCAL_CORE_FIELD_IS_REQUIRED', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
+                                        'title' => 'Группа доставки',
+                                        'reqired' => true,
+                                        'xml_path' => 'robofeed->offers->offer->delivery',
+                                        'xml_expected_type' => 'валидные условия самовывоза'
+                                    ]), $obOfferValRes);
+                        }
                     }
                     break;
 
                 case 'pickup':
-                    if( isset($obXml->$elemName) )
-                    {
+                    if (isset($obXml->$elemName)) {
                         $obPickupValidResult = $this->validPickup($obXml->$elemName, $obField, 'robofeed->offers->offer');
-                        if( !$obPickupValidResult->isSuccess() )
-                        {
+                        if (!$obPickupValidResult->isSuccess()) {
                             $obOfferValRes->addErrors($obPickupValidResult->getErrors());
                         }
                         $arOfferFields['@value'][$elemName] = $obPickupValidResult->getData();
-                    }
-                    else if( !is_null($mixDefaultVal) )
-                    {
-                        $arOfferFields['@value'][$elemName] = $mixDefaultVal;
-                    }
-                    else
-                    {
-                        // Нет информации по самовывозу
-                        self::sendErrorByCodeToResult(
-                            'LOCAL_CORE_FIELD_IS_REQUIRED',
-                            new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                                'pickup__option', [
-                                    'title' => 'Группа самовывоза',
-                                    'reqired' => true,
-                                    'xml_path' => 'robofeed->offers->offer->pickup',
-                                    'xml_expected_type' => 'валидные условия самовывоза'
-                                ]
-                            ),
-                            $obOfferValRes
-                        );
+                    } else {
+                        if (!is_null($mixDefaultVal)) {
+                            $arOfferFields['@value'][$elemName] = $mixDefaultVal;
+                        } else {
+                            // Нет информации по самовывозу
+                            self::sendErrorByCodeToResult('LOCAL_CORE_FIELD_IS_REQUIRED', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('pickup__option', [
+                                        'title' => 'Группа самовывоза',
+                                        'reqired' => true,
+                                        'xml_path' => 'robofeed->offers->offer->pickup',
+                                        'xml_expected_type' => 'валидные условия самовывоза'
+                                    ]), $obOfferValRes);
+                        }
                     }
                     break;
 
 
                 default:
 
-                    if( isset($obXml->$elemName) )
-                    {
-                        if( self::validateValue((string)$obXml->$elemName, $obField, $obOfferValRes) )
-                        {
+                    if (isset($obXml->$elemName)) {
+                        if (self::validateValue((string)$obXml->$elemName, $obField, $obOfferValRes)) {
                             $arOfferFields['@value'][$elemName] = $obField->getValidValue((string)$obXml->$elemName);
                         }
-                    }
-                    else if( !is_null($mixDefaultVal) )
-                    {
-                        $arOfferFields['@value'][$elemName] = $mixDefaultVal;
-                    }
-                    else
-                    {
-                        self::validateValue('', $obField, $obOfferValRes);
+                    } else {
+                        if (!is_null($mixDefaultVal)) {
+                            $arOfferFields['@value'][$elemName] = $mixDefaultVal;
+                        } else {
+                            self::validateValue('', $obField, $obOfferValRes);
+                        }
                     }
 
                     break;
             }
 
 
-            if( !$obOfferValRes->isSuccess() )
-            {
+            if (!$obOfferValRes->isSuccess()) {
                 $obOfferResult->addErrors($obOfferValRes->getErrors());
             }
         }
@@ -310,8 +252,7 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
 
         $obResult->setData($arOfferFields);
 
-        if( !$obOfferResult->isSuccess() )
-        {
+        if (!$obOfferResult->isSuccess()) {
             $obResult->addErrors($obOfferResult->getErrors());
         }
 
@@ -335,42 +276,33 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
         $arReturn = [];
 
         $arAttrs = $this->getAttrs($obXmlDelivery);
-        if( self::validateValue($arAttrs['available'] ?? '', $obField['@attr']['available'], $obReturnResult) )
-        {
+        if (self::validateValue($arAttrs['available'] ?? '', $obField['@attr']['available'], $obReturnResult)) {
             $arReturn['@attr']['available'] = $obField['@attr']['available']->getValidValue($arAttrs['available']);
         }
 
-        if( $arReturn['@attr']['available'] == 'Y' )
-        {
+        if ($arReturn['@attr']['available'] == 'Y') {
             // Доставка заявлена как предоставляемая услуга.
-            if( sizeof($obXmlDelivery->option) > 0 )
-            {
+            if (sizeof($obXmlDelivery->option) > 0) {
                 // Есть условия доставок
-                foreach( $obXmlDelivery->option as $obXmlOption )
-                {
+                foreach ($obXmlDelivery->option as $obXmlOption) {
                     // Перебираем условия, валидируя поля
 
                     $arAttrs = $this->getAttrs($obXmlOption);
 
                     $obOptionResult = new \Bitrix\Main\Result();
 
-                    foreach( $obField['option']['@attr'] as $obOptionField )
-                    {
+                    foreach ($obField['option']['@attr'] as $obOptionField) {
                         $attrName = substr(strstr($obOptionField->getName(), '@'), 1);
                         self::validateValue($arAttrs[$attrName] ?? '', $obOptionField, $obOptionResult);
                     }
 
-                    if( !$obOptionResult->isSuccess() )
-                    {
+                    if (!$obOptionResult->isSuccess()) {
                         // Среди полей условий были ошибки, добавим в общие ошибки и не будем извелкать и сохранять условие.
                         $obReturnResult->addErrors($obOptionResult->getErrors());
-                    }
-                    else
-                    {
+                    } else {
                         $arValues = [];
 
-                        foreach( $obField['option']['@attr'] as $obOptionField )
-                        {
+                        foreach ($obField['option']['@attr'] as $obOptionField) {
                             $attrName = substr(strstr($obOptionField->getName(), '@'), 1);
                             $arValues['@attr'][$attrName] = $obOptionField->getValidValue($arAttrs[$attrName] ?? '');
                         }
@@ -380,37 +312,22 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                 }
 
                 // Перебрали все условия, проверим есть ли валидные
-                if( empty($arReturn['option']) )
-                {
-                    self::sendErrorByCodeToResult(
-                        'LOCAL_CORE_DELIVERY_NO_ONE_OPTION_NOT_VALID',
-                        new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                            'delivery__option', [
+                if (empty($arReturn['option'])) {
+                    self::sendErrorByCodeToResult('LOCAL_CORE_DELIVERY_NO_ONE_OPTION_NOT_VALID', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
                                 'title' => '',
                                 'reqired' => true,
                                 'xml_path' => $xmlPath.'->delivery->option',
                                 'xml_expected_type' => 'валидные условия доставки'
-                            ]
-                        ),
-                        $obReturnResult
-                    );
+                            ]), $obReturnResult);
                 }
-            }
-            else
-            {
+            } else {
                 // Нет условий доставок
-                self::sendErrorByCodeToResult(
-                    'LOCAL_CORE_DELIVERY_EMPTY',
-                    new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                        'delivery__option', [
+                self::sendErrorByCodeToResult('LOCAL_CORE_DELIVERY_EMPTY', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
                             'title' => '',
                             'reqired' => true,
                             'xml_path' => $xmlPath.'->delivery->option',
                             'xml_expected_type' => 'валидные условия доставки'
-                        ]
-                    ),
-                    $obReturnResult
-                );
+                        ]), $obReturnResult);
             }
         }
 
@@ -435,42 +352,33 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
         $arReturn = [];
 
         $arAttrs = $this->getAttrs($obXmlPickup);
-        if( self::validateValue($arAttrs['available'] ?? '', $obField['@attr']['available'], $obReturnResult) )
-        {
+        if (self::validateValue($arAttrs['available'] ?? '', $obField['@attr']['available'], $obReturnResult)) {
             $arReturn['@attr']['available'] = $obField['@attr']['available']->getValidValue($arAttrs['available']);
         }
 
-        if( $arReturn['@attr']['available'] == 'Y' )
-        {
+        if ($arReturn['@attr']['available'] == 'Y') {
             // Самовывоз заявлен как предоставляемая услуга.
-            if( sizeof($obXmlPickup->option) > 0 )
-            {
+            if (sizeof($obXmlPickup->option) > 0) {
                 // Есть условия самовывоза
-                foreach( $obXmlPickup->option as $obXmlOption )
-                {
+                foreach ($obXmlPickup->option as $obXmlOption) {
                     // Перебираем условия, валидируя поля
 
                     $arAttrs = $this->getAttrs($obXmlOption);
 
                     $obOptionResult = new \Bitrix\Main\Result();
 
-                    foreach( $obField['option']['@attr'] as $obOptionField )
-                    {
+                    foreach ($obField['option']['@attr'] as $obOptionField) {
                         $attrName = substr(strstr($obOptionField->getName(), '@'), 1);
                         self::validateValue($arAttrs[$attrName] ?? '', $obOptionField, $obOptionResult);
                     }
 
-                    if( !$obOptionResult->isSuccess() )
-                    {
+                    if (!$obOptionResult->isSuccess()) {
                         // Среди полей условий были ошибки, добавим в общие ошибки и не будем извелкать и сохранять условие.
                         $obReturnResult->addErrors($obOptionResult->getErrors());
-                    }
-                    else
-                    {
+                    } else {
                         $arValues = [];
 
-                        foreach( $obField['option']['@attr'] as $obOptionField )
-                        {
+                        foreach ($obField['option']['@attr'] as $obOptionField) {
                             $attrName = substr(strstr($obOptionField->getName(), '@'), 1);
                             $arValues['@attr'][$attrName] = $obOptionField->getValidValue($arAttrs[$attrName] ?? '');
                         }
@@ -480,37 +388,22 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                 }
 
                 // Перебрали все условия, проверим есть ли валидные
-                if( empty($arReturn['option']) )
-                {
-                    self::sendErrorByCodeToResult(
-                        'LOCAL_CORE_PICKUP_NO_ONE_OPTION_NOT_VALID',
-                        new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                            'delivery__option', [
+                if (empty($arReturn['option'])) {
+                    self::sendErrorByCodeToResult('LOCAL_CORE_PICKUP_NO_ONE_OPTION_NOT_VALID', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
                                 'title' => '',
                                 'reqired' => true,
                                 'xml_path' => $xmlPath.'->pickup->option',
                                 'xml_expected_type' => 'валидные условия самовывоза'
-                            ]
-                        ),
-                        $obReturnResult
-                    );
+                            ]), $obReturnResult);
                 }
-            }
-            else
-            {
+            } else {
                 // Нет условий самовывоза
-                self::sendErrorByCodeToResult(
-                    'LOCAL_CORE_PICKUP_EMPTY',
-                    new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                        'delivery__option', [
+                self::sendErrorByCodeToResult('LOCAL_CORE_PICKUP_EMPTY', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
                             'title' => '',
                             'reqired' => true,
                             'xml_path' => $xmlPath.'->pickup->option',
                             'xml_expected_type' => 'валидные условия самовывоза'
-                        ]
-                    ),
-                    $obReturnResult
-                );
+                        ]), $obReturnResult);
             }
         }
 
@@ -526,84 +419,34 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
      */
     private function finalOfferCheck($arFields, \Bitrix\Main\Result $obOfferCheckResult, $arCategories)
     {
-        if( !empty($arFields['categoryId']) )
-        {
-            if( empty($arCategories[$arFields['categoryId']]) )
-            {
+        if (!empty($arFields['categoryId'])) {
+            if (empty($arCategories[$arFields['categoryId']])) {
                 // Данной категории нет в списке
-                AbstractValidator::sendErrorByCodeToResult(
-                    'LOCAL_CORE_UNDEFINED_CATEGORY',
-                    new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                        'delivery__option', [
+                AbstractValidator::sendErrorByCodeToResult('LOCAL_CORE_UNDEFINED_CATEGORY', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
                             'title' => 'ID категории товара',
                             'xml_path' => 'robofeed->offers->offer->categoryId',
                             'xml_expected_type' => 'валидные условия самовывоза'
-                        ]
-                    ),
-                    $obOfferCheckResult
-                );
+                        ]), $obOfferCheckResult);
             }
         }
 
 
-        $funCheckUnit = function($val, $valUnitCode, $ERROR_CODE, $xmlPath) use ($obOfferCheckResult)
+        $funCheckUnit = function ($val, $valUnitCode, $ERROR_CODE, $xmlPath) use ($obOfferCheckResult)
             {
-                if( !empty($val) && empty($valUnitCode) )
-                {
-                    self::sendErrorByCodeToResult(
-                        $ERROR_CODE,
-                        new \Local\Core\Inner\Robofeed\SchemaFields\StringField(
-                            'q', [
+                if (!empty($val) && empty($valUnitCode)) {
+                    self::sendErrorByCodeToResult($ERROR_CODE, new \Local\Core\Inner\Robofeed\SchemaFields\StringField('q', [
                                 'xml_path' => $xmlPath,
                                 'xml_expected_type' => 'значение из справочника'
-                            ]
-                        ),
-                        $obOfferCheckResult
-                    );
+                            ]), $obOfferCheckResult);
                 }
             };
 
-        $funCheckUnit(
-            $arFields['weight'],
-            $arFields['weightUnitCode'],
-            'LOCAL_CORE_NOT_UNIT_WEIGHT',
-            'robofeed->offers->offer->weightUnitCode'
-        );
-        $funCheckUnit(
-            $arFields['width'],
-            $arFields['widthUnitCode'],
-            'LOCAL_CORE_NOT_UNIT_WIDTH',
-            'robofeed->offers->offer->widthUnitCode'
-        );
-        $funCheckUnit(
-            $arFields['height'],
-            $arFields['heightUnitCode'],
-            'LOCAL_CORE_NOT_UNIT_HEIGHT',
-            'robofeed->offers->offer->heightUnitCode'
-        );
-        $funCheckUnit(
-            $arFields['length'],
-            $arFields['lengthUnitCode'],
-            'LOCAL_CORE_NOT_UNIT_LENGTH',
-            'robofeed->offers->offer->lengthUnitCode'
-        );
-        $funCheckUnit(
-            $arFields['volume'],
-            $arFields['volumeUnitCode'],
-            'LOCAL_CORE_NOT_UNIT_VOLUME',
-            'robofeed->offers->offer->volumeUnitCode'
-        );
-        $funCheckUnit(
-            $arFields['warrantyPeriod'],
-            $arFields['warrantyPeriodCode'],
-            'LOCAL_CORE_NOT_UNIT_WARRANTY',
-            'robofeed->offers->offer->warrantyPeriodCode'
-        );
-        $funCheckUnit(
-            $arFields['expiryPeriod'],
-            $arFields['expiryPeriodCode'],
-            'LOCAL_CORE_NOT_UNIT_EXPIRY',
-            'robofeed->offers->offer->expiryPeriodCode'
-        );
+        $funCheckUnit($arFields['weight'], $arFields['weightUnitCode'], 'LOCAL_CORE_NOT_UNIT_WEIGHT', 'robofeed->offers->offer->weightUnitCode');
+        $funCheckUnit($arFields['width'], $arFields['widthUnitCode'], 'LOCAL_CORE_NOT_UNIT_WIDTH', 'robofeed->offers->offer->widthUnitCode');
+        $funCheckUnit($arFields['height'], $arFields['heightUnitCode'], 'LOCAL_CORE_NOT_UNIT_HEIGHT', 'robofeed->offers->offer->heightUnitCode');
+        $funCheckUnit($arFields['length'], $arFields['lengthUnitCode'], 'LOCAL_CORE_NOT_UNIT_LENGTH', 'robofeed->offers->offer->lengthUnitCode');
+        $funCheckUnit($arFields['volume'], $arFields['volumeUnitCode'], 'LOCAL_CORE_NOT_UNIT_VOLUME', 'robofeed->offers->offer->volumeUnitCode');
+        $funCheckUnit($arFields['warrantyPeriod'], $arFields['warrantyPeriodCode'], 'LOCAL_CORE_NOT_UNIT_WARRANTY', 'robofeed->offers->offer->warrantyPeriodCode');
+        $funCheckUnit($arFields['expiryPeriod'], $arFields['expiryPeriodCode'], 'LOCAL_CORE_NOT_UNIT_EXPIRY', 'robofeed->offers->offer->expiryPeriodCode');
     }
 }

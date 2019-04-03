@@ -21,14 +21,7 @@ class Cache
     public static function getCachePath(array $arDirPath, array $arParams = [])
     {
 
-        $strPath = '/'.implode(
-                '/',
-                array_merge(
-                    ['local.core'],
-                    $arDirPath,
-                    $arParams
-                )
-            ).'/';
+        $strPath = '/'.implode('/', array_merge(['local.core'], $arDirPath, $arParams)).'/';
 
         return $strPath;
     }
@@ -43,13 +36,7 @@ class Cache
     public static function deleteCache(array $arDirPath, array $arParams = [])
     {
 
-        \BXClearCache(
-            true,
-            self::getCachePath(
-                $arDirPath,
-                $arParams
-            )
-        );
+        \BXClearCache(true, self::getCachePath($arDirPath, $arParams));
     }
 
     /**
@@ -67,13 +54,7 @@ class Cache
     public static function getComponentCachePath(array $arDirPath, array $arParams = [])
     {
 
-        return self::getCachePath(
-            array_merge(
-                ['components'],
-                $arDirPath
-            ),
-            $arParams
-        );
+        return self::getCachePath(array_merge(['components'], $arDirPath), $arParams);
     }
 
     /**
@@ -88,13 +69,7 @@ class Cache
      */
     public static function deleteComponentCache(array $arDirPath, array $arParams = [])
     {
-        \BXClearCache(
-            true,
-            self::getComponentCachePath(
-                $arDirPath,
-                $arParams
-            )
-        );
+        \BXClearCache(true, self::getComponentCachePath($arDirPath, $arParams));
     }
 
 }

@@ -26,10 +26,8 @@ class Base
      */
     private static function __fillStoreRegister($intStoreId)
     {
-        if( is_null(self::$__register[$intStoreId]) )
-        {
-            $arTmp = \Local\Core\Model\Data\StoreTable::getList(
-                [
+        if (is_null(self::$__register[$intStoreId])) {
+            $arTmp = \Local\Core\Model\Data\StoreTable::getList([
                     'filter' => ['ID' => $intStoreId],
                     'select' => [
                         'ID',
@@ -39,8 +37,7 @@ class Base
                         'COMPANY_DATA_' => 'COMPANY',
                         'TARIFF_CODE'
                     ]
-                ]
-            )
+                ])
                 ->fetch();
 
             $ar = [
@@ -87,7 +84,7 @@ class Base
      * </ul>
      *
      * @param integer $intStoreId ID магазина
-     * @param integer $intUserId ID пользователя
+     * @param integer $intUserId  ID пользователя
      *
      * @return string
      * @throws \Bitrix\Main\ArgumentException
@@ -96,26 +93,19 @@ class Base
      */
     public static function checkUserAccess($intStoreId, $intUserId = 0)
     {
-        if( $intUserId < 1 )
-        {
+        if ($intUserId < 1) {
             $intUserId = $GLOBALS['USER']->GetID();
         }
 
         $ar = self::__getStoreRegister($intStoreId);
 
-        if( !empty($ar) )
-        {
-            if( $ar['COMPANY_USER_OWN_ID'] == $intUserId )
-            {
+        if (!empty($ar)) {
+            if ($ar['COMPANY_USER_OWN_ID'] == $intUserId) {
                 return self::ACCESS_STORE_IS_MINE;
-            }
-            else
-            {
+            } else {
                 return self::ACCESS_STORE_NOT_MINE;
             }
-        }
-        else
-        {
+        } else {
             return self::ACCESS_STORE_NOT_FOUND;
         }
 
@@ -182,74 +172,109 @@ class Base
     {
         $obResult = new \Bitrix\Main\Result();
 
-        try
-        {
-            switch( \Local\Core\Inner\Store\Base::checkUserAccess($intStoreId) )
-            {
-                case \Local\Core\Inner\Store\Base::ACCESS_STORE_IS_MINE:
+        try {
+            $arTariff = \Local\Core\Model\Data\TariffTable::getList([
+                'filter' => [
+                    'CODE' => $strTariffCode,
+                    'ACTIVE' => 'Y',
+                    [
+                        'LOGIC' => 'OR',
+                        ['TYPE' => 'PUB'],
+                        ['TYPE' => 'PER', 'PERSONAL_BY_STORE' => $intStoreId],
+                    ]
+                ]
+            ])
+                ->fetch();
 
-                    $arTariff = \Local\Core\Model\Data\TariffTable::getList([
-                        'filter' => [
-                            'CODE' => $strTariffCode,
-                            'ACTIVE' => 'Y',
-                            [
-                                'LOGIC' => 'OR',
-                                ['TYPE' => 'PUB'],
-                                ['TYPE' => 'PER', 'PERSONAL_BY_STORE' => $intStoreId],
-                            ]
-                        ]
-                    ])->fetch();
-
-                    if( empty($arTariff) )
-                        throw new \Exception('Ну удалось найти тариф');
-
-                    if( \Local\Core\Inner\Store\Base::getTariffCode($intStoreId) == $strTariffCode )
-                        throw new \Exception('Не возможно изменить тариф на тот же');
-
-                    // TODO Сделать рассчет суммы списания и проверку баланса
-
-                    StoreTable::update($intStoreId, [
-                        'TARIFF_CODE' => $strTariffCode
-                    ]);
-
-                    if( $boolSendEmail )
-                    {
-                        $rs = \Local\Core\Model\Data\StoreTable::getList([
-                            'filter' => ['ID' => $intStoreId],
-                            'select' => ['ID', 'COMPANY_ID', 'COMPANY']
-                        ])->fetchObject();
-                        $arUser = \Bitrix\Main\UserTable::getByPrimary($rs['COMPANY']->get('USER_OWN_ID'), ['select' => ['EMAIL']])->fetch();
-
-                        $arMailFields = [
-                            'EMAIL' => $arUser['EMAIL'],
-                            'STORE_NAME' => \Local\Core\Inner\Store\Base::getStoreName($intStoreId),
-                            'NEW_TARIFF_NAME' => $arTariff['NAME'],
-                            'NEW_TARIFF_PRODUCT_LIMIT' => number_format($arTariff['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' '),
-                        ];
-
-                        if( !is_null($arTariff['DATE_ACTIVE_TO']) )
-                        {
-                            $arMailFields['DATE_ACTIVE_TO'] = $arTariff['DATE_ACTIVE_TO']->format('Y-m-d H:i');
-                            $arMailFields['NEXT_TARIFF_NAME'] = ( !empty( $arTariff['SWITCH_AFTER_ACTIVE_TO'] ) ? \Local\Core\Inner\Tariff\Base::getTariffByCode( $arTariff['SWITCH_AFTER_ACTIVE_TO'] ) : \Local\Core\Inner\Tariff\Base::getDefaultTariff() )['NAME'];
-                        }
-
-                        \Local\Core\Inner\TriggerMail\Store::tariffChanged($arMailFields);
-                    }
-
-                    // TODO сделать списание денег за оплату тарифа
-
-                    break;
-
-                default:
-                    throw new \Exception('Не удалось найти магазин или у Вас нет на него прав');
-                    break;
+            if (empty($arTariff)) {
+                throw new \Exception('Ну удалось найти тариф');
             }
-        }
-        catch(\Exception $e)
-        {
-            $obResult->addError( new \Bitrix\Main\Error( $e->getMessage() ) );
+
+            if (\Local\Core\Inner\Store\Base::getTariffCode($intStoreId) == $strTariffCode) {
+                throw new \Exception('Не возможно изменить тариф на тот же');
+            }
+
+            // TODO Сделать рассчет суммы списания и проверку баланса
+
+
+            // TODO сделать списание денег за оплату тарифа
+
+            StoreTable::update($intStoreId, [
+                'TARIFF_CODE' => $strTariffCode
+            ]);
+
+            if ($boolSendEmail) {
+                $rs = \Local\Core\Model\Data\StoreTable::getList([
+                    'filter' => ['ID' => $intStoreId],
+                    'select' => ['ID', 'COMPANY_ID', 'COMPANY']
+                ])
+                    ->fetchObject();
+                $arUser = \Bitrix\Main\UserTable::getByPrimary($rs['COMPANY']->get('USER_OWN_ID'), ['select' => ['EMAIL']])
+                    ->fetch();
+
+                $arMailFields = [
+                    'EMAIL' => $arUser['EMAIL'],
+                    'STORE_NAME' => \Local\Core\Inner\Store\Base::getStoreName($intStoreId),
+                    'NEW_TARIFF_NAME' => $arTariff['NAME'],
+                    'NEW_TARIFF_PRODUCT_LIMIT' => number_format($arTariff['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' '),
+                ];
+
+                if (!is_null($arTariff['DATE_ACTIVE_TO'])) {
+                    $arMailFields['DATE_ACTIVE_TO'] = $arTariff['DATE_ACTIVE_TO']->format('Y-m-d H:i');
+                    $arMailFields['NEXT_TARIFF_NAME'] = (!empty($arTariff['SWITCH_AFTER_ACTIVE_TO']) ? \Local\Core\Inner\Tariff\Base::getTariffByCode($arTariff['SWITCH_AFTER_ACTIVE_TO']) : \Local\Core\Inner\Tariff\Base::getDefaultTariff())['NAME'];
+                }
+
+                \Local\Core\Inner\TriggerMail\Store::tariffChanged($arMailFields);
+            }
+        } catch (\Exception $e) {
+            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
         }
 
         return $obResult;
+    }
+
+    /**
+     * Получает самый предпочительный тариф, отталкиваясь от данных магазина
+     *
+     * @param $intStoreId
+     *
+     * @return array
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function recommendTariff($intStoreId)
+    {
+        $arReturn = [];
+        $arStore = \Local\Core\Model\Data\StoreTable::getByPrimary($intStoreId)
+            ->fetch();
+        if ($arStore['PRODUCT_TOTAL_COUNT'] > 0) {
+
+            $arTariff = \Local\Core\Model\Data\TariffTable::getList([
+                'filter' => [
+                    '>=LIMIT_IMPORT_PRODUCTS' => $arStore['PRODUCT_TOTAL_COUNT'],
+                    'ACTIVE' => 'Y',
+                    [
+                        'LOGIC' => 'OR',
+                        ['TYPE' => 'PUB'],
+                        ['TYPE' => 'PER', 'PERSONAL_BY_STORE' => $intStoreId]
+                    ]
+                ],
+                'order' => [
+                    'LIMIT_IMPORT_PRODUCTS' => 'ASC',
+                    'IS_ACTION' => 'DESC',
+                    'PRICE_PER_TRADING_PLATFORM' => 'ASC',
+                ],
+                'limit' => 1,
+                'offset' => 0
+            ])
+                ->fetch();
+
+            if (!empty($arTariff) && $arStore['TARIFF_CODE'] != $arTariff['CODE']) {
+                $arReturn = $arTariff;
+            }
+        }
+
+        return $arReturn;
     }
 }

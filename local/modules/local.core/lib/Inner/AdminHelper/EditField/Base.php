@@ -77,9 +77,9 @@ abstract class Base
         return "<tr>
                     <td width='30%'>
                         {$title}:
-                        ".( $this->getNote() ? "<br/><small>{$this->getNote()}</small>" : "" )."
+                        ".($this->getNote() ? "<br/><small>{$this->getNote()}</small>" : "")."
                     </td>
-                    <td>".( ( $this->isEditable === true ) ? $this->getEditFieldHtml() : $this->getViewFieldHtml() )."</td>
+                    <td>".(($this->isEditable === true) ? $this->getEditFieldHtml() : $this->getViewFieldHtml())."</td>
                 </tr>";
     }
 
@@ -101,24 +101,17 @@ abstract class Base
     public function getValue()
     {
         $value = $this->fields["VALUE"];
-        if( $value === null )
-        {
+        if ($value === null) {
 
             $request = \Bitrix\Main\Context::getCurrent()
                 ->getRequest();
 
-            if( $request->isPost() )
-            {
+            if ($request->isPost()) {
                 $value = $request->get($this->getCode());
-            }
-            else
-            {
-                if( !empty($this->elementData) && is_array($this->elementData) )
-                {
+            } else {
+                if (!empty($this->elementData) && is_array($this->elementData)) {
                     $value = $this->elementData[$this->getCode()];
-                }
-                else
-                {
+                } else {
                     $value = $this->getDefaultValue();
                 }
             }
@@ -160,7 +153,7 @@ abstract class Base
      */
     public function setRequired($value)
     {
-        $this->required = ( $value === true || $value === "Y" ) ? true : false;
+        $this->required = ($value === true || $value === "Y") ? true : false;
 
         return $this;
     }

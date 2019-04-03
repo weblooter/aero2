@@ -19,8 +19,7 @@ class ContainerDI
 
     public static function getInstance()
     {
-        if( is_null(self::$container) )
-        {
+        if (is_null(self::$container)) {
             self::$container = new ContainerBuilder(self::$parameterBag);
         }
 

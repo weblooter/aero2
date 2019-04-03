@@ -34,21 +34,14 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $result = new \Bitrix\Main\Result();
 
         $check = $this->checkRights($operation);
-        if( $check->isSuccess() )
-        {
-            $result->setData(
-                [
-                    "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-                        [
+        if ($check->isSuccess()) {
+            $result->setData([
+                    "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                        ]
-                    ),
-                ]
-            );
-        }
-        else
-        {
+                        ]),
+                ]);
+        } else {
             $result->addErrors($check->getErrors());
         }
 
@@ -63,13 +56,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $result = new \Bitrix\Main\Result();
 
-        if( $this->user instanceof \CUser && !$this->user->isAdmin() )
-        {
+        if ($this->user instanceof \CUser && !$this->user->isAdmin()) {
             $result->addError(new \Bitrix\Main\Error("Необходим доступ администратора"));
         }
 
-        switch( $operation )
-        {
+        switch ($operation) {
 
             case "can_add":
                 break;
@@ -89,11 +80,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getTableListId()
     {
-        return \str_replace(
-            ["\\"],
-            ["_"],
-            __CLASS__
-        );
+        return \str_replace(["\\"], ["_"], __CLASS__);
     }
 
     /**
@@ -103,11 +90,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $buttons = [];
 
-        if(
+        if (
         $this->checkRights("can_add")
             ->isSuccess()
-        )
-        {
+        ) {
             $buttons = [
                 [
                     "TEXT" => "Добавить",
@@ -131,9 +117,8 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             'select' => ['CODE', 'NAME', 'ACTIVE']
         ]);
         $arTariff = [];
-        while($ar = $rsTariff->fetch())
-        {
-            $arTariff[ $ar['CODE'] ] = $ar['ACTIVE'].' ['.$ar['CODE'].'] '.$ar['NAME'];
+        while ($ar = $rsTariff->fetch()) {
+            $arTariff[$ar['CODE']] = $ar['ACTIVE'].' ['.$ar['CODE'].'] '.$ar['NAME'];
         }
 
         return [
@@ -209,13 +194,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $arFilter = [];
 
-        foreach( $filterSearch ?? [] as $code => $value )
-        {
+        foreach ($filterSearch ?? [] as $code => $value) {
 
-            if( !empty(trim($value)) )
-            {
-                switch( $code )
-                {
+            if (!empty(trim($value))) {
+                switch ($code) {
 
                     case "ID":
                     case "COMPANY_ID":
@@ -231,29 +213,22 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                         break;
 
                     case "RESOURCE_TYPE":
-                        if( in_array($value, StoreTable::getEnumFieldValues('RESOURCE_TYPE')) )
-                        {
+                        if (in_array($value, StoreTable::getEnumFieldValues('RESOURCE_TYPE'))) {
                             $arFilter["=".$code] = trim($value);
                         }
                         break;
 
                     case "ACTIVE":
                     case "HTTP_AUTH":
-                        if(
-                            in_array(
-                                $value,
-                                ['Y', 'N']
-                            )
-                        )
-                        {
+                        if (
+                        in_array($value, ['Y', 'N'])
+                        ) {
                             $arFilter["=".$code] = trim($value);
                         }
                         break;
 
                     case "BEHAVIOR_IMPORT_ERROR":
-                        if( in_array( $value, StoreTable::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'))
-                        )
-                        {
+                        if (in_array($value, StoreTable::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'))) {
                             $arFilter["=".$code] = trim($value);
                         }
                         break;
@@ -283,8 +258,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getList()
     {
-        return \Local\Core\Model\Data\StoreTable::getlist(
-            [
+        return \Local\Core\Model\Data\StoreTable::getlist([
                 "select" => [
                     "*",
                     'COMPANY_DATA_' => 'COMPANY',
@@ -292,8 +266,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 ],
                 "filter" => $this->filterList,
                 "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
-            ]
-        );
+            ]);
     }
 
     /**
@@ -303,8 +276,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $columns = [];
 
-        foreach( self::$fields as $columnCode => $columnName )
-        {
+        foreach (self::$fields as $columnCode => $columnName) {
             $columns[] = [
                 "id" => $columnCode,
                 "content" => $columnName,
@@ -322,30 +294,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function prepareRowField(\CAdminListRow $row, $fields)
     {
 
-        $row->AddViewField(
-            "ID",
-            '<a href="'.$this->getEditLink($fields).'">'.$fields["ID"].'</a>'
-        );
+        $row->AddViewField("ID", '<a href="'.$this->getEditLink($fields).'">'.$fields["ID"].'</a>');
         $row->AddCheckField("ACTIVE");
-        $row->AddViewField(
-            "COMPANY_ID",
-            '<a href="'.( ( new \Local\Core\Inner\AdminHelper\Data\Company\AdminList() )->getEditLink(['ID' => $fields["COMPANY_ID"]]) ).'" target="_blank">['.$fields["COMPANY_ID"].'] '
-            .$fields['COMPANY_DATA_COMPANY_NAME_SHORT'].'</a>'
-        );
-        $row->AddViewField(
-            "RESOURCE_TYPE",
-            StoreTable::getEnumFieldHtmlValues('RESOURCE_TYPE')[$fields["RESOURCE_TYPE"]]
-        );
-        $row->AddViewField(
-            "HTTP_AUTH",
-            StoreTable::getEnumFieldHtmlValues('HTTP_AUTH')[$fields["HTTP_AUTH"]]
-        );
+        $row->AddViewField("COMPANY_ID",
+            '<a href="'.((new \Local\Core\Inner\AdminHelper\Data\Company\AdminList())->getEditLink(['ID' => $fields["COMPANY_ID"]])).'" target="_blank">['.$fields["COMPANY_ID"].'] '
+            .$fields['COMPANY_DATA_COMPANY_NAME_SHORT'].'</a>');
+        $row->AddViewField("RESOURCE_TYPE", StoreTable::getEnumFieldHtmlValues('RESOURCE_TYPE')[$fields["RESOURCE_TYPE"]]);
+        $row->AddViewField("HTTP_AUTH", StoreTable::getEnumFieldHtmlValues('HTTP_AUTH')[$fields["HTTP_AUTH"]]);
 
-        $row->AddViewField(
-            "TARIFF",
-            '<a href="'.( ( new \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList() )->getEditLink(['CODE' => $fields["TARIFF"]]) ).'" target="_blank">['.$fields["TARIFF"].'] '
-            .$fields['TARIFF_DATA_TARIFF_NAME'].'</a>'
-        );
+        $row->AddViewField("TARIFF", '<a href="'.((new \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList())->getEditLink(['CODE' => $fields["TARIFF"]])).'" target="_blank">['.$fields["TARIFF"].'] '
+                                     .$fields['TARIFF_DATA_TARIFF_NAME'].'</a>');
     }
 
     /**
@@ -355,11 +313,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $actions = [];
 
-        if(
+        if (
         $this->checkRights("can_edit")
             ->isSuccess()
-        )
-        {
+        ) {
             $actions[] = [
                 "ICON" => "edit",
                 "TEXT" => "Редактировать",
@@ -367,20 +324,15 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             ];
         }
 
-        if(
+        if (
         $this->checkRights("can_delete")
             ->isSuccess()
-        )
-        {
+        ) {
             $addParams = \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY."=".self::ADMIN_ENTITY_VALUE."&".\Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION."=".self::ADMIN_ACTION_VALUE;
             $actions[] = [
                 "ICON" => "delete",
                 "TEXT" => "Удалить",
-                "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup(
-                        $fields["ID"],
-                        "delete",
-                        $addParams
-                    )
+                "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup($fields["ID"], "delete", $addParams)
             ];
         }
 
@@ -394,19 +346,17 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     {
         $actions = [];
 
-        if(
+        if (
         $this->checkRights("can_delete")
             ->isSuccess()
-        )
-        {
+        ) {
             $actions["delete"] = "Удалить";
         }
 
-        if(
+        if (
         $this->checkRights("can_edit")
             ->isSuccess()
-        )
-        {
+        ) {
             $actions["edit"] = "Редактировать";
         }
 
@@ -421,31 +371,21 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $result = new \Bitrix\Main\Result();
         $checkRights = $this->checkRights("can_edit");
 
-        if( $checkRights->isSuccess() )
-        {
-            try
-            {
+        if ($checkRights->isSuccess()) {
+            try {
                 $arFields = [
                     "ACTIVE" => $fields["ACTIVE"] ?? "N"
                 ];
 
-                $res = \Local\Core\Model\Data\StoreTable::update(
-                    $id,
-                    $arFields
-                );
-                if( !$res->isSuccess() )
-                {
+                $res = \Local\Core\Model\Data\StoreTable::update($id, $arFields);
+                if (!$res->isSuccess()) {
                     $result->addErrors($res->getErrors());
                 }
 
-            }
-            catch( \Exception $e )
-            {
+            } catch (\Exception $e) {
                 $result->addError(new \Bitrix\Main\Error($e->getMessage()));
             }
-        }
-        else
-        {
+        } else {
             $result->addErrors($checkRights->getErrors());
         }
 
@@ -464,25 +404,18 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $result = new \Bitrix\Main\Result();
         $checkRights = $this->checkRights("can_delete");
 
-        if( $checkRights->isSuccess() )
-        {
-            try
-            {
+        if ($checkRights->isSuccess()) {
+            try {
 
                 $res = \Local\Core\Model\Data\StoreTable::delete((int)$id);
-                if( !$res->isSuccess() )
-                {
+                if (!$res->isSuccess()) {
                     $result->addErrors($res->getErrors());
                 }
 
-            }
-            catch( \Exception $e )
-            {
+            } catch (\Exception $e) {
                 $result->addError(new \Bitrix\Main\Error($e->getMessage()));
             }
-        }
-        else
-        {
+        } else {
             $result->addErrors($checkRights->getErrors());
         }
 
@@ -494,13 +427,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     public function getEditLink($fields = [])
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-            [
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
                 "id" => $fields["ID"],
-            ]
-        );
+            ]);
     }
 
     /**
@@ -508,12 +439,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getFilterUri(array $arData = []): string
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-            [
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-            ]
-        );
+            ]);
     }
 
     /**
@@ -521,12 +450,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     protected function getSortUri(): string
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-            [
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-            ]
-        );
+            ]);
     }
 
     /**
@@ -534,12 +461,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
      */
     public function render()
     {
-        foreach( \Local\Core\Model\Data\StoreTable::getMap() ?? [] as $column )
-        {
+        foreach (\Local\Core\Model\Data\StoreTable::getMap() ?? [] as $column) {
             $GLOBALS['APPLICATION']->SetTitle('Сайты');
 
-            if( $column instanceof \Bitrix\Main\ORM\Fields\ScalarField )
-            {
+            if ($column instanceof \Bitrix\Main\ORM\Fields\ScalarField) {
                 self::$fields[$column->getColumnName()] = $column->getTitle();
             }
         }

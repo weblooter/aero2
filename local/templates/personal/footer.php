@@ -1,6 +1,5 @@
 <?
-if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
-{
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 ?>
@@ -10,10 +9,7 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <? $APPLICATION->IncludeComponent(
-                "bitrix:menu",
-                ".default",
-                Array(
+            <? $APPLICATION->IncludeComponent("bitrix:menu", ".default", Array(
                     "ALLOW_MULTI_SELECT" => "N",
                     "CHILD_MENU_TYPE" => "left",
                     "COMPONENT_TEMPLATE" => "horizontal_multilevel",
@@ -26,8 +22,7 @@ if( !defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true )
                     "MENU_THEME" => "site",
                     "ROOT_MENU_TYPE" => "bottom",
                     "USE_EXT" => "N"
-                )
-            ); ?>
+                )); ?>
         </div>
     </div>
 </div>

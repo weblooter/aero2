@@ -56,8 +56,7 @@ class ElementCollection extends EntityCollection
      */
     public function setPageNavParams(\CDBResult $result)
     {
-        if( (int)$result->NavPageNomer )
-        {
+        if ((int)$result->NavPageNomer) {
             $this->setNavPageCount($result->NavPageCount);
             $this->setNavPageNomer($result->NavPageNomer);
             $this->setNavPageSize($result->NavPageSize);

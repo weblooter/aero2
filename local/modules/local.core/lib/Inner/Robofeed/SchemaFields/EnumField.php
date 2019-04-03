@@ -12,8 +12,7 @@ class EnumField extends ScalarField
     function __construct($name, $parameters = array())
     {
 
-        if( !empty($parameters['values']) )
-        {
+        if (!empty($parameters['values'])) {
             $this->values = $parameters['values'];
             $this->xml_expected_type = 'один из вариантов ('.implode(', ', $parameters['values']).')';
         }
@@ -24,22 +23,17 @@ class EnumField extends ScalarField
     public function getValidators()
     {
         /** @var \Local\Core\Inner\Robofeed\SchemaFields\EnumField $obField */
-        $validators[] = function($value, $primary, $row, $obField)
+        $validators[] = function ($value, $primary, $row, $obField)
             {
-                if( $value === '' )
-                {
-                    if( $this->isRequired() )
-                    {
+                if ($value === '') {
+                    if ($this->isRequired()) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($this, '', 'LOCAL_CORE_FIELD_IS_REQUIRED');
                     }
-                }
-                else
-                {
+                } else {
                     $arFieldsVariantValues = $obField->getValues();
                     $arFieldsVariantValues = array_map('mb_strtoupper', $arFieldsVariantValues);
 
-                    if( !in_array(mb_strtoupper($value), $arFieldsVariantValues) )
-                    {
+                    if (!in_array(mb_strtoupper($value), $arFieldsVariantValues)) {
                         return new \Bitrix\Main\ORM\Fields\FieldError($obField, '', 'LOCAL_CORE_INVALID_VALUE');
                     }
                 }
@@ -52,8 +46,7 @@ class EnumField extends ScalarField
 
     public function getValidValue($mixEnterValue)
     {
-        if( $mixEnterValue == '' )
-        {
+        if ($mixEnterValue == '') {
             $mixEnterValue = null;
         }
 

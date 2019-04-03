@@ -251,28 +251,15 @@ class SMTP
                 break;
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
-                echo gmdate('Y-m-d H:i:s'), ' ', htmlentities(
-                    preg_replace('/[\r\n]+/', '', $str),
-                    ENT_QUOTES,
-                    'UTF-8'
-                ), "<br>\n";
+                echo gmdate('Y-m-d H:i:s'), ' ', htmlentities(preg_replace('/[\r\n]+/', '', $str), ENT_QUOTES, 'UTF-8'), "<br>\n";
                 break;
             case 'echo':
             default:
                 //Normalize line breaks
                 $str = preg_replace('/\r\n|\r/ms', "\n", $str);
-                echo gmdate('Y-m-d H:i:s'),
-                "\t",
-                    //Trim trailing space
-                trim(
-                //Indent for readability, except for trailing break
-                    str_replace(
-                        "\n",
-                        "\n                   \t                  ",
-                        trim($str)
-                    )
-                ),
-                "\n";
+                echo gmdate('Y-m-d H:i:s'), "\t", //Trim trailing space
+                trim(//Indent for readability, except for trailing break
+                    str_replace("\n", "\n                   \t                  ", trim($str))), "\n";
         }
     }
 
@@ -307,54 +294,25 @@ class SMTP
             $port = self::DEFAULT_PORT;
         }
         // Connect to the SMTP server
-        $this->edebug(
-            "Connection: opening to $host:$port, timeout=$timeout, options=" .
-            (count($options) > 0 ? var_export($options, true) : 'array()'),
-            self::DEBUG_CONNECTION
-        );
+        $this->edebug("Connection: opening to $host:$port, timeout=$timeout, options=".(count($options) > 0 ? var_export($options, true) : 'array()'), self::DEBUG_CONNECTION);
         $errno = 0;
         $errstr = '';
         if ($streamok) {
             $socket_context = stream_context_create($options);
             set_error_handler([$this, 'errorHandler']);
-            $this->smtp_conn = stream_socket_client(
-                $host . ':' . $port,
-                $errno,
-                $errstr,
-                $timeout,
-                STREAM_CLIENT_CONNECT,
-                $socket_context
-            );
+            $this->smtp_conn = stream_socket_client($host.':'.$port, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, $socket_context);
             restore_error_handler();
         } else {
             //Fall back to fsockopen which should work in more places, but is missing some features
-            $this->edebug(
-                'Connection: stream_socket_client not available, falling back to fsockopen',
-                self::DEBUG_CONNECTION
-            );
+            $this->edebug('Connection: stream_socket_client not available, falling back to fsockopen', self::DEBUG_CONNECTION);
             set_error_handler([$this, 'errorHandler']);
-            $this->smtp_conn = fsockopen(
-                $host,
-                $port,
-                $errno,
-                $errstr,
-                $timeout
-            );
+            $this->smtp_conn = fsockopen($host, $port, $errno, $errstr, $timeout);
             restore_error_handler();
         }
         // Verify we connected properly
         if (!is_resource($this->smtp_conn)) {
-            $this->setError(
-                'Failed to connect to server',
-                '',
-                (string) $errno,
-                (string) $errstr
-            );
-            $this->edebug(
-                'SMTP ERROR: ' . $this->error['error']
-                . ": $errstr ($errno)",
-                self::DEBUG_CLIENT
-            );
+            $this->setError('Failed to connect to server', '', (string)$errno, (string)$errstr);
+            $this->edebug('SMTP ERROR: '.$this->error['error'].": $errstr ($errno)", self::DEBUG_CLIENT);
 
             return false;
         }
@@ -371,7 +329,7 @@ class SMTP
         }
         // Get any announcement
         $announce = $this->get_lines();
-        $this->edebug('SERVER -> CLIENT: ' . $announce, self::DEBUG_SERVER);
+        $this->edebug('SERVER -> CLIENT: '.$announce, self::DEBUG_SERVER);
 
         return true;
     }
@@ -399,14 +357,10 @@ class SMTP
 
         // Begin encrypted connection
         set_error_handler([$this, 'errorHandler']);
-        $crypto_ok = stream_socket_enable_crypto(
-            $this->smtp_conn,
-            true,
-            $crypto_method
-        );
+        $crypto_ok = stream_socket_enable_crypto($this->smtp_conn, true, $crypto_method);
         restore_error_handler();
 
-        return (bool) $crypto_ok;
+        return (bool)$crypto_ok;
     }
 
     /**
@@ -427,7 +381,7 @@ class SMTP
         $password,
         $authtype = null,
         $OAuth = null
-    ) {
+    ){
         if (!$this->server_caps) {
             $this->setError('Authentication is not allowed before HELO/EHLO');
 
@@ -444,15 +398,12 @@ class SMTP
                 return false;
             }
 
-            $this->edebug('Auth method requested: ' . ($authtype ? $authtype : 'UNSPECIFIED'), self::DEBUG_LOWLEVEL);
-            $this->edebug(
-                'Auth methods available on the server: ' . implode(',', $this->server_caps['AUTH']),
-                self::DEBUG_LOWLEVEL
-            );
+            $this->edebug('Auth method requested: '.($authtype ? $authtype : 'UNSPECIFIED'), self::DEBUG_LOWLEVEL);
+            $this->edebug('Auth methods available on the server: '.implode(',', $this->server_caps['AUTH']), self::DEBUG_LOWLEVEL);
 
             //If we have requested a specific auth type, check the server supports it before trying others
             if (null !== $authtype and !in_array($authtype, $this->server_caps['AUTH'])) {
-                $this->edebug('Requested auth method not available: ' . $authtype, self::DEBUG_LOWLEVEL);
+                $this->edebug('Requested auth method not available: '.$authtype, self::DEBUG_LOWLEVEL);
                 $authtype = null;
             }
 
@@ -470,7 +421,7 @@ class SMTP
 
                     return false;
                 }
-                self::edebug('Auth method selected: ' . $authtype, self::DEBUG_LOWLEVEL);
+                self::edebug('Auth method selected: '.$authtype, self::DEBUG_LOWLEVEL);
             }
 
             if (!in_array($authtype, $this->server_caps['AUTH'])) {
@@ -488,11 +439,8 @@ class SMTP
                     return false;
                 }
                 // Send encoded username and password
-                if (!$this->sendCommand(
-                    'User & Password',
-                    base64_encode("\0" . $username . "\0" . $password),
-                    235
-                )
+                if (
+                !$this->sendCommand('User & Password', base64_encode("\0".$username."\0".$password), 235)
                 ) {
                     return false;
                 }
@@ -518,7 +466,7 @@ class SMTP
                 $challenge = base64_decode(substr($this->last_reply, 4));
 
                 // Build the response
-                $response = $username . ' ' . $this->hmac($challenge, $password);
+                $response = $username.' '.$this->hmac($challenge, $password);
 
                 // send encoded credentials
                 return $this->sendCommand('Username', base64_encode($response), 235);
@@ -530,7 +478,7 @@ class SMTP
                 $oauth = $OAuth->getOauth64();
 
                 // Start authentication
-                if (!$this->sendCommand('AUTH', 'AUTH XOAUTH2 ' . $oauth, 235)) {
+                if (!$this->sendCommand('AUTH', 'AUTH XOAUTH2 '.$oauth, 235)) {
                     return false;
                 }
                 break;
@@ -577,7 +525,7 @@ class SMTP
         $k_ipad = $key ^ $ipad;
         $k_opad = $key ^ $opad;
 
-        return md5($k_opad . pack('H*', md5($k_ipad . $data)));
+        return md5($k_opad.pack('H*', md5($k_ipad.$data)));
     }
 
     /**
@@ -591,10 +539,7 @@ class SMTP
             $sock_status = stream_get_meta_data($this->smtp_conn);
             if ($sock_status['eof']) {
                 // The socket is valid but we are not connected
-                $this->edebug(
-                    'SMTP NOTICE: EOF caught while checking if connected',
-                    self::DEBUG_CLIENT
-                );
+                $this->edebug('SMTP NOTICE: EOF caught while checking if connected', self::DEBUG_CLIENT);
                 $this->close();
 
                 return false;
@@ -692,7 +637,7 @@ class SMTP
                 }
                 //If processing headers add a LWSP-char to the front of new line RFC822 section 3.1.1
                 if ($in_headers) {
-                    $line = "\t" . $line;
+                    $line = "\t".$line;
                 }
             }
             $lines_out[] = $line;
@@ -701,9 +646,9 @@ class SMTP
             foreach ($lines_out as $line_out) {
                 //RFC2821 section 4.5.2
                 if (!empty($line_out) and $line_out[0] == '.') {
-                    $line_out = '.' . $line_out;
+                    $line_out = '.'.$line_out;
                 }
-                $this->client_send($line_out . static::LE, 'DATA');
+                $this->client_send($line_out.static::LE, 'DATA');
             }
         }
 
@@ -749,7 +694,7 @@ class SMTP
      */
     protected function sendHello($hello, $host)
     {
-        $noerror = $this->sendCommand($hello, $hello . ' ' . $host, 250);
+        $noerror = $this->sendCommand($hello, $hello.' '.$host, 250);
         $this->helo_rply = $this->last_reply;
         if ($noerror) {
             $this->parseHelloFields($hello);
@@ -818,11 +763,7 @@ class SMTP
     {
         $useVerp = ($this->do_verp ? ' XVERP' : '');
 
-        return $this->sendCommand(
-            'MAIL FROM',
-            'MAIL FROM:<' . $from . '>' . $useVerp,
-            250
-        );
+        return $this->sendCommand('MAIL FROM', 'MAIL FROM:<'.$from.'>'.$useVerp, 250);
     }
 
     /**
@@ -861,7 +802,7 @@ class SMTP
     public function recipient($address, $dsn = '')
     {
         if (empty($dsn)) {
-            $rcpt = 'RCPT TO:<' . $address . '>';
+            $rcpt = 'RCPT TO:<'.$address.'>';
         } else {
             $dsn = strtoupper($dsn);
             $notify = [];
@@ -876,14 +817,10 @@ class SMTP
                 }
             }
 
-            $rcpt = 'RCPT TO:<' . $address . '> NOTIFY=' . implode(',', $notify);
+            $rcpt = 'RCPT TO:<'.$address.'> NOTIFY='.implode(',', $notify);
         }
 
-        return $this->sendCommand(
-           'RCPT TO',
-           $rcpt,
-           [250, 251]
-       );
+        return $this->sendCommand('RCPT TO', $rcpt, [250, 251]);
     }
 
     /**
@@ -920,7 +857,7 @@ class SMTP
 
             return false;
         }
-        $this->client_send($commandstring . static::LE, $command);
+        $this->client_send($commandstring.static::LE, $command);
 
         $this->last_reply = $this->get_lines();
         // Fetch SMTP code and possible error code explanation
@@ -929,12 +866,7 @@ class SMTP
             $code = $matches[1];
             $code_ex = (count($matches) > 2 ? $matches[2] : null);
             // Cut off error code from each response line
-            $detail = preg_replace(
-                "/{$code}[ -]" .
-                ($code_ex ? str_replace('.', '\\.', $code_ex) . ' ' : '') . '/m',
-                '',
-                $this->last_reply
-            );
+            $detail = preg_replace("/{$code}[ -]".($code_ex ? str_replace('.', '\\.', $code_ex).' ' : '').'/m', '', $this->last_reply);
         } else {
             // Fall back to simple parsing if regex fails
             $code = substr($this->last_reply, 0, 3);
@@ -942,19 +874,11 @@ class SMTP
             $detail = substr($this->last_reply, 4);
         }
 
-        $this->edebug('SERVER -> CLIENT: ' . $this->last_reply, self::DEBUG_SERVER);
+        $this->edebug('SERVER -> CLIENT: '.$this->last_reply, self::DEBUG_SERVER);
 
-        if (!in_array($code, (array) $expect)) {
-            $this->setError(
-                "$command command failed",
-                $detail,
-                $code,
-                $code_ex
-            );
-            $this->edebug(
-                'SMTP ERROR: ' . $this->error['error'] . ': ' . $this->last_reply,
-                self::DEBUG_CLIENT
-            );
+        if (!in_array($code, (array)$expect)) {
+            $this->setError("$command command failed", $detail, $code, $code_ex);
+            $this->edebug('SMTP ERROR: '.$this->error['error'].': '.$this->last_reply, self::DEBUG_CLIENT);
 
             return false;
         }
@@ -1018,7 +942,7 @@ class SMTP
     public function turn()
     {
         $this->setError('The SMTP TURN command is not implemented');
-        $this->edebug('SMTP NOTICE: ' . $this->error['error'], self::DEBUG_CLIENT);
+        $this->edebug('SMTP NOTICE: '.$this->error['error'], self::DEBUG_CLIENT);
 
         return false;
     }
@@ -1035,11 +959,12 @@ class SMTP
     {
         //If SMTP transcripts are left enabled, or debug output is posted online
         //it can leak credentials, so hide credentials in all but lowest level
-        if (self::DEBUG_LOWLEVEL > $this->do_debug and
-            in_array($command, ['User & Password', 'Username', 'Password'], true)) {
+        if (
+            self::DEBUG_LOWLEVEL > $this->do_debug and in_array($command, ['User & Password', 'Username', 'Password'], true)
+        ) {
             $this->edebug('CLIENT -> SERVER: <credentials hidden>', self::DEBUG_CLIENT);
         } else {
-            $this->edebug('CLIENT -> SERVER: ' . $data, self::DEBUG_CLIENT);
+            $this->edebug('CLIENT -> SERVER: '.$data, self::DEBUG_CLIENT);
         }
         set_error_handler([$this, 'errorHandler']);
         $result = fwrite($this->smtp_conn, $data);
@@ -1144,15 +1069,12 @@ class SMTP
         while (is_resource($this->smtp_conn) and !feof($this->smtp_conn)) {
             //Must pass vars in here as params are by reference
             if (!stream_select($selR, $selW, $selW, $this->Timelimit)) {
-                $this->edebug(
-                    'SMTP -> get_lines(): timed-out (' . $this->Timeout . ' sec)',
-                    self::DEBUG_LOWLEVEL
-                );
+                $this->edebug('SMTP -> get_lines(): timed-out ('.$this->Timeout.' sec)', self::DEBUG_LOWLEVEL);
                 break;
             }
             //Deliberate noise suppression - errors are handled afterwards
             $str = @fgets($this->smtp_conn, 515);
-            $this->edebug('SMTP INBOUND: "' . trim($str) . '"', self::DEBUG_LOWLEVEL);
+            $this->edebug('SMTP INBOUND: "'.trim($str).'"', self::DEBUG_LOWLEVEL);
             $data .= $str;
             // If response is only 3 chars (not valid, but RFC5321 S4.2 says it must be handled),
             // or 4th character is a space, we are done reading, break the loop,
@@ -1163,19 +1085,12 @@ class SMTP
             // Timed-out? Log and break
             $info = stream_get_meta_data($this->smtp_conn);
             if ($info['timed_out']) {
-                $this->edebug(
-                    'SMTP -> get_lines(): timed-out (' . $this->Timeout . ' sec)',
-                    self::DEBUG_LOWLEVEL
-                );
+                $this->edebug('SMTP -> get_lines(): timed-out ('.$this->Timeout.' sec)', self::DEBUG_LOWLEVEL);
                 break;
             }
             // Now check if reads took too long
             if ($endtime and time() > $endtime) {
-                $this->edebug(
-                    'SMTP -> get_lines(): timelimit reached (' .
-                    $this->Timelimit . ' sec)',
-                    self::DEBUG_LOWLEVEL
-                );
+                $this->edebug('SMTP -> get_lines(): timelimit reached ('.$this->Timelimit.' sec)', self::DEBUG_LOWLEVEL);
                 break;
             }
         }
@@ -1292,15 +1207,8 @@ class SMTP
     protected function errorHandler($errno, $errmsg, $errfile = '', $errline = 0)
     {
         $notice = 'Connection failed.';
-        $this->setError(
-            $notice,
-            $errmsg,
-            (string) $errno
-        );
-        $this->edebug(
-            "$notice Error #$errno: $errmsg [$errfile line $errline]",
-            self::DEBUG_CONNECTION
-        );
+        $this->setError($notice, $errmsg, (string)$errno);
+        $this->edebug("$notice Error #$errno: $errmsg [$errfile line $errline]", self::DEBUG_CONNECTION);
     }
 
     /**

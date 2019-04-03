@@ -40,8 +40,7 @@ class Element extends CollectableEntity
     {
         $default = false;
 
-        if( !empty($sort) )
-        {
+        if (!empty($sort)) {
             return $sort;
         }
 
@@ -57,8 +56,7 @@ class Element extends CollectableEntity
      */
     protected static function getFilter(array $filter = [])
     {
-        if( !( (int)$filter['IBLOCK_ID'] ) )
-        {
+        if (!((int)$filter['IBLOCK_ID'])) {
             throw new Main\ArgumentNullException('В фильтре не указан обязательный параметр IBLOCK_ID');
         }
 
@@ -69,19 +67,14 @@ class Element extends CollectableEntity
             'MIN_PERMISSION' => 'R',
         );
 
-        if( !empty($filter) )
-        {
-            if( isset($filter['SECTION_ID']) )
-            {
+        if (!empty($filter)) {
+            if (isset($filter['SECTION_ID'])) {
                 $filter['INCLUDE_SUBSECTIONS'] = $filter['INCLUDE_SUBSECTIONS'] === 'N' ? 'N' : 'Y';
 
                 $filter['SECTION_GLOBAL_ACTIVE'] = $filter['SECTION_GLOBAL_ACTIVE'] === 'N' ? 'N' : 'Y';
             }
 
-            $default = array_merge(
-                $default,
-                $filter
-            );
+            $default = array_merge($default, $filter);
         }
         return $default;
     }
@@ -97,8 +90,7 @@ class Element extends CollectableEntity
     {
         $default = false;
 
-        if( !empty($arr_group) )
-        {
+        if (!empty($arr_group)) {
             return $arr_group;
         }
 
@@ -116,8 +108,7 @@ class Element extends CollectableEntity
     {
         $default = array();
 
-        if( !empty($arr_nav) )
-        {
+        if (!empty($arr_nav)) {
             return $arr_nav;
         }
 
@@ -158,12 +149,8 @@ class Element extends CollectableEntity
             'PREVIEW_PICTURE',
         );
 
-        if( !empty($select) )
-        {
-            $default = array_merge(
-                $default,
-                $select
-            );
+        if (!empty($select)) {
+            $default = array_merge($default, $select);
         }
 
         return $default;
@@ -178,35 +165,18 @@ class Element extends CollectableEntity
      */
     protected static function getProperty(&$select = [])
     {
-        if( !empty($select) )
-        {
-            $props = array_filter(
-                $select,
-                function($v)
-                    {
-                        return strpos(
-                                   $v,
-                                   'PROPERTY_'
-                               ) !== false;
-                    }
-            );
+        if (!empty($select)) {
+            $props = array_filter($select, function ($v)
+                {
+                    return strpos($v, 'PROPERTY_') !== false;
+                });
 
-            $select = array_diff(
-                $select,
-                $props
-            );
+            $select = array_diff($select, $props);
 
-            array_walk(
-                $props,
-                function(&$v, $k)
-                    {
-                        $v = str_replace(
-                            'PROPERTY_',
-                            '',
-                            $v
-                        );
-                    }
-            );
+            array_walk($props, function (&$v, $k)
+                {
+                    $v = str_replace('PROPERTY_', '', $v);
+                });
 
             return $props;
         }
@@ -241,8 +211,7 @@ class Element extends CollectableEntity
     public static function getById(int $id)
     {
         $id = (int)$id;
-        if( $id <= 0 )
-        {
+        if ($id <= 0) {
             throw new Main\ArgumentNullException('Не указан ID элмента');
         }
 
@@ -269,13 +238,7 @@ class Element extends CollectableEntity
         $lazy_init = self::getLazy($params['lazy']);
 
         /** @var $elementIterator \CDBResult */
-        $elementIterator = \CIBlockElement::GetList(
-            $order_fields,
-            $filter_fields,
-            $group_fields,
-            $nav_fields,
-            $select_fields
-        );
+        $elementIterator = \CIBlockElement::GetList($order_fields, $filter_fields, $group_fields, $nav_fields, $select_fields);
 
         /** @var $collection ElementCollection */
         $collection = ElementCollection::create();
@@ -283,8 +246,7 @@ class Element extends CollectableEntity
 
         $arr_elements = [];
 
-        while( $row = $elementIterator->GetNext() )
-        {
+        while ($row = $elementIterator->GetNext()) {
 
             $arr_elements[$row['ID']] = false;
 
@@ -296,12 +258,8 @@ class Element extends CollectableEntity
             $collection->addItem($item);
         }
 
-        if( !$lazy_init )
-        {
-            self::initProps(
-                $collection,
-                $property_fields
-            );
+        if (!$lazy_init) {
+            self::initProps($collection, $property_fields);
             self::initFiles($collection);
         }
 
@@ -329,9 +287,7 @@ class Element extends CollectableEntity
      */
     protected static function createLazy(array $fields = array())
     {
-        return new static(
-            $fields, true
-        );
+        return new static($fields, true);
     }
 
     /**
@@ -400,22 +356,12 @@ class Element extends CollectableEntity
         $element['ID'] = (int)$element['ID'];
         $element['IBLOCK_ID'] = (int)$element['IBLOCK_ID'];
 
-        $element['ACTIVE_FROM'] = ( isset($element['DATE_ACTIVE_FROM']) ? new Main\Type\DateTime(
-            $element['DATE_ACTIVE_FROM'], 'd.m.Y H:i:s'
-        ) : null );
-        $element['ACTIVE_TO'] = ( isset($element['DATE_ACTIVE_TO']) ? new Main\Type\DateTime(
-            $element['DATE_ACTIVE_TO'], 'd.m.Y H:i:s'
-        ) : null );
-        $element['DATE_CREATE'] = ( isset($element['DATE_CREATE']) ? new Main\Type\DateTime(
-            $element['DATE_CREATE'], 'd.m.Y H:i:s'
-        ) : null );
-        $element['TIMESTAMP_X'] = ( isset($element['TIMESTAMP_X']) ? new Main\Type\DateTime(
-            $element['TIMESTAMP_X'], 'd.m.Y H:i:s'
-        ) : null );
+        $element['ACTIVE_FROM'] = (isset($element['DATE_ACTIVE_FROM']) ? new Main\Type\DateTime($element['DATE_ACTIVE_FROM'], 'd.m.Y H:i:s') : null);
+        $element['ACTIVE_TO'] = (isset($element['DATE_ACTIVE_TO']) ? new Main\Type\DateTime($element['DATE_ACTIVE_TO'], 'd.m.Y H:i:s') : null);
+        $element['DATE_CREATE'] = (isset($element['DATE_CREATE']) ? new Main\Type\DateTime($element['DATE_CREATE'], 'd.m.Y H:i:s') : null);
+        $element['TIMESTAMP_X'] = (isset($element['TIMESTAMP_X']) ? new Main\Type\DateTime($element['TIMESTAMP_X'], 'd.m.Y H:i:s') : null);
 
-        $ipropValues = new ElementValues(
-            $element['IBLOCK_ID'], $element['ID']
-        );
+        $ipropValues = new ElementValues($element['IBLOCK_ID'], $element['ID']);
         $element['IPROPERTY_VALUES'] = $ipropValues->getValues();
 
     }
@@ -430,20 +376,14 @@ class Element extends CollectableEntity
      */
     protected static function initProps(ElementCollection $collection, $select = false)
     {
-        $prop_collection = PropertyValue::getCollectionArrayByIblockElementCollection(
-            $collection,
-            $select
-        );
+        $prop_collection = PropertyValue::getCollectionArrayByIblockElementCollection($collection, $select);
 
-        if( !count($prop_collection) )
-        {
+        if (!count($prop_collection)) {
             return;
         }
 
-        foreach( $collection as $item )
-        {
-            if( isset($prop_collection[$item->getId()]) )
-            {
+        foreach ($collection as $item) {
+            if (isset($prop_collection[$item->getId()])) {
                 $item->setPropertyCollection($prop_collection[$item->getId()]);
             }
         }
@@ -461,84 +401,50 @@ class Element extends CollectableEntity
     {
         $file_collection = File::getCollectionByElementCollection($collection);
 
-        if( !$file_collection->count() )
-        {
+        if (!$file_collection->count()) {
             return;
         }
 
         /** @var $item IblockElement */
-        foreach( $collection as $item )
-        {
-            if( $file_id = (int)$item->getField('DETAIL_PICTURE') )
-            {
-                if( $file = $file_collection->getItemById($file_id) )
-                {
-                    $item->setField(
-                        'DETAIL_PICTURE',
-                        $file
-                    );
+        foreach ($collection as $item) {
+            if ($file_id = (int)$item->getField('DETAIL_PICTURE')) {
+                if ($file = $file_collection->getItemById($file_id)) {
+                    $item->setField('DETAIL_PICTURE', $file);
                 }
             }
 
-            if( $file_id = (int)$item->getField('PREVIEW_PICTURE') )
-            {
-                if( $file = $file_collection->getItemById($file_id) )
-                {
-                    $item->setField(
-                        'PREVIEW_PICTURE',
-                        $file
-                    );
+            if ($file_id = (int)$item->getField('PREVIEW_PICTURE')) {
+                if ($file = $file_collection->getItemById($file_id)) {
+                    $item->setField('PREVIEW_PICTURE', $file);
                 }
             }
 
-            if( $prop_collection = $item->getPropertyCollection() )
-            {
+            if ($prop_collection = $item->getPropertyCollection()) {
                 /** @var $property IblockPropertyValue */
-                foreach( $prop_collection as $property )
-                {
-                    if( $property->getPropertyType() == 'F' )
-                    {
-                        if( $property->isMultiple() )
-                        {
-                            $values = array_filter(
-                                array_map(
-                                    function($v)
-                                        {
-                                            return (int)$v;
-                                        },
-                                    (array)$property->getField('VALUE')
-                                )
-                            );
+                foreach ($prop_collection as $property) {
+                    if ($property->getPropertyType() == 'F') {
+                        if ($property->isMultiple()) {
+                            $values = array_filter(array_map(function ($v)
+                                    {
+                                        return (int)$v;
+                                    }, (array)$property->getField('VALUE')));
 
-                            if( $values )
-                            {
+                            if ($values) {
                                 $item_file_collection = FileCollection::create();
 
-                                foreach( $values as $file_id )
-                                {
-                                    if( $file = $file_collection->getItemById($file_id) )
-                                    {
+                                foreach ($values as $file_id) {
+                                    if ($file = $file_collection->getItemById($file_id)) {
                                         $item_file_collection->addItem($file);
                                         $file->setCollection($item_file_collection);
-                                        $property->setField(
-                                            'VALUE',
-                                            $item_file_collection
-                                        );
+                                        $property->setField('VALUE', $item_file_collection);
                                     }
                                 }
                             }
 
-                        }
-                        else
-                        {
-                            if( $value = (int)$property->getField('VALUE') )
-                            {
-                                if( $file = $file_collection->getItemById($value) )
-                                {
-                                    $property->setField(
-                                        'VALUE',
-                                        $file
-                                    );
+                        } else {
+                            if ($value = (int)$property->getField('VALUE')) {
+                                if ($file = $file_collection->getItemById($value)) {
+                                    $property->setField('VALUE', $file);
                                 }
                             }
                         }
@@ -685,8 +591,7 @@ class Element extends CollectableEntity
      */
     public function createClone(\SplObjectStorage $cloneEntity)
     {
-        if( $this->isClone() && $cloneEntity->contains($this) )
-        {
+        if ($this->isClone() && $cloneEntity->contains($this)) {
             return $cloneEntity[$this];
         }
 
@@ -694,25 +599,20 @@ class Element extends CollectableEntity
         $productClone->isClone = true;
 
         /** @var Internals\Fields $fields */
-        if( $fields = $this->fields )
-        {
+        if ($fields = $this->fields) {
             $productClone->fields = $fields->createClone($cloneEntity);
         }
 
-        if( !$cloneEntity->contains($this) )
-        {
+        if (!$cloneEntity->contains($this)) {
             $cloneEntity[$this] = $productClone;
         }
 
-        if( $collection = $this->getCollection() )
-        {
-            if( !$cloneEntity->contains($collection) )
-            {
+        if ($collection = $this->getCollection()) {
+            if (!$cloneEntity->contains($collection)) {
                 $cloneEntity[$collection] = $collection->createClone($cloneEntity);
             }
 
-            if( $cloneEntity->contains($collection) )
-            {
+            if ($cloneEntity->contains($collection)) {
                 $productClone->collection = $cloneEntity[$collection];
             }
         }
@@ -786,12 +686,10 @@ class Element extends CollectableEntity
      */
     public static function GetListCross($arOrder = ["SORT" => "ASC"], $arFilters = [], $arNavStartParams = false, $arSelectFields = [], $SelectPlaceholders = [], $delimiter = "##")
     {
-        if( empty($arFilters) )
-        {
+        if (empty($arFilters)) {
             return new \CIBlockResult();
         }
-        if( empty($arSelectFields) )
-        {
+        if (empty($arSelectFields)) {
             $arSelectFields = ["*"];
         }
 
@@ -801,80 +699,49 @@ class Element extends CollectableEntity
         $arFilterIBlocks = [];
 
         # Преобразовываем каждый фильтр в sql запрос
-        foreach( $arFilters as $type => $typeList )
-        {
+        foreach ($arFilters as $type => $typeList) {
 
-            if(
-            !in_array(
-                $type,
-                ["CROSS", "UNION"]
-            )
-            )
-            {
+            if (
+            !in_array($type, ["CROSS", "UNION"])
+            ) {
                 continue;
             }
 
-            foreach( $typeList as $arFilter )
-            {
+            foreach ($typeList as $arFilter) {
                 $ob = new \CIBlockElement();
-                $ob->prepareSql(
-                    $arSelectFields,
-                    $arFilter,
-                    false,
-                    $arOrder
-                );
+                $ob->prepareSql($arSelectFields, $arFilter, false, $arOrder);
 
                 $arFilterIBlocks = $arFilterIBlocks + $ob->arFilterIBlocks;
 
-                if( empty($sqlSelect) )
-                {
+                if (empty($sqlSelect)) {
                     $sqlSelect = $ob->sSelect;
                 }
 
-                if( empty($sqlOrder) )
-                {
+                if (empty($sqlOrder)) {
                     # Добавляем в SELECT поля для сортировки, чтобы потом по ним можно было отсортировать весь результат
                     $sqlSelectAddOrderFields = [];
                     # Бьем поля на 2 группы ({алиас таблицы}.{название поля}) as ({название поля})
-                    if(
-                    preg_match_all(
-                        "/([^,\.\s]+\.([^,\.\s]+))/",
-                        $ob->sOrderBy,
-                        $sqlOrderMatches
-                    )
-                    )
-                    {
+                    if (
+                    preg_match_all("/([^,\.\s]+\.([^,\.\s]+))/", $ob->sOrderBy, $sqlOrderMatches)
+                    ) {
 
-                        foreach( $sqlOrderMatches[1] as $key => $field )
-                        {
+                        foreach ($sqlOrderMatches[1] as $key => $field) {
                             # Если значение {название поля) существует, и если этого значения ещё нет в SELECT
-                            if(
+                            if (
                                 !isset($sqlOrderMatches[2][$key])
-                                || preg_match(
-                                    "/[\s\,]as\s+{$sqlOrderMatches[2][$key]}[\s\,]/",
-                                    $sqlSelect
-                                )
-                            )
-                            {
+                                || preg_match("/[\s\,]as\s+{$sqlOrderMatches[2][$key]}[\s\,]/", $sqlSelect)
+                            ) {
                                 continue;
                             }
                             $sqlSelectAddOrderFields[] = "{$field} as {$sqlOrderMatches[2][$key]}";
                         }
                     }
-                    if( !empty($sqlSelectAddOrderFields) )
-                    {
-                        $sqlSelect .= ", ".implode(
-                                ", ",
-                                $sqlSelectAddOrderFields
-                            );
+                    if (!empty($sqlSelectAddOrderFields)) {
+                        $sqlSelect .= ", ".implode(", ", $sqlSelectAddOrderFields);
                     }
 
                     # Используется для сортировки всего результата. Убираем алиасы таблиц для полей, так как они не нужны.
-                    $sqlOrder = preg_replace(
-                        "/([^.\s,]+\.)/",
-                        "",
-                        $ob->sOrderBy
-                    );
+                    $sqlOrder = preg_replace("/([^.\s,]+\.)/", "", $ob->sOrderBy);
                 }
 
                 $sqlList[$type][] = "
@@ -889,69 +756,45 @@ class Element extends CollectableEntity
             }
         }
 
-        if( empty($sqlList) )
-        {
+        if (empty($sqlList)) {
             throw new \Exception("Не получилось собрать запросы");
         }
 
         $strSql = "";
 
         # Добавляем CROSS JOIN запросы
-        if( !empty($sqlList["CROSS"]) )
-        {
+        if (!empty($sqlList["CROSS"])) {
 
             # Подготавливаем общее поле SELECT для CROSS
             $arSelectCross = [];
 
             #Получим все названия колонок (...as {Название колонки}...)
-            if(
-            preg_match_all(
-                "/as\s([^,]+)/",
-                $sqlSelect,
-                $matches
-            )
-            )
-            {
+            if (
+            preg_match_all("/as\s([^,]+)/", $sqlSelect, $matches)
+            ) {
                 $countCrossQueries = count($sqlList["CROSS"]) - 1;
-                foreach( $matches[1] as $fieldName )
-                {
+                foreach ($matches[1] as $fieldName) {
 
                     # Для каждого CROSS запроса соберем отдельный префикс для названия колонки
                     $arSelectFieldQueries = [];
-                    for( $i = 0; $i <= $countCrossQueries; $i++ )
-                    {
+                    for ($i = 0; $i <= $countCrossQueries; $i++) {
                         $arSelectFieldQueries[] = "a{$i}.{$fieldName}";
                     }
 
                     # Если есть особая обработка слияния колонок
-                    if( isset($SelectPlaceholders[$fieldName]) && is_callable($SelectPlaceholders[$fieldName]) )
-                    {
-                        $arSelectCross[] = call_user_func(
-                            $SelectPlaceholders[$fieldName],
-                            $arSelectFieldQueries,
-                            $fieldName
-                        );
-                    }
-                    # Иначе собираем значения для колонки из всех CROSS запросов через разделитель
-                    else
-                    {
-                        $arSelectCross[] = "CONCAT( ".implode(
-                                ", '{$delimiter}', ",
-                                $arSelectFieldQueries
-                            )." ) as {$fieldName}";
+                    if (isset($SelectPlaceholders[$fieldName]) && is_callable($SelectPlaceholders[$fieldName])) {
+                        $arSelectCross[] = call_user_func($SelectPlaceholders[$fieldName], $arSelectFieldQueries, $fieldName);
+                    } # Иначе собираем значения для колонки из всех CROSS запросов через разделитель
+                    else {
+                        $arSelectCross[] = "CONCAT( ".implode(", '{$delimiter}', ", $arSelectFieldQueries)." ) as {$fieldName}";
                     }
                 }
             }
 
             # Формируем запросы через CROSS JOIN
-            $sqlCross = "( SELECT ".implode(
-                    ", ",
-                    $arSelectCross
-                )." FROM ";
-            foreach( $sqlList["CROSS"] as $key => $sqlItem )
-            {
-                if( $key != 0 )
-                {
+            $sqlCross = "( SELECT ".implode(", ", $arSelectCross)." FROM ";
+            foreach ($sqlList["CROSS"] as $key => $sqlItem) {
+                if ($key != 0) {
                     $sqlCross .= " CROSS JOIN ";
                 }
                 $sqlCross .= " ({$sqlItem}) a{$key} ";
@@ -961,55 +804,33 @@ class Element extends CollectableEntity
         }
 
         # Добавляем UNION ALL запросы
-        if( !empty($sqlList["UNION"]) )
-        {
-            foreach( $sqlList["UNION"] as $key => $sqlItem )
-            {
-                if( ( $key == 0 && !empty($sqlList["CROSS"]) ) || $key > 0 )
-                {
+        if (!empty($sqlList["UNION"])) {
+            foreach ($sqlList["UNION"] as $key => $sqlItem) {
+                if (($key == 0 && !empty($sqlList["CROSS"])) || $key > 0) {
                     $strSql .= " UNION ALL ";
                 }
                 $strSql .= " ({$sqlItem})";
             }
         }
 
-        if( !empty($sqlOrder) )
-        {
+        if (!empty($sqlOrder)) {
             $strSql .= $sqlOrder;
         }
 
-        if( !empty($arNavStartParams) && is_array($arNavStartParams) )
-        {
-            $nTopCount = ( isset($arNavStartParams["nTopCount"]) ? (int)$arNavStartParams["nTopCount"] : 0 );
+        if (!empty($arNavStartParams) && is_array($arNavStartParams)) {
+            $nTopCount = (isset($arNavStartParams["nTopCount"]) ? (int)$arNavStartParams["nTopCount"] : 0);
 
-            if( $nTopCount > 0 )
-            {
+            if ($nTopCount > 0) {
                 $strSql .= " LIMIT {$nTopCount}";
-                $res = $GLOBALS["DB"]->Query(
-                    $strSql,
-                    false,
-                    "FILE: ".__FILE__."<br> LINE: ".__LINE__
-                );
-            }
-            else
-            {
+                $res = $GLOBALS["DB"]->Query($strSql, false, "FILE: ".__FILE__."<br> LINE: ".__LINE__);
+            } else {
                 $res_cnt = $GLOBALS["DB"]->Query($strSql);
                 $cntRows = $res_cnt->SelectedRowsCount();
                 $res = new \CDBResult();
-                $res->NavQuery(
-                    $strSql,
-                    $cntRows,
-                    $arNavStartParams
-                );
+                $res->NavQuery($strSql, $cntRows, $arNavStartParams);
             }
-        }
-        else
-        {
-            $res = $GLOBALS["DB"]->Query(
-                $strSql,
-                false,
-                "FILE: ".__FILE__."<br> LINE: ".__LINE__
-            );
+        } else {
+            $res = $GLOBALS["DB"]->Query($strSql, false, "FILE: ".__FILE__."<br> LINE: ".__LINE__);
         }
 
         $result = new \CIBlockResult($res);

@@ -28,16 +28,12 @@ class LegalPartyClient extends BaseClient
     public function suggest(Interfaces\QueryInterface $query)
     {
 
-        return parent::suggest(
-            $this->resource,
-            $query
-        );
+        return parent::suggest($this->resource, $query);
     }
 
     protected function signHash(&$response)
     {
-        foreach( $response['suggestions'] as &$suggestion )
-        {
+        foreach ($response['suggestions'] as &$suggestion) {
             $ar_data = [
                 $suggestion['unrestricted_value'],
                 $suggestion['data']['kpp'],

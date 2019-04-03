@@ -19,18 +19,14 @@ class Mail
             ->get('mail')['smtp'];
 
         $mail = new PHPMailer(true);
-        try
-        {
+        try {
 
             //парсим дополнительные заголовки в массив
             $arHeaders = [];
-            if( !empty($additional_headers) )
-            {
+            if (!empty($additional_headers)) {
                 $explode = explode("\n", $additional_headers);
-                foreach( $explode as $strHeader )
-                {
-                    if( preg_match('/^([^\:]+)\:(.*)$/', $strHeader, $matches) )
-                    {
+                foreach ($explode as $strHeader) {
+                    if (preg_match('/^([^\:]+)\:(.*)$/', $strHeader, $matches)) {
                         $key = trim($matches[1]);
                         $value = trim($matches[2]);
                         $arHeaders[$key] = $value;
@@ -38,8 +34,7 @@ class Mail
                 }
             }
 
-            if( function_exists('mb_internal_encoding') && ( (int)ini_get('mbstring.func_overload') ) & 2 )
-            {
+            if (function_exists('mb_internal_encoding') && ((int)ini_get('mbstring.func_overload')) & 2) {
                 mb_internal_encoding('ASCII');
             }
 
@@ -62,24 +57,19 @@ class Mail
 
             //Content
             $mail->Subject = $subject;
-            foreach( array_map('trim', explode(',', $to)) as $emailTo )
-            {
+            foreach (array_map('trim', explode(',', $to)) as $emailTo) {
                 $mail->addAddress($emailTo);
             }
             //парсим копии, если есть
-            if( !empty($arHeaders['CC']) )
-            {
-                foreach( array_map('trim', explode(',', $arHeaders['CC'])) as $emailTo )
-                {
+            if (!empty($arHeaders['CC'])) {
+                foreach (array_map('trim', explode(',', $arHeaders['CC'])) as $emailTo) {
                     $mail->addCC($emailTo);
                 }
                 unset($arHeaders['CC']);
             }
             //парсим скрытые копии, если есть
-            if( !empty($arHeaders['BCC']) )
-            {
-                foreach( array_map('trim', explode(',', $arHeaders['BCC'])) as $emailTo )
-                {
+            if (!empty($arHeaders['BCC'])) {
+                foreach (array_map('trim', explode(',', $arHeaders['BCC'])) as $emailTo) {
                     $mail->addBCC($emailTo);
                 }
                 unset($arHeaders['BCC']);
@@ -94,9 +84,7 @@ class Mail
 
 
             return $mail->send();
-        }
-        catch( Exception $e )
-        {
+        } catch (Exception $e) {
             echo $e->getMessage();
             return false;
         }

@@ -7,8 +7,7 @@ class Store
 {
     public static function tariffChanged($arFields)
     {
-        return \Bitrix\Main\Mail\Event::send(
-            array(
+        return \Bitrix\Main\Mail\Event::send(array(
                 "EVENT_NAME" => "LOCAL_STORE_TARIFF_CHANGED",
                 "LID" => "s1",
                 "C_FIELDS" => array(
@@ -19,7 +18,6 @@ class Store
                     'DATE_ACTIVE_TO' => $arFields['DATE_ACTIVE_TO'],
                     'NEXT_TARIFF_NAME' => $arFields['NEXT_TARIFF_NAME'],
                 )
-            )
-        );
+            ));
     }
 }

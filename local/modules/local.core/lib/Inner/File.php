@@ -31,49 +31,30 @@ class File extends CollectableEntity
     {
         $file_ids = [];
         /** @var $item Iblock\Element */
-        foreach( $collection as $item )
-        {
-            if( $file_id = (int)$item->getField('DETAIL_PICTURE') )
-            {
+        foreach ($collection as $item) {
+            if ($file_id = (int)$item->getField('DETAIL_PICTURE')) {
                 $file_ids[] = $file_id;
             }
 
-            if( $file_id = (int)$item->getField('PREVIEW_PICTURE') )
-            {
+            if ($file_id = (int)$item->getField('PREVIEW_PICTURE')) {
                 $file_ids[] = $file_id;
             }
 
-            if( $prop_collection = $item->getPropertyCollection() )
-            {
+            if ($prop_collection = $item->getPropertyCollection()) {
                 /** @var $property IblockPropertyValue */
-                foreach( $prop_collection as $property )
-                {
-                    if( $property->getPropertyType() == 'F' )
-                    {
-                        if( $property->isMultiple() )
-                        {
-                            $values = array_filter(
-                                array_map(
-                                    function($v)
-                                        {
-                                            return (int)$v;
-                                        },
-                                    (array)$property->getField('VALUE')
-                                )
-                            );
+                foreach ($prop_collection as $property) {
+                    if ($property->getPropertyType() == 'F') {
+                        if ($property->isMultiple()) {
+                            $values = array_filter(array_map(function ($v)
+                                    {
+                                        return (int)$v;
+                                    }, (array)$property->getField('VALUE')));
 
-                            if( $values )
-                            {
-                                $file_ids = array_merge(
-                                    $file_ids,
-                                    $values
-                                );
+                            if ($values) {
+                                $file_ids = array_merge($file_ids, $values);
                             }
-                        }
-                        else
-                        {
-                            if( $value = (int)$property->getField('VALUE') )
-                            {
+                        } else {
+                            if ($value = (int)$property->getField('VALUE')) {
                                 $file_ids[] = $value;
                             }
                         }
@@ -88,8 +69,7 @@ class File extends CollectableEntity
     public static function getById(int $id)
     {
         $id = (int)$id;
-        if( $id <= 0 )
-        {
+        if ($id <= 0) {
             throw new Main\ArgumentNullException('Не указан ID элемента');
         }
 
@@ -108,8 +88,7 @@ class File extends CollectableEntity
     public static function getList(array $filter = [])
     {
         $params = [];
-        if( !empty($filter) )
-        {
+        if (!empty($filter)) {
             $params = ['filter' => $filter];
         }
 
@@ -118,8 +97,7 @@ class File extends CollectableEntity
 
         $rows = Main\FileTable::getList($params);
 
-        while( $row = $rows->fetch() )
-        {
+        while ($row = $rows->fetch()) {
             /** @var $item IblockElement */
             $item = self::create($row);
 
@@ -140,14 +118,9 @@ class File extends CollectableEntity
      */
     protected static function create(array $fields = array())
     {
-        $arContentType = substr(
-            $fields['CONTENT_TYPE'],
-            0,
-            5
-        );
+        $arContentType = substr($fields['CONTENT_TYPE'], 0, 5);
 
-        if( $arContentType === 'image' )
-        {
+        if ($arContentType === 'image') {
             return new Image($fields);
         }
 
@@ -161,11 +134,7 @@ class File extends CollectableEntity
      */
     protected function __construct(array $fields = array())
     {
-        $this->uploadDir = Main\Config\Option::get(
-            'main',
-            'upload_dir',
-            'upload'
-        );
+        $this->uploadDir = Main\Config\Option::get('main', 'upload_dir', 'upload');
 
         parent::__construct($fields);
     }

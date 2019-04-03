@@ -23,13 +23,10 @@ class Base
      */
     private static function __fillStoreRegister($strTariffCode)
     {
-        if( is_null(self::$__register[$strTariffCode]) )
-        {
-            $arTmp = \Local\Core\Model\Data\TariffTable::getList(
-                [
+        if (is_null(self::$__register[$strTariffCode])) {
+            $arTmp = \Local\Core\Model\Data\TariffTable::getList([
                     'filter' => ['CODE' => $strTariffCode],
-                ]
-            )
+                ])
                 ->fetch();
 
             self::$__register[$strTariffCode] = $arTmp;
@@ -63,11 +60,11 @@ class Base
      */
     public static function getDefaultTariff()
     {
-        if( is_null(self::$__register['!DEFAULT_TARIFF']) )
-        {
+        if (is_null(self::$__register['!DEFAULT_TARIFF'])) {
             $arTmp = \Local\Core\Model\Data\TariffTable::getList([
                 'filter' => ['IS_DEFAULT' => 'Y']
-            ])->fetch();
+            ])
+                ->fetch();
             self::$__register['!DEFAULT_TARIFF'] = $arTmp;
         }
         return self::$__register['!DEFAULT_TARIFF'];
@@ -89,6 +86,7 @@ class Base
             'filter' => [
                 'CODE' => $strTariffCode
             ]
-        ])->fetch();
+        ])
+            ->fetch();
     }
 }

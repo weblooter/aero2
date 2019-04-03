@@ -37,14 +37,8 @@ class DemoConsole extends Command
     {
         $this->setName('kd:demo')
             ->setDescription('Демострация работы консольной команды')
-            ->setHelp(
-                "Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kd:demo --help"
-            )
-            ->addArgument(
-                'username',
-                ( $this->requireName ? InputArgument :: REQUIRED : InputArgument::OPTIONAL ),
-                'Ваше имя'
-            );
+            ->setHelp("Это текст справки по команде,\nкоторый выводится если вызвать команду с ключем --help:\n$ php consoleapp.php kd:demo --help")
+            ->addArgument('username', ($this->requireName ? InputArgument :: REQUIRED : InputArgument::OPTIONAL), 'Ваше имя');
     }
 
     /**

@@ -28,12 +28,7 @@ abstract class CollectableEntity extends Entity
     protected function onFieldModify($name, $oldValue, $value)
     {
         $collection = $this->getCollection();
-        return $collection->onItemModify(
-            $this,
-            $name,
-            $oldValue,
-            $value
-        );
+        return $collection->onItemModify($this, $name, $oldValue, $value);
     }
 
     /**
@@ -59,8 +54,7 @@ abstract class CollectableEntity extends Entity
     public function delete()
     {
         $collection = $this->getCollection();
-        if( !$collection )
-        {
+        if (!$collection) {
             throw new Main\ObjectNotFoundException('Entity "CollectableEntity" not found');
         }
 
@@ -107,8 +101,7 @@ abstract class CollectableEntity extends Entity
      */
     public function createClone(\SplObjectStorage $cloneEntity)
     {
-        if( $this->isClone() && $cloneEntity->contains($this) )
-        {
+        if ($this->isClone() && $cloneEntity->contains($this)) {
             return $cloneEntity[$this];
         }
 
@@ -116,25 +109,20 @@ abstract class CollectableEntity extends Entity
         $collectableEntity->isClone = true;
 
         /** @var Internals\Fields $fields */
-        if( $fields = $this->fields )
-        {
+        if ($fields = $this->fields) {
             $collectableEntity->fields = $fields->createClone($cloneEntity);
         }
 
-        if( !$cloneEntity->contains($this) )
-        {
+        if (!$cloneEntity->contains($this)) {
             $cloneEntity[$this] = $collectableEntity;
         }
 
-        if( $collection = $this->getCollection() )
-        {
-            if( !$cloneEntity->contains($collection) )
-            {
+        if ($collection = $this->getCollection()) {
+            if (!$cloneEntity->contains($collection)) {
                 $cloneEntity[$collection] = $collection->createClone($cloneEntity);
             }
 
-            if( $cloneEntity->contains($collection) )
-            {
+            if ($cloneEntity->contains($collection)) {
                 $collectableEntity->collection = $cloneEntity[$collection];
             }
         }

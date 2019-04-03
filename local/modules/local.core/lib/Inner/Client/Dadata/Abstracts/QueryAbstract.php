@@ -30,12 +30,8 @@ abstract class QueryAbstract
     {
         $instance = new static();
 
-        foreach( $ar_query as $key => $value )
-        {
-            $instance->set(
-                $key,
-                $value
-            );
+        foreach ($ar_query as $key => $value) {
+            $instance->set($key, $value);
         }
 
         return $instance;
@@ -66,17 +62,10 @@ abstract class QueryAbstract
      */
     public function set(string $name, $value)
     {
-        $check_result = $this->checkParam(
-            $name,
-            $value
-        );
+        $check_result = $this->checkParam($name, $value);
 
-        if( !$check_result->isSuccess() )
-        {
-            $errors = implode(
-                "\n",
-                $check_result->getErrorMessages()
-            );
+        if (!$check_result->isSuccess()) {
+            $errors = implode("\n", $check_result->getErrorMessages());
             throw new ArgumentException('Некорректный параметр запроса: '.$errors);
         }
 
@@ -122,24 +111,16 @@ abstract class QueryAbstract
 
         $name = trim($name);
 
-        if(
-        !key_exists(
-            $name,
-            $this->validationRules
-        )
-        )
-        {
+        if (
+        !key_exists($name, $this->validationRules)
+        ) {
             $result->addError(new Error('Неизвестный параметр запроса "'.$name.'"'));
         }
 
-        if(
+        if (
             $result->isSuccess()
-            && !call_user_func(
-                $this->validationRules[$name],
-                $value
-            )
-        )
-        {
+            && !call_user_func($this->validationRules[$name], $value)
+        ) {
             $result->addError(new Error('Недопустимое значение параметра "'.$name.'"'));
         }
 
@@ -161,9 +142,6 @@ abstract class QueryAbstract
      */
     public function __toString(): string
     {
-        return json_encode(
-            $this->toArray(),
-            JSON_UNESCAPED_UNICODE
-        );
+        return json_encode($this->toArray(), JSON_UNESCAPED_UNICODE);
     }
 }

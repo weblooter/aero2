@@ -1,4 +1,5 @@
 <?php
+
 namespace Local\Core\Inner\Robofeed\Schema;
 
 use \Local\Core\Inner\Robofeed\SchemaFields, \Local\Core\Inner\Exception;
@@ -21,7 +22,7 @@ abstract class AbstractSchema
 
         $arSchema = $this->getSchemeRoot();
 
-        $arSchema['robofeed'] = array_merge($arSchema['robofeed'], static::getSchemaBody() );
+        $arSchema['robofeed'] = array_merge($arSchema['robofeed'], static::getSchemaBody());
 
         $arMap = $arSchema;
 
@@ -38,23 +39,19 @@ abstract class AbstractSchema
     {
         return [
             'robofeed' => [
-                'lastModified' => new SchemaFields\DatetimeField(
-                    'robofeed__lastModified', [
+                'lastModified' => new SchemaFields\DatetimeField('robofeed__lastModified', [
                         'title' => 'Дата создания робофида',
                         'required' => true,
                         'xml_path' => 'robofeed->lastModified'
-                    ]
-                ),
-                'version' => new SchemaFields\EnumField(
-                    'robofeed__version', [
+                    ]),
+                'version' => new SchemaFields\EnumField('robofeed__version', [
                         'title' => 'Номер версии робофида',
                         'required' => true,
                         'values' => [
                             '1'
                         ],
                         'xml_path' => 'robofeed->version'
-                    ]
-                )
+                    ])
             ]
         ];
     }

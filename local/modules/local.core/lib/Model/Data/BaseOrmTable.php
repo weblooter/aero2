@@ -23,38 +23,30 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
     public static function getMap()
     {
         return [
-            new Fields\IntegerField(
-                'ID', [
+            new Fields\IntegerField('ID', [
                     'primary' => true,
                     'autocomplete' => true,
                     'title' => 'ID'
-                ]
-            ),
-            new Fields\EnumField(
-                'ACTIVE', [
+                ]),
+            new Fields\EnumField('ACTIVE', [
                     'title' => 'Активность',
                     'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
-                ]
-            ),
-            new Fields\DatetimeField(
-                'DATE_CREATE', [
+                ]),
+            new Fields\DatetimeField('DATE_CREATE', [
                     'title' => 'Дата создания',
-                    'default_value' => function()
+                    'default_value' => function ()
                         {
                             return new \Bitrix\Main\Type\DateTime();
                         }
-                ]
-            ),
-            new Fields\DatetimeField(
-                'DATE_MODIFIED', [
+                ]),
+            new Fields\DatetimeField('DATE_MODIFIED', [
                     'title' => 'Дата последнего изменения',
-                    'default_value' => function()
+                    'default_value' => function ()
                         {
                             return new \Bitrix\Main\Type\DateTime();
                         }
-                ]
-            ),
+                ]),
         ];
     }
 

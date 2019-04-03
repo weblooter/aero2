@@ -11,7 +11,7 @@ class Custom extends Base
     public function getRowHtml()
     {
         return "<tr>
-                     <td>".( ( $this->isEditable === true ) ? $this->getEditFieldHtml() : $this->getViewFieldHtml() )."</td>
+                     <td>".(($this->isEditable === true) ? $this->getEditFieldHtml() : $this->getViewFieldHtml())."</td>
                 </tr>";
     }
 

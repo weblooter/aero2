@@ -14,8 +14,7 @@ class Factory
      */
     public static function factory($intVersion)
     {
-        switch( (string)$intVersion )
-        {
+        switch ((string)$intVersion) {
             case '1':
                 return new \Local\Core\Inner\Robofeed\Importer\V1\Importer();
                 break;

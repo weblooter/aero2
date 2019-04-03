@@ -12,18 +12,15 @@ abstract class ScalarField extends \Bitrix\Main\ORM\Fields\ScalarField implement
     {
         parent::__construct($name, $parameters);
 
-        if( !empty($parameters['xml_path']) )
-        {
+        if (!empty($parameters['xml_path'])) {
             $this->xml_path = $parameters['xml_path'];
         }
 
-        if( !empty($parameters['xml_description']) )
-        {
+        if (!empty($parameters['xml_description'])) {
             $this->xml_description = $parameters['xml_description'];
         }
 
-        if( !empty($parameters['xml_expected_type']) )
-        {
+        if (!empty($parameters['xml_expected_type'])) {
             $this->xml_expected_type = $parameters['xml_expected_type'];
         }
     }
@@ -53,8 +50,7 @@ abstract class ScalarField extends \Bitrix\Main\ORM\Fields\ScalarField implement
     {
 
         // TODO вернуть проверку на isRequired() по дефолту в этот класс.
-        if( trim($mixEnterValue) === '' )
-        {
+        if (trim($mixEnterValue) === '') {
             $mixEnterValue = null;
         }
 

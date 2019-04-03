@@ -98,6 +98,7 @@ try
 
         if( is_callable($callable) )
         {
+
             $args = array_filter(
                 $parameters,
                 function($v, $k)
@@ -108,7 +109,9 @@ try
             );
 
             call_user_func($callable, $request, $response, $args);
+            $GLOBALS['APPLICATION']->RestartBuffer();
             $response->send();
+            die();
         }
         else
         {
@@ -120,11 +123,13 @@ try
 catch( \Throwable $e )
 {
 
+    $GLOBALS['APPLICATION']->RestartBuffer();
     $response->setContentJson(
         ["error" => 'Возникло исключение '.get_class($e).' Тескт ошибки: '.$e->getMessage()],
         405
     );
     $response->send();
+    die();
 }
 
 require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_after.php" );

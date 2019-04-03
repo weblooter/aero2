@@ -10,13 +10,13 @@
  * @var string                      $templateFolder
  */
 
-$funIsRequired = function($strCode) use ($arResult)
+$funIsRequired = function ($strCode) use ($arResult)
     {
         return $arResult['FIELDS'][$strCode]['IS_REQUIRED'];
     }
 ?>
 
-<? if( $arResult['STATUS'] == 'SUCCESS_ADD' ): ?>
+<? if ($arResult['STATUS'] == 'SUCCESS_ADD'): ?>
     <div class="alert alert-success" role="alert">
         Магазин успешно добавлен!
     </div>
@@ -27,7 +27,7 @@ $funIsRequired = function($strCode) use ($arResult)
     </script>
 <? else: ?>
 
-    <? if( $arResult['STATUS'] == 'SUCCESS_UPDATE' ): ?>
+    <? if ($arResult['STATUS'] == 'SUCCESS_UPDATE'): ?>
         <div class="alert alert-success" role="alert">
             Магазин успешно изменен!
         </div>
@@ -35,53 +35,35 @@ $funIsRequired = function($strCode) use ($arResult)
 
     <?
     $strRoute = '';
-    if( !empty($arParams['STORE_ID']) )
-    {
-        $strRoute = \Local\Core\Inner\Route::getRouteTo(
-            'store',
-            'edit',
-            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']]
-        );
-    }
-    else
-    {
-        $strRoute = \Local\Core\Inner\Route::getRouteTo(
-            'store',
-            'add',
-            ['#COMPANY_ID#' => $arParams['COMPANY_ID']]
-        );
+    if (!empty($arParams['STORE_ID'])) {
+        $strRoute = \Local\Core\Inner\Route::getRouteTo('store', 'edit', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']]);
+    } else {
+        $strRoute = \Local\Core\Inner\Route::getRouteTo('store', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID']]);
     }
     ?>
 
     <form method="post" action="<?=$strRoute?>" enctype="multipart/form-data">
         <?=bitrix_sessid_post();?>
-        <? if( $arResult['STATUS'] == 'ERROR' ): ?>
+        <? if ($arResult['STATUS'] == 'ERROR'): ?>
             <div class="alert alert-danger" role="alert">
-                <?=implode(
-                    '<br/>',
-                    $arResult['ERROR_TEXT']
-                )?>
+                <?=implode('<br/>', $arResult['ERROR_TEXT'])?>
             </div>
         <? endif; ?>
 
         <div class="form-group">
-            <label>Название <?=( $funIsRequired('NAME') ? '*' : '' )?></label>
-            <input type="text" class="form-control" name="STORE_FIELD[NAME]" <?=( $funIsRequired(
-                'NAME'
-            ) ? 'required' : '' )?> value="<?=$arResult['FIELDS']['NAME']['VALUE']?>" placeholder="Мой магазин" />
+            <label>Название <?=($funIsRequired('NAME') ? '*' : '')?></label>
+            <input type="text" class="form-control" name="STORE_FIELD[NAME]" <?=($funIsRequired('NAME') ? 'required' : '')?> value="<?=$arResult['FIELDS']['NAME']['VALUE']?>" placeholder="Мой магазин" />
         </div>
 
         <div class="form-group">
-            <label>Домен <?=( $funIsRequired('DOMAIN') ? '*' : '' )?></label>
-            <input type="text" class="form-control" name="STORE_FIELD[DOMAIN]" <?=( $funIsRequired(
-                'DOMAIN'
-            ) ? 'required' : '' )?> value="<?=$arResult['FIELDS']['DOMAIN']['VALUE']?>" placeholder="http://example.com" />
+            <label>Домен <?=($funIsRequired('DOMAIN') ? '*' : '')?></label>
+            <input type="text" class="form-control" name="STORE_FIELD[DOMAIN]" <?=($funIsRequired('DOMAIN') ? 'required' : '')?> value="<?=$arResult['FIELDS']['DOMAIN']['VALUE']?>" placeholder="http://example.com" />
             <small class="form-text text-muted">С http://</small>
         </div>
         <div class="form-group">
-            <label>Источник данных <?=( $funIsRequired('RESOURCE_TYPE') ? '*' : '' )?></label>
+            <label>Источник данных <?=($funIsRequired('RESOURCE_TYPE') ? '*' : '')?></label>
             <select name="STORE_FIELD[RESOURCE_TYPE]" class="custom-select mb-3" required>
-                <? foreach( \Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('RESOURCE_TYPE') as $v => $t ): ?>
+                <? foreach (\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('RESOURCE_TYPE') as $v => $t): ?>
                     <option value="<?=$v?>" <?=$arResult['FIELDS']['RESOURCE_TYPE']['VALUE'] == $v ? 'selected' : ''?> ><?=$t?></option>
                 <? endforeach; ?>
             </select>
@@ -144,9 +126,9 @@ $funIsRequired = function($strCode) use ($arResult)
         </div>
 
         <div class="form-group">
-            <label>Поведение импорта при ошибке <?=( $funIsRequired('BEHAVIOR_IMPORT_ERROR') ? '*' : '' )?></label>
+            <label>Поведение импорта при ошибке <?=($funIsRequired('BEHAVIOR_IMPORT_ERROR') ? '*' : '')?></label>
             <select name="STORE_FIELD[BEHAVIOR_IMPORT_ERROR]" class="custom-select mb-3" required>
-                <? foreach( \Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR') as $val => $text ): ?>
+                <? foreach (\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR') as $val => $text): ?>
                     <option value="<?=$val?>" <?=$arResult['FIELDS']['BEHAVIOR_IMPORT_ERROR']['VALUE'] == $val ? 'selected' : ''?> ><?=$text?></option>
                 <? endforeach; ?>
             </select>
@@ -159,18 +141,18 @@ $funIsRequired = function($strCode) use ($arResult)
             <b><?=\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[\Local\Core\Model\Data\StoreTable::BEHAVIOR_IMPORT_ERROR_IMPORT_ONLY_VALID]?></b> - продолжает
             импорт, но импортирует только валидные данные.<br />
             Мы считаем, что появившиеся ошибки в Robofeed XML говорят о нарушении в логике работы формирования Robofeed XML со стороны Вашего сайта, которые могут понести за собой финансовые потери,
-            поэтому рекомендуем использовать "<b><?=\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues(
-                    'BEHAVIOR_IMPORT_ERROR'
-                )[\Local\Core\Model\Data\StoreTable::BEHAVIOR_IMPORT_ERROR_STOP_IMPORT]?></b>". К тому же валидные данные могут быть не полными, что повлияет на дальнейшее генерирование файлов на их
+            поэтому рекомендуем использовать
+            "<b><?=\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('BEHAVIOR_IMPORT_ERROR')[\Local\Core\Model\Data\StoreTable::BEHAVIOR_IMPORT_ERROR_STOP_IMPORT]?></b>". К тому же валидные
+            данные могут быть не полными, что повлияет на дальнейшее генерирование файлов на их
             основании.<br />
             Вне зависимости от выбранного поведения мы проинформируем Вас о проблемах, если таковые появятся.
         </div>
 
 
         <div class="form-group">
-            <label>Информировать о не изменившемся Robofeed XML? <?=( $funIsRequired('ALERT_IF_XML_NOT_MODIFIED') ? '*' : '' )?></label>
+            <label>Информировать о не изменившемся Robofeed XML? <?=($funIsRequired('ALERT_IF_XML_NOT_MODIFIED') ? '*' : '')?></label>
             <select name="STORE_FIELD[ALERT_IF_XML_NOT_MODIFIED]" class="custom-select mb-3" required>
-                <? foreach( \Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('ALERT_IF_XML_NOT_MODIFIED') as $val => $text ): ?>
+                <? foreach (\Local\Core\Model\Data\StoreTable::getEnumFieldHtmlValues('ALERT_IF_XML_NOT_MODIFIED') as $val => $text): ?>
                     <option value="<?=$val?>" <?=$arResult['FIELDS']['ALERT_IF_XML_NOT_MODIFIED']['VALUE'] == $val ? 'selected' : ''?> ><?=$text?></option>
                 <? endforeach; ?>
             </select>
@@ -186,29 +168,22 @@ $funIsRequired = function($strCode) use ($arResult)
             <b>"Да"</b> следует выбрать, если выбран источник данных "Ссылка на файл" и Вы обновляете Robofeed XML каждые 3 часа или чаще. В остальных случаях рекомендуем выставить <b>"Нет"</b>.
         </div>
 
-        <? if( $arResult['STATUS'] == 'ERROR' ): ?>
+        <? if ($arResult['STATUS'] == 'ERROR'): ?>
             <div class="alert alert-danger" role="alert">
-                <?=implode(
-                    '<br/>',
-                    $arResult['ERROR_TEXT']
-                )?>
+                <?=implode('<br/>', $arResult['ERROR_TEXT'])?>
             </div>
         <? endif; ?>
 
 
-        <? if( $arResult['STATUS'] == 'SUCCESS_UPDATE' ): ?>
+        <? if ($arResult['STATUS'] == 'SUCCESS_UPDATE'): ?>
             <div class="alert alert-success" role="alert">
                 Магазин успешно изменен!
             </div>
         <? endif; ?>
 
-        <? if( $arParams['STORE_ID'] > 0 ): ?>
+        <? if ($arParams['STORE_ID'] > 0): ?>
             <div class="form-group">
-                <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-                    'store',
-                    'detail',
-                    ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']]
-                )?>" class="btn btn-dark">
+                <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']])?>" class="btn btn-dark">
                     <ion-icon name="arrow-round-back"></ion-icon>
                     Вернуться к магазину</a>
                 <button class="btn btn-warning">
@@ -218,11 +193,7 @@ $funIsRequired = function($strCode) use ($arResult)
             </div>
         <? else: ?>
             <div class="form-group">
-                <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-                    'store',
-                    'list',
-                    ['#COMPANY_ID#' => $arParams['COMPANY_ID']]
-                )?>" class="btn btn-dark">
+                <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'list', ['#COMPANY_ID#' => $arParams['COMPANY_ID']])?>" class="btn btn-dark">
                     <ion-icon name="arrow-round-back"></ion-icon>
                     Вернуться к магазинам</a>
                 <button class="btn btn-warning">

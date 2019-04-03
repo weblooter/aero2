@@ -6,31 +6,23 @@ class RobofeedConvertFormComponent extends \Local\Core\Inner\BxModified\CBitrixC
 
     public function executeComponent()
     {
-        if( !$GLOBALS['USER']->IsAuthorized() )
-        {
+        if (!$GLOBALS['USER']->IsAuthorized()) {
             echo 'Необходимо авторизоваться';
-        }
-        else
-        {
+        } else {
             $this->intMaxUploadFileSizeMb = \Bitrix\Main\Config\Configuration::getInstance()
                                                 ->get('robofeed')['convert']['upload_file_max_size'] ?? 100;
 
-            if(
-                !empty(
-                \Bitrix\Main\Application::getInstance()
+            if (
+                !empty(\Bitrix\Main\Application::getInstance()
                     ->getContext()
                     ->getRequest()
-                    ->getPost('CONVERT')
-                )
-                && !empty(
-                \Bitrix\Main\Application::getInstance()
+                    ->getPost('CONVERT'))
+                && !empty(\Bitrix\Main\Application::getInstance()
                     ->getContext()
                     ->getRequest()
-                    ->getFile('CONVERT')
-                )
+                    ->getFile('CONVERT'))
                 && check_bitrix_sessid()
-            )
-            {
+            ) {
                 $this->__tryAdd();
             }
 
@@ -43,21 +35,13 @@ class RobofeedConvertFormComponent extends \Local\Core\Inner\BxModified\CBitrixC
     private function __tryAdd()
     {
 
-        $arConvertFile = array_combine(
-            array_keys(
-                \Bitrix\Main\Application::getInstance()
-                    ->getContext()
-                    ->getRequest()
-                    ->getFile('CONVERT')
-            ),
-            array_column(
-                \Bitrix\Main\Application::getInstance()
-                    ->getContext()
-                    ->getRequest()
-                    ->getFile('CONVERT'),
-                'FILE'
-            )
-        );
+        $arConvertFile = array_combine(array_keys(\Bitrix\Main\Application::getInstance()
+            ->getContext()
+            ->getRequest()
+            ->getFile('CONVERT')), array_column(\Bitrix\Main\Application::getInstance()
+                ->getContext()
+                ->getRequest()
+                ->getFile('CONVERT'), 'FILE'));
 
         $arPostFields = \Bitrix\Main\Application::getInstance()
             ->getContext()
@@ -66,67 +50,46 @@ class RobofeedConvertFormComponent extends \Local\Core\Inner\BxModified\CBitrixC
 
         $arAddFields = [];
 
-        try
-        {
-            if( !in_array($arPostFields['HANDLER'], \Local\Core\Model\Robofeed\ConvertTable::getEnumFieldValues('HANDLER')) )
-            {
+        try {
+            if (!in_array($arPostFields['HANDLER'], \Local\Core\Model\Robofeed\ConvertTable::getEnumFieldValues('HANDLER'))) {
                 throw new \Exception('Нет такого исходного формата файла');
             }
             $arAddFields['HANDLER'] = $arPostFields['HANDLER'];
 
-            switch( $arPostFields['HANDLER'] )
-            {
+            switch ($arPostFields['HANDLER']) {
                 case 'YML':
-                    if(
-                    !\Local\Core\Inner\BxModified\CFile::checkExtension(
-                        $arConvertFile,
-                        '.xml'
-                    )
-                    )
-                    {
+                    if (
+                    !\Local\Core\Inner\BxModified\CFile::checkExtension($arConvertFile, '.xml')
+                    ) {
                         throw new \Exception('Файл должен быть XML');
                     }
                     break;
             }
 
-            if(
-                round(
-                    ( $arConvertFile['size'] / 1000 / 1000 ),
-                    3
-                ) > $this->intMaxUploadFileSizeMb
-            )
-            {
+            if (
+                round(($arConvertFile['size'] / 1000 / 1000), 3) > $this->intMaxUploadFileSizeMb
+            ) {
                 throw new \Exception('Максимальный размер файла - '.$this->intMaxUploadFileSizeMb.'Мб');
             }
 
-            $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile(
-                $arConvertFile,
-                '/robofeed/convert/original_file/'
-            );
-            if( $intFileSave < 1 )
-            {
+            $intFileSave = \Local\Core\Inner\BxModified\CFile::saveFile($arConvertFile, '/robofeed/convert/original_file/');
+            if ($intFileSave < 1) {
                 throw new \Exception('Не удалось сохранить файл');
             }
 
             $arAddFields['ORIGINAL_FILE_ID'] = $intFileSave;
             $arAddFields['ORIGINAL_FILE_NAME'] = $arConvertFile['name'];
-        }
-        catch( \Exception $e )
-        {
+        } catch (\Exception $e) {
             $this->arResult['ADD_STATUS'] = 'ERROR';
             $this->arResult['ERROR_TEXT'][] = $e->getMessage();
         }
 
-        if( is_null( $this->arResult['ADD_STATUS'] ) )
-        {
+        if (is_null($this->arResult['ADD_STATUS'])) {
             /** @var \Bitrix\Main\ORM\Data\AddResult $obRes */
             $obRes = \Local\Core\Model\Robofeed\ConvertTable::add($arAddFields);
-            if( $obRes->isSuccess() )
-            {
+            if ($obRes->isSuccess()) {
                 $this->arResult['ADD_STATUS'] = 'SUCCESS';
-            }
-            else
-            {
+            } else {
                 $this->arResult['ADD_STATUS'] = 'ERROR';
                 $this->arResult['ERROR_TEXT'] = $obRes->getErrorMessages();
             }

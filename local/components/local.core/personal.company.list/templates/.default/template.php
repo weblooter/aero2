@@ -12,13 +12,12 @@
 ?>
 <div class="col-12">
 
-    <? if( $arResult['ITEMS'] > 0 ): ?>
-        <? foreach( $arResult['ITEMS'] as $arItem ): ?>
+    <? if ($arResult['ITEMS'] > 0): ?>
+        <? foreach ($arResult['ITEMS'] as $arItem): ?>
 
             <?
             $strAlertClass = '';
-            switch( $arItem['VERIFIED'] )
-            {
+            switch ($arItem['VERIFIED']) {
                 case 'Y':
                     $strAlertClass = 'alert-success';
                     break;
@@ -32,11 +31,7 @@
             ?>
             <div class="alert <?=$strAlertClass?>">
                 <div class="pull-right">
-                    <a href="<?=\Local\Core\Inner\Route::getRouteTo(
-                        'company',
-                        'edit',
-                        ['#COMPANY_ID#' => $arItem['ID']]
-                    )?>" title="Редактировать">
+                    <a href="<?=\Local\Core\Inner\Route::getRouteTo('company', 'edit', ['#COMPANY_ID#' => $arItem['ID']])?>" title="Редактировать">
                         <ion-icon name="create"></ion-icon>
                     </a>
                     <a href="javascript:void(0)" onclick="wblDeleteCompany(<?=$arItem['ID']?>)" title="Удалить">
@@ -44,24 +39,15 @@
                     </a>
                 </div>
                 <?
-                switch( $arItem['TYPE'] )
-                {
+                switch ($arItem['TYPE']) {
                     case 'FI':
                         ?>
-                        <b><a href="<?=\Local\Core\Inner\Route::getRouteTo(
-                                'company',
-                                'detail',
-                                ['#COMPANY_ID#' => $arItem['ID']]
-                            )?>"><?=$arItem['NAME']?></a></b>
+                        <b><a href="<?=\Local\Core\Inner\Route::getRouteTo('company', 'detail', ['#COMPANY_ID#' => $arItem['ID']])?>"><?=$arItem['NAME']?></a></b>
                         <?
                         break;
                     case 'UR':
                         ?>
-                        <b><a href="<?=\Local\Core\Inner\Route::getRouteTo(
-                                'company',
-                                'detail',
-                                ['#COMPANY_ID#' => $arItem['ID']]
-                            )?>"><?=$arItem['NAME']?></a></b><br />
+                        <b><a href="<?=\Local\Core\Inner\Route::getRouteTo('company', 'detail', ['#COMPANY_ID#' => $arItem['ID']])?>"><?=$arItem['NAME']?></a></b><br />
                         Сокращеное название огранизации: <?=$arItem['COMPANY_NAME_SHORT']?><br />
                         ИНН: <?=$arItem['COMPANY_INN']?>
                         <?
@@ -69,15 +55,11 @@
                 }
                 ?>
                 <br />
-                Дата создания: <?=date(
-                    'Y.m.d H:i:s',
-                    $arItem['DATE_CREATE']->getTimestamp()
-                )?><br />
+                Дата создания: <?=date('Y.m.d H:i:s', $arItem['DATE_CREATE']->getTimestamp())?><br />
                 Активность: <?=$arItem['ACTIVE'] == 'Y' ? 'Активна' : 'Деактивирована'?><br />
                 Верификация:
                 <?
-                switch( $arItem['VERIFIED'] )
-                {
+                switch ($arItem['VERIFIED']) {
                     case 'Y':
                         ?>
                         Компания успешно верифицированна!
@@ -107,16 +89,11 @@
     <a href="/personal/company/add/" class="btn btn-warning">+ Добавить компанию</a>
 
     <?
-    $APPLICATION->IncludeComponent(
-        "bitrix:main.pagenavigation",
-        "",
-        array(
+    $APPLICATION->IncludeComponent("bitrix:main.pagenavigation", "", array(
             "NAV_OBJECT" => $arResult['NAV_OBJ'],
             "SEF_MODE" => "N", // ЧПУ пагинация или нет, Y|N
             "SHOW_COUNT" => "N",
-        ),
-        false
-    );
+        ), false);
     ?>
 
 </div>

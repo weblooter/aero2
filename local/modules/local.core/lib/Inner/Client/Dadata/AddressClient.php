@@ -28,10 +28,7 @@ class AddressClient extends BaseClient
     public function suggest(Interfaces\QueryInterface $query)
     {
 
-        return parent::suggest(
-            $this->resource,
-            $query
-        );
+        return parent::suggest($this->resource, $query);
     }
 }
 

@@ -11,8 +11,7 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
 
     public function onPrepareComponentParams($arParams)
     {
-        if( $arParams['ELEM_COUNT'] < 1 )
-        {
+        if ($arParams['ELEM_COUNT'] < 1) {
             $arParams['ELEM_COUNT'] = 10;
         }
 
@@ -30,27 +29,18 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
             ->setPageSize($this->arParams['ELEM_COUNT'])
             ->initFromUri();
 
-        if(
-        $obCache->startDataCache(
-            ( 60 * 60 * 24 * 7 ),
-            md5(
-                __METHOD__.'_user_id='.$GLOBALS['USER']->GetID().'_elem_count='.$this->arParams['ELEM_COUNT'].'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
-            ),
-            \Local\Core\Inner\Cache::getComponentCachePath(
-                ['personal.company.list'],
-                [
+        if (
+        $obCache->startDataCache((60 * 60 * 24 * 7),
+            md5(__METHOD__.'_user_id='.$GLOBALS['USER']->GetID().'_elem_count='.$this->arParams['ELEM_COUNT'].'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()),
+            \Local\Core\Inner\Cache::getComponentCachePath(['personal.company.list'], [
                     'user_id='.$GLOBALS['USER']->GetID(),
                     'elem_count='.$this->arParams['ELEM_COUNT'],
                     'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
-                ]
-            )
-        )
-        )
-        {
+                ]))
+        ) {
 
 
-            $rs = \Local\Core\Model\Data\CompanyTable::getList(
-                [
+            $rs = \Local\Core\Model\Data\CompanyTable::getList([
                     'filter' => [
                         'USER_OWN_ID' => $GLOBALS['USER']->GetID()
                     ],
@@ -61,28 +51,21 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
                     "count_total" => true,
                     "offset" => $nav->getOffset(),
                     "limit" => $nav->getLimit(),
-                ]
-            );
-            if( $rs->getSelectedRowsCount() < 1 )
-            {
+                ]);
+            if ($rs->getSelectedRowsCount() < 1) {
                 $obCache->abortDataCache();
                 $arResult['ITEMS'] = [];
-            }
-            else
-            {
+            } else {
                 $nav->setRecordCount($rs->getCount());
 
-                while( $ar = $rs->fetch() )
-                {
+                while ($ar = $rs->fetch()) {
                     $arResult['ITEMS'][$ar['ID']] = $ar;
                 }
                 $arResult['NAV_OBJ'] = $nav;
 
                 $obCache->endDataCache($arResult);
             }
-        }
-        else
-        {
+        } else {
             $arResult = $obCache->getVars();
         }
 

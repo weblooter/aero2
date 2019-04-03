@@ -37,12 +37,10 @@ class Debug
         $ar = $ar[sizeof($ar) - 1 - $intDepth];
 
         $strCall = '';
-        if( !empty($ar['class']) )
-        {
+        if (!empty($ar['class'])) {
             $strCall .= $ar['class'].$ar['type'];
         }
-        if( !empty($ar['function']) )
-        {
+        if (!empty($ar['function'])) {
             $strCall .= $ar['function'].'()';
         }
 
@@ -52,8 +50,7 @@ class Debug
             //            'FILE' => $ar['file'].':'.$ar['line']
         ];
 
-        if( $this->boolSaveArgs )
-        {
+        if ($this->boolSaveArgs) {
             $arFields['ARGS'] = $ar['args'];
         }
 

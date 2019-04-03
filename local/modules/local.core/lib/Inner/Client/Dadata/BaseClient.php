@@ -51,11 +51,7 @@ abstract class BaseClient
     {
         $status_line = $headers[0];
 
-        preg_match(
-            '{HTTP\/\S*\s(\d{3})}i',
-            $status_line,
-            $match
-        );
+        preg_match('{HTTP\/\S*\s(\d{3})}i', $status_line, $match);
 
         $status = $match[1];
 
@@ -64,18 +60,15 @@ abstract class BaseClient
             'message' => ''
         ];
 
-        if( $status >= 400 )
-        {
+        if ($status >= 400) {
             $result['message'] = 'Неправилный запрос';
         }
 
-        if( $status >= 500 )
-        {
+        if ($status >= 500) {
             $result['message'] = 'Произошла внутренняя ошибка сервиса во время обработки';
         }
 
-        switch( $status )
-        {
+        switch ($status) {
             case '200':
                 $result['message'] = 'Запрос успешно обработан';
                 break;
@@ -129,42 +122,24 @@ abstract class BaseClient
         );
         $context = stream_context_create($options);
 
-        $response = file_get_contents(
-            $this->url.$resource,
-            false,
-            $context
-        );
+        $response = file_get_contents($this->url.$resource, false, $context);
 
         $response_status = $this->checkResponseStatus($http_response_header);
 
-        if( $response_status['status'] == 200 )
-        {
-            $response = json_decode(
-                $response,
-                true
-            );
+        if ($response_status['status'] == 200) {
+            $response = json_decode($response, true);
             $response['count'] = 0;
 
-            if(
-                key_exists(
-                    'suggestions',
-                    $response
-                )
+            if (
+                key_exists('suggestions', $response)
                 && $response['suggestions'] > 0
-            )
-            {
+            ) {
                 $response['count'] = count($response['suggestions']);
             }
 
             $result->setData($response);
-        }
-        else
-        {
-            $result->addError(
-                new Error(
-                    $response_status['message'], $response_status['status']
-                )
-            );
+        } else {
+            $result->addError(new Error($response_status['message'], $response_status['status']));
         }
 
         return $result;

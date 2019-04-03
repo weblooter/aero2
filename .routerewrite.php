@@ -156,12 +156,36 @@ $arLocalRoutes = [
             'URL' => '/personal/convert/'
         ],
     ],
-    'bill'    => [
-        'list'   => [
-            'URL' => '/personal/company/#COMPANY_ID#/bill/'
+    'balance' => [
+        'list' => [
+            'URL' => '/personal/balance/',
+            'BREADCRUMBS' => function($arParams = [])
+                {
+                    $GLOBALS['APPLICATION']->AddChainItem(
+                        "Баланс",
+                        \Local\Core\Inner\Route::getRouteTo(
+                            'balance',
+                            'list'
+                        )
+                    );
+                }
         ],
-        'detail' => [
-            'URL' => '/personal/company/#COMPANY_ID#/bill/#BILL_ACCOUNT_ID#/'
-        ],
+        'top-up' => [
+            'URL' => '/personal/balance/top-up/?handler=#HANDLER#',
+            'BREADCRUMBS' => function($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs(
+                        'balance',
+                        'list'
+                    );
+                    $GLOBALS['APPLICATION']->AddChainItem(
+                        "Пополнить баланс",
+                        \Local\Core\Inner\Route::getRouteTo(
+                            'balance',
+                            'top-up'
+                        )
+                    );
+                }
+        ]
     ]
 ];

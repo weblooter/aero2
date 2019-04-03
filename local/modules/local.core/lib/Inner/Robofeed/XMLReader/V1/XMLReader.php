@@ -46,71 +46,49 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
     {
         $this->checkFilledXmlPath();
 
-        if( $this->constScript == self::SCRIPT_IMPORT && is_null($this->intStoreId) )
-        {
+        if ($this->constScript == self::SCRIPT_IMPORT && is_null($this->intStoreId)) {
             throw new FatalException('Необходимо задать ID магазина для импорта');
         }
 
         $this->getImporter()
             ->setStoreId($this->intStoreId);
 
-        $this->obReader->registerCallback(
-            '/robofeed/defaultValues/offer',
-            function($reader)
-                {
-                    return $this->callDefaultValuesOffer($reader);
-                }
-        );
+        $this->obReader->registerCallback('/robofeed/defaultValues/offer', function ($reader)
+            {
+                return $this->callDefaultValuesOffer($reader);
+            });
 
-        $this->obReader->registerCallback(
-            '/robofeed/categories',
-            function($reader)
-                {
-                    return $this->callCategories($reader);
-                }
-        );
+        $this->obReader->registerCallback('/robofeed/categories', function ($reader)
+            {
+                return $this->callCategories($reader);
+            });
 
-        $this->obReader->registerCallback(
-            '/robofeed/offers/offer',
-            function($reader)
-                {
-                    $this->intProductTotal++;
-                    if(
-                        $this->intProductImportSuccess >= $this->intImportProductLimit
-                        && $this->constScript == self::SCRIPT_IMPORT
-                    )
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return $this->callOffer($reader);
-                    }
+        $this->obReader->registerCallback('/robofeed/offers/offer', function ($reader)
+            {
+                $this->intProductTotal++;
+                if (
+                    $this->intProductImportSuccess >= $this->intImportProductLimit
+                    && $this->constScript == self::SCRIPT_IMPORT
+                ) {
+                    return true;
+                } else {
+                    return $this->callOffer($reader);
                 }
-        );
+            });
 
 
         $this->obReader->open($this->strXmlFilePath);
-        try
-        {
+        try {
             $this->obReader->parse();
-        }
-        catch( \TypeError $e )
-        {
-            $this->obResult->addError(
-                new \Bitrix\Main\Error(
-                    'Во время проверки Robofeed XML произошла критическая ошибка. Убедитесь, что в Вашем Robofeed XML нет ошибки и все теги закрыты.'
-                )
-            );
+        } catch (\TypeError $e) {
+            $this->obResult->addError(new \Bitrix\Main\Error('Во время проверки Robofeed XML произошла критическая ошибка. Убедитесь, что в Вашем Robofeed XML нет ошибки и все теги закрыты.'));
         }
         $this->obReader->close();
 
-        $this->obResult->setData(
-            [
+        $this->obResult->setData([
                 'PRODUCT_TOTAL_COUNT' => $this->intProductTotal,
                 'PRODUCT_SUCCESS_IMPORT' => $this->intProductImportSuccess,
-            ]
-        );
+            ]);
 
         return $this->obResult;
     }
@@ -131,8 +109,7 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
         $obDefaultValuesOfferValidateResult = $this->getValidator()
             ->validateDefaultValuesOffer($obXml, $this->arSchema['robofeed']['defaultValues']['offer']);
         $this->arBodyValues['defaultValues']['offer'] = $obDefaultValuesOfferValidateResult->getData();
-        if( !$obDefaultValuesOfferValidateResult->isSuccess() )
-        {
+        if (!$obDefaultValuesOfferValidateResult->isSuccess()) {
             $this->obResult->addErrors($obDefaultValuesOfferValidateResult->getErrors());
         }
 
@@ -152,13 +129,11 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
             ->validateCategories($obXml, $this->arSchema['robofeed']['categories']['category']);
 
         $this->arBodyValues['categories']['category'] = $obCategoriesValidateResult->getData();
-        if( !$obCategoriesValidateResult->isSuccess() )
-        {
+        if (!$obCategoriesValidateResult->isSuccess()) {
             $this->obResult->addErrors($obCategoriesValidateResult->getErrors());
         }
 
-        if( $this->constScript == self::SCRIPT_IMPORT )
-        {
+        if ($this->constScript == self::SCRIPT_IMPORT) {
             $this->getImporter()
                 ->importCategories($this->arBodyValues['categories']['category']);
         }
@@ -180,47 +155,35 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
         $obXml = $reader->expandSimpleXml();
 
         $obOfferValidateResult = $this->getValidator()
-            ->validateOffer(
-                $obXml,
-                $this->arSchema['robofeed']['offers']['offer'],
-                $this->arBodyValues['defaultValues']['offer'],
-                $this->arBodyValues['categories']['category']
-            );
+            ->validateOffer($obXml, $this->arSchema['robofeed']['offers']['offer'], $this->arBodyValues['defaultValues']['offer'], $this->arBodyValues['categories']['category']);
 
         $arOfferFields = $obOfferValidateResult->getData();
 
-        if( !$obOfferValidateResult->isSuccess() )
-        {
+        if (!$obOfferValidateResult->isSuccess()) {
             $this->obResult->addError(new \Bitrix\Main\Error('У товара с ID "'.$arOfferFields['@attr']['id'].'" выявлены следующие ошибки:'));
             $this->obResult->addErrors($obOfferValidateResult->getErrors());
             $this->intOffersErrorCount++;
         }
 
 
-        switch( $this->constScript )
-        {
+        switch ($this->constScript) {
             case self::SCRIPT_XSD_VALIDATE:
-                if( $this->intOffersErrorCount >= $this->intMaxOffersErrorCountInValidation )
-                {
+                if ($this->intOffersErrorCount >= $this->intMaxOffersErrorCountInValidation) {
                     $this->obResult->addError(new \Bitrix\Main\Error('Дальнейшая проверка товаров в Robofeed XML прекращена.'));
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
                 break;
 
             case self::SCRIPT_IMPORT:
 
-                if( $obOfferValidateResult->isSuccess() )
-                {
+                if ($obOfferValidateResult->isSuccess()) {
 
-                    if(
+                    if (
                     $this->getImporter()
                         ->importOffer($arOfferFields)
-                    )
-                    {
+                    ) {
                         $this->intProductImportSuccess++;
                     }
                 }

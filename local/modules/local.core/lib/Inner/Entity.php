@@ -36,12 +36,8 @@ abstract class Entity
     {
         static $fieldsMap = null;
 
-        if( $fieldsMap === null )
-        {
-            $fieldsMap = array_fill_keys(
-                static::getAvailableFields(),
-                true
-            );
+        if ($fieldsMap === null) {
+            $fieldsMap = array_fill_keys(static::getAvailableFields(), true);
         }
 
         return $fieldsMap;
@@ -55,14 +51,12 @@ abstract class Entity
     public static function getAllFields()
     {
         static $mapFields = array();
-        if( $mapFields )
-        {
+        if ($mapFields) {
             return $mapFields;
         }
 
         $fields = static::getFieldsDescription();
-        foreach( $fields as $field )
-        {
+        foreach ($fields as $field) {
             $mapFields[$field['CODE']] = $field['CODE'];
         }
 
@@ -78,19 +72,14 @@ abstract class Entity
         $result = [];
 
         $map = static::getFieldsMap();
-        foreach( $map as $key => $value )
-        {
-            if( is_array($value) && !isset($value['expression']) )
-            {
+        foreach ($map as $key => $value) {
+            if (is_array($value) && !isset($value['expression'])) {
                 $result[$key] = [
                     'CODE' => $key,
                     'TYPE' => $value['data_type']
                 ];
-            }
-            else
-            {
-                if( $value instanceof Main\Entity\ScalarField )
-                {
+            } else {
+                if ($value instanceof Main\Entity\ScalarField) {
                     $result[$value->getName()] = [
                         'CODE' => $value->getName(),
                         'TYPE' => $value->getDataType(),
@@ -144,42 +133,22 @@ abstract class Entity
     {
         $availableFields = static::getAvailableFieldsMap();
 
-        if( !isset($availableFields[$name]) )
-        {
+        if (!isset($availableFields[$name])) {
             throw new Main\ArgumentOutOfRangeException("name=$name");
         }
 
         $oldValue = $this->fields->get($name);
 
-        if( $oldValue != $value || ( $oldValue === null && $value !== null ) )
-        {
-            $this->fields->set(
-                $name,
-                $value
-            );
-            try
-            {
-                $result = $this->onFieldModify(
-                    $name,
-                    $oldValue,
-                    $value
-                );
+        if ($oldValue != $value || ($oldValue === null && $value !== null)) {
+            $this->fields->set($name, $value);
+            try {
+                $result = $this->onFieldModify($name, $oldValue, $value);
 
-                if( $result->isSuccess() )
-                {
-                    static::addChangesToHistory(
-                        $name,
-                        $oldValue,
-                        $value
-                    );
+                if ($result->isSuccess()) {
+                    static::addChangesToHistory($name, $oldValue, $value);
                 }
-            }
-            catch( \Exception $e )
-            {
-                $this->fields->set(
-                    $name,
-                    $oldValue
-                );
+            } catch (\Exception $e) {
+                $this->fields->set($name, $oldValue);
                 throw $e;
             }
 
@@ -200,24 +169,15 @@ abstract class Entity
     public function setFieldNoDemand($name, $value)
     {
         $allFields = static::getAllFields();
-        if( !isset($allFields[$name]) )
-        {
+        if (!isset($allFields[$name])) {
             throw new Main\ArgumentOutOfRangeException($name);
         }
 
         $oldValue = $this->fields->get($name);
 
-        if( $oldValue != $value || ( $oldValue === null && $value !== null ) )
-        {
-            $this->fields->set(
-                $name,
-                $value
-            );
-            static::addChangesToHistory(
-                $name,
-                $oldValue,
-                $value
-            );
+        if ($oldValue != $value || ($oldValue === null && $value !== null)) {
+            $this->fields->set($name, $value);
+            static::addChangesToHistory($name, $oldValue, $value);
         }
     }
 
@@ -237,63 +197,42 @@ abstract class Entity
         $result = new Result();
         $oldValues = null;
 
-        foreach( $values as $key => $value )
-        {
+        foreach ($values as $key => $value) {
             $oldValues[$key] = $this->fields->get($key);
         }
 
-        if( $this->eventName === null )
-        {
+        if ($this->eventName === null) {
             $this->eventName = static::getEntityEventName();
         }
 
-        if( $this->eventName )
-        {
+        if ($this->eventName) {
             $eventManager = Main\EventManager::getInstance();
-            if(
-            $eventsList = $eventManager->findEventHandlers(
-                'sale',
-                'OnBefore'.$this->eventName.'SetFields'
-            )
-            )
-            {
-                $event = new Main\Event(
-                    'sale', 'OnBefore'.$this->eventName.'SetFields', array(
+            if (
+            $eventsList = $eventManager->findEventHandlers('sale', 'OnBefore'.$this->eventName.'SetFields')
+            ) {
+                $event = new Main\Event('sale', 'OnBefore'.$this->eventName.'SetFields', array(
                         'ENTITY' => $this,
                         'VALUES' => $values,
                         'OLD_VALUES' => $oldValues
-                    )
-                );
+                    ));
                 $event->send();
 
-                if( $event->getResults() )
-                {
+                if ($event->getResults()) {
                     /** @var Main\EventResult $eventResult */
-                    foreach( $event->getResults() as $eventResult )
-                    {
-                        if( $eventResult->getType() == Main\EventResult::SUCCESS )
-                        {
-                            if( $eventResultData = $eventResult->getParameters() )
-                            {
-                                if( isset($eventResultData['VALUES']) )
-                                {
+                    foreach ($event->getResults() as $eventResult) {
+                        if ($eventResult->getType() == Main\EventResult::SUCCESS) {
+                            if ($eventResultData = $eventResult->getParameters()) {
+                                if (isset($eventResultData['VALUES'])) {
                                     $values = $eventResultData['VALUES'];
                                 }
                             }
-                        }
-                        else
-                        {
-                            if( $eventResult->getType() == Main\EventResult::ERROR )
-                            {
-                                $errorMsg = new ResultError(
-                                    Main\Localization\Loc::getMessage('SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR'),
-                                    'SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR'
-                                );
+                        } else {
+                            if ($eventResult->getType() == Main\EventResult::ERROR) {
+                                $errorMsg = new ResultError(Main\Localization\Loc::getMessage('SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR'),
+                                    'SALE_EVENT_ON_BEFORE_'.strtoupper($this->eventName).'_SET_FIELDS_ERROR');
 
-                                if( $eventResultData = $eventResult->getParameters() )
-                                {
-                                    if( isset($eventResultData) && $eventResultData instanceof ResultError )
-                                    {
+                                if ($eventResultData = $eventResult->getParameters()) {
+                                    if (isset($eventResultData) && $eventResultData instanceof ResultError) {
                                         /** @var ResultError $errorMsg */
                                         $errorMsg = $eventResultData;
                                     }
@@ -307,57 +246,38 @@ abstract class Entity
             }
         }
 
-        if( !$result->isSuccess() )
-        {
+        if (!$result->isSuccess()) {
             return $result;
         }
 
         $isStartField = $this->isStartField();
 
-        foreach( $values as $key => $value )
-        {
-            $r = $this->setField(
-                $key,
-                $value
-            );
-            if( !$r->isSuccess() )
-            {
+        foreach ($values as $key => $value) {
+            $r = $this->setField($key, $value);
+            if (!$r->isSuccess()) {
                 $data = $r->getData();
-                if( !empty($data) && is_array($data) )
-                {
-                    $resultData = array_merge(
-                        $resultData,
-                        $data
-                    );
+                if (!empty($data) && is_array($data)) {
+                    $resultData = array_merge($resultData, $data);
                 }
                 $result->addErrors($r->getErrors());
             }
         }
 
-        if( !empty($resultData) )
-        {
+        if (!empty($resultData)) {
             $result->setData($resultData);
         }
 
-        if( $isStartField )
-        {
+        if ($isStartField) {
             $hasMeaningfulFields = $this->hasMeaningfulField();
 
             /** @var Result $r */
             $r = $this->doFinalAction($hasMeaningfulFields);
-            if( !$r->isSuccess() )
-            {
+            if (!$r->isSuccess()) {
                 $result->addErrors($r->getErrors());
             }
 
-            if( ( $data = $r->getData() ) && !empty($data) && is_array($data) )
-            {
-                $result->setData(
-                    array_merge(
-                        $result->getData(),
-                        $data
-                    )
-                );
+            if (($data = $r->getData()) && !empty($data) && is_array($data)) {
+                $result->setData(array_merge($result->getData(), $data));
             }
         }
 
@@ -373,12 +293,8 @@ abstract class Entity
      */
     public function setFieldsNoDemand(array $values)
     {
-        foreach( $values as $key => $value )
-        {
-            $this->setFieldNoDemand(
-                $key,
-                $value
-            );
+        foreach ($values as $key => $value) {
+            $this->setFieldNoDemand($key, $value);
         }
     }
 
@@ -393,15 +309,11 @@ abstract class Entity
     public function initField($name, $value)
     {
         $allFields = static::getAllFields();
-        if( !isset($allFields[$name]) )
-        {
+        if (!isset($allFields[$name])) {
             throw new Main\ArgumentOutOfRangeException($name);
         }
 
-        $this->fields->init(
-            $name,
-            $value
-        );
+        $this->fields->init($name, $value);
     }
 
     /**
@@ -413,12 +325,8 @@ abstract class Entity
      */
     public function initFields(array $values)
     {
-        foreach( $values as $key => $value )
-        {
-            $this->initField(
-                $key,
-                $value
-            );
+        foreach ($values as $key => $value) {
+            $this->initField($key, $value);
         }
     }
 
@@ -469,8 +377,7 @@ abstract class Entity
     protected function getEntityParent()
     {
         $parent = null;
-        if( $this instanceof CollectableEntity )
-        {
+        if ($this instanceof CollectableEntity) {
             $parent = $this->getCollection();
         }
         return $parent;
@@ -485,21 +392,15 @@ abstract class Entity
     {
         $eventName = null;
         $className = static::getClassName();
-        $parts = explode(
-            "\\",
-            $className
-        );
+        $parts = explode("\\", $className);
 
         $first = true;
-        foreach( $parts as $part )
-        {
-            if( strval(trim($part)) == '' )
-            {
+        foreach ($parts as $part) {
+            if (strval(trim($part)) == '') {
                 continue;
             }
 
-            if( $first === true && $part == "Bitrix" )
-            {
+            if ($first === true && $part == "Bitrix") {
                 $first = false;
                 continue;
             }

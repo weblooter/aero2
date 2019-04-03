@@ -11,6 +11,7 @@ $conf = [
      */
     'local.core' => [
         'value' => [
+            'xor_key' => 'B9=[$>XYB89=n;_a$y}?3`Tz]Q8$T*gn'
         ],
         'readonly' => true
     ],
@@ -108,6 +109,28 @@ $conf = [
         ],
         'readonly' => true
     ],
+
+    /**
+     * Конфиг платежных систем
+     */
+    'payment' => [
+        'value' => [
+            'yandex_money' => [
+                /**
+                 * Мануал по настройке формы https://tech.yandex.ru/money/doc/payment-buttons/reference/forms-docpage/
+                 */
+                'receiver_id' => 410015955409068,
+                'successURL' => 'https://dev1.robofeed.ru/personal/balance/top-up/?handler=yandex-money&result=success',
+                /**
+                 * Секретный ключ, а так же настройка пути - https://money.yandex.ru/myservices/online.xml
+                 * Если ссылка не работает - читаем мануал https://tech.yandex.ru/money/doc/payment-buttons/reference/notifications-docpage/
+                 * Сейчас путь бьет на https://dev1.robofeed.ru/local/tools/payment/yandex-money.php
+                 */
+                'secret_key' => 'outu5ODl0FnBL1a1OmVNxf7C'
+            ]
+        ],
+        'readonly' => true
+    ]
 ];
 
 return $conf;

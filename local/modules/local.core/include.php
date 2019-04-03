@@ -12,13 +12,9 @@ class CLocalCore
     public static function createDBTableByGetMap($ormClassTable)
     {
 
-        foreach( $ormClassTable::getEntity()->compileDbTableStructureDump() as $sqlString )
-        {
-            $sqlString = str_replace(
-                ' NOT NULL',
-                ' ',
-                $sqlString
-            );
+        foreach ($ormClassTable::getEntity()
+                     ->compileDbTableStructureDump() as $sqlString) {
+            $sqlString = str_replace(' NOT NULL', ' ', $sqlString);
             \Bitrix\Main\Application::getConnection()
                 ->query($sqlString);
         }
@@ -33,13 +29,12 @@ class CLocalCore
      */
     public static function dropDBTableByGetMap($ormClassTable)
     {
-        if(
-            \Bitrix\Main\Application::getConnection()->isTableExists($ormClassTable::getTableName())
-        )
-        {
+        if (
+        \Bitrix\Main\Application::getConnection()
+            ->isTableExists($ormClassTable::getTableName())
+        ) {
             $sqlString = $ormClassTable::getTableName();
-            if( !empty($sqlString) )
-            {
+            if (!empty($sqlString)) {
                 \Bitrix\Main\Application::getConnection()
                     ->dropTable($sqlString);
             }
@@ -55,11 +50,10 @@ class CLocalCore
      */
     public static function resetDBTableByGetMap($ormClassTable)
     {
-        if(
+        if (
         \Bitrix\Main\Application::getConnection()
             ->isTableExists($ormClassTable::getTableName())
-        )
-        {
+        ) {
             static::dropDBTableByGetMap($ormClassTable);
         }
         static::createDBTableByGetMap($ormClassTable);
@@ -84,19 +78,17 @@ class CLocalCore
         $arCurrentTableColumn = [];
         $obCurrentTableColumns = \Bitrix\Main\Application::getConnection()
             ->query('SHOW COLUMNS FROM `'.$obClassEntity->getDBTableName().'`');
-        while( $ar = $obCurrentTableColumns->fetch() )
-        {
-            if( $ar['Type'] == 'int(11)' )
-            {
+        while ($ar = $obCurrentTableColumns->fetch()) {
+            if ($ar['Type'] == 'int(11)') {
                 $ar['Type'] = 'int';
             }
 
             $arCurrentTableColumn[$ar['Field']] = [
                 'NAME' => $ar['Field'],
                 'TYPE' => $ar['Type'],
-                'IS_NULL' => ( $ar['Null'] == 'YES' ),
-                'IS_PRIMARY' => ( $ar['Key'] == 'PRI' ),
-                'IS_AUTO_INCREMENT' => ( $ar['Extra'] == 'auto_increment' ),
+                'IS_NULL' => ($ar['Null'] == 'YES'),
+                'IS_PRIMARY' => ($ar['Key'] == 'PRI'),
+                'IS_AUTO_INCREMENT' => ($ar['Extra'] == 'auto_increment'),
             ];
         }
         dump($arCurrentTableColumn);
@@ -104,46 +96,39 @@ class CLocalCore
         $sqlBegin = 'ALTER TABLE '.$obConnection->getSqlHelper()
                 ->quote($obClassEntity->getDBTableName()).' ';
 
-        foreach( $obClassEntity->getScalarFields() as $obField )
-        {
-            if( $obField instanceof \Bitrix\Main\ORM\Fields\ScalarField )
-            {
+        foreach ($obClassEntity->getScalarFields() as $obField) {
+            if ($obField instanceof \Bitrix\Main\ORM\Fields\ScalarField) {
 
                 $strColumnName = $obField->getColumnName();
 
-                if( !empty($arCurrentTableColumn[$strColumnName]) )
-                {
+                if (!empty($arCurrentTableColumn[$strColumnName])) {
                     /*
                      * Уже есть, проверим на модификации
                      */
-                    if(
+                    if (
                         $arCurrentTableColumn[$strColumnName]['TYPE'] != $obConnection->getSqlHelper()
                             ->getColumnTypeByField($obField)
                         || $arCurrentTableColumn[$strColumnName]['IS_NULL'] != $obField->isRequired()
                         || $arCurrentTableColumn[$strColumnName]['IS_PRIMARY'] != in_array($strColumnName, $obClassEntity->getPrimaryArray(), true)
                         || $arCurrentTableColumn[$strColumnName]['IS_AUTO_INCREMENT'] != in_array($strColumnName, $obClassEntity->getPrimaryArray(), true)
-                    )
-                    {
+                    ) {
                         $sqlEnd = $obConnection->getSqlHelper()
                                       ->quote($strColumnName).' '.$obConnection->getSqlHelper()
-                                      ->getColumnTypeByField($obField).( in_array($strColumnName, $obClassEntity->getPrimaryArray(), true) ? ' AUTO_INCREMENT' : '' ).( $obField->isRequired()
-                                                                                                                                                                        || !empty(
-                            $obField->getDefaultValue()
-                            ) ? ' NOT_NULL' : ' NULL ' ).( $obField->getDefaultValue() ? ' DEFAULT '.$obField->getDefaultValue() : '' );
+                                      ->getColumnTypeByField($obField).(in_array($strColumnName, $obClassEntity->getPrimaryArray(), true) ? ' AUTO_INCREMENT' : '').($obField->isRequired()
+                                                                                                                                                                     || !empty($obField->getDefaultValue()) ? ' NOT_NULL' : ' NULL ')
+                                  .($obField->getDefaultValue() ? ' DEFAULT '.$obField->getDefaultValue() : '');
 
                         dump($sqlBegin.' MODIFY COLUMN '.$sqlEnd);
                         //                                    $obConnection->query($sqlBegin.' MODIFY COLUMN '.$sqlEnd);
                     }
-                }
-                else
-                {
+                } else {
                     /*
                      * Нет, надо добавить
                      */
 
                     $sqlEnd = $obConnection->getSqlHelper()
                                   ->quote($strColumnName).' '.$obConnection->getSqlHelper()
-                                  ->getColumnTypeByField($obField).( in_array($strColumnName, $obClassEntity->getPrimaryArray(), true) ? ' AUTO_INCREMENT' : '' );
+                                  ->getColumnTypeByField($obField).(in_array($strColumnName, $obClassEntity->getPrimaryArray(), true) ? ' AUTO_INCREMENT' : '');
 
                     dump($sqlBegin.' ADD COLUMN '.$sqlEnd);
                     //                                $obConnection->query($sqlBegin.' ADD COLUMN '.$sqlEnd);
@@ -160,16 +145,7 @@ class CLocalCore
      */
     public static function addAgent($strAgentClassName, $intPeriod = 3600)
     {
-        \CAgent::AddAgent(
-            $strAgentClassName.'::init();',
-            'local.core',
-            'N',
-            $intPeriod,
-            date('d.m.Y H:i:00'),
-            'N',
-            null,
-            100
-        );
+        \CAgent::AddAgent($strAgentClassName.'::init();', 'local.core', 'N', $intPeriod, date('d.m.Y H:i:00'), 'N', null, 100);
     }
 
     /**
@@ -182,71 +158,48 @@ class CLocalCore
     public static function getOrmFieldsTable($strClass)
     {
         $str = '<ul>';
-        foreach( $strClass::getMap() as $obField )
-        {
+        foreach ($strClass::getMap() as $obField) {
             $str .= '<li>';
             $str .= $obField->getName();
-            if( $obField instanceof \Bitrix\Main\ORM\Fields\ScalarField )
-            {
-                if( !empty($obField->getTitle()) )
-                {
+            if ($obField instanceof \Bitrix\Main\ORM\Fields\ScalarField) {
+                if (!empty($obField->getTitle())) {
                     $str .= ' - '.$obField->getTitle();
                 }
 
-                if( !empty($obField->getDefaultValue()) )
-                {
+                if (!empty($obField->getDefaultValue())) {
                     $str .= ' ['.$obField->getDefaultValue().']';
                 }
 
-                $str .= ' | '.str_replace(
-                        'Bitrix\Main\ORM\\',
-                        '',
-                        get_class($obField)
-                    );
+                $str .= ' | '.str_replace('Bitrix\Main\ORM\\', '', get_class($obField));
 
-                if( $obField instanceof Bitrix\Main\ORM\Fields\EnumField )
-                {
-                    try
-                    {
-                        if( !method_exists($strClass, 'getEnumFieldHtmlValues') )
-                        {
+                if ($obField instanceof Bitrix\Main\ORM\Fields\EnumField) {
+                    try {
+                        if (!method_exists($strClass, 'getEnumFieldHtmlValues')) {
                             throw new \Exception();
                         }
 
-                        if( empty($strClass::getEnumFieldHtmlValues($obField->getName())) )
-                        {
+                        if (empty($strClass::getEnumFieldHtmlValues($obField->getName()))) {
                             throw new \Exception();
                         }
 
                         $str .= '<br/>';
-                        foreach( $strClass::getEnumFieldHtmlValues($obField->getName()) as $key => $value )
-                        {
+                        foreach ($strClass::getEnumFieldHtmlValues($obField->getName()) as $key => $value) {
                             $str .= '&emsp;'.$key.' => '.$value."<br/>";
                         }
-                    }
-                    catch( \Exception $e )
-                    {
+                    } catch (\Exception $e) {
                         $str .= '<br/>';
-                        foreach( $obField->getValues() as $key => $value )
-                        {
+                        foreach ($obField->getValues() as $key => $value) {
                             $str .= '&emsp;'.$value."<br/>";
                         }
                     }
                 }
 
-            }
-            else
-            {
+            } else {
 
-                if( !empty($obField->getRefEntityName()) )
-                {
+                if (!empty($obField->getRefEntityName())) {
                     $str .= ' - '.$obField->getRefEntityName();
                 }
-                $str .= ' | '.str_replace(
-                        'Bitrix\Main\ORM\\',
-                        '',
-                        get_class($obField)
-                    );
+                $str .= ' | '.str_replace('Bitrix\Main\ORM\\', '', get_class($obField));
 
             }
 
@@ -268,17 +221,15 @@ class CLocalCore
      */
     public static function addItemToMenu(&$arSubMenu, $strClassAdminList, $strClassAdminEdit, $strName, $strIcon = '')
     {
-        if( class_exists($strClassAdminList) )
-        {
-            $lDataList = ( new $strClassAdminList() )->getAdminUri();
-            if( $lDataList->isSuccess() )
-            {
-                $lDataEdit = ( new $strClassAdminEdit() )->getAdminUri();
+        if (class_exists($strClassAdminList)) {
+            $lDataList = (new $strClassAdminList())->getAdminUri();
+            if ($lDataList->isSuccess()) {
+                $lDataEdit = (new $strClassAdminEdit())->getAdminUri();
 
                 $arSubMenu[] = [
                     "text" => $strName,
                     'url' => $lDataList->getData()['uri'],
-                    "more_url" => ( $lDataEdit->isSuccess() ) ? [$lDataEdit->getData()["uri"]] : [],
+                    "more_url" => ($lDataEdit->isSuccess()) ? [$lDataEdit->getData()["uri"]] : [],
                     "icon" => $strIcon
                 ];
             }

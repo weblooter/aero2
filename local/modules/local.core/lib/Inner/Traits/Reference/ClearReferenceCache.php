@@ -12,15 +12,12 @@ trait ClearReferenceCache
 {
     public static function clearReferenceCache()
     {
-        \Local\Core\Inner\Cache::deleteCache(
-            [
-                'Robofeed',
-                'Scheme',
-                'ReferenceField'
-            ],
-            [
-                'class='.( implode('_', array_slice(explode('\\', static::class), -2)) )
-            ]
-        );
+        \Local\Core\Inner\Cache::deleteCache([
+            'Robofeed',
+            'Scheme',
+            'ReferenceField'
+        ], [
+                'class='.(implode('_', array_slice(explode('\\', static::class), -2)))
+            ]);
     }
 }

@@ -29,21 +29,14 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
         $result = new \Bitrix\Main\Result();
 
         $check = $this->checkRights($operation);
-        if( $check->isSuccess() )
-        {
-            $result->setData(
-                [
-                    'uri' => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-                        [
+        if ($check->isSuccess()) {
+            $result->setData([
+                    'uri' => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                        ]
-                    ),
-                ]
-            );
-        }
-        else
-        {
+                        ]),
+                ]);
+        } else {
             $result->addErrors($check->getErrors());
         }
 
@@ -58,13 +51,11 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
         $result = new \Bitrix\Main\Result();
 
-        if( $this->user instanceof \CUser && !$this->user->isAdmin() )
-        {
+        if ($this->user instanceof \CUser && !$this->user->isAdmin()) {
             $result->addError(new \Bitrix\Main\Error('Необходим доступ администратора'));
         }
 
-        switch( $operation )
-        {
+        switch ($operation) {
 
             case 'can_add':
                 break;
@@ -88,46 +79,34 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
         $request = \Bitrix\Main\Context::getCurrent()
             ->getRequest();
 
-        if( $request->get("id") !== null )
-        {
-            try
-            {
+        if ($request->get("id") !== null) {
+            try {
 
-                $body = \Local\Core\Model\Data\CompanyTable::getList(
-                    [
+                $body = \Local\Core\Model\Data\CompanyTable::getList([
                         "select" => ["*"],
                         "filter" => [
                             "=ID" => (int)$request->get("id")
                         ],
                         "limit" => 1
-                    ]
-                )
+                    ])
                     ->fetch();
 
-            }
-            catch( \Exception $e )
-            {
+            } catch (\Exception $e) {
                 $result->addError(new \Bitrix\Main\Error($e->getMessage()));
 
                 return $result;
             }
         }
 
-        if( !empty($body) )
-        {
+        if (!empty($body)) {
             $this->id = $body["ID"];
             $this->data = $body;
             $this->app->SetTitle("Редактирование компании");
-        }
-        else
-        {
+        } else {
             $rightAdd = $this->checkRights("can_add");
-            if( $rightAdd->isSuccess() )
-            {
+            if ($rightAdd->isSuccess()) {
                 $this->app->SetTitle("Создание компании");
-            }
-            else
-            {
+            } else {
                 $result->addErrors($rightAdd->getErrors());
             }
         }
@@ -149,32 +128,27 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             ]
         ];
 
-        if( (int)$this->id > 0 )
-        {
+        if ((int)$this->id > 0) {
 
-            if(
+            if (
             $this->checkRights("can_add")
                 ->isSuccess()
-            )
-            {
+            ) {
                 $buttons[] = [
                     "TEXT" => "Добавить",
-                    "LINK" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-                        [
+                    "LINK" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                             \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                        ]
-                    ),
+                        ]),
                     "TITLE" => "Добавить компанию",
                     "ICON" => "btn_new",
                 ];
             }
 
-            if(
+            if (
             $this->checkRights("can_delete")
                 ->isSuccess()
-            )
-            {
+            ) {
                 $buttons[] = [
                     "TEXT" => "Удалить",
                     "LINK" => "javascript:if(confirm('Действительно удалить?'))window.location='".$this->getEditLink(["id" => $this->id])."&action=delete&".bitrix_sessid_get()."';",
@@ -218,141 +192,91 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     protected function getTabsContent()
     {
 
-        $canEdit = ( ( (int)$this->id > 0
-                       && $this->checkRights("can_edit")
-                           ->isSuccess() )
-                     || ( (int)$this->id == 0
-                          && $this->checkRights("can_add")
-                              ->isSuccess() ) ) ? true : false;
+        $canEdit = (((int)$this->id > 0
+                     && $this->checkRights("can_edit")
+                         ->isSuccess())
+                    || ((int)$this->id == 0
+                        && $this->checkRights("can_add")
+                            ->isSuccess())) ? true : false;
 
         $columnName = [];
         $map = \Local\Core\Model\Data\CompanyTable::getMap();
-        foreach( $map as $column )
-        {
-            if( $column instanceof \Bitrix\Main\ORM\Fields\ScalarField )
-            {
+        foreach ($map as $column) {
+            if ($column instanceof \Bitrix\Main\ORM\Fields\ScalarField) {
                 $columnName[$column->getColumnName()] = $column->getTitle();
             }
         }
 
         return [
             "main" => [
-                ( (int)$this->id > 0 ) ? new \Local\Core\Inner\AdminHelper\EditField\Html(
-                    $columnName["ID"], "ID", $this->id
-                ) : null,
-                ( (int)$this->id > 0 ) ? new \Local\Core\Inner\AdminHelper\EditField\Hidden(
-                    "", "ID", $this->id
-                ) : null,
+                ((int)$this->id > 0) ? new \Local\Core\Inner\AdminHelper\EditField\Html($columnName["ID"], "ID", $this->id) : null,
+                ((int)$this->id > 0) ? new \Local\Core\Inner\AdminHelper\EditField\Hidden("", "ID", $this->id) : null,
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Checkbox(
-                    $columnName["ACTIVE"], "ACTIVE"
-                ) )->setEditable($canEdit),
+                (new \Local\Core\Inner\AdminHelper\EditField\Checkbox($columnName["ACTIVE"], "ACTIVE"))->setEditable($canEdit),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\User(
-                    $columnName['USER_OWN_ID'], 'USER_OWN_ID'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\User($columnName['USER_OWN_ID'], 'USER_OWN_ID'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Date(
-                    $columnName["DATE_CREATE"], "DATE_CREATE"
-                ) )->setEditable(false),
+                (new \Local\Core\Inner\AdminHelper\EditField\Date($columnName["DATE_CREATE"], "DATE_CREATE"))->setEditable(false),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Date(
-                    $columnName["DATE_MODIFIED"], "DATE_MODIFIED"
-                ) )->setEditable(false),
+                (new \Local\Core\Inner\AdminHelper\EditField\Date($columnName["DATE_MODIFIED"], "DATE_MODIFIED"))->setEditable(false),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Select(
-                    $columnName["VERIFIED"], "VERIFIED"
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Select($columnName["VERIFIED"], "VERIFIED"))->setEditable($canEdit)
                     ->setVariants(CompanyTable::getEnumFieldHtmlValues('VERIFIED')),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Textarea(
-                    $columnName['VERIFIED_NOTE'], 'VERIFIED_NOTE'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Textarea($columnName['VERIFIED_NOTE'], 'VERIFIED_NOTE'))->setEditable($canEdit)
                     ->setRequired(true),
             ],
 
             'ur_data' => [
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_INN'], 'COMPANY_INN'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_INN'], 'COMPANY_INN'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_NAME_SHORT'], 'COMPANY_NAME_SHORT'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_NAME_SHORT'], 'COMPANY_NAME_SHORT'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_NAME_FULL'], 'COMPANY_NAME_FULL'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_NAME_FULL'], 'COMPANY_NAME_FULL'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_OGRN'], 'COMPANY_OGRN'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_OGRN'], 'COMPANY_OGRN'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_KPP'], 'COMPANY_KPP'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_KPP'], 'COMPANY_KPP'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_OKPO'], 'COMPANY_OKPO'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_OKPO'], 'COMPANY_OKPO'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_OKTMO'], 'COMPANY_OKTMO'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_OKTMO'], 'COMPANY_OKTMO'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_DIRECTOR'], 'COMPANY_DIRECTOR'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_DIRECTOR'], 'COMPANY_DIRECTOR'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ACCOUNTANT'], 'COMPANY_ACCOUNTANT'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ACCOUNTANT'], 'COMPANY_ACCOUNTANT'))->setEditable($canEdit)
                     ->setRequired(true),
             ],
 
             'ur_address' => [
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ADDRESS_COUNTRY'], 'COMPANY_ADDRESS_COUNTRY'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ADDRESS_COUNTRY'], 'COMPANY_ADDRESS_COUNTRY'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ADDRESS_REGION'], 'COMPANY_ADDRESS_REGION'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ADDRESS_REGION'], 'COMPANY_ADDRESS_REGION'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ADDRESS_AREA'], 'COMPANY_ADDRESS_AREA'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ADDRESS_AREA'], 'COMPANY_ADDRESS_AREA'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ADDRESS_CITY'], 'COMPANY_ADDRESS_CITY'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ADDRESS_CITY'], 'COMPANY_ADDRESS_CITY'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ADDRESS_ADDRESS'], 'COMPANY_ADDRESS_ADDRESS'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ADDRESS_ADDRESS'], 'COMPANY_ADDRESS_ADDRESS'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ADDRESS_OFFICE'], 'COMPANY_ADDRESS_OFFICE'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ADDRESS_OFFICE'], 'COMPANY_ADDRESS_OFFICE'))->setEditable($canEdit)
                     ->setRequired(true),
 
-                ( new \Local\Core\Inner\AdminHelper\EditField\Text(
-                    $columnName['COMPANY_ADDRESS_ZIP'], 'COMPANY_ADDRESS_ZIP'
-                ) )->setEditable($canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['COMPANY_ADDRESS_ZIP'], 'COMPANY_ADDRESS_ZIP'))->setEditable($canEdit)
                     ->setRequired(true),
             ]
         ];
@@ -400,58 +324,36 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
         ];
 
-        if( (int)$id > 0 )
-        {
+        if ((int)$id > 0) {
 
             $rightEdit = $this->checkRights("can_edit");
-            if( $rightEdit->isSuccess() )
-            {
-                try
-                {
-                    $res = \Local\Core\Model\Data\CompanyTable::update(
-                        $id,
-                        $arFields
-                    );
-                    if( !$res->isSuccess() )
-                    {
+            if ($rightEdit->isSuccess()) {
+                try {
+                    $res = \Local\Core\Model\Data\CompanyTable::update($id, $arFields);
+                    if (!$res->isSuccess()) {
                         $result->addErrors($res->getErrors());
                     }
-                }
-                catch( \Exception $e )
-                {
+                } catch (\Exception $e) {
                     $result->addError(new \Bitrix\Main\Error($e->getMessage()));
                 }
-            }
-            else
-            {
+            } else {
                 $result->addErrors($rightEdit->getErrors());
             }
-        }
-        else
-        {
+        } else {
 
             $rightAdd = $this->checkRights("can_add");
-            if( $rightAdd->isSuccess() )
-            {
-                try
-                {
+            if ($rightAdd->isSuccess()) {
+                try {
                     $res = \Local\Core\Model\Data\CompanyTable::add($arFields);
-                    if( $res->isSuccess() )
-                    {
+                    if ($res->isSuccess()) {
                         $this->id = $res->getId();
-                    }
-                    else
-                    {
+                    } else {
                         $result->addErrors($res->getErrors());
                     }
-                }
-                catch( \Exception $e )
-                {
+                } catch (\Exception $e) {
                     $result->addError(new \Bitrix\Main\Error($e->getMessage()));
                 }
-            }
-            else
-            {
+            } else {
                 $result->addErrors($rightAdd->getErrors());
             }
         }
@@ -466,27 +368,19 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
         $result = new \Bitrix\Main\Result();
 
-        if( $this->id )
-        {
+        if ($this->id) {
             $rightDelete = $this->checkRights("can_delete");
 
-            if( $rightDelete->isSuccess() )
-            {
-                try
-                {
+            if ($rightDelete->isSuccess()) {
+                try {
                     $res = \Local\Core\Model\Data\CompanyTable::delete((int)$this->id);
-                    if( !$res->isSuccess() )
-                    {
+                    if (!$res->isSuccess()) {
                         $result->addErrors($res->getErrors());
                     }
-                }
-                catch( \Exception $e )
-                {
+                } catch (\Exception $e) {
                     $result->addError(new \Bitrix\Main\Error($e->getMessage()));
                 }
-            }
-            else
-            {
+            } else {
                 $result->addErrors($rightDelete->getErrors());
             }
         }
@@ -499,12 +393,10 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
      */
     protected function getListLink()
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-            [
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => AdminList::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminList::ADMIN_ACTION_VALUE,
-            ]
-        );
+            ]);
     }
 
     /**
@@ -512,13 +404,11 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
      */
     protected function getEditLink($fields = [])
     {
-        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri(
-            [
+        return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
                 \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
                 "id" => $this->id,
-            ]
-        );
+            ]);
     }
 
     /**

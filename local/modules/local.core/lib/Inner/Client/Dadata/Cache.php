@@ -64,8 +64,7 @@ class Cache
 
         $result = DadataCacheTable::getList($ar_filter);
 
-        if( $row = $result->fetch() )
-        {
+        if ($row = $result->fetch()) {
             DadataCacheTable::hit($row['ID']);
             return $row['DATA'];
         }
@@ -119,8 +118,7 @@ class Cache
 
         $result = DadataCacheTable::getList($ar_filter);
 
-        while( $row = $result->fetch() )
-        {
+        while ($row = $result->fetch()) {
             DadataCacheTable::delete($row['ID']);
         }
     }

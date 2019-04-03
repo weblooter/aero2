@@ -1,13 +1,11 @@
 <?
-if( !defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true )
-{
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
 $arAllowFieldsListValues = [];
 /** @var \Bitrix\Main\ORM\Fields\ScalarField $obField */
-foreach( \Local\Core\Model\Data\CompanyTable::getMap() as $obField )
-{
+foreach (\Local\Core\Model\Data\CompanyTable::getMap() as $obField) {
     $arAllowFieldsListValues[$obField->getColumnName()] = '['.$obField->getColumnName().'] '.$obField->getTitle();
 }
 

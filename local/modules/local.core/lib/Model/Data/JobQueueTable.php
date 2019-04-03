@@ -69,54 +69,39 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
     public static function getMap()
     {
         return array(
-            new Orm\Fields\IntegerField(
-                'ID', [
+            new Orm\Fields\IntegerField('ID', [
                     'primary' => true,
                     'autocomplete' => true,
-                ]
-            ),
-            new Orm\Fields\DatetimeField(
-                'DATE_CREATE', [
+                ]),
+            new Orm\Fields\DatetimeField('DATE_CREATE', [
                     'title' => 'Дата создания',
-                    'default_value' => function()
+                    'default_value' => function ()
                         {
                             return new \Bitrix\Main\Type\DateTime();
                         }
-                ]
-            ),
-            new Orm\Fields\DatetimeField(
-                'DATE_MODIFIED', [
+                ]),
+            new Orm\Fields\DatetimeField('DATE_MODIFIED', [
                     'title' => 'Дата последнего изменения',
-                    'default_value' => function()
+                    'default_value' => function ()
                         {
                             return new \Bitrix\Main\Type\DateTime();
                         }
-                ]
-            ),
-            new Orm\Fields\StringField(
-                'EXECUTE_BY', [
+                ]),
+            new Orm\Fields\StringField('EXECUTE_BY', [
                     'primary' => true,
                     'default_value' => self::EXECUTE_BY_DEFAULT,
-                ]
-            ),
-            new Orm\Fields\StringField(
-                'WORKER_CLASS_NAME', ['required' => true]
-            ),
-            new Orm\Fields\TextField(
-                'INPUT_DATA', [
+                ]),
+            new Orm\Fields\StringField('WORKER_CLASS_NAME', ['required' => true]),
+            new Orm\Fields\TextField('INPUT_DATA', [
                     'required' => true,
                     'serialized' => true,
-                ]
-            ),
+                ]),
             new Orm\Fields\StringField('HASH'),
-            new Orm\Fields\IntegerField(
-                'ATTEMPTS_LEFT', [
+            new Orm\Fields\IntegerField('ATTEMPTS_LEFT', [
                     'required' => true,
                     'default_value' => 10,
-                ]
-            ),
-            new Orm\Fields\EnumField(
-                'STATUS', [
+                ]),
+            new Orm\Fields\EnumField('STATUS', [
                     'values' => [
                         self::STATUS_ENUM_NEW,
                         self::STATUS_ENUM_SUCCESS,
@@ -124,19 +109,14 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
                         self::STATUS_ENUM_FAIL,
                     ],
                     'default_value' => self::STATUS_ENUM_NEW,
-                ]
-            ),
-            new Orm\Fields\DatetimeField(
-                'EXECUTE_AT', [
+                ]),
+            new Orm\Fields\DatetimeField('EXECUTE_AT', [
                     'required' => true,
-                ]
-            ),
-            new Orm\Fields\EnumField(
-                'IS_EXECUTE_NOW', [
+                ]),
+            new Orm\Fields\EnumField('IS_EXECUTE_NOW', [
                     'values' => ['Y', 'N'],
                     'default_value' => 'N',
-                ]
-            ),
+                ]),
             new Orm\Fields\DatetimeField('LAST_EXECUTE_START'),
         );
     }
@@ -148,10 +128,7 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
         $result = new \Bitrix\Main\Entity\EventResult();
 
         $arModifiedFields = [
-            'HASH' => self::hash(
-                $data['WORKER_CLASS_NAME'],
-                $data['INPUT_DATA']
-            ),
+            'HASH' => self::hash($data['WORKER_CLASS_NAME'], $data['INPUT_DATA']),
         ];
 
         # Вызывается строго в конце
@@ -160,7 +137,7 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
         return $result;
     }
 
-    public static function onBeforeUpdate( $event)
+    public static function onBeforeUpdate($event)
     {
         $primary = $event->getParameter("primary");
         $data = $event->getParameter("fields");
@@ -169,30 +146,19 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
         $result = new \Bitrix\Main\Entity\EventResult();
         $result->unsetFields(['ADDED_BY']);
 
-        $class = key_exists(
-            'WORKER_CLASS_NAME',
-            $data
-        );
-        $input = key_exists(
-            'INPUT_DATA',
-            $data
-        );
+        $class = key_exists('WORKER_CLASS_NAME', $data);
+        $input = key_exists('INPUT_DATA', $data);
 
-        if( $class || $input )
-        {
+        if ($class || $input) {
             $source = [];
-            if( !$class || !$input )
-            {
+            if (!$class || !$input) {
                 $source = self::getById($primary)
                     ->fetch();
             }
 
             $arModifiedFields = [
-                    'HASH' => self::hash(
-                        ( $data['WORKER_CLASS_NAME'] ? : @$source['WORKER_CLASS_NAME'] ),
-                        ( $data['INPUT_DATA'] ? : @$source['INPUT_DATA'] )
-                    ),
-                ];
+                'HASH' => self::hash(($data['WORKER_CLASS_NAME'] ? : @$source['WORKER_CLASS_NAME']), ($data['INPUT_DATA'] ? : @$source['INPUT_DATA'])),
+            ];
         }
 
         # Вызывается строго в конце
@@ -212,8 +178,7 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
      */
     public static function hash(string $class, array $input_data = []): string
     {
-        if( !( $class = trim($class) ) )
-        {
+        if (!($class = trim($class))) {
             throw new ArgumentException('Не указан обязатльный параметр класс воркера');
         }
 
@@ -221,10 +186,7 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
 
         $str_to_hash = $class.'#'.$input_dump;
 
-        return hash(
-            self::HASH_ALGO,
-            $str_to_hash
-        );
+        return hash(self::HASH_ALGO, $str_to_hash);
     }
 
     /**

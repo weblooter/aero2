@@ -21,20 +21,15 @@ abstract class AbstractValidator
      */
     public static function validateValue(string $strValue, $obField, \Bitrix\Main\Result &$obResult)
     {
-        if( !in_array(\Local\Core\Inner\Robofeed\Interfaces\ScalarField::class, class_implements(get_class($obField)) ) )
+        if (!in_array(\Local\Core\Inner\Robofeed\Interfaces\ScalarField::class, class_implements(get_class($obField)))) {
             throw new FatalException('Поля, описывающие схему валидации, должны быть потомками '.\Local\Core\Inner\Robofeed\SchemaFields\ScalarField::class.'. Поле - '.$obField->getName());
+        }
 
         $obValidResult = new \Bitrix\Main\ORM\Data\AddResult();
 
-        $obField->validateValue(
-            $strValue,
-            null,
-            [],
-            $obValidResult
-        );
+        $obField->validateValue($strValue, null, [], $obValidResult);
 
-        if( !$obValidResult->isSuccess() )
-        {
+        if (!$obValidResult->isSuccess()) {
             $obErrorsFields = $obValidResult->getErrors();
 
             /** @var \Bitrix\Main\ORM\Fields\FieldError $obErrorsField */
@@ -65,8 +60,7 @@ abstract class AbstractValidator
     {
         $strErrorText = '';
 
-        switch( $strErrorCode )
-        {
+        switch ($strErrorCode) {
             case 'LOCAL_CORE_FIELD_IS_REQUIRED':
                 $strErrorText = 'Обязательное поле "'.$obField->getTitle().'" не заполнено.';
                 break;
@@ -96,12 +90,14 @@ abstract class AbstractValidator
                 break;
 
             case 'LOCAL_CORE_INVALID_VALUE_REF_CLASS_NOT_EXIST':
-                $strErrorText = 'Поле "'.$obField->getTitle().'" не может быть проверено, т.к. справочник не доступен. Пожалуйста, напишите на info@robofeed.ru что бы мы исправили ошибку, вероятно мы еще не курсе!';
+                $strErrorText = 'Поле "'.$obField->getTitle()
+                                .'" не может быть проверено, т.к. справочник не доступен. Пожалуйста, напишите на info@robofeed.ru что бы мы исправили ошибку, вероятно мы еще не курсе!';
                 // TODO сделал записть в логер о критической ошибке
                 break;
 
             case 'LOCAL_CORE_REF_INVALID_VALUE':
-                $strErrorText = 'Поле "'.$obField->getTitle().'" должно содержать значение из справочника. Пожалуйста, изучите справочники https://robofeed.ru/'.Route::getRouteTo('development', 'references');
+                $strErrorText = 'Поле "'.$obField->getTitle().'" должно содержать значение из справочника. Пожалуйста, изучите справочники https://robofeed.ru/'.Route::getRouteTo('development',
+                        'references');
                 break;
 
             case 'LOCAL_CORE_DELIVERY_EMPTY':
@@ -157,13 +153,11 @@ abstract class AbstractValidator
                 break;
         }
 
-        if( !is_null($obField->getXmlPath()) )
-        {
+        if (!is_null($obField->getXmlPath())) {
             $strErrorText .= '<br/>Путь: '.$obField->getXmlPath();
         }
 
-        if( !is_null($obField->getXmlExpectedType()) )
-        {
+        if (!is_null($obField->getXmlExpectedType())) {
             $strErrorText .= '<br/>Ожидаемые данные: '.$obField->getXmlExpectedType();
         }
 
@@ -172,6 +166,7 @@ abstract class AbstractValidator
 
     /**
      * Извлекает аттрибуты элемента.
+     *
      * @param \SimpleXMLElement $obElem
      *
      * @return array
@@ -179,10 +174,8 @@ abstract class AbstractValidator
     protected function getAttrs(\SimpleXMLElement $obElem)
     {
         $arAttrs = [];
-        if( $obElem instanceof \SimpleXMLElement)
-        {
-            foreach($obElem->attributes() as $k=>$v)
-            {
+        if ($obElem instanceof \SimpleXMLElement) {
+            foreach ($obElem->attributes() as $k => $v) {
                 $arAttrs[$k] = (string)$v;
             }
         }

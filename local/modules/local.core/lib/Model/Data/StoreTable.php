@@ -12,7 +12,17 @@ use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
 /**
  * Класс ORM магазинов компаний.
  *
- * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [01.04.2019 20:43:39] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [01.04.2019 20:43:39] | Fields\DatetimeField</li><li>COMPANY_ID - ID компании | Fields\IntegerField</li><li>NAME - Название | Fields\StringField</li><li>DOMAIN - Домен | Fields\StringField</li><li>RESOURCE_TYPE - Источник данных | Fields\EnumField<br/>&emsp;LINK => Ссылка на файл<br/>&emsp;FILE => Загрузить файл<br/></li><li>FILE_ID - Загруженный файл XML | Fields\IntegerField</li><li>FILE_LINK - Ссылка на файл XML | Fields\StringField</li><li>HTTP_AUTH - Для доступа нужен логин и пароль [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>HTTP_AUTH_LOGIN - Логин для авторизации | Fields\StringField</li><li>HTTP_AUTH_PASS - Пароль для авторизации | Fields\StringField</li><li>BEHAVIOR_IMPORT_ERROR - Поведение импорта при ошибке [STOP_IMPORT] | Fields\EnumField<br/>&emsp;STOP_IMPORT => Не актуализировать данные<br/>&emsp;IMPORT_ONLY_VALID => Актуализировать только валидные<br/></li><li>ALERT_IF_XML_NOT_MODIFIED - Информировать о не изменившемся Robofeed XML? [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_LAST_IMPORT - Дата последнего импорта | Fields\DatetimeField</li><li>LAST_IMPORT_RESULT - Фактический результат последнего импорта | Fields\EnumField<br/>&emsp;SU => Успешен<br/>&emsp;ER => Ошибочный<br/></li><li>DATE_LAST_SUCCESS_IMPORT - Дата последнего успешного импорта | Fields\DatetimeField</li><li>PRODUCT_TOTAL_COUNT - Общее кол-во заявленных товаров в Robofeed XML в последней успешной выгрузке | Fields\IntegerField</li><li>PRODUCT_SUCCESS_IMPORT - Кол-во валидных импортированных товаров в последней успешной выгрузке | Fields\IntegerField</li><li>TARIFF_CODE - Тариф [TRIAL_7_DAYS] | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li><li>TARIFF - \Local\Core\Model\Data\Tariff | Fields\Relations\Reference</li><li>IMPORT_LOGS - \Local\Core\Model\Robofeed\ImportLog | Fields\Relations\OneToMany</li><li>TARIFF_LOGS - \Local\Core\Model\Data\StoreTariffChangeLog | Fields\Relations\OneToMany</li></ul>
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [01.04.2019 20:43:39] |
+ * Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [01.04.2019 20:43:39] | Fields\DatetimeField</li><li>COMPANY_ID - ID компании | Fields\IntegerField</li><li>NAME - Название |
+ * Fields\StringField</li><li>DOMAIN - Домен | Fields\StringField</li><li>RESOURCE_TYPE - Источник данных | Fields\EnumField<br/>&emsp;LINK => Ссылка на файл<br/>&emsp;FILE => Загрузить
+ * файл<br/></li><li>FILE_ID - Загруженный файл XML | Fields\IntegerField</li><li>FILE_LINK - Ссылка на файл XML | Fields\StringField</li><li>HTTP_AUTH - Для доступа нужен логин и пароль [N] |
+ * Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>HTTP_AUTH_LOGIN - Логин для авторизации | Fields\StringField</li><li>HTTP_AUTH_PASS - Пароль для авторизации |
+ * Fields\StringField</li><li>BEHAVIOR_IMPORT_ERROR - Поведение импорта при ошибке [STOP_IMPORT] | Fields\EnumField<br/>&emsp;STOP_IMPORT => Не актуализировать данные<br/>&emsp;IMPORT_ONLY_VALID =>
+ * Актуализировать только валидные<br/></li><li>ALERT_IF_XML_NOT_MODIFIED - Информировать о не изменившемся Robofeed XML? [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N =>
+ * Нет<br/></li><li>DATE_LAST_IMPORT - Дата последнего импорта | Fields\DatetimeField</li><li>LAST_IMPORT_RESULT - Фактический результат последнего импорта | Fields\EnumField<br/>&emsp;SU =>
+ * Успешен<br/>&emsp;ER => Ошибочный<br/></li><li>DATE_LAST_SUCCESS_IMPORT - Дата последнего успешного импорта | Fields\DatetimeField</li><li>PRODUCT_TOTAL_COUNT - Общее кол-во заявленных товаров в
+ * Robofeed XML в последней успешной выгрузке | Fields\IntegerField</li><li>PRODUCT_SUCCESS_IMPORT - Кол-во валидных импортированных товаров в последней успешной выгрузке |
+ * Fields\IntegerField</li><li>TARIFF_CODE - Тариф [TRIAL_7_DAYS] | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li><li>TARIFF - \Local\Core\Model\Data\Tariff | Fields\Relations\Reference</li><li>IMPORT_LOGS - \Local\Core\Model\Robofeed\ImportLog | Fields\Relations\OneToMany</li><li>TARIFF_LOGS - \Local\Core\Model\Data\StoreTariffChangeLog | Fields\Relations\OneToMany</li></ul>
  *
  *
  * @package Local\Core\Model\Data
@@ -57,254 +67,186 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     public static function getMap()
     {
         return [
-            new Fields\IntegerField(
-                'ID', [
+            new Fields\IntegerField('ID', [
                     'primary' => true,
                     'autocomplete' => true,
                     'title' => 'ID'
-                ]
-            ),
-            new Fields\EnumField(
-                'ACTIVE', [
+                ]),
+            new Fields\EnumField('ACTIVE', [
                     'title' => 'Активность',
                     'required' => false,
                     'values' => self::getEnumFieldValues('ACTIVE'),
                     'default_value' => 'Y'
-                ]
-            ),
-            new Fields\DatetimeField(
-                'DATE_CREATE', [
+                ]),
+            new Fields\DatetimeField('DATE_CREATE', [
                     'title' => 'Дата создания',
                     'required' => false,
-                    'default_value' => function()
+                    'default_value' => function ()
                         {
                             return new \Bitrix\Main\Type\DateTime();
                         }
-                ]
-            ),
-            new Fields\DatetimeField(
-                'DATE_MODIFIED', [
+                ]),
+            new Fields\DatetimeField('DATE_MODIFIED', [
                     'title' => 'Дата последнего изменения',
                     'required' => false,
-                    'default_value' => function()
+                    'default_value' => function ()
                         {
                             return new \Bitrix\Main\Type\DateTime();
                         }
-                ]
-            ),
-            new Fields\IntegerField(
-                'COMPANY_ID', [
+                ]),
+            new Fields\IntegerField('COMPANY_ID', [
                     'required' => true,
                     'title' => 'ID компании'
-                ]
-            ),
-            new Fields\StringField(
-                'NAME', [
+                ]),
+            new Fields\StringField('NAME', [
                     'required' => true,
                     'title' => 'Название',
-                ]
-            ),
-            new Fields\StringField(
-                'DOMAIN', [
+                ]),
+            new Fields\StringField('DOMAIN', [
                     'required' => false,
                     'title' => 'Домен',
-                    'validation' => function()
+                    'validation' => function ()
                         {
                             return [
                                 new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))?/')
                             ];
                         },
-                    'save_data_modification' => function()
+                    'save_data_modification' => function ()
                         {
                             return [
-                                function($value)
+                                function ($value)
                                     {
-                                        preg_match(
-                                            '/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/',
-                                            $value,
-                                            $arMatches
-                                        );
+                                        preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/', $value, $arMatches);
                                         return $arMatches[1];
                                     }
                             ];
                         }
-                ]
-            ),
-            new Fields\EnumField(
-                'RESOURCE_TYPE', [
+                ]),
+            new Fields\EnumField('RESOURCE_TYPE', [
                     'required' => true,
                     'title' => 'Источник данных',
                     'values' => self::getEnumFieldValues('RESOURCE_TYPE')
-                ]
-            ),
+                ]),
 
-            new Fields\IntegerField(
-                'FILE_ID', [
+            new Fields\IntegerField('FILE_ID', [
                     'required' => false,
                     'title' => 'Загруженный файл XML',
-                ]
-            ),
+                ]),
 
-            new Fields\StringField(
-                'FILE_LINK', [
+            new Fields\StringField('FILE_LINK', [
                     'required' => false,
                     'title' => 'Ссылка на файл XML',
-                    'validation' => function()
+                    'validation' => function ()
                         {
                             return [
                                 new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)?$/')
                             ];
                         },
-                    'save_data_modification' => function()
+                    'save_data_modification' => function ()
                         {
                             return [
-                                function($value)
+                                function ($value)
                                     {
-                                        preg_match(
-                                            '/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/',
-                                            $value,
-                                            $arMatches
-                                        );
+                                        preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/', $value, $arMatches);
                                         return $arMatches[1];
                                     }
                             ];
                         }
-                ]
-            ),
-            new Fields\EnumField(
-                'HTTP_AUTH', [
+                ]),
+            new Fields\EnumField('HTTP_AUTH', [
                     'required' => false,
                     'title' => 'Для доступа нужен логин и пароль',
                     'values' => self::getEnumFieldValues('HTTP_AUTH'),
                     'default_value' => 'N'
-                ]
-            ),
-            new Fields\StringField(
-                'HTTP_AUTH_LOGIN', [
+                ]),
+            new Fields\StringField('HTTP_AUTH_LOGIN', [
                     'required' => false,
                     'title' => 'Логин для авторизации',
-                ]
-            ),
-            new Fields\StringField(
-                'HTTP_AUTH_PASS', [
+                ]),
+            new Fields\StringField('HTTP_AUTH_PASS', [
                     'required' => false,
                     'title' => 'Пароль для авторизации',
-                ]
-            ),
+                ]),
 
-            new Fields\EnumField(
-                'BEHAVIOR_IMPORT_ERROR',
-                [
+            new Fields\EnumField('BEHAVIOR_IMPORT_ERROR', [
                     'required' => true,
                     'title' => 'Поведение импорта при ошибке',
                     'values' => self::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'),
                     'default_value' => 'STOP_IMPORT'
-                ]
-            ),
-            new Fields\EnumField(
-                'ALERT_IF_XML_NOT_MODIFIED',
-                [
+                ]),
+            new Fields\EnumField('ALERT_IF_XML_NOT_MODIFIED', [
                     'required' => false,
                     'title' => 'Информировать о не изменившемся Robofeed XML?',
                     'values' => self::getEnumFieldValues('ALERT_IF_XML_NOT_MODIFIED'),
                     'default_value' => 'Y'
-                ]
-            ),
+                ]),
 
-            new Fields\DatetimeField(
-                'DATE_LAST_IMPORT', [
+            new Fields\DatetimeField('DATE_LAST_IMPORT', [
                     'title' => 'Дата последнего импорта',
                     'required' => false,
-                ]
-            ),
-            new Fields\EnumField(
-                'LAST_IMPORT_RESULT', [
+                ]),
+            new Fields\EnumField('LAST_IMPORT_RESULT', [
                     'title' => 'Фактический результат последнего импорта',
                     'required' => false,
                     'values' => self::getEnumFieldValues('LAST_IMPORT_RESULT')
-                ]
-            ),
-            new Fields\DatetimeField(
-                'DATE_LAST_SUCCESS_IMPORT', [
+                ]),
+            new Fields\DatetimeField('DATE_LAST_SUCCESS_IMPORT', [
                     'title' => 'Дата последнего успешного импорта',
                     'required' => false,
-                ]
-            ),
-            new Fields\IntegerField(
-                'PRODUCT_TOTAL_COUNT', [
+                ]),
+            new Fields\IntegerField('PRODUCT_TOTAL_COUNT', [
                     'required' => false,
                     'title' => 'Общее кол-во заявленных товаров в Robofeed XML в последней успешной выгрузке'
-                ]
-            ),
-            new Fields\IntegerField(
-                'PRODUCT_SUCCESS_IMPORT', [
+                ]),
+            new Fields\IntegerField('PRODUCT_SUCCESS_IMPORT', [
                     'required' => false,
                     'title' => 'Кол-во валидных импортированных товаров в последней успешной выгрузке'
-                ]
-            ),
+                ]),
             new Fields\StringField('TARIFF_CODE', [
                 'title' => 'Тариф',
                 'required' => true,
-                'validation' => function() {
-                    return array(
-                        function ($value, $primary, $row, $field)
-                        {
-                            $intCount = TariffTable::getList([
-                                'filter' => [
-                                    'CODE' => $value
-                                ],
-                                'select' => ['ID']
-                            ])->getSelectedRowsCount();
-                            if( $intCount < 1 )
-                            {
-                                return 'Тарифа с кодом "'.$value.'" не существует!';
-                            }
-                            else
-                            {
-                                return true;
-                            }
-                        }
-                    );
-                },
-                'default_value' => function()
+                'validation' => function ()
+                    {
+                        return array(
+                            function ($value, $primary, $row, $field)
+                                {
+                                    $intCount = TariffTable::getList([
+                                        'filter' => [
+                                            'CODE' => $value
+                                        ],
+                                        'select' => ['ID']
+                                    ])
+                                        ->getSelectedRowsCount();
+                                    if ($intCount < 1) {
+                                        return 'Тарифа с кодом "'.$value.'" не существует!';
+                                    } else {
+                                        return true;
+                                    }
+                                }
+                        );
+                    },
+                'default_value' => function ()
                     {
                         $arDefaultVal = TariffTable::getList([
                             'filter' => [
                                 'IS_DEFAULT' => 'Y'
                             ],
                             'select' => ['CODE']
-                        ])->fetch();
-                        return ( !empty( $arDefaultVal['CODE'] ) ) ? $arDefaultVal['CODE'] : null;
+                        ])
+                            ->fetch();
+                        return (!empty($arDefaultVal['CODE'])) ? $arDefaultVal['CODE'] : null;
                     }
             ]),
 
-            new Fields\Relations\Reference(
-                'COMPANY', \Local\Core\Model\Data\CompanyTable::class, \Bitrix\Main\ORM\Query\Join::on(
-                'this.COMPANY_ID',
-                'ref.ID'
-            ), [
+            new Fields\Relations\Reference('COMPANY', \Local\Core\Model\Data\CompanyTable::class, \Bitrix\Main\ORM\Query\Join::on('this.COMPANY_ID', 'ref.ID'), [
                     'title' => 'ORM: Компания'
-                ]
-            ),
+                ]),
 
-            new Fields\Relations\Reference(
-                'TARIFF', \Local\Core\Model\Data\TariffTable::class, \Bitrix\Main\ORM\Query\Join::on(
-                'this.TARIFF_CODE',
-                'ref.CODE'
-            ), [
+            new Fields\Relations\Reference('TARIFF', \Local\Core\Model\Data\TariffTable::class, \Bitrix\Main\ORM\Query\Join::on('this.TARIFF_CODE', 'ref.CODE'), [
                     'title' => 'ORM: Тариф'
-                ]
-            ),
-            new Fields\Relations\OneToMany(
-                'IMPORT_LOGS',
-                \Local\Core\Model\Robofeed\ImportLogTable::class,
-                'STORE_DATA'
-            ),
-            new Fields\Relations\OneToMany(
-                'TARIFF_LOGS',
-                \Local\Core\Model\Data\StoreTariffChangeLogTable::class,
-                'STORE_DATA'
-            ),
+                ]),
+            new Fields\Relations\OneToMany('IMPORT_LOGS', \Local\Core\Model\Robofeed\ImportLogTable::class, 'STORE_DATA'),
+            new Fields\Relations\OneToMany('TARIFF_LOGS', \Local\Core\Model\Data\StoreTariffChangeLogTable::class, 'STORE_DATA'),
         ];
     }
 
@@ -320,27 +262,21 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         $result = new \Bitrix\Main\ORM\EventResult();
         $arFields = $event->getParameter('fields');
         $arModifiedFields = [];
-        try
-        {
-            switch( $arFields['RESOURCE_TYPE'] )
-            {
+        try {
+            switch ($arFields['RESOURCE_TYPE']) {
                 case 'LINK':
                     // Ссылка на файл
 
-                    if( empty($arFields['FILE_LINK']) )
-                    {
+                    if (empty($arFields['FILE_LINK'])) {
                         throw new \Exception('Необходимо указать ссылку на файл XML');
                     }
 
-                    if( $arFields['HTTP_AUTH'] == 'Y' )
-                    {
-                        if( empty($arFields['HTTP_AUTH_LOGIN']) )
-                        {
+                    if ($arFields['HTTP_AUTH'] == 'Y') {
+                        if (empty($arFields['HTTP_AUTH_LOGIN'])) {
                             throw new \Exception('Необходимо указать логин для авторизации');
                         }
 
-                        if( empty($arFields['HTTP_AUTH_PASS']) )
-                        {
+                        if (empty($arFields['HTTP_AUTH_PASS'])) {
                             throw new \Exception('Необходимо указать пароль для авторизации');
                         }
                     }
@@ -352,8 +288,7 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                 case 'FILE':
                     // Загрузить файл
 
-                    if( empty($arFields['FILE_ID']) )
-                    {
+                    if (empty($arFields['FILE_ID'])) {
                         throw new \Exception('Необходимо загрузить файл XML');
                     }
 
@@ -364,22 +299,13 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 
                     break;
             }
-        }
-        catch( \Exception $e )
-        {
+        } catch (\Exception $e) {
             $result->addError(new \Bitrix\Main\ORM\EntityError($e->getMessage()));
         }
 
-        if( !empty($arModifiedFields) )
-        {
-            $arFields = array_merge(
-                $arFields,
-                $arModifiedFields
-            );
-            $event->setParameter(
-                'fields',
-                $arFields
-            );
+        if (!empty($arModifiedFields)) {
+            $arFields = array_merge($arFields, $arModifiedFields);
+            $event->setParameter('fields', $arFields);
             $result->modifyFields($arModifiedFields);
         }
 
@@ -390,8 +316,7 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     public static function onAfterAdd(\Bitrix\Main\ORM\Event $event)
     {
         $arFields = $event->getParameter('fields');
-        if( !empty($arFields['TARIFF_CODE']) )
-        {
+        if (!empty($arFields['TARIFF_CODE'])) {
             StoreTariffChangeLogTable::add([
                 'STORE_ID' => $event->getParameter('primary')['ID'],
                 'TARIFF_CODE' => $arFields['TARIFF_CODE']
@@ -439,26 +364,20 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         /*
          * Чистака полей, которые не соответсвуют логике работы ORM
          */
-        if( !empty($arFields) )
-        {
+        if (!empty($arFields)) {
 
-            try
-            {
+            try {
 
-                switch( $arFields['RESOURCE_TYPE'] )
-                {
+                switch ($arFields['RESOURCE_TYPE']) {
                     case 'LINK':
                         // Ссылка на файл
 
-                        if( $arFields['HTTP_AUTH'] == 'Y' )
-                        {
-                            if( empty($arFields['HTTP_AUTH_LOGIN']) )
-                            {
+                        if ($arFields['HTTP_AUTH'] == 'Y') {
+                            if (empty($arFields['HTTP_AUTH_LOGIN'])) {
                                 throw new \Exception('Необходимо указать логин для авторизации');
                             }
 
-                            if( empty($arFields['HTTP_AUTH_PASS']) )
-                            {
+                            if (empty($arFields['HTTP_AUTH_PASS'])) {
                                 throw new \Exception('Необходимо указать пароль для авторизации');
                             }
                         }
@@ -479,9 +398,7 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                         break;
                 }
 
-            }
-            catch( \Exception $e )
-            {
+            } catch (\Exception $e) {
                 $result->addError(new \Bitrix\Main\ORM\EntityError($e->getMessage()));
             }
 
@@ -495,14 +412,8 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         self::$__arStoreIdToOldCompanyId[$ar['ID']] = $ar['COMPANY_ID'];
 
 
-        $arFields = array_merge(
-            $arFields,
-            $arModifiedFields
-        );
-        $event->setParameter(
-            'fields',
-            $arFields
-        );
+        $arFields = array_merge($arFields, $arModifiedFields);
+        $event->setParameter('fields', $arFields);
 
         $result->modifyFields($arModifiedFields);
 
@@ -523,18 +434,15 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if( !empty($arEventParams['primary']['ID']) )
-        {
-            if( self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] > 0 )
-            {
+        if (!empty($arEventParams['primary']['ID'])) {
+            if (self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] > 0) {
                 \CFile::Delete(self::$__NeedDeleteFileID[$arEventParams['primary']['ID']]);
                 $arModifiedFields['FILE_ID'] = null;
             }
         }
 
         $arFields = $event->getParameter('fields');
-        if( !empty( $arFields['TARIFF_CODE'] ) )
-        {
+        if (!empty($arFields['TARIFF_CODE'])) {
             StoreTariffChangeLogTable::add([
                 'STORE_ID' => $event->getParameter('primary')['ID'],
                 'TARIFF_CODE' => $arFields['TARIFF_CODE']
@@ -556,15 +464,13 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if( !empty($arEventParams['primary']['ID']) )
-        {
+        if (!empty($arEventParams['primary']['ID'])) {
             $ar = self::getById($arEventParams['primary']['ID'])
                 ->fetchRaw();
 
             self::$__arStoreIdToOldCompanyId[$ar['ID']] = $ar['COMPANY_ID'];
 
-            if( $ar['RESOURCE_TYPE'] == 'FILE' )
-            {
+            if ($ar['RESOURCE_TYPE'] == 'FILE') {
                 self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] = $ar['FILE_ID'];
             }
         }
@@ -586,10 +492,8 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     {
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
-        if( !empty($arEventParams['primary']) )
-        {
-            if( self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] > 0 )
-            {
+        if (!empty($arEventParams['primary'])) {
+            if (self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] > 0) {
                 \Local\Core\Inner\BxModified\CFile::Delete(self::$__NeedDeleteFileID[$arEventParams['primary']['ID']]);
             }
 
@@ -601,8 +505,7 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                     'ID'
                 ]
             ]);
-            while($ar = $rsStoreTariffLogs->fetch())
-            {
+            while ($ar = $rsStoreTariffLogs->fetch()) {
                 StoreTariffChangeLogTable::delete($ar['ID']);
             }
         }
@@ -613,49 +516,32 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
      */
     public static function clearComponentsCache($arFields)
     {
-        if( !empty( $arFields['COMPANY_ID'] ) )
-        {
+        if (!empty($arFields['COMPANY_ID'])) {
             // Удаляет кэш списка у компании на странице списка магазинов
-            \Local\Core\Inner\Cache::deleteComponentCache(
-                ['personal.store.list'],
-                ['company_id='.$arFields['COMPANY_ID']]
-            );
+            \Local\Core\Inner\Cache::deleteComponentCache(['personal.store.list'], ['company_id='.$arFields['COMPANY_ID']]);
 
             // Удаляет кэш деталки компании
-            \Local\Core\Inner\Cache::deleteComponentCache(
-                ['personal.company.detail'],
-                [
+            \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.detail'], [
                     'company_id='.$arFields['COMPANY_ID']
-                ]
-            );
+                ]);
         }
 
         // Удаляет кэш деталки магазина
-        \Local\Core\Inner\Cache::deleteComponentCache(
-            ['personal.store.detail'],
-            [
+        \Local\Core\Inner\Cache::deleteComponentCache(['personal.store.detail'], [
                 'store_id='.$arFields['ID']
-            ]
-        );
+            ]);
 
-        if( self::$__arStoreIdToOldCompanyId[$arFields['ID']] != $arFields['COMPANY_ID'] )
-        {
+        if (self::$__arStoreIdToOldCompanyId[$arFields['ID']] != $arFields['COMPANY_ID']) {
             /*
              * Сменилась компания магазина
              */
 
             // Удаляет кэш списка у старой компании, если сменился владелец
-            \Local\Core\Inner\Cache::deleteComponentCache(
-                ['personal.store.list'],
-                ['company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]]
-            );
+            \Local\Core\Inner\Cache::deleteComponentCache(['personal.store.list'], ['company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]]);
             // Удаляет кэш деталки старой компании
-            \Local\Core\Inner\Cache::deleteComponentCache(
-                ['personal.company.detail'],
-                [
+            \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.detail'], [
                     'company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]
-                ]
-            );
+                ]);
         }
     }
 
@@ -669,13 +555,11 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
      */
     public static function getOrmFiles()
     {
-        return self::getList(
-            [
+        return self::getList([
                 'filter' => [
                     '!FILE_ID' => false,
                 ],
                 'select' => ['FILE_ID']
-            ]
-        );
+            ]);
     }
 }

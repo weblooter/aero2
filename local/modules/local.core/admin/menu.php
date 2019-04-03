@@ -9,18 +9,8 @@ $arModelData = [];
 /* ********** */
 /* Model\Data */
 /* ********** */
-\CLocalCore::addItemToMenu(
-    $arModelData,
-    \Local\Core\Inner\AdminHelper\Data\Company\AdminList::class,
-    \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit::class,
-    'Компании'
-);
-\CLocalCore::addItemToMenu(
-    $arModelData,
-    \Local\Core\Inner\AdminHelper\Data\Store\AdminList::class,
-    \Local\Core\Inner\AdminHelper\Data\Store\AdminEdit::class,
-    'Магазины'
-);
+\CLocalCore::addItemToMenu($arModelData, \Local\Core\Inner\AdminHelper\Data\Company\AdminList::class, \Local\Core\Inner\AdminHelper\Data\Company\AdminEdit::class, 'Компании');
+\CLocalCore::addItemToMenu($arModelData, \Local\Core\Inner\AdminHelper\Data\Store\AdminList::class, \Local\Core\Inner\AdminHelper\Data\Store\AdminEdit::class, 'Магазины');
 
 
 /* *********** */
@@ -28,24 +18,9 @@ $arModelData = [];
 /* *********** */
 $arModelReferences = [];
 
-\CLocalCore::addItemToMenu(
-    $arModelReferences,
-    \Local\Core\Inner\AdminHelper\Reference\Measure\AdminList::class,
-    \Local\Core\Inner\AdminHelper\Reference\Measure\AdminEdit::class,
-    'Единицы измерения'
-);
-\CLocalCore::addItemToMenu(
-    $arModelReferences,
-    \Local\Core\Inner\AdminHelper\Reference\Currency\AdminList::class,
-    \Local\Core\Inner\AdminHelper\Reference\Currency\AdminEdit::class,
-    'Валюты'
-);
-\CLocalCore::addItemToMenu(
-    $arModelReferences,
-    \Local\Core\Inner\AdminHelper\Reference\Country\AdminList::class,
-    \Local\Core\Inner\AdminHelper\Reference\Country\AdminEdit::class,
-    'Страны'
-);
+\CLocalCore::addItemToMenu($arModelReferences, \Local\Core\Inner\AdminHelper\Reference\Measure\AdminList::class, \Local\Core\Inner\AdminHelper\Reference\Measure\AdminEdit::class, 'Единицы измерения');
+\CLocalCore::addItemToMenu($arModelReferences, \Local\Core\Inner\AdminHelper\Reference\Currency\AdminList::class, \Local\Core\Inner\AdminHelper\Reference\Currency\AdminEdit::class, 'Валюты');
+\CLocalCore::addItemToMenu($arModelReferences, \Local\Core\Inner\AdminHelper\Reference\Country\AdminList::class, \Local\Core\Inner\AdminHelper\Reference\Country\AdminEdit::class, 'Страны');
 
 
 /* ********** */
@@ -53,12 +28,7 @@ $arModelReferences = [];
 /* ********** */
 $arModelTariff = [];
 
-\CLocalCore::addItemToMenu(
-    $arModelTariff,
-    \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList::class,
-    \Local\Core\Inner\AdminHelper\Data\Tariff\AdminEdit::class,
-    'Тарифы'
-);
+\CLocalCore::addItemToMenu($arModelTariff, \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList::class, \Local\Core\Inner\AdminHelper\Data\Tariff\AdminEdit::class, 'Тарифы');
 
 
 /*
@@ -94,8 +64,7 @@ $aMenu = [
     ],
 */
 
-if( !empty($arModelData) )
-{
+if (!empty($arModelData)) {
     $aMenu[] = [
         "parent_menu" => "global_menu_local_core",
         "text" => "Model\Data",
@@ -107,8 +76,7 @@ if( !empty($arModelData) )
     ];
 }
 
-if( !empty($arModelReferences) )
-{
+if (!empty($arModelReferences)) {
     $aMenu[] = [
         "parent_menu" => "global_menu_local_core",
         "text" => "Тарифы",
@@ -120,8 +88,7 @@ if( !empty($arModelReferences) )
     ];
 }
 
-if( !empty($arModelReferences) )
-{
+if (!empty($arModelReferences)) {
     $aMenu[] = [
         "parent_menu" => "global_menu_local_core",
         "text" => "Справочники",
@@ -133,5 +100,5 @@ if( !empty($arModelReferences) )
     ];
 }
 
-return ( !empty($aMenu) ) ? $aMenu : false;
+return (!empty($aMenu)) ? $aMenu : false;
 

@@ -32,8 +32,7 @@ class Route
      */
     private static function __getLocalRoutes()
     {
-        if( is_null(self::$__arLocalRoutes) )
-        {
+        if (is_null(self::$__arLocalRoutes)) {
             require $_SERVER['DOCUMENT_ROOT'].'/.routerewrite.php';
             self::$__arLocalRoutes = $arLocalRoutes ?? [];
         }
@@ -54,13 +53,8 @@ class Route
     {
         $arLocalRoutes = self::__getLocalRoutes();
 
-        $strReturn = str_replace(
-            array_keys($arParams),
-            array_values($arParams),
-            $arLocalRoutes[$strDirection][$strAction]['URL']
-        );
-        if( strlen($strReturn) < 1 )
-        {
+        $strReturn = str_replace(array_keys($arParams), array_values($arParams), $arLocalRoutes[$strDirection][$strAction]['URL']);
+        if (strlen($strReturn) < 1) {
             $strReturn = false;
         }
 
@@ -71,8 +65,7 @@ class Route
     {
         $arLocalRoutes = self::__getLocalRoutes();
 
-        if( is_callable($arLocalRoutes[$strDirection][$strAction]['BREADCRUMBS']) )
-        {
+        if (is_callable($arLocalRoutes[$strDirection][$strAction]['BREADCRUMBS'])) {
             $arLocalRoutes[$strDirection][$strAction]['BREADCRUMBS']($arParams);
         }
     }

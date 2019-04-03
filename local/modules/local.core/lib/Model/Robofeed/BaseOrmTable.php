@@ -23,29 +23,23 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
     public static function getMap()
     {
         return [
-            new Fields\IntegerField(
-                'ID', [
+            new Fields\IntegerField('ID', [
                     'primary' => true,
                     'autocomplete' => true,
                     'title' => 'ID'
-                ]
-            ),
-            new Fields\DatetimeField(
-                'DATE_CREATE', [
+                ]),
+            new Fields\DatetimeField('DATE_CREATE', [
                     'title' => 'Дата создания',
                     'required' => false,
-                    'default_value' => function()
+                    'default_value' => function ()
                         {
                             return new \Bitrix\Main\Type\DateTime();
                         }
-                ]
-            ),
-            new Fields\IntegerField(
-                'STORE_ID', [
+                ]),
+            new Fields\IntegerField('STORE_ID', [
                     'required' => true,
                     'title' => 'ID магазина'
-                ]
-            ),
+                ]),
         ];
     }
 }

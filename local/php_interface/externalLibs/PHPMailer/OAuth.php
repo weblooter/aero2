@@ -109,10 +109,7 @@ class OAuth
      */
     protected function getToken()
     {
-        return $this->provider->getAccessToken(
-            $this->getGrant(),
-            ['refresh_token' => $this->oauthRefreshToken]
-        );
+        return $this->provider->getAccessToken($this->getGrant(), ['refresh_token' => $this->oauthRefreshToken]);
     }
 
     /**
@@ -127,12 +124,6 @@ class OAuth
             $this->oauthToken = $this->getToken();
         }
 
-        return base64_encode(
-            'user=' .
-            $this->oauthUserEmail .
-            "\001auth=Bearer " .
-            $this->oauthToken .
-            "\001\001"
-        );
+        return base64_encode('user='.$this->oauthUserEmail."\001auth=Bearer ".$this->oauthToken."\001\001");
     }
 }
