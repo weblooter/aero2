@@ -1,0 +1,25 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "search",
+            "NAME": "version",
+            "VALUE": "v2.0",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "search",
+            "NAME": "dbnode_id",
+            "VALUE": "N",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "search",
+            "NAME": "dbnode_status",
+            "VALUE": "ok",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        }
+    ]
+}

@@ -1,0 +1,61 @@
+{
+    "event": "NEW_USER",
+    "type": {
+        "LID": "en",
+        "NAME": "New user was registered",
+        "DESCRIPTION": [
+            "",
+            "",
+            "#USER_ID# - User ID",
+            "#LOGIN# - Login",
+            "#EMAIL# - EMail",
+            "#NAME# - Name",
+            "#LAST_NAME# - Last Name",
+            "#USER_IP# - User IP",
+            "#USER_HOST# - User Host",
+            ""
+        ],
+        "SORT": "1"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#DEFAULT_EMAIL_FROM#",
+            "SUBJECT": "#SITE_NAME#: Зарегистрировался новый пользователь",
+            "MESSAGE": [
+                "Информационное сообщение сайта #SITE_NAME#",
+                "------------------------------------------",
+                "",
+                "На сайте #SERVER_NAME# успешно зарегистрирован новый пользователь.",
+                "",
+                "Данные пользователя:",
+                "ID пользователя: #USER_ID#",
+                "",
+                "Имя: #NAME#",
+                "Фамилия: #LAST_NAME#",
+                "E-Mail: #EMAIL#",
+                "",
+                "Login: #LOGIN#",
+                "",
+                "Письмо сгенерировано автоматически."
+            ],
+            "BODY_TYPE": "text",
+            "BCC": null,
+            "REPLY_TO": null,
+            "CC": null,
+            "IN_REPLY_TO": null,
+            "PRIORITY": null,
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": null,
+            "ADDITIONAL_FIELD": false,
+            "LANGUAGE_ID": "ru"
+        }
+    ]
+}

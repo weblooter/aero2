@@ -1,0 +1,47 @@
+{
+    "event": "LOCAL_BALANCE_PAYED_FROM_ACCOUNT",
+    "type": {
+        "LID": "ru",
+        "NAME": "LocalCore: Списание денег с баланса",
+        "DESCRIPTION": [
+            "#EMAIL#",
+            "#SUMM_FORMAT#",
+            "#TOTAL_SUMM_FORMAT#",
+            "#NOTE#"
+        ],
+        "SORT": "150"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SERVER_NAME#: С Вашего баланса произошло списание",
+            "MESSAGE": [
+                "С Вашего баланса произошло списание #SUMM_FORMAT# руб.<br>",
+                "{{{IF #NOTE#;!=;}}}",
+                "Комментарий списания:<br>",
+                "#NOTE#<br>",
+                "<br>",
+                "{{{ENDIF}}}",
+                "Ваш баланс теперь составляет #TOTAL_SUMM_FORMAT# руб."
+            ],
+            "BODY_TYPE": "text",
+            "BCC": "",
+            "REPLY_TO": "",
+            "CC": "",
+            "IN_REPLY_TO": "",
+            "PRIORITY": "",
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": "",
+            "ADDITIONAL_FIELD": [],
+            "LANGUAGE_ID": ""
+        }
+    ]
+}

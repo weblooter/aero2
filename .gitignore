@@ -14,3 +14,4 @@
 /page.php
 *.tar.gz*
 *.psd
+/bitrix/modules/updater_partner.log

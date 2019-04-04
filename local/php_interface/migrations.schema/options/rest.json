@@ -1,0 +1,18 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "rest",
+            "NAME": "server_path",
+            "VALUE": "\/rest",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "rest",
+            "NAME": "entity_iblock_type",
+            "VALUE": "rest_entity",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        }
+    ]
+}

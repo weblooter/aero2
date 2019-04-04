@@ -1,0 +1,298 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_editor_3",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "stickers_use_hotkeys",
+            "VALUE": "N",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "GROUP_DEFAULT_TASK",
+            "VALUE": "18",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "default_edit",
+            "VALUE": "text",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_medialib",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "replace_new_lines",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_pspell",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "user_dics_path",
+            "VALUE": "\/bitrix\/modules\/fileman\/u_dics",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_separeted_dics",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_custom_spell",
+            "VALUE": "N",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ar_entities",
+            "VALUE": "none",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "editor_body_id",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "editor_body_class",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ml_thumb_width",
+            "VALUE": "140",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ml_thumb_height",
+            "VALUE": "105",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ml_media_extentions",
+            "VALUE": "jpg,jpeg,gif,png,flv,mp4,wmv,wma,mp3,ppt",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ml_max_width",
+            "VALUE": "1024",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ml_max_height",
+            "VALUE": "1024",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ml_media_available_ext",
+            "VALUE": "jpg,jpeg,gif,png,flv,mp4,wmv,wma,mp3,ppt,aac",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "ml_use_default",
+            "VALUE": "1",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "~script_files",
+            "VALUE": "php,php3,php4,php5,php6,phtml,pl,asp,aspx,cgi,exe,ico,shtm,shtml",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "~allowed_components",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "different_set",
+            "VALUE": "N",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "num_menu_param",
+            "VALUE": "1",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "menutypes",
+            "VALUE": "a:4:{s:4:\\\"left\\\";s:19:\\\"Левое меню\\\";s:3:\\\"top\\\";s:23:\\\"Верхнее меню\\\";s:8:\\\"personal\\\";s:13:\\\"Меню ЛК\\\";s:6:\\\"bottom\\\";s:21:\\\"Нижнее меню\\\";}",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "propstypes",
+            "VALUE": "a:2:{s:11:\\\"description\\\";s:16:\\\"Описание\\\";s:8:\\\"keywords\\\";s:27:\\\"Ключевые слова\\\";}",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "search_max_open_file_size",
+            "VALUE": "1024",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "search_max_res_count",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "search_time_step",
+            "VALUE": "5",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "search_mask",
+            "VALUE": "*.php",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "show_inc_icons",
+            "VALUE": "N",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "hide_physical_struc",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_translit",
+            "VALUE": "1",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_translit_google",
+            "VALUE": "1",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "log_menu",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "log_page",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "use_code_editor",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "google_map_api_key",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "yandex_map_api_key",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "default_edit_groups",
+            "VALUE": "",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "archive_step_time",
+            "VALUE": "30",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "fileman",
+            "NAME": "GROUP_DEFAULT_RIGHT",
+            "VALUE": "D",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        }
+    ]
+}

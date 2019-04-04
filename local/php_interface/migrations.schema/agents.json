@@ -1,0 +1,244 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "landing",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Bitrix\\Landing\\Agent::clearRecycle();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 23:18:01",
+            "AGENT_INTERVAL": "7200",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "landing",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Bitrix\\Landing\\Agent::clearFiles(30);",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 22:18:01",
+            "AGENT_INTERVAL": "3600",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "local.core",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Local\\Core\\Agent\\Fileman\\ClearUnregisteredLocalCoreFiles::init();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 22:48:01",
+            "AGENT_INTERVAL": "5400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "local.core",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Local\\Core\\Agent\\Robofeed\\DeleteOldConvert::init();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 22:18:01",
+            "AGENT_INTERVAL": "3600",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "local.core",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Local\\Core\\Agent\\Robofeed\\CreateQueueToImportProducts::init();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 21:33:01",
+            "AGENT_INTERVAL": "900",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "local.core",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Local\\Core\\Agent\\Store\\ClearDBFromDeletedStores::init();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CEvent::CleanUpAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CUser::CleanUpHitAuthAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CCaptchaAgent::DeleteOldCaptcha(3600);",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 22:18:01",
+            "AGENT_INTERVAL": "3600",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CUndo::CleanUpOld();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CUser::AuthActionsCleanUpAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CSiteCheckerTest::CommonTest();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "\\Bitrix\\Main\\Analytics\\CounterDataTable::submitData();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 21:27:02",
+            "AGENT_INTERVAL": "60",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CUserCounter::DeleteOld();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "\\Bitrix\\Main\\UI\\Viewer\\FilePreviewTable::deleteOldAgent(22, 20);",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "main",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "CEventLog::CleanUpAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "messageservice",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "\\Bitrix\\MessageService\\Queue::cleanUpAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 00:00:00",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "Y"
+        },
+        {
+            "MODULE_ID": "rest",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Bitrix\\Rest\\Marketplace\\Client::getNumUpdates();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "rest",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "\\Bitrix\\Rest\\EventOfflineTable::cleanProcessAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "search",
+            "USER_ID": null,
+            "SORT": "10",
+            "NAME": "CSearchSuggest::CleanUpAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "search",
+            "USER_ID": null,
+            "SORT": "10",
+            "NAME": "CSearchStatistic::CleanUpAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "seo",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Bitrix\\Seo\\Engine\\YandexDirect::updateAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 22:18:01",
+            "AGENT_INTERVAL": "3600",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "seo",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Bitrix\\Seo\\Adv\\LogTable::clean();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "05.04.2019 21:18:01",
+            "AGENT_INTERVAL": "86400",
+            "IS_PERIOD": "N"
+        },
+        {
+            "MODULE_ID": "seo",
+            "USER_ID": null,
+            "SORT": "100",
+            "NAME": "Bitrix\\Seo\\Adv\\Auto::checkQuantityAgent();",
+            "ACTIVE": "Y",
+            "NEXT_EXEC": "04.04.2019 22:18:01",
+            "AGENT_INTERVAL": "3600",
+            "IS_PERIOD": "N"
+        }
+    ]
+}

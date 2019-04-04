@@ -1,0 +1,43 @@
+{
+    "event": "LOCAL_STORE_TARIFF_CHANGED",
+    "type": {
+        "LID": "en",
+        "NAME": "",
+        "DESCRIPTION": [
+            ""
+        ],
+        "SORT": "150"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SERVER_NAME#: У магазина \"#STORE_NAME#\" изменился тарифный план",
+            "MESSAGE": [
+                "У магазина \"#STORE_NAME#\" изменился тарифный план.<br>",
+                "Новый тариф - \"#NEW_TARIFF_NAME#\" с ограничением в #NEW_TARIFF_PRODUCT_LIMIT# товаров.",
+                "{{{IF #DATE_ACTIVE_TO#;!=;}}}",
+                "<br\/>",
+                "Тариф действует до #DATE_ACTIVE_TO#. Далее он будет заменен на \"#NEXT_TARIFF_NAME#\".",
+                "{{{ENDIF}}}"
+            ],
+            "BODY_TYPE": "html",
+            "BCC": "",
+            "REPLY_TO": "",
+            "CC": "",
+            "IN_REPLY_TO": "",
+            "PRIORITY": "",
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": "",
+            "ADDITIONAL_FIELD": [],
+            "LANGUAGE_ID": ""
+        }
+    ]
+}

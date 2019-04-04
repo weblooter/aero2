@@ -1,0 +1,31 @@
+{
+    "items": [
+        {
+            "ACTIVE": "Y",
+            "C_SORT": "1",
+            "ANONYMOUS": "N",
+            "NAME": "Администраторы",
+            "STRING_ID": "administrators",
+            "DESCRIPTION": "Полный доступ к управлению сайтом.",
+            "SECURITY_POLICY": null
+        },
+        {
+            "ACTIVE": "Y",
+            "C_SORT": "2",
+            "ANONYMOUS": "Y",
+            "NAME": "Все пользователи (в том числе неавторизованные)",
+            "STRING_ID": "everyone",
+            "DESCRIPTION": "Все пользователи, включая неавторизованных.",
+            "SECURITY_POLICY": null
+        },
+        {
+            "ACTIVE": "Y",
+            "C_SORT": "110",
+            "ANONYMOUS": "N",
+            "NAME": "Зарегистрированный пользователь",
+            "STRING_ID": "USER_REGISTERED",
+            "DESCRIPTION": "",
+            "SECURITY_POLICY": []
+        }
+    ]
+}

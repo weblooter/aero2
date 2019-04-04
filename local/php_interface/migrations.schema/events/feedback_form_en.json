@@ -1,0 +1,53 @@
+{
+    "event": "FEEDBACK_FORM",
+    "type": {
+        "LID": "en",
+        "NAME": "Sending a message using a feedback form",
+        "DESCRIPTION": [
+            "#AUTHOR# - Message author",
+            "#AUTHOR_EMAIL# - Author's e-mail address",
+            "#TEXT# - Message text",
+            "#EMAIL_FROM# - Sender's e-mail address",
+            "#EMAIL_TO# - Recipient's e-mail address"
+        ],
+        "SORT": "7"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL_TO#",
+            "SUBJECT": "#SITE_NAME#: Сообщение из формы обратной связи",
+            "MESSAGE": [
+                "Информационное сообщение сайта #SITE_NAME#",
+                "------------------------------------------",
+                "",
+                "Вам было отправлено сообщение через форму обратной связи",
+                "",
+                "Автор: #AUTHOR#",
+                "E-mail автора: #AUTHOR_EMAIL#",
+                "",
+                "Текст сообщения:",
+                "#TEXT#",
+                "",
+                "Сообщение сгенерировано автоматически."
+            ],
+            "BODY_TYPE": "text",
+            "BCC": null,
+            "REPLY_TO": null,
+            "CC": null,
+            "IN_REPLY_TO": null,
+            "PRIORITY": null,
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": null,
+            "ADDITIONAL_FIELD": false,
+            "LANGUAGE_ID": "ru"
+        }
+    ]
+}

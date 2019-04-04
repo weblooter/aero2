@@ -1,0 +1,40 @@
+{
+    "event": "LOCAL_IMPORT_ROBOFEED_NOT_MODIFIED",
+    "type": {
+        "LID": "ru",
+        "NAME": "LocalCore: Robofeed XML не модифицировался",
+        "DESCRIPTION": [
+            "#EMAIL#",
+            "#STORE_NAME#"
+        ],
+        "SORT": "150"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SERVER_NAME#: Robofeed XML магазина \"#STORE_NAME#\" не изменился",
+            "MESSAGE": [
+                "Время и версия в Robofeed XML магазина \"#STORE_NAME#\" не изменились, товары магазина не были актуализированы.<br>",
+                "Проверьте, не является ли это ошибкой. Если данная ситуация допустима и Вы не хотите получать уведомления - отключите оповещение в настройках магазина."
+            ],
+            "BODY_TYPE": "html",
+            "BCC": "",
+            "REPLY_TO": "",
+            "CC": "",
+            "IN_REPLY_TO": "",
+            "PRIORITY": "",
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": "",
+            "ADDITIONAL_FIELD": [],
+            "LANGUAGE_ID": ""
+        }
+    ]
+}

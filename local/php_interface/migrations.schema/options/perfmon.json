@@ -1,0 +1,95 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "tables_show_time",
+            "VALUE": "0",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "bitrix_optimal",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_page_rate",
+            "VALUE": "59.56",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_page_time",
+            "VALUE": "0.0168",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_cpu_value",
+            "VALUE": "7.4",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_files_value",
+            "VALUE": "9 370.1",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_mail_value",
+            "VALUE": "0.0422",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_session_time_value",
+            "VALUE": "0.0001",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_is_good",
+            "VALUE": "Y",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_db_insert_value",
+            "VALUE": "7 186",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_db_read_value",
+            "VALUE": "10 165",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_db_update_value",
+            "VALUE": "5 302",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "perfmon",
+            "NAME": "mark_php_page_date",
+            "VALUE": "26.03.2019 12:06:41",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        }
+    ]
+}

@@ -1,0 +1,65 @@
+{
+    "event": "USER_INVITE",
+    "type": {
+        "LID": "en",
+        "NAME": "Invitation of a new site user",
+        "DESCRIPTION": [
+            "#ID# - User ID",
+            "#LOGIN# - Login",
+            "#URL_LOGIN# - Encoded login for use in URL",
+            "#EMAIL# - EMail",
+            "#NAME# - Name",
+            "#LAST_NAME# - Last Name",
+            "#PASSWORD# - User password",
+            "#CHECKWORD# - Password check string",
+            "#XML_ID# - User ID to link with external data sources",
+            "",
+            ""
+        ],
+        "SORT": "6"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SITE_NAME#: Приглашение на сайт",
+            "MESSAGE": [
+                "Информационное сообщение сайта #SITE_NAME#",
+                "------------------------------------------",
+                "Здравствуйте, #NAME# #LAST_NAME#!",
+                "",
+                "Администратором сайта вы добавлены в число зарегистрированных пользователей.",
+                "",
+                "Приглашаем Вас на наш сайт.",
+                "",
+                "Ваша регистрационная информация:",
+                "",
+                "ID пользователя: #ID#",
+                "Login: #LOGIN#",
+                "",
+                "Рекомендуем вам сменить установленный автоматически пароль.",
+                "",
+                "Для смены пароля перейдите по следующей ссылке:",
+                "http:\/\/#SERVER_NAME#\/auth.php?change_password=yes&USER_LOGIN=#URL_LOGIN#&USER_CHECKWORD=#CHECKWORD#",
+                ""
+            ],
+            "BODY_TYPE": "text",
+            "BCC": null,
+            "REPLY_TO": null,
+            "CC": null,
+            "IN_REPLY_TO": null,
+            "PRIORITY": null,
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": null,
+            "ADDITIONAL_FIELD": false,
+            "LANGUAGE_ID": "ru"
+        }
+    ]
+}

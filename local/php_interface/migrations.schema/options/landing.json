@@ -1,0 +1,25 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "landing",
+            "NAME": "disabled_namespaces",
+            "VALUE": "bitrix",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "landing",
+            "NAME": "block_vendor_bitrix",
+            "VALUE": "https:\/\/repo.bitrix24.site\/rest\/1\/w1uqy3swvyp50bso\/",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "landing",
+            "NAME": "pub_path_s1",
+            "VALUE": "\/lp\/",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        }
+    ]
+}

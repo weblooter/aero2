@@ -1,0 +1,25 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "socialservices",
+            "NAME": "bitrix24net_domain",
+            "VALUE": "http:\/\/johnny-boy.coffee",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "socialservices",
+            "NAME": "bitrix24net_id",
+            "VALUE": "ext.5c1911296c0d23.85221216",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        },
+        {
+            "MODULE_ID": "socialservices",
+            "NAME": "bitrix24net_secret",
+            "VALUE": "AiPB4sZASiooaNSaEwdFUbck5HObu66UPWvhTg2vvGm4B07z4i",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        }
+    ]
+}

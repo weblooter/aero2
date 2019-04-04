@@ -1,0 +1,67 @@
+{
+    "event": "LOCAL_YML_CONVERT_COMPLETED",
+    "type": {
+        "LID": "ru",
+        "NAME": "LocalCore: Конвертирование YML файла завершено",
+        "DESCRIPTION": [
+            "#EMAIL#",
+            "#STATUS#",
+            "#HEADER_MAIL#",
+            "#ERROR_MESSAGE#",
+            "#HOW_MADE_ROBOFEED_ROUTE#",
+            "#STORE_ROUTE#",
+            "#CONVERT_ROUTE#"
+        ],
+        "SORT": "150"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SERVER_NAME#: #HEADER_MAIL#",
+            "MESSAGE": [
+                "{{{IF #STATUS#;==;SU}}}",
+                "Мы сконвертировали Ваш файл в Robofeed XML! Он валиден и готов к импорту в нашу базу.",
+                "Скачать файл Вы можете в личном кабинете по ссылке <a href=\"https:\/\/robofeed.ru#CONVERT_ROUTE#\" target=\"_blank\">https:\/\/robofeed.ru#CONVERT_ROUTE#<\/a>.<br\/>",
+                "После скачивания загрузите его в необходимый <a href=\"https:\/\/robofeed.ru#STORE_ROUTE#\" target=\"_blank\">магазин<\/a>.<br\/>",
+                "Файл удалится через 4 часа.<br>",
+                "{{{ENDIF}}}",
+                "",
+                "{{{IF #STATUS#;==;ER}}}",
+                "Нам не удалось сконвертировать Ваш файл в Robofeed XML.<br\/>",
+                "#ERROR_MESSAGE#<br\/>",
+                "Изучите <a href=\"https:\/\/robofeed.ru#HOW_MADE_ROBOFEED_ROUTE#\" target=\"_blank\">как сделать Robofeed XML<\/a>.",
+                "{{{ENDIF}}}",
+                "",
+                "{{{IF #STATUS#;==;VAER}}}",
+                "Ваш файл содержит не все необходимые нам данные, из-за чего мы смогли сконвертировать его в Robofeed XML, но он не прошел валидацию.<br\/>",
+                "Изучите <a href=\"https:\/\/robofeed.ru#HOW_MADE_ROBOFEED_ROUTE#\" target=\"_blank\">как сделать Robofeed XML<\/a>.<br\/>",
+                "Так же Вы можете скачать то, что получилось по ссылке <a href=\"https:\/\/robofeed.ru#CONVERT_ROUTE#\" target=\"_blank\">https:\/\/robofeed.ru#CONVERT_ROUTE#<\/a> и попробовать загрузить его в магазин, выставив у поля <b>\"Поведение импорта при ошибке\"<\/b> значение <b>\"Актуализировать только валидные\"<\/b>.<br\/>",
+                "Ошибки валидации:<br\/>",
+                "#ERROR_MESSAGE#",
+                "{{{ENDIF}}}",
+                "",
+                "{{{IF #STATUS#;==;OTHER}}}",
+                "О результате Вы можете узнать в личном кабинете по ссылке  <a href=\"https:\/\/robofeed.ru#CONVERT_ROUTE#\" target=\"_blank\">https:\/\/robofeed.ru#CONVERT_ROUTE#<\/a>",
+                "{{{ENDIF}}}"
+            ],
+            "BODY_TYPE": "html",
+            "BCC": "",
+            "REPLY_TO": "",
+            "CC": "",
+            "IN_REPLY_TO": "",
+            "PRIORITY": "",
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": "",
+            "ADDITIONAL_FIELD": [],
+            "LANGUAGE_ID": ""
+        }
+    ]
+}

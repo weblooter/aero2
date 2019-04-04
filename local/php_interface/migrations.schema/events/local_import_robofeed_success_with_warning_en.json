@@ -1,0 +1,41 @@
+{
+    "event": "LOCAL_IMPORT_ROBOFEED_SUCCESS_WITH_WARNING",
+    "type": {
+        "LID": "en",
+        "NAME": "",
+        "DESCRIPTION": [
+            ""
+        ],
+        "SORT": "150"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SERVER_NAME#: Импорт магазина \"#STORE_NAME#\" прошел успешно, но мы заметили ошибки",
+            "MESSAGE": [
+                "Импорт Robofeed XML магазина \"#STORE_NAME#\" прошел успешно, но были замечены ошибки:<br>",
+                "#ERROR_MSG#<br>",
+                "<br>",
+                "Пожалуйста, исправьте ошибки к следующему импорту."
+            ],
+            "BODY_TYPE": "text",
+            "BCC": "",
+            "REPLY_TO": "",
+            "CC": "",
+            "IN_REPLY_TO": "",
+            "PRIORITY": "",
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": "",
+            "ADDITIONAL_FIELD": [],
+            "LANGUAGE_ID": ""
+        }
+    ]
+}

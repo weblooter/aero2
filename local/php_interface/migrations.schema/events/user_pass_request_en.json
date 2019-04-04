@@ -1,0 +1,64 @@
+{
+    "event": "USER_PASS_REQUEST",
+    "type": {
+        "LID": "en",
+        "NAME": "Password Change Request",
+        "DESCRIPTION": [
+            "",
+            "",
+            "#USER_ID# - User ID",
+            "#STATUS# - Account status",
+            "#MESSAGE# - Message for user",
+            "#LOGIN# - Login",
+            "#URL_LOGIN# - Encoded login for use in URL",
+            "#CHECKWORD# - Check string for password change",
+            "#NAME# - Name",
+            "#LAST_NAME# - Last Name",
+            "#EMAIL# - User E-Mail",
+            ""
+        ],
+        "SORT": "4"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SITE_NAME#: Запрос на смену пароля",
+            "MESSAGE": [
+                "Информационное сообщение сайта #SITE_NAME#",
+                "------------------------------------------",
+                "#NAME# #LAST_NAME#,",
+                "",
+                "#MESSAGE#",
+                "",
+                "Для смены пароля перейдите по следующей ссылке:",
+                "http:\/\/#SERVER_NAME#\/auth\/index.php?change_password=yes&lang=ru&USER_CHECKWORD=#CHECKWORD#&USER_LOGIN=#URL_LOGIN#",
+                "",
+                "Ваша регистрационная информация:",
+                "",
+                "ID пользователя: #USER_ID#",
+                "Статус профиля: #STATUS#",
+                "Login: #LOGIN#",
+                "",
+                "Сообщение сгенерировано автоматически."
+            ],
+            "BODY_TYPE": "text",
+            "BCC": null,
+            "REPLY_TO": null,
+            "CC": null,
+            "IN_REPLY_TO": null,
+            "PRIORITY": null,
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": null,
+            "ADDITIONAL_FIELD": false,
+            "LANGUAGE_ID": "ru"
+        }
+    ]
+}

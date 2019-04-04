@@ -1,0 +1,43 @@
+{
+    "event": "LOCAL_IMPORT_ROBOFEED_ERROR",
+    "type": {
+        "LID": "ru",
+        "NAME": "LocalCore: Ошибка при импорте Robofeed XML",
+        "DESCRIPTION": [
+            "#EMAIL#",
+            "#STORE_NAME#",
+            "#ERROR_MSG#"
+        ],
+        "SORT": "150"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL#",
+            "SUBJECT": "#SERVER_NAME#: Ошибка актуализации Robofeed XML для магазина \"#STORE_NAME#\"",
+            "MESSAGE": [
+                "Во время актуализации товаров магазина \"#STORE_NAME#\" произошла ошибка:<br>",
+                "#ERROR_MSG#<br>",
+                "<br>",
+                "Исправьте ошибку, что бы мы могли актуализировать Ваши товары."
+            ],
+            "BODY_TYPE": "html",
+            "BCC": "",
+            "REPLY_TO": "",
+            "CC": "",
+            "IN_REPLY_TO": "",
+            "PRIORITY": "",
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": "",
+            "ADDITIONAL_FIELD": [],
+            "LANGUAGE_ID": ""
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "items": [
+        {
+            "MODULE_ID": "messageservice",
+            "NAME": "clean_up_period",
+            "VALUE": "14",
+            "DESCRIPTION": null,
+            "SITE_ID": null
+        }
+    ]
+}

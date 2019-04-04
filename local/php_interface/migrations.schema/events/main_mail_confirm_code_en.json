@@ -1,0 +1,42 @@
+{
+    "event": "MAIN_MAIL_CONFIRM_CODE",
+    "type": {
+        "LID": "en",
+        "NAME": "Confirm sender's email address",
+        "DESCRIPTION": [
+            "",
+            "",
+            "#EMAIL_TO# - confirmation email address",
+            "#MESSAGE_SUBJECT# - Message subject",
+            "#CONFIRM_CODE# - Confirmation code"
+        ],
+        "SORT": "8"
+    },
+    "messages": [
+        {
+            "LID": [
+                "s1"
+            ],
+            "ACTIVE": "Y",
+            "EMAIL_FROM": "#DEFAULT_EMAIL_FROM#",
+            "EMAIL_TO": "#EMAIL_TO#",
+            "SUBJECT": "#MESSAGE_SUBJECT#",
+            "MESSAGE": [
+                "<? EventMessageThemeCompiler::includeComponent('bitrix:main.mail.confirm', '', $arParams); ?>"
+            ],
+            "BODY_TYPE": "html",
+            "BCC": null,
+            "REPLY_TO": null,
+            "CC": null,
+            "IN_REPLY_TO": null,
+            "PRIORITY": null,
+            "FIELD1_NAME": null,
+            "FIELD1_VALUE": null,
+            "FIELD2_NAME": null,
+            "FIELD2_VALUE": null,
+            "SITE_TEMPLATE_ID": "mail_join",
+            "ADDITIONAL_FIELD": false,
+            "LANGUAGE_ID": null
+        }
+    ]
+}
