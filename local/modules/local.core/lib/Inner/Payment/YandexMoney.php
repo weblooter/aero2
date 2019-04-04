@@ -31,7 +31,7 @@ class YandexMoney implements PaymentInterface
             $this->printPaymentSuccess();
         } else {
             $arConf = \Bitrix\Main\Config\Configuration::getInstance()
-                ->get('payment')['yandex_money'];
+                ->get('payment')['yandex-money'];
             $arUserLastBalanceUpId = \Local\Core\Model\Data\BalanceLogTable::getList([
                 'filter' => [
                     'USER_ID' => $GLOBALS['USER']->GetId(),
@@ -134,7 +134,8 @@ class YandexMoney implements PaymentInterface
 
             $arAttemptLog = [
                 'QUERY_DATA' => $obRequest->getPostList()
-                    ->toArray()
+                    ->toArray(),
+                'HANDLER' => self::getCode()
             ];
 
             try {
@@ -143,7 +144,7 @@ class YandexMoney implements PaymentInterface
                 foreach ($r as &$i) {
                     if ($i == 'notification_secret') {
                         $i = \Bitrix\Main\Config\Configuration::getInstance()
-                            ->get('payment')['yandex_money']['secret_key'];
+                            ->get('payment')['yandex-money']['secret_key'];
                     } else {
                         $i = $obRequest->getPost($i);
                     }
@@ -216,5 +217,11 @@ class YandexMoney implements PaymentInterface
                 \Local\Core\Model\Data\AttemptsTopUpBalanceLogTable::add($arAttemptLog);
             }
         }
+    }
+
+    /** @inheritdoc */
+    public static function getAdditionalDataInAdmin($strAdditionalData)
+    {
+        return '<pre>'.print_r((array)json_decode($strAdditionalData), true).'</pre>';
     }
 }

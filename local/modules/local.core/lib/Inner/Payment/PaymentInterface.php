@@ -24,7 +24,11 @@ interface PaymentInterface
     public function printPaymentForm();
 
     /**
-     * Вывод на страницу информации об успешности процесса оплаты, ести таковой есть
+     * Получить дополнительные данные, приспособленные к выводу в админке
+     *
+     * @param $strAdditionalData
+     *
+     * @return mixed
      */
-    public function printPaymentSuccess();
+    public static function getAdditionalDataInAdmin($strAdditionalData);
 }

@@ -182,7 +182,8 @@ $arLocalRoutes = [
                         "Пополнить баланс",
                         \Local\Core\Inner\Route::getRouteTo(
                             'balance',
-                            'top-up'
+                            'top-up',
+                            ['#HANDLER#' => '']
                         )
                     );
                 }

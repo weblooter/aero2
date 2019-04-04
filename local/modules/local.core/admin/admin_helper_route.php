@@ -46,6 +46,16 @@ $arRouteRules = [
         "edit" => \Local\Core\Inner\AdminHelper\Data\Tariff\AdminEdit::class,
     ],
 
+    // Balance
+    "model_data_balance_log" => [
+        "list" => \Local\Core\Inner\AdminHelper\Data\BalanceLog\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Data\BalanceLog\AdminEdit::class,
+    ],
+    "model_data_attempts_top_up_balance_log" => [
+        "list" => \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminList::class,
+        "edit" => \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminEdit::class,
+    ],
+
 ];
 
 

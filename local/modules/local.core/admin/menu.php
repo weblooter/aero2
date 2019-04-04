@@ -24,11 +24,20 @@ $arModelReferences = [];
 
 
 /* ********** */
-/* Model\Data */
+/* ТАРИФЫ */
 /* ********** */
 $arModelTariff = [];
 
 \CLocalCore::addItemToMenu($arModelTariff, \Local\Core\Inner\AdminHelper\Data\Tariff\AdminList::class, \Local\Core\Inner\AdminHelper\Data\Tariff\AdminEdit::class, 'Тарифы');
+
+
+/* ********** */
+/* БАЛАНС */
+/* ********** */
+$arModelBalance = [];
+
+\CLocalCore::addItemToMenu($arModelBalance, \Local\Core\Inner\AdminHelper\Data\BalanceLog\AdminList::class, \Local\Core\Inner\AdminHelper\Data\BalanceLog\AdminEdit::class, 'Логи балансов');
+\CLocalCore::addItemToMenu($arModelBalance, \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminList::class, \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminEdit::class, 'Логи попыток пополнения');
 
 
 /*
@@ -76,7 +85,7 @@ if (!empty($arModelData)) {
     ];
 }
 
-if (!empty($arModelReferences)) {
+if (!empty($arModelTariff)) {
     $aMenu[] = [
         "parent_menu" => "global_menu_local_core",
         "text" => "Тарифы",
@@ -85,6 +94,18 @@ if (!empty($arModelReferences)) {
         "icon" => "promo_https_menu_icon",
         "sort" => 2,
         'items' => $arModelTariff
+    ];
+}
+
+if (!empty($arModelBalance)) {
+    $aMenu[] = [
+        "parent_menu" => "global_menu_local_core",
+        "text" => "Баланс",
+        'url' => '',
+        "items_id" => "model_balance",
+        "icon" => "crm-cashbox-icon",
+        "sort" => 3,
+        'items' => $arModelBalance
     ];
 }
 

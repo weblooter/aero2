@@ -26,4 +26,12 @@ class Factory
                 break;
         }
     }
+
+    public static function getHandlersList()
+    {
+        $ar = [];
+        $ar[ Bill::getCode() ] = Bill::getTitle();
+        $ar[ YandexMoney::getCode() ] = YandexMoney::getTitle();
+        return $ar;
+    }
 }

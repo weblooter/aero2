@@ -7,7 +7,11 @@ use \Bitrix\Main\ORM\Fields;
 /**
  * ORM попыток пополнить баланс
  *
- * <ul><li>ID - ID | Fields\IntegerField</li><li>DATE_CREATE - Дата создания [03.04.2019 23:17:12] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [03.04.2019 23:17:12] | Fields\DatetimeField</li><li>USER_ID - ID пользователя | Fields\IntegerField</li><li>QUERY_DATA - Данные по из запроса | Fields\TextField</li><li>ADDITIONAL_DATA - Дополнительные данные, возникающие в ходе проверки | Fields\TextField</li><li>QUERY_CHECK_RESULT - Результат проверки запроса | Fields\EnumField<br/>&emsp;SU => Успех<br/>&emsp;ER => Ошибка<br/></li><li>QUERY_CHECK_ERROR_TEXT - Ошибка проверки запроса | Fields\TextField</li><li>TRY_TOP_UP_BALANCE_RESULT - Результат попытки пополнить баланс | Fields\EnumField<br/>&emsp;SU => Успех<br/>&emsp;ER => Ошибка<br/></li><li>TRY_TOP_UP_BALANCE_ERROR_TEXT - Ошибка попытки пополнить баланс | Fields\TextField</li></ul>
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>DATE_CREATE - Дата создания [04.04.2019 13:42:02] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [04.04.2019 13:42:02] |
+ * Fields\DatetimeField</li><li>USER_ID - ID пользователя | Fields\IntegerField</li><li>HANDLER - HANDLER | Fields\StringField</li><li>QUERY_DATA - Данные по из запроса |
+ * Fields\TextField</li><li>ADDITIONAL_DATA - Дополнительные данные, возникающие в ходе проверки | Fields\TextField</li><li>QUERY_CHECK_RESULT - Результат проверки запроса |
+ * Fields\EnumField<br/>&emsp;SU => Успех<br/>&emsp;ER => Ошибка<br/></li><li>QUERY_CHECK_ERROR_TEXT - Ошибка проверки запроса | Fields\TextField</li><li>TRY_TOP_UP_BALANCE_RESULT - Результат попытки
+ * пополнить баланс | Fields\EnumField<br/>&emsp;SU => Успех<br/>&emsp;ER => Ошибка<br/></li><li>TRY_TOP_UP_BALANCE_ERROR_TEXT - Ошибка попытки пополнить баланс | Fields\TextField</li></ul>
  *
  * @package Local\Core\Model\Data
  */
@@ -55,6 +59,9 @@ class AttemptsTopUpBalanceLogTable extends \Local\Core\Inner\BxModified\Main\ORM
 
             new Fields\IntegerField('USER_ID', [
                 'title' => 'ID пользователя'
+            ]),
+            new Fields\StringField('HANDLER', [
+                'title' => 'Обработчик'
             ]),
             new Fields\TextField('QUERY_DATA', [
                 'title' => 'Данные по из запроса'

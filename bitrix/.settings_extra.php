@@ -115,11 +115,11 @@ $conf = [
      */
     'payment' => [
         'value' => [
-            'yandex_money' => [
+            'yandex-money' => [
                 /**
                  * Мануал по настройке формы https://tech.yandex.ru/money/doc/payment-buttons/reference/forms-docpage/
                  */
-                'receiver_id' => 410015955409068,
+                'receiver_id' => '410015955409068',
                 'successURL' => 'https://dev1.robofeed.ru/personal/balance/top-up/?handler=yandex-money&result=success',
                 /**
                  * Секретный ключ, а так же настройка пути - https://money.yandex.ru/myservices/online.xml
@@ -127,6 +127,19 @@ $conf = [
                  * Сейчас путь бьет на https://dev1.robofeed.ru/local/tools/payment/yandex-money.php
                  */
                 'secret_key' => 'outu5ODl0FnBL1a1OmVNxf7C'
+            ],
+            'bill' => [
+                'inn' => '505078003987',
+                'kpp' => '-',
+                'recipient' => 'ИП Черешнев Евгений Сергеевич',
+                'rs' => '40802810770010147432',
+                'bank' => 'МОСКОВСКИЙ ФИЛИАЛ АО КБ "МОДУЛЬБАНК"',
+                'bik' => '044525092',
+                'kr' => '30101810645250000092',
+
+                'sing_1_link' => \Bitrix\Main\Application::getDocumentRoot().'/local/tools/payment/bill/sign200x50.png',
+                'sing_2_link' => \Bitrix\Main\Application::getDocumentRoot().'/local/tools/payment/bill/sign200x50.png',
+                'printing_link' => \Bitrix\Main\Application::getDocumentRoot().'/local/tools/payment/bill/printing150x150.png',
             ]
         ],
         'readonly' => true
