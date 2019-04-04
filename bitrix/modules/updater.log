@@ -1,0 +1,122 @@
+2018-12-18 16:26:13 -  - exec CUpdateClient::GetUpdatesList
+2018-12-18 16:26:13 -  - exec CUpdateClient::CollectRequestData
+2018-12-18 16:26:13 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.9&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.0.4&bitm_b24connector=18.0.0&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-N
+2018-12-18 16:26:13 -  - exec CUpdateClient::GetHTTPPage
+2018-12-18 16:26:13 -  - TIME GetUpdatesList(request) 0.122 sec
+2018-12-18 16:26:13 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:27 -  - exec CUpdateClient::GetUpdatesList
+2018-12-19 14:22:27 -  - exec CUpdateClient::CollectRequestData
+2018-12-19 14:22:27 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.9&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.0.4&bitm_b24connector=18.0.0&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2018-12-19 14:22:27 -  - exec CUpdateClient::GetHTTPPage
+2018-12-19 14:22:27 -  - TIME GetUpdatesList(request) 0.194 sec
+2018-12-19 14:22:27 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:27 -  - exec CUpdateClient::executeCounters
+2018-12-19 14:22:27 -  - exec CUpdateClient::CollectRequestData
+2018-12-19 14:22:27 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.9&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.0.4&bitm_b24connector=18.0.0&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y&query_type=counter&cntr_result[201]=
+2018-12-19 14:22:27 -  - exec CUpdateClient::GetHTTPPage
+2018-12-19 14:22:27 -  - TIME executeCounters 0.144 sec
+2018-12-19 14:22:29 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:29 -  - exec CUpdateClient::CollectRequestData
+2018-12-19 14:22:29 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.9&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.0.4&bitm_b24connector=18.0.0&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2018-12-19 14:22:29 -  - exec CUpdateClient::GetHTTPPage
+2018-12-19 14:22:29 -  - TIME LoadModulesUpdates(request) 0.16 sec
+2018-12-19 14:22:29 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:29 - S - STEP
+2018-12-19 14:22:29 - LMU01 - LoadModulesUpdates-Step
+2018-12-19 14:22:29 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:29 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:29 -  - loadFile
+2018-12-19 14:22:29 - U - RETURN
+2018-12-19 14:22:29 -  - exec CUpdateClient::UnGzipArchive
+2018-12-19 14:22:29 -  - TIME UnGzipArchive 0.029 sec
+2018-12-19 14:22:29 - CSURUS1 - Run updater '/bitrix/updates/update_m1545225749/fileman/updater18.5.0.php'
+2018-12-19 14:22:29 - CRUPDCF1 - Run updater '/bitrix/updates/update_m1545225749/fileman/updater18.5.0.php': CopyFiles(install/js, js)
+2018-12-19 14:22:29 - CRUPDCF1 - Run updater '/bitrix/updates/update_m1545225749/fileman/updater18.5.0.php': CopyFiles(install/components, components)
+2018-12-19 14:22:29 -  - TIME UpdateStepModules 0.045 sec
+2018-12-19 14:22:29 - UPD_SUCCESS - Updated: fileman (18.5.0)<br><li>В плеере исправлена проблема переключения на следующий трек в списке, если первый не может воспроизвести. <li>Исправлена работоспособность свойства \"привязка к Яндекс.Карты\". <li>Добавлена возможность использования ключа Google Maps и Яндекс.Карты для сайта на всех его поддоменах. <li>Добавлен интерфейс ввода ключа Яндекс.Карт. <li>Исправлена проблема загрузки файлов в медиабиблиотеку при включенном сервисе cloudflare. <li>Блочный редактор: исправлена проблеама доступности выбора второй страницы компонентов. <li>Блочный редактор: возобновлена работоспосбность предпросмотра. 
+2018-12-19 14:22:29 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:29 -  - exec CUpdateClient::CollectRequestData
+2018-12-19 14:22:29 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.9&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.5.0&bitm_b24connector=18.0.0&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2018-12-19 14:22:29 -  - exec CUpdateClient::GetHTTPPage
+2018-12-19 14:22:29 -  - TIME LoadModulesUpdates(request) 0.137 sec
+2018-12-19 14:22:29 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:29 - S - STEP
+2018-12-19 14:22:29 - LMU01 - LoadModulesUpdates-Step
+2018-12-19 14:22:30 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:30 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:30 -  - loadFile
+2018-12-19 14:22:30 - U - RETURN
+2018-12-19 14:22:30 -  - exec CUpdateClient::UnGzipArchive
+2018-12-19 14:22:30 -  - TIME UnGzipArchive 0.004 sec
+2018-12-19 14:22:30 - CSURUS1 - Run updater '/bitrix/updates/update_m1545225750/b24connector/updater18.0.1.php'
+2018-12-19 14:22:30 - CRUPDCF1 - Run updater '/bitrix/updates/update_m1545225750/b24connector/updater18.0.1.php': CopyFiles(install/components, components)
+2018-12-19 14:22:30 -  - TIME UpdateStepModules 0.009 sec
+2018-12-19 14:22:30 - UPD_SUCCESS - Updated: b24connector (18.0.1)<br><li>Добавлена поддержка новой версии виджета онлайн-чата.
+2018-12-19 14:22:30 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:30 -  - exec CUpdateClient::CollectRequestData
+2018-12-19 14:22:30 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.9&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.5.0&bitm_b24connector=18.0.1&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2018-12-19 14:22:30 -  - exec CUpdateClient::GetHTTPPage
+2018-12-19 14:22:30 -  - TIME LoadModulesUpdates(request) 0.148 sec
+2018-12-19 14:22:30 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:30 - S - STEP
+2018-12-19 14:22:30 - LMU01 - LoadModulesUpdates-Step
+2018-12-19 14:22:30 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:30 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:30 -  - loadFile
+2018-12-19 14:22:30 - U - RETURN
+2018-12-19 14:22:30 -  - exec CUpdateClient::UnGzipArchive
+2018-12-19 14:22:30 -  - TIME UnGzipArchive 0.007 sec
+2018-12-19 14:22:30 - CSURUS1 - Run updater '/bitrix/updates/update_m1545225750/landing/updater18.5.10.php'
+2018-12-19 14:22:30 - CRUPDCF1 - Run updater '/bitrix/updates/update_m1545225750/landing/updater18.5.10.php': CopyFiles(install/components, components)
+2018-12-19 14:22:30 -  - TIME UpdateStepModules 0.046 sec
+2018-12-19 14:22:30 - UPD_SUCCESS - Updated: landing (18.5.10)<br><li>Улучшен экспорт-импорт партнерских шаблонов. <li>Добавлена поддержка call-трекинга.
+2018-12-19 14:22:30 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:30 -  - exec CUpdateClient::CollectRequestData
+2018-12-19 14:22:30 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.10&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.5.0&bitm_b24connector=18.0.1&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2018-12-19 14:22:30 -  - exec CUpdateClient::GetHTTPPage
+2018-12-19 14:22:30 -  - TIME LoadModulesUpdates(request) 0.125 sec
+2018-12-19 14:22:30 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:30 - S - STEP
+2018-12-19 14:22:30 - LMU01 - LoadModulesUpdates-Step
+2018-12-19 14:22:30 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:30 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:31 -  - loadFile
+2018-12-19 14:22:31 - U - RETURN
+2018-12-19 14:22:31 -  - exec CUpdateClient::UnGzipArchive
+2018-12-19 14:22:31 -  - TIME UnGzipArchive 0.036 sec
+2018-12-19 14:22:31 - CSURUS1 - Run updater '/bitrix/updates/update_m1545225751/landing/updater18.5.11.php'
+2018-12-19 14:22:31 - CRUPDCF1 - Run updater '/bitrix/updates/update_m1545225751/landing/updater18.5.11.php': CopyFiles(install/components, components)
+2018-12-19 14:22:31 - CRUPDCF1 - Run updater '/bitrix/updates/update_m1545225751/landing/updater18.5.11.php': CopyFiles(install/templates, templates)
+2018-12-19 14:22:31 - CRUPDCF1 - Run updater '/bitrix/updates/update_m1545225751/landing/updater18.5.11.php': CopyFiles(install/blocks, blocks)
+2018-12-19 14:22:31 -  - TIME UpdateStepModules 0.066 sec
+2018-12-19 14:22:31 - UPD_SUCCESS - Updated: landing (18.5.11)<br><li>Праздничные шаблоны на Новый год и Рождество.
+2018-12-19 14:22:31 -  - exec CUpdateClient::LoadModulesUpdates
+2018-12-19 14:22:31 -  - exec CUpdateClient::CollectRequestData
+2018-12-19 14:22:31 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.11&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.5.0&bitm_b24connector=18.0.1&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2018-12-19 14:22:31 -  - exec CUpdateClient::GetHTTPPage
+2018-12-19 14:22:31 -  - TIME LoadModulesUpdates(request) 0.127 sec
+2018-12-19 14:22:31 -  - exec CUpdateClient::ParseServerData
+2018-12-19 14:22:31 - STEP - Finish - NOUPDATES
+2018-12-19 14:22:31 - STEP - Finish - NOUPDATES
+2018-12-19 14:24:54 - CRUPDCDF2 - Run updater '/bitrix/updates/update_m1545225894/asd.tplvars/updater1.5.0.php': Query(create table if not exists b_asd_option_descr
+(
+	ID INT not null auto_increment,
+	NAME VARCHAR(50) not null,
+	DESCRIPTION VARCHAR(255),
+	SITE_ID CHAR(2),
+	PRIMARY KEY (ID),
+	INDEX ASD_OPTION_NAME (NAME),
+	INDEX ASD_OPTION_SITE (SITE_ID)
+);, )
+2018-12-26 19:04:01 -  - exec CUpdateClient::GetUpdatesList
+2018-12-26 19:04:01 -  - exec CUpdateClient::CollectRequestData
+2018-12-26 19:04:01 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.11&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.5.0&bitm_b24connector=18.0.1&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2018-12-26 19:04:01 -  - exec CUpdateClient::GetHTTPPage
+2018-12-26 19:04:01 -  - TIME GetUpdatesList(request) 0.102 sec
+2018-12-26 19:04:01 -  - exec CUpdateClient::ParseServerData
+2019-03-09 09:06:13 -  - exec CUpdateClient::GetUpdatesList
+2019-03-09 09:06:13 -  - exec CUpdateClient::CollectRequestData
+2019-03-09 09:06:13 -  - LICENSE_KEY=X&lang=ru&SUPD_VER=18.1.3&VERSION=18.1.5&TYPENC=F&SUPD_STS=1&SUPD_URS=0&SUPD_DBS=MYSQL&XE=N&CLIENT_SITE=johnny-boy.coffee&CHHB=johnny-boy.coffee%3A80&CSAB=127.0.0.1&SUID=ae62245dcdfc7d018d03816ae61341e7&CANGZIP=Y&CLIENT_PHPVER=7.1.22&stable=Y&NGINX=Y&rerere=Y&bitm_main=18.1.5&bitm_translate=16.5.0&bitm_clouds=18.0.0&bitm_rest=18.5.2&bitm_ui=18.0.3&bitm_messageservice=18.0.0&bitm_bitrixcloud=18.5.0&bitm_highloadblock=18.5.0&bitm_iblock=18.5.4&bitm_compression=16.0.0&bitm_landing=18.5.11&bitm_seo=18.5.0&bitm_perfmon=18.5.0&bitm_search=18.5.0&bitm_socialservices=18.0.3&bitm_fileman=18.5.0&bitm_b24connector=18.0.1&bitl_en=&bitl_ru=&SUPD_SRS=RU&SUPD_CMP=N&SALE_15=Y&LICENSE_SIGNED=%7Enew_license18_0_sign-Y
+2019-03-09 09:06:13 -  - exec CUpdateClient::GetHTTPPage
+2019-03-09 09:06:13 -  - TIME GetUpdatesList(request) 0.106 sec
+2019-03-09 09:06:13 -  - exec CUpdateClient::ParseServerData

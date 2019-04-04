@@ -1,0 +1,143 @@
+2019-Mar-09 09:46:04 Наличие необходимых модулей php (check_php_modules): Ok
+Все необходимые модули установлены
+2019-Mar-09 09:46:05 Обязательные параметры PHP (check_php_settings): Ok
+Настройки правильные
+2019-Mar-09 09:46:05 Модули веб-сервера (check_security): Ok
+Конфликтов не выявлено
+2019-Mar-09 09:46:05 Значения переменных сервера (check_server_vars): Ok
+Корректные
+2019-Mar-09 09:46:05 Сохранение сессии (check_session): Ok
+50% done
+2019-Mar-09 09:46:05 Сохранение сессии (check_session): Ok
+Успешно
+2019-Mar-09 09:46:05 Параметры настройки UTF (mbstring и константа BX_UTF) (check_mbstring): Ok
+Правильные. Сайт работает в UTF кодировке
+2019-Mar-09 09:46:05 Служебные скрипты в корне сайта (check_install_scripts): Ok
+Отсутствуют
+2019-Mar-09 09:46:05 Работа с сокетами (check_socket): Fail
+Connection to ssl://feed.weblooter.ru:443	Success
+== Request ==
+GET /bitrix/admin/site_checker.php?test_type=socket_test&unique_id=3dd78264e8d7a1b53f0d9a62db1a34e9 HTTP/1.1
+Host: feed.weblooter.ru
+
+
+== Response ==
+HTTP/1.1 401 Unauthorized
+Server: nginx/1.14.0
+Date: Sat, 09 Mar 2019 08:46:05 GMT
+Content-Type: text/html; charset=iso-8859-1
+Content-Length: 464
+Connection: keep-alive
+WWW-Authenticate: Basic realm="Deny"
+
+== Body ==
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>401 Unauthorized</title>
+</head><body>
+<h1>Unauthorized</h1>
+<p>This server could not verify that you
+are authorized to access the document
+requested.  Either you supplied the wrong
+credentials (e.g., bad password), or your
+browser doesn't understand how to supply
+the credentials required.</p>
+<hr>
+<address>Apache/2.4.6 (CentOS) Server at feed.weblooter.ru Port 443</address>
+</body></html>
+
+==========
+
+Ошибка! Не работает
+2019-Mar-09 09:46:05 Выполнение агентов на cron (check_bx_crontab): Ok
+Успешно
+2019-Mar-09 09:46:05 Параметры подключения к базе данных (check_dbconn_settings): Ok
+Успешно
+2019-Mar-09 09:46:05 Лишний вывод в файлах конфигурации (check_dbconn): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:06 Сохранение сессии без UserAgent (check_session_ua): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:06 Настройки сайтов (check_sites): Ok
+Правильные
+2019-Mar-09 09:46:06 Передача объектов по ссылке (check_clone): Ok
+Успешно
+2019-Mar-09 09:46:06 Размер стека и pcre.recursion_limit (check_pcre_recursion): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:06 Загрузка файла (check_upload): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:06 Загрузка файла больше 4Мб (check_upload_big): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:06 Загрузка файла через php://input (check_upload_raw): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:06 Передача POST запроса с большим числом параметров (check_post): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:06 Отправка почты (check_mail): Ok
+Успешно
+2019-Mar-09 09:46:06 Отправка почтового сообщения больше 64Кб (check_mail_big): Ok
+Успешно
+2019-Mar-09 09:46:06 Проверка на наличие неотправленных сообщений (check_mail_b_event): Ok
+Успешно
+2019-Mar-09 09:46:07 Внутреннее перенаправление (функция LocalRedirect) (check_localredirect): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:07 Фактическое ограничение памяти (check_memory_limit): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:07 Работа с файлами кеша (check_cache): Ok
+Успешно
+2019-Mar-09 09:46:07 Доступ к серверу обновлений (check_update): Ok
+Успешно
+2019-Mar-09 09:46:07 HTTP авторизация (check_http_auth): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:07 Создание и запуск файла (check_exec): Warning
+Замечание. Не удалось проверить из-за ошибки в работе с сокетами
+2019-Mar-09 09:46:07 Функция getimagesize для swf (check_getimagesize): Ok
+Успешно
+2019-Mar-09 09:46:07 Версия MySQL-сервера (check_mysql_bug_version): Ok
+Успешно
+2019-Mar-09 09:46:08 Время на БД и веб-сервере (check_mysql_time): Fail
+Ошибка! Время отличается на 7200 секунд
+2019-Mar-09 09:46:08 Режим работы MySQL (check_mysql_mode): Ok
+Успешно
+2019-Mar-09 09:46:08 Кодировка соединения (check_mysql_connection_charset): Ok
+character_set_connection=utf8, collation_connection=utf8_unicode_ci, character_set_results=utf8
+Успешно
+2019-Mar-09 09:46:08 Кодировка базы данных (check_mysql_db_charset): Ok
+CHARSET=utf8, COLLATION=utf8_unicode_ci
+Успешно
+2019-Mar-09 09:46:08 Кодировки таблиц в БД (check_mysql_table_charset): Ok
+Успешно
+2019-Mar-09 09:46:08 Структура базы данных (check_mysql_table_structure): Ok
+0% done
+2019-Mar-09 09:46:08 Структура базы данных (check_mysql_table_structure): Ok
+5% done
+2019-Mar-09 09:46:09 Структура базы данных (check_mysql_table_structure): Ok
+11% done
+2019-Mar-09 09:46:09 Структура базы данных (check_mysql_table_structure): Ok
+17% done
+2019-Mar-09 09:46:09 Структура базы данных (check_mysql_table_structure): Ok
+23% done
+2019-Mar-09 09:46:09 Структура базы данных (check_mysql_table_structure): Ok
+29% done
+2019-Mar-09 09:46:09 Структура базы данных (check_mysql_table_structure): Ok
+35% done
+2019-Mar-09 09:46:10 Структура базы данных (check_mysql_table_structure): Ok
+41% done
+2019-Mar-09 09:46:10 Структура базы данных (check_mysql_table_structure): Ok
+47% done
+2019-Mar-09 09:46:10 Структура базы данных (check_mysql_table_structure): Ok
+52% done
+2019-Mar-09 09:46:13 Структура базы данных (check_mysql_table_structure): Ok
+58% done
+2019-Mar-09 09:46:13 Структура базы данных (check_mysql_table_structure): Ok
+64% done
+2019-Mar-09 09:46:14 Структура базы данных (check_mysql_table_structure): Ok
+70% done
+2019-Mar-09 09:46:14 Структура базы данных (check_mysql_table_structure): Ok
+76% done
+2019-Mar-09 09:46:14 Структура базы данных (check_mysql_table_structure): Ok
+82% done
+2019-Mar-09 09:46:15 Структура базы данных (check_mysql_table_structure): Ok
+88% done
+2019-Mar-09 09:46:15 Структура базы данных (check_mysql_table_structure): Ok
+94% done
+2019-Mar-09 09:46:15 Структура базы данных (check_mysql_table_structure): Ok
+Успешно
