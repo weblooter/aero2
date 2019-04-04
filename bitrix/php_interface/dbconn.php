@@ -1,5 +1,10 @@
-<?define("BX_CRONTAB_SUPPORT", true);?><? define("SHORT_INSTALL_CHECK", true);?><?
-/* Ansible managed */
+<?
+//@set_time_limit(php_sapi_name() == "cli" ? 600 : 60);
+
+if(!(defined("CHK_EVENT") && CHK_EVENT===true))
+    define("BX_CRONTAB_SUPPORT", true);
+
+define("SHORT_INSTALL_CHECK", true);
 define("DBPersistent", false);
 $DBType = "mysql";
 $DBHost = "localhost";
