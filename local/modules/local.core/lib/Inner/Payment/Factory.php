@@ -1,4 +1,5 @@
 <?
+
 namespace Local\Core\Inner\Payment;
 
 /**
@@ -10,14 +11,14 @@ class Factory
 {
     /**
      * Фабрика
+     *
      * @param $str
      *
      * @return PaymentInterface
      */
     public static function factory($str)
     {
-        switch ($str)
-        {
+        switch ($str) {
             case 'yandex-money':
                 return new YandexMoney();
                 break;
@@ -30,8 +31,8 @@ class Factory
     public static function getHandlersList()
     {
         $ar = [];
-        $ar[ Bill::getCode() ] = Bill::getTitle();
-        $ar[ YandexMoney::getCode() ] = YandexMoney::getTitle();
+        $ar[Bill::getCode()] = Bill::getTitle();
+        $ar[YandexMoney::getCode()] = YandexMoney::getTitle();
         return $ar;
     }
 }

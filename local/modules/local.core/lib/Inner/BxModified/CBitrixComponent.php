@@ -47,7 +47,7 @@ class CBitrixComponent extends \CBitrixComponent
     /**
      * Проверка прав пользователя на сайт (проверяет по владельцу компании сайта)
      *
-     * @param  int $intStoreId     ID магазина
+     * @param int  $intStoreId     ID магазина
      * @param int  $intUserId      ID пользователя
      * @param bool $init404Process Запустить процесс 404й (true) или просто вернуть boolean (false), по умолчанию true
      *

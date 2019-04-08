@@ -29,48 +29,42 @@ class PathPackage extends Package
     private $basePath;
 
     /**
-     * @param string                   $basePath The base path to be prepended to relative paths
+     * @param string                   $basePath        The base path to be prepended to relative paths
      * @param VersionStrategyInterface $versionStrategy The version strategy
-     * @param ContextInterface|null    $context The context
+     * @param ContextInterface|null    $context         The context
      */
-    public function __construct( string $basePath, VersionStrategyInterface $versionStrategy, ContextInterface $context = null )
+    public function __construct(string $basePath, VersionStrategyInterface $versionStrategy, ContextInterface $context = null)
     {
-        parent::__construct( $versionStrategy, $context );
+        parent::__construct($versionStrategy, $context);
 
-        if ( !$basePath )
-        {
+        if (!$basePath) {
             $this->basePath = '/';
-        }
-        else
-        {
-            if ( '/' != $basePath[ 0 ] )
-            {
+        } else {
+            if ('/' != $basePath[0]) {
                 $basePath = '/'.$basePath;
             }
 
-            $this->basePath = rtrim( $basePath, '/' ).'/';
+            $this->basePath = rtrim($basePath, '/').'/';
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getUrl( $path )
+    public function getUrl($path)
     {
-        if ( $this->isAbsoluteUrl( $path ) )
-        {
+        if ($this->isAbsoluteUrl($path)) {
             return $path;
         }
 
-        $versionedPath = $this->getVersionStrategy()->applyVersion( $path );
+        $versionedPath = $this->getVersionStrategy()->applyVersion($path);
 
         // if absolute or begins with /, we're done
-        if ( $this->isAbsoluteUrl( $versionedPath ) || ( $versionedPath && '/' === $versionedPath[ 0 ] ) )
-        {
+        if ($this->isAbsoluteUrl($versionedPath) || ($versionedPath && '/' === $versionedPath[0])) {
             return $versionedPath;
         }
 
-        return $this->getBasePath().ltrim( $versionedPath, '/' );
+        return $this->getBasePath().ltrim($versionedPath, '/');
     }
 
     /**

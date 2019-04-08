@@ -40,18 +40,18 @@ abstract class AbstractSchema
         return [
             'robofeed' => [
                 'lastModified' => new SchemaFields\DatetimeField('robofeed__lastModified', [
-                        'title' => 'Дата создания робофида',
-                        'required' => true,
-                        'xml_path' => 'robofeed->lastModified'
-                    ]),
+                    'title' => 'Дата создания робофида',
+                    'required' => true,
+                    'xml_path' => 'robofeed->lastModified'
+                ]),
                 'version' => new SchemaFields\EnumField('robofeed__version', [
-                        'title' => 'Номер версии робофида',
-                        'required' => true,
-                        'values' => [
-                            '1'
-                        ],
-                        'xml_path' => 'robofeed->version'
-                    ])
+                    'title' => 'Номер версии робофида',
+                    'required' => true,
+                    'values' => [
+                        '1'
+                    ],
+                    'xml_path' => 'robofeed->version'
+                ])
             ]
         ];
     }

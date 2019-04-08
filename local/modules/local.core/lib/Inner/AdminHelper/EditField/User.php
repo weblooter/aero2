@@ -24,10 +24,10 @@ class User extends Base
 
             try {
                 $user = \Bitrix\Main\UserTable::getList([
-                        "select" => ["ID", "LOGIN", "NAME", "LAST_NAME"],
-                        "filter" => ["ID" => (int)$this->getValue()],
-                        "limit" => 1
-                    ])
+                    "select" => ["ID", "LOGIN", "NAME", "LAST_NAME"],
+                    "filter" => ["ID" => (int)$this->getValue()],
+                    "limit" => 1
+                ])
                     ->fetch();
             } catch (\Exception $e) {
                 return $result;

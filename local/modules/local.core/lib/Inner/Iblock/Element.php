@@ -425,9 +425,9 @@ class Element extends CollectableEntity
                     if ($property->getPropertyType() == 'F') {
                         if ($property->isMultiple()) {
                             $values = array_filter(array_map(function ($v)
-                                    {
-                                        return (int)$v;
-                                    }, (array)$property->getField('VALUE')));
+                                {
+                                    return (int)$v;
+                                }, (array)$property->getField('VALUE')));
 
                             if ($values) {
                                 $item_file_collection = FileCollection::create();

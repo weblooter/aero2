@@ -28,13 +28,13 @@ class Group
 
         if (!isset($arStorage[$groupCode])) {
             $data = \Bitrix\Main\GroupTable::getList([
-                    "select" => ["ID"],
-                    "filter" => [
-                        "=STRING_ID" => $groupCode,
-                    ],
-                    "limit" => 1,
-                    "cache" => ["ttl" => 86400]
-                ])
+                "select" => ["ID"],
+                "filter" => [
+                    "=STRING_ID" => $groupCode,
+                ],
+                "limit" => 1,
+                "cache" => ["ttl" => 86400]
+            ])
                 ->fetch();
 
             $arStorage[$groupCode] = $data["ID"] ?? null;

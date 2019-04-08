@@ -24,28 +24,27 @@ class CliDescriptorTest extends TestCase
     public static function setUpBeforeClass()
     {
         self::$timezone = date_default_timezone_get();
-        date_default_timezone_set( 'UTC' );
+        date_default_timezone_set('UTC');
     }
 
     public static function tearDownAfterClass()
     {
-        date_default_timezone_set( self::$timezone );
+        date_default_timezone_set(self::$timezone);
     }
 
     /**
      * @dataProvider provideContext
      */
-    public function testDescribe( array $context, string $expectedOutput )
+    public function testDescribe(array $context, string $expectedOutput)
     {
         $output = new BufferedOutput();
-        $descriptor = new CliDescriptor( new CliDumper( function ( $s ) {
+        $descriptor = new CliDescriptor(new CliDumper(function ($s) {
             return $s;
-        } ) );
+        }));
 
-        $descriptor->describe( $output, new Data( [[123]] ), $context + ['timestamp' => 1544804268.3668], 1 );
+        $descriptor->describe($output, new Data([[123]]), $context + ['timestamp' => 1544804268.3668], 1);
 
-        $this->assertStringMatchesFormat( trim( $expectedOutput ),
-            str_replace( PHP_EOL, "\n", trim( $output->fetch() ) ) );
+        $this->assertStringMatchesFormat(trim($expectedOutput), str_replace(PHP_EOL, "\n", trim($output->fetch())));
     }
 
     public function provideContext()
@@ -116,7 +115,7 @@ TXT
             [
                 'request' => [
                     'identifier' => 'd8bece1c',
-                    'controller' => new Data( [['FooController.php']] ),
+                    'controller' => new Data([['FooController.php']]),
                     'method' => 'GET',
                     'uri' => 'http://localhost/foo',
                 ],

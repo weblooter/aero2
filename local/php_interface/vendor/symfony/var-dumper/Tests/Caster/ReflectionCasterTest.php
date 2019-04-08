@@ -26,7 +26,7 @@ class ReflectionCasterTest extends TestCase
 
     public function testReflectionCaster()
     {
-        $var = new \ReflectionClass( 'ReflectionClass' );
+        $var = new \ReflectionClass('ReflectionClass');
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'
@@ -65,8 +65,7 @@ EOTXT
     public function testClosureCaster()
     {
         $a = $b = 123;
-        $var = function ( $x ) use ( $a, &$b ) {
-        };
+        $var = function ($x) use ($a, &$b) {};
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'
@@ -88,13 +87,12 @@ EOTXT
 
     public function testFromCallableClosureCaster()
     {
-        if ( \defined( 'HHVM_VERSION_ID' ) )
-        {
-            $this->markTestSkipped( 'Not for HHVM.' );
+        if (\defined('HHVM_VERSION_ID')) {
+            $this->markTestSkipped('Not for HHVM.');
         }
         $var = [
-            ( new \ReflectionMethod( $this, __FUNCTION__ ) )->getClosure( $this ),
-            ( new \ReflectionMethod( __CLASS__, 'tearDownAfterClass' ) )->getClosure(),
+            (new \ReflectionMethod($this, __FUNCTION__))->getClosure($this),
+            (new \ReflectionMethod(__CLASS__, 'tearDownAfterClass'))->getClosure(),
         ];
 
         $this->assertDumpMatchesFormat(
@@ -117,15 +115,14 @@ EOTXT
 
     public function testClosureCasterExcludingVerbosity()
     {
-        $var = function &( $a = 5 ) {
-        };
+        $var = function &($a = 5) {};
 
-        $this->assertDumpEquals( 'Closure&($a = 5) { …6}', $var, Caster::EXCLUDE_VERBOSE );
+        $this->assertDumpEquals('Closure&($a = 5) { …6}', $var, Caster::EXCLUDE_VERBOSE);
     }
 
     public function testReflectionParameter()
     {
-        $var = new \ReflectionParameter( __NAMESPACE__.'\reflectionParameterFixture', 0 );
+        $var = new \ReflectionParameter(__NAMESPACE__.'\reflectionParameterFixture', 0);
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'
@@ -142,8 +139,8 @@ EOTXT
 
     public function testReflectionParameterScalar()
     {
-        $f = eval( 'return function (int $a) {};' );
-        $var = new \ReflectionParameter( $f, 0 );
+        $f = eval('return function (int $a) {};');
+        $var = new \ReflectionParameter($f, 0);
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'
@@ -159,7 +156,7 @@ EOTXT
 
     public function testReturnType()
     {
-        $f = eval( 'return function ():int {};' );
+        $f = eval('return function ():int {};');
         $line = __LINE__ - 1;
 
         $this->assertDumpMatchesFormat(
@@ -178,9 +175,8 @@ EOTXT
 
     public function testGenerator()
     {
-        if ( \extension_loaded( 'xdebug' ) )
-        {
-            $this->markTestSkipped( 'xdebug is active' );
+        if (\extension_loaded('xdebug')) {
+            $this->markTestSkipped('xdebug is active');
         }
 
         $generator = new GeneratorDemo();
@@ -202,10 +198,9 @@ Generator {
 }
 EODUMP;
 
-        $this->assertDumpMatchesFormat( $expectedDump, $generator );
+        $this->assertDumpMatchesFormat($expectedDump, $generator);
 
-        foreach ( $generator as $v )
-        {
+        foreach ($generator as $v) {
             break;
         }
 
@@ -239,11 +234,10 @@ array:2 [
 ]
 EODUMP;
 
-        $r = new \ReflectionGenerator( $generator );
-        $this->assertDumpMatchesFormat( $expectedDump, [$r, $r->getExecutingGenerator()] );
+        $r = new \ReflectionGenerator($generator);
+        $this->assertDumpMatchesFormat($expectedDump, [$r, $r->getExecutingGenerator()]);
 
-        foreach ( $generator as $v )
-        {
+        foreach ($generator as $v) {
         }
 
         $expectedDump = <<<'EODUMP'
@@ -251,10 +245,10 @@ Generator {
   closed: true
 }
 EODUMP;
-        $this->assertDumpMatchesFormat( $expectedDump, $generator );
+        $this->assertDumpMatchesFormat($expectedDump, $generator);
     }
 }
 
-function reflectionParameterFixture( NotLoadableClass $arg1 = null, $arg2 )
+function reflectionParameterFixture(NotLoadableClass $arg1 = null, $arg2)
 {
 }

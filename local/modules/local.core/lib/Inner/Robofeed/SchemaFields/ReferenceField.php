@@ -94,16 +94,16 @@ class ReferenceField extends ScalarField
                     'Scheme',
                     'ReferenceField'
                 ], [
-                        'class='.(implode('_', array_slice(explode('\\', $strClass), -2))),
-                        'column_name='.$strColumnName
-                    ]))
+                    'class='.(implode('_', array_slice(explode('\\', $strClass), -2))),
+                    'column_name='.$strColumnName
+                ]))
                 ) {
                     /** @var \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager $strClass */
 
                     $rs = $strClass::getList([
-                            'order' => ['SORT' => 'ASC'],
-                            'select' => [$strColumnName]
-                        ]);
+                        'order' => ['SORT' => 'ASC'],
+                        'select' => [$strColumnName]
+                    ]);
                     if ($rs->getSelectedRowsCount() < 1) {
                         $obCache->abortDataCache();
                     } else {

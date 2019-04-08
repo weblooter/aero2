@@ -185,21 +185,15 @@ class YandexMoney implements PaymentInterface
 
                         if ($obRes->isSuccess()) {
                             $arAttemptLog['TRY_TOP_UP_BALANCE_RESULT'] = 'SU';
-                        }
-                        else
-                        {
+                        } else {
                             $arAttemptLog['TRY_TOP_UP_BALANCE_RESULT'] = 'ER';
                             $arAttemptLog['TRY_TOP_UP_BALANCE_ERROR_TEXT'] = implode('<br/>', $obRes->getErrorMessages());
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $arAttemptLog['QUERY_CHECK_RESULT'] = 'ER';
                         $arAttemptLog['QUERY_CHECK_ERROR_TEXT'] = 'Завленный ID последнего пополнения и фактический не совпадают';
                     }
-                }
-                else
-                {
+                } else {
                     $arAttemptLog['QUERY_CHECK_RESULT'] = 'ER';
                     $arAttemptLog['QUERY_CHECK_ERROR_TEXT'] = 'Полученный хэш от значений и заявленый не совпадают';
                 }

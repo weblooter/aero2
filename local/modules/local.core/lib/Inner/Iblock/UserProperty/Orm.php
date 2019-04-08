@@ -270,8 +270,8 @@ HIBSELECT;
             #Получаем все записи из таблицы
             if (empty(self::$dataCache[$ormEntityName])) {
                 self::$dataCache[$ormEntityName] = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
-                        "select" => [$ormEntityColumnID, $ormEntityColumnName]
-                    ]);
+                    "select" => [$ormEntityColumnID, $ormEntityColumnName]
+                ]);
             }
 
             #Формируем option'ы
@@ -349,9 +349,9 @@ HIBSELECT;
             #Если нет кеша или множественное значение, то получаем значения
             if (is_array($value["VALUE"]) || !isset(self::$arItemCache[$ormEntityName][$value["VALUE"]])) {
                 $data = self::getEntityFieldsByFilter($ormEntityName, $ormEntityColumnID, $ormEntityColumnName, [
-                        "select" => array($ormEntityColumnID, $ormEntityColumnName),
-                        "filter" => array("={$ormEntityColumnID}" => $value["VALUE"])
-                    ]);
+                    "select" => array($ormEntityColumnID, $ormEntityColumnName),
+                    "filter" => array("={$ormEntityColumnID}" => $value["VALUE"])
+                ]);
                 if (!empty($data)) {
                     foreach ($data as $item) {
                         if (isset($item[$ormEntityColumnName])) {

@@ -78,14 +78,13 @@ class Base
             ]);
             if (!$rr->isSuccess()) {
                 $obResult->addErrors($rr->getErrors());
-            }
-            else
-            {
-                $arUser = \Bitrix\Main\UserTable::getByPrimary($intUserId, ['select' => ['EMAIL']])->fetch();
+            } else {
+                $arUser = \Bitrix\Main\UserTable::getByPrimary($intUserId, ['select' => ['EMAIL']])
+                    ->fetch();
                 \Local\Core\Inner\TriggerMail\Balance::balanceTopUpped([
                     'EMAIL' => $arUser['EMAIL'],
                     'SUMM_FORMAT' => number_format(floor($intBalance), 0, '.', ' '),
-                    'TOTAL_SUMM_FORMAT' => number_format( static::getUserBalance($intUserId), 0, '.', ' '),
+                    'TOTAL_SUMM_FORMAT' => number_format(static::getUserBalance($intUserId), 0, '.', ' '),
                     'NOTE' => $strNote
                 ]);
             }
@@ -121,14 +120,13 @@ class Base
             ]);
             if (!$rr->isSuccess()) {
                 $obResult->addErrors($rr->getErrors());
-            }
-            else
-            {
-                $arUser = \Bitrix\Main\UserTable::getByPrimary($intUserId, ['select' => ['EMAIL']])->fetch();
+            } else {
+                $arUser = \Bitrix\Main\UserTable::getByPrimary($intUserId, ['select' => ['EMAIL']])
+                    ->fetch();
                 \Local\Core\Inner\TriggerMail\Balance::balancePayedFromAccount([
                     'EMAIL' => $arUser['EMAIL'],
                     'SUMM_FORMAT' => number_format(floor($intBalance), 0, '.', ' '),
-                    'TOTAL_SUMM_FORMAT' => number_format( static::getUserBalance($intUserId), 0, '.', ' '),
+                    'TOTAL_SUMM_FORMAT' => number_format(static::getUserBalance($intUserId), 0, '.', ' '),
                     'NOTE' => $strNote
                 ]);
             }

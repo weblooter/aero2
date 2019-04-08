@@ -109,12 +109,12 @@ abstract class Worker
     private function getClearJobID()
     {
         $ar = JobQueueTable::getList([
-                'filter' => [
-                    '=ID' => $this->dirtyJobID,
-                    '=EXECUTE_BY' => $this->dirtyExecutorID,
-                ],
-                'select' => ['*'],
-            ])
+            'filter' => [
+                '=ID' => $this->dirtyJobID,
+                '=EXECUTE_BY' => $this->dirtyExecutorID,
+            ],
+            'select' => ['*'],
+        ])
             ->fetch();
 
         if (!empty($ar)) {

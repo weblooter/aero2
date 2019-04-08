@@ -25,8 +25,8 @@ class Base
     {
         if (is_null(self::$__register[$strTariffCode])) {
             $arTmp = \Local\Core\Model\Data\TariffTable::getList([
-                    'filter' => ['CODE' => $strTariffCode],
-                ])
+                'filter' => ['CODE' => $strTariffCode],
+            ])
                 ->fetch();
 
             self::$__register[$strTariffCode] = $arTmp;

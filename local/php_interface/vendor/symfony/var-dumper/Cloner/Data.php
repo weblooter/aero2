@@ -28,7 +28,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @param array $data An array as returned by ClonerInterface::cloneVar()
      */
-    public function __construct( array $data )
+    public function __construct(array $data)
     {
         $this->data = $data;
     }
@@ -38,30 +38,24 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function getType()
     {
-        $item = $this->data[ $this->position ][ $this->key ];
+        $item = $this->data[$this->position][$this->key];
 
-        if ( $item instanceof Stub && Stub::TYPE_REF === $item->type && !$item->position )
-        {
+        if ($item instanceof Stub && Stub::TYPE_REF === $item->type && !$item->position) {
             $item = $item->value;
         }
-        if ( !$item instanceof Stub )
-        {
-            return \gettype( $item );
+        if (!$item instanceof Stub) {
+            return \gettype($item);
         }
-        if ( Stub::TYPE_STRING === $item->type )
-        {
+        if (Stub::TYPE_STRING === $item->type) {
             return 'string';
         }
-        if ( Stub::TYPE_ARRAY === $item->type )
-        {
+        if (Stub::TYPE_ARRAY === $item->type) {
             return 'array';
         }
-        if ( Stub::TYPE_OBJECT === $item->type )
-        {
+        if (Stub::TYPE_OBJECT === $item->type) {
             return $item->class;
         }
-        if ( Stub::TYPE_RESOURCE === $item->type )
-        {
+        if (Stub::TYPE_RESOURCE === $item->type) {
             return $item->class.' resource';
         }
     }
@@ -71,47 +65,39 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return string|int|float|bool|array|Data[]|null A native representation of the original value
      */
-    public function getValue( $recursive = false )
+    public function getValue($recursive = false)
     {
-        $item = $this->data[ $this->position ][ $this->key ];
+        $item = $this->data[$this->position][$this->key];
 
-        if ( $item instanceof Stub && Stub::TYPE_REF === $item->type && !$item->position )
-        {
+        if ($item instanceof Stub && Stub::TYPE_REF === $item->type && !$item->position) {
             $item = $item->value;
         }
-        if ( !( $item = $this->getStub( $item ) ) instanceof Stub )
-        {
+        if (!($item = $this->getStub($item)) instanceof Stub) {
             return $item;
         }
-        if ( Stub::TYPE_STRING === $item->type )
-        {
+        if (Stub::TYPE_STRING === $item->type) {
             return $item->value;
         }
 
-        $children = $item->position ? $this->data[ $item->position ] : [];
+        $children = $item->position ? $this->data[$item->position] : [];
 
-        foreach ( $children as $k => $v )
-        {
-            if ( $recursive && !( $v = $this->getStub( $v ) ) instanceof Stub )
-            {
+        foreach ($children as $k => $v) {
+            if ($recursive && !($v = $this->getStub($v)) instanceof Stub) {
                 continue;
             }
-            $children[ $k ] = clone $this;
-            $children[ $k ]->key = $k;
-            $children[ $k ]->position = $item->position;
+            $children[$k] = clone $this;
+            $children[$k]->key = $k;
+            $children[$k]->position = $item->position;
 
-            if ( $recursive )
-            {
-                if ( Stub::TYPE_REF === $v->type && ( $v = $this->getStub( $v->value ) ) instanceof Stub )
-                {
-                    $recursive = (array)$recursive;
-                    if ( isset( $recursive[ $v->position ] ) )
-                    {
+            if ($recursive) {
+                if (Stub::TYPE_REF === $v->type && ($v = $this->getStub($v->value)) instanceof Stub) {
+                    $recursive = (array) $recursive;
+                    if (isset($recursive[$v->position])) {
                         continue;
                     }
-                    $recursive[ $v->position ] = true;
+                    $recursive[$v->position] = true;
                 }
-                $children[ $k ] = $children[ $k ]->getValue( $recursive );
+                $children[$k] = $children[$k]->getValue($recursive);
             }
         }
 
@@ -120,65 +106,61 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function count()
     {
-        return \count( $this->getValue() );
+        return \count($this->getValue());
     }
 
     public function getIterator()
     {
-        if ( !\is_array( $value = $this->getValue() ) )
-        {
-            throw new \LogicException( sprintf( '%s object holds non-iterable type "%s".', self::class,
-                \gettype( $value ) ) );
+        if (!\is_array($value = $this->getValue())) {
+            throw new \LogicException(sprintf('%s object holds non-iterable type "%s".', self::class, \gettype($value)));
         }
 
         yield from $value;
     }
 
-    public function __get( $key )
+    public function __get($key)
     {
-        if ( null !== $data = $this->seek( $key ) )
-        {
-            $item = $this->getStub( $data->data[ $data->position ][ $data->key ] );
+        if (null !== $data = $this->seek($key)) {
+            $item = $this->getStub($data->data[$data->position][$data->key]);
 
             return $item instanceof Stub || [] === $item ? $data : $item;
         }
     }
 
-    public function __isset( $key )
+    public function __isset($key)
     {
-        return null !== $this->seek( $key );
+        return null !== $this->seek($key);
     }
 
-    public function offsetExists( $key )
+    public function offsetExists($key)
     {
-        return $this->__isset( $key );
+        return $this->__isset($key);
     }
 
-    public function offsetGet( $key )
+    public function offsetGet($key)
     {
-        return $this->__get( $key );
+        return $this->__get($key);
     }
 
-    public function offsetSet( $key, $value )
+    public function offsetSet($key, $value)
     {
-        throw new \BadMethodCallException( self::class.' objects are immutable.' );
+        throw new \BadMethodCallException(self::class.' objects are immutable.');
     }
 
-    public function offsetUnset( $key )
+    public function offsetUnset($key)
     {
-        throw new \BadMethodCallException( self::class.' objects are immutable.' );
+        throw new \BadMethodCallException(self::class.' objects are immutable.');
     }
 
     public function __toString()
     {
         $value = $this->getValue();
 
-        if ( !\is_array( $value ) )
-        {
-            return (string)$value;
+        if (!\is_array($value)) {
+            return (string) $value;
         }
 
-        return sprintf( '%s (count=%d)', $this->getType(), \count( $value ) );
+        return sprintf('%s (count=%d)', $this->getType(), \count($value));
     }
 
     /**
@@ -188,10 +170,10 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return self A clone of $this
      */
-    public function withMaxDepth( $maxDepth )
+    public function withMaxDepth($maxDepth)
     {
         $data = clone $this;
-        $data->maxDepth = (int)$maxDepth;
+        $data->maxDepth = (int) $maxDepth;
 
         return $data;
     }
@@ -203,10 +185,10 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return self A clone of $this
      */
-    public function withMaxItemsPerDepth( $maxItemsPerDepth )
+    public function withMaxItemsPerDepth($maxItemsPerDepth)
     {
         $data = clone $this;
-        $data->maxItemsPerDepth = (int)$maxItemsPerDepth;
+        $data->maxItemsPerDepth = (int) $maxItemsPerDepth;
 
         return $data;
     }
@@ -218,7 +200,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return self A clone of $this
      */
-    public function withRefHandles( $useRefHandles )
+    public function withRefHandles($useRefHandles)
     {
         $data = clone $this;
         $data->useRefHandles = $useRefHandles ? -1 : 0;
@@ -233,28 +215,25 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return self|null A clone of $this or null if the key is not set
      */
-    public function seek( $key )
+    public function seek($key)
     {
-        $item = $this->data[ $this->position ][ $this->key ];
+        $item = $this->data[$this->position][$this->key];
 
-        if ( $item instanceof Stub && Stub::TYPE_REF === $item->type && !$item->position )
-        {
+        if ($item instanceof Stub && Stub::TYPE_REF === $item->type && !$item->position) {
             $item = $item->value;
         }
-        if ( !( $item = $this->getStub( $item ) ) instanceof Stub || !$item->position )
-        {
+        if (!($item = $this->getStub($item)) instanceof Stub || !$item->position) {
             return;
         }
         $keys = [$key];
 
-        switch ( $item->type )
-        {
+        switch ($item->type) {
             case Stub::TYPE_OBJECT:
                 $keys[] = Caster::PREFIX_DYNAMIC.$key;
                 $keys[] = Caster::PREFIX_PROTECTED.$key;
                 $keys[] = Caster::PREFIX_VIRTUAL.$key;
                 $keys[] = "\0$item->class\0$key";
-            // no break
+                // no break
             case Stub::TYPE_ARRAY:
             case Stub::TYPE_RESOURCE:
                 break;
@@ -263,12 +242,10 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         $data = null;
-        $children = $this->data[ $item->position ];
+        $children = $this->data[$item->position];
 
-        foreach ( $keys as $key )
-        {
-            if ( isset( $children[ $key ] ) || \array_key_exists( $key, $children ) )
-            {
+        foreach ($keys as $key) {
+            if (isset($children[$key]) || \array_key_exists($key, $children)) {
                 $data = clone $this;
                 $data->key = $key;
                 $data->position = $item->position;
@@ -282,175 +259,141 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * Dumps data with a DumperInterface dumper.
      */
-    public function dump( DumperInterface $dumper )
+    public function dump(DumperInterface $dumper)
     {
         $refs = [0];
-        $this->dumpItem( $dumper, new Cursor(), $refs, $this->data[ $this->position ][ $this->key ] );
+        $this->dumpItem($dumper, new Cursor(), $refs, $this->data[$this->position][$this->key]);
     }
 
     /**
      * Depth-first dumping of items.
      *
-     * @param DumperInterface  $dumper The dumper being used for dumping
-     * @param Cursor           $cursor A cursor used for tracking dumper state position
-     * @param array           &$refs A map of all references discovered while dumping
-     * @param mixed            $item A Stub object or the original value being dumped
+     * @param DumperInterface $dumper The dumper being used for dumping
+     * @param Cursor          $cursor A cursor used for tracking dumper state position
+     * @param array           &$refs  A map of all references discovered while dumping
+     * @param mixed           $item   A Stub object or the original value being dumped
      */
-    private function dumpItem( $dumper, $cursor, &$refs, $item )
+    private function dumpItem($dumper, $cursor, &$refs, $item)
     {
         $cursor->refIndex = 0;
         $cursor->softRefTo = $cursor->softRefHandle = $cursor->softRefCount = 0;
         $cursor->hardRefTo = $cursor->hardRefHandle = $cursor->hardRefCount = 0;
         $firstSeen = true;
 
-        if ( !$item instanceof Stub )
-        {
+        if (!$item instanceof Stub) {
             $cursor->attr = [];
-            $type = \gettype( $item );
-            if ( $item && 'array' === $type )
-            {
-                $item = $this->getStub( $item );
+            $type = \gettype($item);
+            if ($item && 'array' === $type) {
+                $item = $this->getStub($item);
             }
-        }
-        elseif ( Stub::TYPE_REF === $item->type )
-        {
-            if ( $item->handle )
-            {
-                if ( !isset( $refs[ $r = $item->handle - ( PHP_INT_MAX >> 1 ) ] ) )
-                {
-                    $cursor->refIndex = $refs[ $r ] = $cursor->refIndex ? : ++$refs[ 0 ];
-                }
-                else
-                {
+        } elseif (Stub::TYPE_REF === $item->type) {
+            if ($item->handle) {
+                if (!isset($refs[$r = $item->handle - (PHP_INT_MAX >> 1)])) {
+                    $cursor->refIndex = $refs[$r] = $cursor->refIndex ?: ++$refs[0];
+                } else {
                     $firstSeen = false;
                 }
-                $cursor->hardRefTo = $refs[ $r ];
+                $cursor->hardRefTo = $refs[$r];
                 $cursor->hardRefHandle = $this->useRefHandles & $item->handle;
                 $cursor->hardRefCount = $item->refCount;
             }
             $cursor->attr = $item->attr;
-            $type = $item->class ? : \gettype( $item->value );
-            $item = $this->getStub( $item->value );
+            $type = $item->class ?: \gettype($item->value);
+            $item = $this->getStub($item->value);
         }
-        if ( $item instanceof Stub )
-        {
-            if ( $item->refCount )
-            {
-                if ( !isset( $refs[ $r = $item->handle ] ) )
-                {
-                    $cursor->refIndex = $refs[ $r ] = $cursor->refIndex ? : ++$refs[ 0 ];
-                }
-                else
-                {
+        if ($item instanceof Stub) {
+            if ($item->refCount) {
+                if (!isset($refs[$r = $item->handle])) {
+                    $cursor->refIndex = $refs[$r] = $cursor->refIndex ?: ++$refs[0];
+                } else {
                     $firstSeen = false;
                 }
-                $cursor->softRefTo = $refs[ $r ];
+                $cursor->softRefTo = $refs[$r];
             }
             $cursor->softRefHandle = $this->useRefHandles & $item->handle;
             $cursor->softRefCount = $item->refCount;
             $cursor->attr = $item->attr;
             $cut = $item->cut;
 
-            if ( $item->position && $firstSeen )
-            {
-                $children = $this->data[ $item->position ];
+            if ($item->position && $firstSeen) {
+                $children = $this->data[$item->position];
 
-                if ( $cursor->stop )
-                {
-                    if ( $cut >= 0 )
-                    {
-                        $cut += \count( $children );
+                if ($cursor->stop) {
+                    if ($cut >= 0) {
+                        $cut += \count($children);
                     }
                     $children = [];
                 }
-            }
-            else
-            {
+            } else {
                 $children = [];
             }
-            switch ( $item->type )
-            {
+            switch ($item->type) {
                 case Stub::TYPE_STRING:
-                    $dumper->dumpString( $cursor, $item->value, Stub::STRING_BINARY === $item->class, $cut );
+                    $dumper->dumpString($cursor, $item->value, Stub::STRING_BINARY === $item->class, $cut);
                     break;
 
                 case Stub::TYPE_ARRAY:
                     $item = clone $item;
                     $item->type = $item->class;
                     $item->class = $item->value;
-                // no break
+                    // no break
                 case Stub::TYPE_OBJECT:
                 case Stub::TYPE_RESOURCE:
                     $withChildren = $children && $cursor->depth !== $this->maxDepth && $this->maxItemsPerDepth;
-                    $dumper->enterHash( $cursor, $item->type, $item->class, $withChildren );
-                    if ( $withChildren )
-                    {
-                        if ( $cursor->skipChildren )
-                        {
+                    $dumper->enterHash($cursor, $item->type, $item->class, $withChildren);
+                    if ($withChildren) {
+                        if ($cursor->skipChildren) {
                             $withChildren = false;
                             $cut = -1;
+                        } else {
+                            $cut = $this->dumpChildren($dumper, $cursor, $refs, $children, $cut, $item->type, null !== $item->class);
                         }
-                        else
-                        {
-                            $cut = $this->dumpChildren( $dumper, $cursor, $refs, $children, $cut, $item->type,
-                                null !== $item->class );
-                        }
-                    }
-                    elseif ( $children && 0 <= $cut )
-                    {
-                        $cut += \count( $children );
+                    } elseif ($children && 0 <= $cut) {
+                        $cut += \count($children);
                     }
                     $cursor->skipChildren = false;
-                    $dumper->leaveHash( $cursor, $item->type, $item->class, $withChildren, $cut );
+                    $dumper->leaveHash($cursor, $item->type, $item->class, $withChildren, $cut);
                     break;
 
                 default:
-                    throw new \RuntimeException( sprintf( 'Unexpected Stub type: %s', $item->type ) );
+                    throw new \RuntimeException(sprintf('Unexpected Stub type: %s', $item->type));
             }
-        }
-        elseif ( 'array' === $type )
-        {
-            $dumper->enterHash( $cursor, Cursor::HASH_INDEXED, 0, false );
-            $dumper->leaveHash( $cursor, Cursor::HASH_INDEXED, 0, false, 0 );
-        }
-        elseif ( 'string' === $type )
-        {
-            $dumper->dumpString( $cursor, $item, false, 0 );
-        }
-        else
-        {
-            $dumper->dumpScalar( $cursor, $type, $item );
+        } elseif ('array' === $type) {
+            $dumper->enterHash($cursor, Cursor::HASH_INDEXED, 0, false);
+            $dumper->leaveHash($cursor, Cursor::HASH_INDEXED, 0, false, 0);
+        } elseif ('string' === $type) {
+            $dumper->dumpString($cursor, $item, false, 0);
+        } else {
+            $dumper->dumpScalar($cursor, $type, $item);
         }
     }
 
     /**
      * Dumps children of hash structures.
      *
-     * @param DumperInterface  $dumper
-     * @param Cursor           $parentCursor The cursor of the parent hash
-     * @param array           &$refs A map of all references discovered while dumping
-     * @param array            $children The children to dump
-     * @param int              $hashCut The number of items removed from the original hash
-     * @param string           $hashType A Cursor::HASH_* const
-     * @param bool             $dumpKeys Whether keys should be dumped or not
+     * @param DumperInterface $dumper
+     * @param Cursor          $parentCursor The cursor of the parent hash
+     * @param array           &$refs        A map of all references discovered while dumping
+     * @param array           $children     The children to dump
+     * @param int             $hashCut      The number of items removed from the original hash
+     * @param string          $hashType     A Cursor::HASH_* const
+     * @param bool            $dumpKeys     Whether keys should be dumped or not
      *
      * @return int The final number of removed items
      */
-    private function dumpChildren( $dumper, $parentCursor, &$refs, $children, $hashCut, $hashType, $dumpKeys )
+    private function dumpChildren($dumper, $parentCursor, &$refs, $children, $hashCut, $hashType, $dumpKeys)
     {
         $cursor = clone $parentCursor;
         ++$cursor->depth;
         $cursor->hashType = $hashType;
         $cursor->hashIndex = 0;
-        $cursor->hashLength = \count( $children );
+        $cursor->hashLength = \count($children);
         $cursor->hashCut = $hashCut;
-        foreach ( $children as $key => $child )
-        {
-            $cursor->hashKeyIsBinary = isset( $key[ 0 ] ) && !preg_match( '//u', $key );
+        foreach ($children as $key => $child) {
+            $cursor->hashKeyIsBinary = isset($key[0]) && !preg_match('//u', $key);
             $cursor->hashKey = $dumpKeys ? $key : null;
-            $this->dumpItem( $dumper, $cursor, $refs, $child );
-            if ( ++$cursor->hashIndex === $this->maxItemsPerDepth || $cursor->stop )
-            {
+            $this->dumpItem($dumper, $cursor, $refs, $child);
+            if (++$cursor->hashIndex === $this->maxItemsPerDepth || $cursor->stop) {
                 $parentCursor->stop = true;
 
                 return $hashCut >= 0 ? $hashCut + $cursor->hashLength - $cursor->hashIndex : $hashCut;
@@ -460,23 +403,20 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
         return $hashCut;
     }
 
-    private function getStub( $item )
+    private function getStub($item)
     {
-        if ( !$item || !\is_array( $item ) )
-        {
+        if (!$item || !\is_array($item)) {
             return $item;
         }
 
         $stub = new Stub();
         $stub->type = Stub::TYPE_ARRAY;
-        foreach ( $item as $stub->class => $stub->position )
-        {
+        foreach ($item as $stub->class => $stub->position) {
         }
-        if ( isset( $item[ 0 ] ) )
-        {
-            $stub->cut = $item[ 0 ];
+        if (isset($item[0])) {
+            $stub->cut = $item[0];
         }
-        $stub->value = $stub->cut + ( $stub->position ? \count( $this->data[ $stub->position ] ) : 0 );
+        $stub->value = $stub->cut + ($stub->position ? \count($this->data[$stub->position]) : 0);
 
         return $stub;
     }

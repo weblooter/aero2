@@ -34,18 +34,18 @@ class CatalogCategoryAccodrance extends Base
             $currentValue = $currentValueName.' ['.$currentValueId.']';
 
             $APPLICATION->IncludeComponent('bitrix:main.lookup.input', 'iblockedit', array(
-                    'CONTROL_ID' => $this->getCode().'_'.mt_rand(0, 10000),
-                    'INPUT_NAME' => $this->getCode().'['.$st['ID'].']',
-                    'INPUT_NAME_STRING' => 'text_area_'.$this->getCode().'['.$st['ID'].']',
-                    'INPUT_VALUE_STRING' => $currentValue,
-                    'START_TEXT' => "Начните вводить текст",
-                    'SEARCH_DATA_FILE' => $this->_marketTaxonomyFile,
-                    'SEARCH_DATA_FILE_SEPARATOR' => $this->_marketTaxonomyFileSeparator,
-                    'MULTIPLE' => 'N',
-                    'WITHOUT_IBLOCK' => 'Y',
-                    'FILTER' => 'Y',
-                    'TYPE' => 'SECTION',
-                ), null, array('HIDE_ICONS' => 'Y'));
+                'CONTROL_ID' => $this->getCode().'_'.mt_rand(0, 10000),
+                'INPUT_NAME' => $this->getCode().'['.$st['ID'].']',
+                'INPUT_NAME_STRING' => 'text_area_'.$this->getCode().'['.$st['ID'].']',
+                'INPUT_VALUE_STRING' => $currentValue,
+                'START_TEXT' => "Начните вводить текст",
+                'SEARCH_DATA_FILE' => $this->_marketTaxonomyFile,
+                'SEARCH_DATA_FILE_SEPARATOR' => $this->_marketTaxonomyFileSeparator,
+                'MULTIPLE' => 'N',
+                'WITHOUT_IBLOCK' => 'Y',
+                'FILTER' => 'Y',
+                'TYPE' => 'SECTION',
+            ), null, array('HIDE_ICONS' => 'Y'));
 
             $input = ob_get_contents();
             ob_end_clean();

@@ -97,9 +97,9 @@ class PersonalStoreFormComponent extends \Local\Core\Inner\BxModified\CBitrixCom
                                 ->getContext()
                                 ->getRequest()
                                 ->getFile('STORE_FIELD')), array_column(\Bitrix\Main\Application::getInstance()
-                                    ->getContext()
-                                    ->getRequest()
-                                    ->getFile('STORE_FIELD'), 'FILE'));
+                                ->getContext()
+                                ->getRequest()
+                                ->getFile('STORE_FIELD'), 'FILE'));
 
                             if (
                             !\Local\Core\Inner\BxModified\CFile::checkExtension($arFile, '.xml')

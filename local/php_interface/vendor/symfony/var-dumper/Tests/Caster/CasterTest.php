@@ -35,18 +35,15 @@ class CasterTest extends TestCase
     /**
      * @dataProvider provideFilter
      */
-    public function testFilter( $filter, $expectedDiff, $listedProperties = null )
+    public function testFilter($filter, $expectedDiff, $listedProperties = null)
     {
-        if ( null === $listedProperties )
-        {
-            $filteredArray = Caster::filter( $this->referenceArray, $filter );
-        }
-        else
-        {
-            $filteredArray = Caster::filter( $this->referenceArray, $filter, $listedProperties );
+        if (null === $listedProperties) {
+            $filteredArray = Caster::filter($this->referenceArray, $filter);
+        } else {
+            $filteredArray = Caster::filter($this->referenceArray, $filter, $listedProperties);
         }
 
-        $this->assertSame( $expectedDiff, array_diff_assoc( $this->referenceArray, $filteredArray ) );
+        $this->assertSame($expectedDiff, array_diff_assoc($this->referenceArray, $filteredArray));
     }
 
     public function provideFilter()
@@ -156,7 +153,7 @@ class CasterTest extends TestCase
 
     public function testAnonymousClass()
     {
-        $c = eval( 'return new class extends stdClass { private $foo = "foo"; };' );
+        $c = eval('return new class extends stdClass { private $foo = "foo"; };');
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'
@@ -167,7 +164,7 @@ EOTXT
             , $c
         );
 
-        $c = eval( 'return new class { private $foo = "foo"; };' );
+        $c = eval('return new class { private $foo = "foo"; };');
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'

@@ -24,9 +24,9 @@ class StubCasterTest extends TestCase
 {
     use VarDumperTestTrait;
 
-    public function testArgsStubWithDefaults( $foo = 234, $bar = 456 )
+    public function testArgsStubWithDefaults($foo = 234, $bar = 456)
     {
-        $args = [new ArgsStub( [123], __FUNCTION__, __CLASS__ )];
+        $args = [new ArgsStub([123], __FUNCTION__, __CLASS__)];
 
         $expectedDump = <<<'EODUMP'
 array:1 [
@@ -36,12 +36,12 @@ array:1 [
 ]
 EODUMP;
 
-        $this->assertDumpMatchesFormat( $expectedDump, $args );
+        $this->assertDumpMatchesFormat($expectedDump, $args);
     }
 
-    public function testArgsStubWithExtraArgs( $foo = 234 )
+    public function testArgsStubWithExtraArgs($foo = 234)
     {
-        $args = [new ArgsStub( [123, 456], __FUNCTION__, __CLASS__ )];
+        $args = [new ArgsStub([123, 456], __FUNCTION__, __CLASS__)];
 
         $expectedDump = <<<'EODUMP'
 array:1 [
@@ -54,12 +54,12 @@ array:1 [
 ]
 EODUMP;
 
-        $this->assertDumpMatchesFormat( $expectedDump, $args );
+        $this->assertDumpMatchesFormat($expectedDump, $args);
     }
 
     public function testArgsStubNoParamWithExtraArgs()
     {
-        $args = [new ArgsStub( [123], __FUNCTION__, __CLASS__ )];
+        $args = [new ArgsStub([123], __FUNCTION__, __CLASS__)];
 
         $expectedDump = <<<'EODUMP'
 array:1 [
@@ -69,12 +69,12 @@ array:1 [
 ]
 EODUMP;
 
-        $this->assertDumpMatchesFormat( $expectedDump, $args );
+        $this->assertDumpMatchesFormat($expectedDump, $args);
     }
 
     public function testArgsStubWithClosure()
     {
-        $args = [new ArgsStub( [123], '{closure}', null )];
+        $args = [new ArgsStub([123], '{closure}', null)];
 
         $expectedDump = <<<'EODUMP'
 array:1 [
@@ -84,19 +84,19 @@ array:1 [
 ]
 EODUMP;
 
-        $this->assertDumpMatchesFormat( $expectedDump, $args );
+        $this->assertDumpMatchesFormat($expectedDump, $args);
     }
 
     public function testLinkStub()
     {
-        $var = [new LinkStub( __CLASS__, 0, __FILE__ )];
+        $var = [new LinkStub(__CLASS__, 0, __FILE__)];
 
         $cloner = new VarCloner();
         $dumper = new HtmlDumper();
-        $dumper->setDumpHeader( '<foo></foo>' );
-        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
-        $dumper->setDisplayOptions( ['fileLinkFormat' => '%f:%l'] );
-        $dump = $dumper->dump( $cloner->cloneVar( $var ), true );
+        $dumper->setDumpHeader('<foo></foo>');
+        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dumper->setDisplayOptions(['fileLinkFormat' => '%f:%l']);
+        $dump = $dumper->dump($cloner->cloneVar($var), true);
 
         $expectedDump = <<<'EODUMP'
 <foo></foo><bar><span class=sf-dump-note>array:1</span> [<samp>
@@ -105,19 +105,19 @@ EODUMP;
 </bar>
 EODUMP;
 
-        $this->assertStringMatchesFormat( $expectedDump, $dump );
+        $this->assertStringMatchesFormat($expectedDump, $dump);
     }
 
     public function testLinkStubWithNoFileLink()
     {
-        $var = [new LinkStub( 'example.com', 0, 'http://example.com' )];
+        $var = [new LinkStub('example.com', 0, 'http://example.com')];
 
         $cloner = new VarCloner();
         $dumper = new HtmlDumper();
-        $dumper->setDumpHeader( '<foo></foo>' );
-        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
-        $dumper->setDisplayOptions( ['fileLinkFormat' => '%f:%l'] );
-        $dump = $dumper->dump( $cloner->cloneVar( $var ), true );
+        $dumper->setDumpHeader('<foo></foo>');
+        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dumper->setDisplayOptions(['fileLinkFormat' => '%f:%l']);
+        $dump = $dumper->dump($cloner->cloneVar($var), true);
 
         $expectedDump = <<<'EODUMP'
 <foo></foo><bar><span class=sf-dump-note>array:1</span> [<samp>
@@ -126,18 +126,18 @@ EODUMP;
 </bar>
 EODUMP;
 
-        $this->assertStringMatchesFormat( $expectedDump, $dump );
+        $this->assertStringMatchesFormat($expectedDump, $dump);
     }
 
     public function testClassStub()
     {
-        $var = [new ClassStub( 'hello', [FooInterface::class, 'foo'] )];
+        $var = [new ClassStub('hello', [FooInterface::class, 'foo'])];
 
         $cloner = new VarCloner();
         $dumper = new HtmlDumper();
-        $dumper->setDumpHeader( '<foo></foo>' );
-        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
-        $dump = $dumper->dump( $cloner->cloneVar( $var ), true, ['fileLinkFormat' => '%f:%l'] );
+        $dumper->setDumpHeader('<foo></foo>');
+        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dump = $dumper->dump($cloner->cloneVar($var), true, ['fileLinkFormat' => '%f:%l']);
 
         $expectedDump = <<<'EODUMP'
 <foo></foo><bar><span class=sf-dump-note>array:1</span> [<samp>
@@ -146,18 +146,18 @@ EODUMP;
 </bar>
 EODUMP;
 
-        $this->assertStringMatchesFormat( $expectedDump, $dump );
+        $this->assertStringMatchesFormat($expectedDump, $dump);
     }
 
     public function testClassStubWithNotExistingClass()
     {
-        $var = [new ClassStub( NotExisting::class )];
+        $var = [new ClassStub(NotExisting::class)];
 
         $cloner = new VarCloner();
         $dumper = new HtmlDumper();
-        $dumper->setDumpHeader( '<foo></foo>' );
-        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
-        $dump = $dumper->dump( $cloner->cloneVar( $var ), true );
+        $dumper->setDumpHeader('<foo></foo>');
+        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dump = $dumper->dump($cloner->cloneVar($var), true);
 
         $expectedDump = <<<'EODUMP'
 <foo></foo><bar><span class=sf-dump-note>array:1</span> [<samp>
@@ -167,18 +167,18 @@ EODUMP;
 </bar>
 EODUMP;
 
-        $this->assertStringMatchesFormat( $expectedDump, $dump );
+        $this->assertStringMatchesFormat($expectedDump, $dump);
     }
 
     public function testClassStubWithNotExistingMethod()
     {
-        $var = [new ClassStub( 'hello', [FooInterface::class, 'missing'] )];
+        $var = [new ClassStub('hello', [FooInterface::class, 'missing'])];
 
         $cloner = new VarCloner();
         $dumper = new HtmlDumper();
-        $dumper->setDumpHeader( '<foo></foo>' );
-        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
-        $dump = $dumper->dump( $cloner->cloneVar( $var ), true, ['fileLinkFormat' => '%f:%l'] );
+        $dumper->setDumpHeader('<foo></foo>');
+        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dump = $dumper->dump($cloner->cloneVar($var), true, ['fileLinkFormat' => '%f:%l']);
 
         $expectedDump = <<<'EODUMP'
 <foo></foo><bar><span class=sf-dump-note>array:1</span> [<samp>
@@ -187,22 +187,19 @@ EODUMP;
 </bar>
 EODUMP;
 
-        $this->assertStringMatchesFormat( $expectedDump, $dump );
+        $this->assertStringMatchesFormat($expectedDump, $dump);
     }
 
     public function testClassStubWithAnonymousClass()
     {
-        $var = [
-            new ClassStub( \get_class( new class() extends \Exception
-            {
-            } ) )
-        ];
+        $var = [new ClassStub(\get_class(new class() extends \Exception {
+        }))];
 
         $cloner = new VarCloner();
         $dumper = new HtmlDumper();
-        $dumper->setDumpHeader( '<foo></foo>' );
-        $dumper->setDumpBoundaries( '<bar>', '</bar>' );
-        $dump = $dumper->dump( $cloner->cloneVar( $var ), true, ['fileLinkFormat' => '%f:%l'] );
+        $dumper->setDumpHeader('<foo></foo>');
+        $dumper->setDumpBoundaries('<bar>', '</bar>');
+        $dump = $dumper->dump($cloner->cloneVar($var), true, ['fileLinkFormat' => '%f:%l']);
 
         $expectedDump = <<<'EODUMP'
 <foo></foo><bar><span class=sf-dump-note>array:1</span> [<samp>
@@ -211,6 +208,6 @@ EODUMP;
 </bar>
 EODUMP;
 
-        $this->assertStringMatchesFormat( $expectedDump, $dump );
+        $this->assertStringMatchesFormat($expectedDump, $dump);
     }
 }

@@ -37,7 +37,8 @@ $arModelTariff = [];
 $arModelBalance = [];
 
 \CLocalCore::addItemToMenu($arModelBalance, \Local\Core\Inner\AdminHelper\Data\BalanceLog\AdminList::class, \Local\Core\Inner\AdminHelper\Data\BalanceLog\AdminEdit::class, 'Логи балансов');
-\CLocalCore::addItemToMenu($arModelBalance, \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminList::class, \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminEdit::class, 'Логи попыток пополнения');
+\CLocalCore::addItemToMenu($arModelBalance, \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminList::class, \Local\Core\Inner\AdminHelper\Data\AttemptsTopUpBalanceLog\AdminEdit::class,
+    'Логи попыток пополнения');
 
 
 /*

@@ -32,20 +32,20 @@ class PersonalCompanyDetailComponent extends \Local\Core\Inner\BxModified\CBitri
 
         if (
         $obCache->startDataCache((60 * 60 * 24 * 7), md5(__METHOD__.'_company_id='.$this->arParams['COMPANY_ID']), \Local\Core\Inner\Cache::getComponentCachePath(['personal.company.detail'], [
-                'company_id='.$this->arParams['COMPANY_ID']
-            ]))
+            'company_id='.$this->arParams['COMPANY_ID']
+        ]))
         ) {
             $rsCompany = \Local\Core\Model\Data\CompanyTable::getList([
-                    'filter' => [
-                        'ID' => $this->arParams['COMPANY_ID'],
-                        'USER_OWN_ID' => $GLOBALS['USER']->GetID()
-                    ],
-                    'order' => ['DATE_CREATE' => 'DESC'],
-                    'select' => [
-                        '*',
-                        'STORES'
-                    ]
-                ]);
+                'filter' => [
+                    'ID' => $this->arParams['COMPANY_ID'],
+                    'USER_OWN_ID' => $GLOBALS['USER']->GetID()
+                ],
+                'order' => ['DATE_CREATE' => 'DESC'],
+                'select' => [
+                    '*',
+                    'STORES'
+                ]
+            ]);
 
             $rsCompany = $rsCompany->fetchObject();
 

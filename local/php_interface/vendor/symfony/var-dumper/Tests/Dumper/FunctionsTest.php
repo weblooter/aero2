@@ -25,10 +25,10 @@ class FunctionsTest extends TestCase
         $var1 = 'a';
 
         ob_start();
-        $return = dump( $var1 );
+        $return = dump($var1);
         $out = ob_get_clean();
 
-        $this->assertEquals( $var1, $return );
+        $this->assertEquals($var1, $return);
     }
 
     public function testDumpReturnsAllArgsInArray()
@@ -40,18 +40,18 @@ class FunctionsTest extends TestCase
         $var3 = 'c';
 
         ob_start();
-        $return = dump( $var1, $var2, $var3 );
+        $return = dump($var1, $var2, $var3);
         $out = ob_get_clean();
 
-        $this->assertEquals( [$var1, $var2, $var3], $return );
+        $this->assertEquals([$var1, $var2, $var3], $return);
     }
 
     protected function setupVarDumper()
     {
         $cloner = new VarCloner();
-        $dumper = new CliDumper( 'php://output' );
-        VarDumper::setHandler( function ( $var ) use ( $cloner, $dumper ) {
-            $dumper->dump( $cloner->cloneVar( $var ) );
-        } );
+        $dumper = new CliDumper('php://output');
+        VarDumper::setHandler(function ($var) use ($cloner, $dumper) {
+            $dumper->dump($cloner->cloneVar($var));
+        });
     }
 }

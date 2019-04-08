@@ -53,14 +53,14 @@ class ImportData
                 $arLoggerData['ALERT_IF_XML_NOT_MODIFIED'] = $arStore['ALERT_IF_XML_NOT_MODIFIED'];
 
                 $rsLastLog = ImportLogTable::getList([
-                        'filter' => [
-                            'STORE_ID' => $arLoggerData['STORE_ID'],
-                        ],
-                        'order' => ['ID' => 'DESC'],
-                        'select' => ['ROBOFEED_VERSION', 'ROBOFEED_DATE'],
-                        'limit' => 1,
-                        'offset' => 0
-                    ]);
+                    'filter' => [
+                        'STORE_ID' => $arLoggerData['STORE_ID'],
+                    ],
+                    'order' => ['ID' => 'DESC'],
+                    'select' => ['ROBOFEED_VERSION', 'ROBOFEED_DATE'],
+                    'limit' => 1,
+                    'offset' => 0
+                ]);
                 $isDouble = false;
                 $isTariffChanged = false;
                 if ($rsLastLog->getSelectedRowsCount() > 0) {
@@ -148,10 +148,10 @@ class ImportData
             switch ($arLoggerData['IMPORT_RESULT']) {
                 case 'ER':
                     \Local\Core\Inner\TriggerMail\Robofeed\Import::error([
-                            "EMAIL" => $arUser['EMAIL'],
-                            'STORE_NAME' => $arStore['NAME'],
-                            'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
-                        ]);
+                        "EMAIL" => $arUser['EMAIL'],
+                        'STORE_NAME' => $arStore['NAME'],
+                        'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
+                    ]);
                     break;
                 case 'SU':
                     $arStoreImportData['DATE_LAST_SUCCESS_IMPORT'] = $arLoggerData['DATE_CREATE'];
@@ -160,18 +160,18 @@ class ImportData
 
                     if (!empty($arLoggerData['ERROR_TEXT'])) {
                         \Local\Core\Inner\TriggerMail\Robofeed\Import::successWithWarning([
-                                "EMAIL" => $arUser['EMAIL'],
-                                'STORE_NAME' => $arStore['NAME'],
-                                'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
-                            ]);
+                            "EMAIL" => $arUser['EMAIL'],
+                            'STORE_NAME' => $arStore['NAME'],
+                            'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
+                        ]);
                     } else {
 
                         if ($arStore['LAST_IMPORT_RESULT'] != 'SU') {
                             \Local\Core\Inner\TriggerMail\Robofeed\Import::success([
-                                    "EMAIL" => $arUser['EMAIL'],
-                                    'STORE_NAME' => $arStore['NAME'],
-                                    'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']])
-                                ]);
+                                "EMAIL" => $arUser['EMAIL'],
+                                'STORE_NAME' => $arStore['NAME'],
+                                'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']])
+                            ]);
                         }
                     }
 
@@ -179,9 +179,9 @@ class ImportData
                 case 'NU':
                     if ($arStore['ALERT_IF_XML_NOT_MODIFIED'] == 'Y') {
                         \Local\Core\Inner\TriggerMail\Robofeed\Import::xmlNotModified([
-                                "EMAIL" => $arUser['EMAIL'],
-                                'STORE_NAME' => $arStore['NAME']
-                            ]);
+                            "EMAIL" => $arUser['EMAIL'],
+                            'STORE_NAME' => $arStore['NAME']
+                        ]);
                     }
                     break;
             }
@@ -295,25 +295,25 @@ class ImportData
             ->getTimestamp();
 
         $rsStoreToQueue = \Local\Core\Model\Data\StoreTable::getList([
-                'filter' => [
-                    'ACTIVE' => 'Y'
-                ],
-                'select' => [
-                    'ID',
-                ],
-                'order' => [
-                    'DATE_CREATE' => 'DESC',
-                ],
-            ]);
+            'filter' => [
+                'ACTIVE' => 'Y'
+            ],
+            'select' => [
+                'ID',
+            ],
+            'order' => [
+                'DATE_CREATE' => 'DESC',
+            ],
+        ]);
 
         while ($arStore = $rsStoreToQueue->fetch()) {
             $boolNeedCreateJob = false;
 
             $arLastLog = \Local\Core\Model\Robofeed\ImportLogTable::getList([
-                    'filter' => ['STORE_ID' => $arStore['ID']],
-                    'select' => ['ID', 'DATE_CREATE'],
-                    'order' => ['DATE_CREATE' => 'DESC']
-                ])
+                'filter' => ['STORE_ID' => $arStore['ID']],
+                'select' => ['ID', 'DATE_CREATE'],
+                'order' => ['DATE_CREATE' => 'DESC']
+            ])
                 ->fetch();
             if (!empty($arLastLog['DATE_CREATE'])) {
                 if ($arLastLog['DATE_CREATE']->getTimestamp() < $intTimestamp) {

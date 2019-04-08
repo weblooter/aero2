@@ -19,9 +19,9 @@ class CFile extends \CFile
      *                             /local.core/tmp/
      * @param int    $intOldFileId ID старого файла, который необходимо удалить, если такой есть.
      *
+     * @return int Метод возвращает числовой идентификатор сохранённого и зарегистрированного в системе файла.
      * @see \CFile::MakeFileArray()
      *
-     * @return int Метод возвращает числовой идентификатор сохранённого и зарегистрированного в системе файла.
      */
     public static function saveFile(array $arFile, string $strSavePath = '', $intOldFileId = 0)
     {
@@ -89,9 +89,9 @@ class CFile extends \CFile
      * @param array|string $mixFile      Загружаемый файл, структурой как \CFile::MakeFileArray(), или название файла
      * @param string       $strExtension Расшине файла, к примеру <b>.xml</b>
      *
+     * @return bool
      * @see \CFile::MakeFileArray()
      *
-     * @return bool
      */
     public static function checkExtension($mixFile, $strExtension)
     {

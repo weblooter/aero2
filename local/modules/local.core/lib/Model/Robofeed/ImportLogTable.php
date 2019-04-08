@@ -52,70 +52,70 @@ class ImportLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMana
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\DatetimeField('DATE_MODIFIED', [
-                    'title' => 'Дата последнего изменения',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата последнего изменения',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('STORE_ID', [
-                    'required' => true,
-                    'title' => 'ID магазина'
-                ]),
+                'required' => true,
+                'title' => 'ID магазина'
+            ]),
             new Fields\IntegerField('ROBOFEED_VERSION', [
-                    'required' => false,
-                    'title' => 'Версия Robofeed XML'
-                ]),
+                'required' => false,
+                'title' => 'Версия Robofeed XML'
+            ]),
             new Fields\DatetimeField('ROBOFEED_DATE', [
-                    'required' => false,
-                    'title' => 'Дата создания Robofeed XML'
-                ]),
+                'required' => false,
+                'title' => 'Дата создания Robofeed XML'
+            ]),
             new Fields\EnumField('BEHAVIOR_IMPORT_ERROR', [
-                    'required' => false,
-                    'title' => 'Поведение импорта при ошибке',
-                    'values' => self::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'),
-                ]),
+                'required' => false,
+                'title' => 'Поведение импорта при ошибке',
+                'values' => self::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'),
+            ]),
             new Fields\EnumField('ALERT_IF_XML_NOT_MODIFIED', [
-                    'required' => false,
-                    'title' => 'Информировать о не изменившемся Robofeed XML?',
-                    'values' => self::getEnumFieldValues('ALERT_IF_XML_NOT_MODIFIED'),
-                    'default_value' => 'Y'
-                ]),
+                'required' => false,
+                'title' => 'Информировать о не изменившемся Robofeed XML?',
+                'values' => self::getEnumFieldValues('ALERT_IF_XML_NOT_MODIFIED'),
+                'default_value' => 'Y'
+            ]),
             new Fields\IntegerField('PRODUCT_TOTAL_COUNT', [
-                    'required' => false,
-                    'title' => 'Кол-во товаров в Robofeed XML'
-                ]),
+                'required' => false,
+                'title' => 'Кол-во товаров в Robofeed XML'
+            ]),
             new Fields\IntegerField('PRODUCT_SUCCESS_IMPORT', [
-                    'required' => false,
-                    'title' => 'Кол-во валидных товаров в Robofeed XML'
-                ]),
+                'required' => false,
+                'title' => 'Кол-во валидных товаров в Robofeed XML'
+            ]),
             new Fields\EnumField('IMPORT_RESULT', [
-                    'required' => false,
-                    'title' => 'Результат импорта',
-                    'values' => self::getEnumFieldValues('IMPORT_RESULT'),
-                    'default_value' => ''
-                ]),
+                'required' => false,
+                'title' => 'Результат импорта',
+                'values' => self::getEnumFieldValues('IMPORT_RESULT'),
+                'default_value' => ''
+            ]),
             new Fields\TextField('ERROR_TEXT', [
-                    'required' => false,
-                    'title' => 'Ошибка',
-                ]),
+                'required' => false,
+                'title' => 'Ошибка',
+            ]),
 
             new Fields\Relations\Reference('STORE_DATA', StoreTable::class, \Bitrix\Main\ORM\Query\Join::on('this.STORE_ID', 'ref.ID'), [
-                    'title' => 'ORM: Магазин'
-                ])
+                'title' => 'ORM: Магазин'
+            ])
         ];
     }
 

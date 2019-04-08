@@ -29,14 +29,14 @@ class ElementProperty
 
         if (!isset($arStorage[$iblockId][$code])) {
             $data = Iblock\PropertyTable::getList([
-                    "select" => ["ID"],
-                    "filter" => [
-                        "=IBLOCK_ID" => $iblockId,
-                        "=CODE" => $code,
-                    ],
-                    "limit" => 1,
-                    "cache" => ["ttl" => 86400]
-                ])
+                "select" => ["ID"],
+                "filter" => [
+                    "=IBLOCK_ID" => $iblockId,
+                    "=CODE" => $code,
+                ],
+                "limit" => 1,
+                "cache" => ["ttl" => 86400]
+            ])
                 ->fetch();
 
             $arStorage[$iblockId][$code] = $data["ID"] ?? null;
@@ -64,9 +64,9 @@ class ElementProperty
             $propertyId = \Local\Core\Assistant\Iblock\ElementProperty::getIdByCode(\Local\Core\Assistant\Iblock\Iblock::getIdByCode('catalog', 'catalog'), $code);
             if ($propertyId) {
                 $data = \Bitrix\Iblock\PropertyEnumerationTable::getList([
-                        'order' => ['SORT' => 'ASC'],
-                        'filter' => ['=PROPERTY_ID' => $propertyId],
-                    ])
+                    'order' => ['SORT' => 'ASC'],
+                    'filter' => ['=PROPERTY_ID' => $propertyId],
+                ])
                     ->fetchAll();
             }
 

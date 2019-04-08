@@ -26,28 +26,28 @@ class PersonalStoreListComponent extends \Local\Core\Inner\BxModified\CBitrixCom
         $obCache->startDataCache((60 * 60 * 24 * 7),
             md5(__METHOD__.'_company_id='.$this->arParams['COMPANY_ID'].'_elem_count='.$this->arParams['ELEM_COUNT'].'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()),
             \Local\Core\Inner\Cache::getComponentCachePath(['personal.store.list'], [
-                    'company_id='.$this->arParams['COMPANY_ID'],
-                    'elem_count='.$this->arParams['ELEM_COUNT'],
-                    'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
-                ]))
+                'company_id='.$this->arParams['COMPANY_ID'],
+                'elem_count='.$this->arParams['ELEM_COUNT'],
+                'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
+            ]))
         ) {
             $rs = \Local\Core\Model\Data\StoreTable::getList([
-                    'filter' => [
-                        'COMPANY_ID' => $this->arParams['COMPANY_ID']
-                    ],
-                    'order' => ['DATE_CREATE' => 'DESC'],
-                    'select' => [
-                        'ID',
-                        'NAME',
-                        'DOMAIN',
-                        'ACTIVE',
-                        'DATE_CREATE',
-                        'RESOURCE_TYPE'
-                    ],
-                    "count_total" => true,
-                    "offset" => $nav->getOffset(),
-                    "limit" => $nav->getLimit(),
-                ]);
+                'filter' => [
+                    'COMPANY_ID' => $this->arParams['COMPANY_ID']
+                ],
+                'order' => ['DATE_CREATE' => 'DESC'],
+                'select' => [
+                    'ID',
+                    'NAME',
+                    'DOMAIN',
+                    'ACTIVE',
+                    'DATE_CREATE',
+                    'RESOURCE_TYPE'
+                ],
+                "count_total" => true,
+                "offset" => $nav->getOffset(),
+                "limit" => $nav->getLimit(),
+            ]);
             if ($rs->getSelectedRowsCount() < 1) {
                 $obCache->abortDataCache();
                 $arResult['ITEMS'] = [];

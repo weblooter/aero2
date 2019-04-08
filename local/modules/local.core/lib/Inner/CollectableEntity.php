@@ -65,11 +65,11 @@ abstract class CollectableEntity extends Entity
     }
 
     /**
-     * @internal
-     *
      * @param $index
      *
      * @throws Main\ArgumentTypeException
+     * @internal
+     *
      */
     public function setInternalIndex($index)
     {
@@ -93,11 +93,11 @@ abstract class CollectableEntity extends Entity
     }
 
     /**
-     * @internal
-     *
      * @param \SplObjectStorage $cloneEntity
      *
      * @return CollectableEntity
+     * @internal
+     *
      */
     public function createClone(\SplObjectStorage $cloneEntity)
     {

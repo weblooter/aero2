@@ -107,8 +107,8 @@
         <? if ($arParams['COMPANY_ID'] > 0): ?>
             <div class="form-group">
                 <a href="<?=\Local\Core\Inner\Route::getRouteTo('company', 'detail', [
-                        '#COMPANY_ID#' => $arParams['COMPANY_ID']
-                    ])?>" class="btn btn-dark">Вернуться
+                    '#COMPANY_ID#' => $arParams['COMPANY_ID']
+                ])?>" class="btn btn-dark">Вернуться
                     к компании</a>
                 <button type="submit" class="btn btn-warning">Сохранить изменения</button>
             </div>

@@ -30,11 +30,11 @@ class Condition extends Base
         if (!is_null($this->fieldName) && !is_null($this->formName)) {
             $obCond = new \CCatalogCondTree();
             $boolCond = $obCond->Init(BT_COND_MODE_DEFAULT, BT_COND_BUILD_CATALOG, [
-                    "FORM_NAME" => $this->formName, // ID формы в которую будет выводится
-                    "CONT_ID" => $this->fieldName,
-                    "JS_NAME" => "JSCatCond",
-                    "PREFIX" => $this->fieldName
-                ]);
+                "FORM_NAME" => $this->formName, // ID формы в которую будет выводится
+                "CONT_ID" => $this->fieldName,
+                "JS_NAME" => "JSCatCond",
+                "PREFIX" => $this->fieldName
+            ]);
             if (!$boolCond) {
                 if ($ex = $APPLICATION->GetException()) {
                     $result .= $ex->GetString()."<br>";

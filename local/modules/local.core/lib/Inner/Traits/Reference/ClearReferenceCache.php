@@ -17,7 +17,7 @@ trait ClearReferenceCache
             'Scheme',
             'ReferenceField'
         ], [
-                'class='.(implode('_', array_slice(explode('\\', static::class), -2)))
-            ]);
+            'class='.(implode('_', array_slice(explode('\\', static::class), -2)))
+        ]);
     }
 }

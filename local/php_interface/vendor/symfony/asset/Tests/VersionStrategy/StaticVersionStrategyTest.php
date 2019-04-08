@@ -20,18 +20,18 @@ class StaticVersionStrategyTest extends TestCase
     {
         $version = 'v1';
         $path = 'test-path';
-        $staticVersionStrategy = new StaticVersionStrategy( $version );
-        $this->assertEquals( $version, $staticVersionStrategy->getVersion( $path ) );
+        $staticVersionStrategy = new StaticVersionStrategy($version);
+        $this->assertEquals($version, $staticVersionStrategy->getVersion($path));
     }
 
     /**
      * @dataProvider getConfigs
      */
-    public function testApplyVersion( $path, $version, $format )
+    public function testApplyVersion($path, $version, $format)
     {
-        $staticVersionStrategy = new StaticVersionStrategy( $version, $format );
-        $formatted = sprintf( $format ? : '%s?%s', $path, $version );
-        $this->assertEquals( $formatted, $staticVersionStrategy->applyVersion( $path ) );
+        $staticVersionStrategy = new StaticVersionStrategy($version, $format);
+        $formatted = sprintf($format ?: '%s?%s', $path, $version);
+        $this->assertEquals($formatted, $staticVersionStrategy->applyVersion($path));
     }
 
     public function getConfigs()

@@ -29,60 +29,53 @@ class CliDescriptor implements DumpDescriptorInterface
     private $dumper;
     private $lastIdentifier;
 
-    public function __construct( CliDumper $dumper )
+    public function __construct(CliDumper $dumper)
     {
         $this->dumper = $dumper;
     }
 
-    public function describe( OutputInterface $output, Data $data, array $context, int $clientId ): void
+    public function describe(OutputInterface $output, Data $data, array $context, int $clientId): void
     {
-        $io = $output instanceof SymfonyStyle ? $output : new SymfonyStyle( new ArrayInput( [] ), $output );
-        $this->dumper->setColors( $output->isDecorated() );
+        $io = $output instanceof SymfonyStyle ? $output : new SymfonyStyle(new ArrayInput([]), $output);
+        $this->dumper->setColors($output->isDecorated());
 
-        $rows = [['date', date( 'r', $context[ 'timestamp' ] )]];
+        $rows = [['date', date('r', $context['timestamp'])]];
         $lastIdentifier = $this->lastIdentifier;
         $this->lastIdentifier = $clientId;
 
         $section = "Received from client #$clientId";
-        if ( isset( $context[ 'request' ] ) )
-        {
-            $request = $context[ 'request' ];
-            $this->lastIdentifier = $request[ 'identifier' ];
-            $section = sprintf( '%s %s', $request[ 'method' ], $request[ 'uri' ] );
-            if ( $controller = $request[ 'controller' ] )
-            {
-                $rows[] = ['controller', rtrim( $this->dumper->dump( $controller, true ), "\n" )];
+        if (isset($context['request'])) {
+            $request = $context['request'];
+            $this->lastIdentifier = $request['identifier'];
+            $section = sprintf('%s %s', $request['method'], $request['uri']);
+            if ($controller = $request['controller']) {
+                $rows[] = ['controller', rtrim($this->dumper->dump($controller, true), "\n")];
             }
-        }
-        elseif ( isset( $context[ 'cli' ] ) )
-        {
-            $this->lastIdentifier = $context[ 'cli' ][ 'identifier' ];
-            $section = '$ '.$context[ 'cli' ][ 'command_line' ];
+        } elseif (isset($context['cli'])) {
+            $this->lastIdentifier = $context['cli']['identifier'];
+            $section = '$ '.$context['cli']['command_line'];
         }
 
-        if ( $this->lastIdentifier !== $lastIdentifier )
-        {
-            $io->section( $section );
+        if ($this->lastIdentifier !== $lastIdentifier) {
+            $io->section($section);
         }
 
-        if ( isset( $context[ 'source' ] ) )
-        {
-            $source = $context[ 'source' ];
-            $rows[] = ['source', sprintf( '%s on line %d', $source[ 'name' ], $source[ 'line' ] )];
-            $file = $source[ 'file_relative' ] ?? $source[ 'file' ];
+        if (isset($context['source'])) {
+            $source = $context['source'];
+            $rows[] = ['source', sprintf('%s on line %d', $source['name'], $source['line'])];
+            $file = $source['file_relative'] ?? $source['file'];
             $rows[] = ['file', $file];
-            $fileLink = $source[ 'file_link' ] ?? null;
+            $fileLink = $source['file_link'] ?? null;
         }
 
-        $io->table( [], $rows );
+        $io->table([], $rows);
 
-        if ( isset( $fileLink ) )
-        {
-            $io->writeln( ['<info>Open source in your IDE/browser:</info>', $fileLink] );
+        if (isset($fileLink)) {
+            $io->writeln(['<info>Open source in your IDE/browser:</info>', $fileLink]);
             $io->newLine();
         }
 
-        $this->dumper->dump( $data );
+        $this->dumper->dump($data);
         $io->newLine();
     }
 }

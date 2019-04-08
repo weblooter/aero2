@@ -28,16 +28,16 @@ class Base
     {
         if (is_null(self::$__register[$intStoreId])) {
             $arTmp = \Local\Core\Model\Data\StoreTable::getList([
-                    'filter' => ['ID' => $intStoreId],
-                    'select' => [
-                        'ID',
-                        'NAME',
-                        'DOMAIN',
-                        'COMPANY_ID',
-                        'COMPANY_DATA_' => 'COMPANY',
-                        'TARIFF_CODE'
-                    ]
-                ])
+                'filter' => ['ID' => $intStoreId],
+                'select' => [
+                    'ID',
+                    'NAME',
+                    'DOMAIN',
+                    'COMPANY_ID',
+                    'COMPANY_DATA_' => 'COMPANY',
+                    'TARIFF_CODE'
+                ]
+            ])
                 ->fetch();
 
             $ar = [

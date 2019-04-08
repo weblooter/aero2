@@ -12,7 +12,7 @@
 ?>
 
 <h5>Текущий баланс</h5>
-<?=number_format(\Local\Core\Inner\Balance\Base::getUserBalance($GLOBALS['USER']->GetId()), 0, '.', ' ')?> руб.<br/>
+<?=number_format(\Local\Core\Inner\Balance\Base::getUserBalance($GLOBALS['USER']->GetId()), 0, '.', ' ')?> руб.<br />
 
 <div class="btn-group" role="group">
     <button id="btnGroupDrop1" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -23,9 +23,9 @@
         <a class="dropdown-item" href="<?=\Local\Core\Inner\Route::getRouteTo('balance', 'top-up', ['#HANDLER#' => 'bill'])?>">Оплата по счету</a>
     </div>
 </div>
-<br/>
+<br />
 <h5>Ближайшие операции по списанию</h5>
-// TODO<br/>
+// TODO<br />
 <ul class="list-group">
     <li class="list-group-item">2019-03-02, Яндекс Маркет, ЛИД, 1 700 руб.</li>
     <li class="list-group-item">2019-03-02, Яндекс Маркет, ЛИД, 1 700 руб.</li>
@@ -33,7 +33,7 @@
     <li class="list-group-item">2019-03-02, Яндекс Маркет, ЛИД, 1 700 руб.</li>
     <li class="list-group-item">2019-03-02, Яндекс Маркет, ЛИД, 1 700 руб.</li>
 </ul>
-<br/>
+<br />
 <h5>Последние операции по балансу</h5>
 <table class="table">
     <thead>
@@ -44,12 +44,12 @@
     </tr>
     </thead>
     <tbody>
-    <?foreach ($arResult['BALANCE_LOG'] as $arLog):?>
-    <tr class="table-<?=$arLog['OPERATION'] > 0 ? 'success' : 'danger'?>">
-        <td><?=$arLog['DATE_CREATE']->format('Y-m-d H:i:s')?></td>
-        <td><?=$arLog['OPERATION']?></td>
-        <td><?=$arLog['NOTE']?></td>
-    </tr>
-    <?endforeach;?>
+    <? foreach ($arResult['BALANCE_LOG'] as $arLog): ?>
+        <tr class="table-<?=$arLog['OPERATION'] > 0 ? 'success' : 'danger'?>">
+            <td><?=$arLog['DATE_CREATE']->format('Y-m-d H:i:s')?></td>
+            <td><?=$arLog['OPERATION']?></td>
+            <td><?=$arLog['NOTE']?></td>
+        </tr>
+    <? endforeach; ?>
     </tbody>
 </table>

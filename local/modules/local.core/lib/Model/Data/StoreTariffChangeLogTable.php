@@ -27,25 +27,25 @@ class StoreTariffChangeLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Da
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('STORE_ID', [
-                    'required' => true,
-                    'title' => 'ID магазина'
-                ]),
+                'required' => true,
+                'title' => 'ID магазина'
+            ]),
             new Fields\StringField('TARIFF_CODE', [
-                    'required' => true,
-                    'title' => 'Символьный код тарифа'
-                ]),
+                'required' => true,
+                'title' => 'Символьный код тарифа'
+            ]),
 
             new Fields\Relations\Reference('STORE_DATA', StoreTable::class, \Bitrix\Main\ORM\Query\Join::on('this.STORE_ID', 'ref.ID')),
             new Fields\Relations\Reference('TARIFF_DATA', TariffTable::class, \Bitrix\Main\ORM\Query\Join::on('this.TARIFF_CODE', 'ref.CODE')),

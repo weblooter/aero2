@@ -40,9 +40,9 @@ class Base
 
             /** @see \Local\Core\EventHandlers\Iblock\OnIBlockPropertyBuildList::getLinkToORM(); */
             $eventManager->addEventHandler('iblock', 'OnIBlockPropertyBuildList', [
-                    Iblock\OnIBlockPropertyBuildList::class,
-                    'getLinkToORM'
-                ]);
+                Iblock\OnIBlockPropertyBuildList::class,
+                'getLinkToORM'
+            ]);
         }
     }
 }

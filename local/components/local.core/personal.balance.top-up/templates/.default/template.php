@@ -12,14 +12,11 @@
 ?>
 
 <?
-if( !empty( $arResult['HANDLER'] ) )
-{
+if (!empty($arResult['HANDLER'])) {
     /** @var \Local\Core\Inner\Payment\PaymentInterface $obHandler */
     $obHandler = $arResult['HANDLER'];
     $obHandler->printPaymentForm();
-}
-else
-{
+} else {
     ?>
     <h4>Выбери способ оплаты:</h4>
     <ul>

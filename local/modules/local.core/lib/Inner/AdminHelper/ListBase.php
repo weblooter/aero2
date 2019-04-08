@@ -403,8 +403,8 @@ abstract class ListBase
      *
      * @param array $fields
      *
-     * @see https://dev.1c-bitrix.ru/api_help/main/general/admin.section/classes/cadminlistrow/addactions.php
      * @return array
+     * @see https://dev.1c-bitrix.ru/api_help/main/general/admin.section/classes/cadminlistrow/addactions.php
      */
     abstract protected function getRowAction($fields);
 
@@ -510,10 +510,10 @@ abstract class ListBase
             <?
         }
         $oFilter->Buttons([
-                "table_id" => $this->getTableListId(),
-                "url" => $this->getFilterUri(),
-                "form" => "find_form"
-            ]);
+            "table_id" => $this->getTableListId(),
+            "url" => $this->getFilterUri(),
+            "form" => "find_form"
+        ]);
         $oFilter->End();
 
         ?></form><?

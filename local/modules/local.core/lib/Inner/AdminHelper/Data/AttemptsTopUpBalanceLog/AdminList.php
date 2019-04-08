@@ -297,7 +297,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $this->checkRights("can_delete")
             ->isSuccess()
         ) {
-//            $actions["delete"] = "Удалить";
+            //            $actions["delete"] = "Удалить";
         }
 
         if (
@@ -320,8 +320,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
 
         if ($checkRights->isSuccess()) {
             try {
-                $arFields = [
-                ];
+                $arFields = [];
 
                 $res = \Local\Core\Model\Data\AttemptsTopUpBalanceLogTable::update($id, $arFields);
                 if (!$res->isSuccess()) {

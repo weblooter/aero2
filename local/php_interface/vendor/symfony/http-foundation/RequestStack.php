@@ -29,7 +29,7 @@ class RequestStack
      * This method should generally not be called directly as the stack
      * management should be taken care of by the application itself.
      */
-    public function push( Request $request )
+    public function push(Request $request)
     {
         $this->requests[] = $request;
     }
@@ -46,12 +46,11 @@ class RequestStack
      */
     public function pop()
     {
-        if ( !$this->requests )
-        {
+        if (!$this->requests) {
             return;
         }
 
-        return array_pop( $this->requests );
+        return array_pop($this->requests);
     }
 
     /**
@@ -59,7 +58,7 @@ class RequestStack
      */
     public function getCurrentRequest()
     {
-        return end( $this->requests ) ? : null;
+        return end($this->requests) ?: null;
     }
 
     /**
@@ -73,12 +72,11 @@ class RequestStack
      */
     public function getMasterRequest()
     {
-        if ( !$this->requests )
-        {
+        if (!$this->requests) {
             return;
         }
 
-        return $this->requests[ 0 ];
+        return $this->requests[0];
     }
 
     /**
@@ -94,13 +92,12 @@ class RequestStack
      */
     public function getParentRequest()
     {
-        $pos = \count( $this->requests ) - 2;
+        $pos = \count($this->requests) - 2;
 
-        if ( !isset( $this->requests[ $pos ] ) )
-        {
+        if (!isset($this->requests[$pos])) {
             return;
         }
 
-        return $this->requests[ $pos ];
+        return $this->requests[$pos];
     }
 }

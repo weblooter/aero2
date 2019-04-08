@@ -98,12 +98,13 @@ abstract class QueryAbstract
 
     /**
      * Валидировать параметра запроса. Вызывается в методе set.
-     * @see QueryAbstract::set
      *
      * @param string $name  Имя параметра, передается по ссылке
      * @param        $value Значение параметра, передается по ссылке
      *
      * @return Result
+     * @see QueryAbstract::set
+     *
      */
     public function checkParam(string &$name, &$value)
     {

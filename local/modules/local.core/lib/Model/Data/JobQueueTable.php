@@ -70,53 +70,53 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
     {
         return array(
             new Orm\Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+            ]),
             new Orm\Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Orm\Fields\DatetimeField('DATE_MODIFIED', [
-                    'title' => 'Дата последнего изменения',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата последнего изменения',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Orm\Fields\StringField('EXECUTE_BY', [
-                    'primary' => true,
-                    'default_value' => self::EXECUTE_BY_DEFAULT,
-                ]),
+                'primary' => true,
+                'default_value' => self::EXECUTE_BY_DEFAULT,
+            ]),
             new Orm\Fields\StringField('WORKER_CLASS_NAME', ['required' => true]),
             new Orm\Fields\TextField('INPUT_DATA', [
-                    'required' => true,
-                    'serialized' => true,
-                ]),
+                'required' => true,
+                'serialized' => true,
+            ]),
             new Orm\Fields\StringField('HASH'),
             new Orm\Fields\IntegerField('ATTEMPTS_LEFT', [
-                    'required' => true,
-                    'default_value' => 10,
-                ]),
+                'required' => true,
+                'default_value' => 10,
+            ]),
             new Orm\Fields\EnumField('STATUS', [
-                    'values' => [
-                        self::STATUS_ENUM_NEW,
-                        self::STATUS_ENUM_SUCCESS,
-                        self::STATUS_ENUM_ERROR,
-                        self::STATUS_ENUM_FAIL,
-                    ],
-                    'default_value' => self::STATUS_ENUM_NEW,
-                ]),
+                'values' => [
+                    self::STATUS_ENUM_NEW,
+                    self::STATUS_ENUM_SUCCESS,
+                    self::STATUS_ENUM_ERROR,
+                    self::STATUS_ENUM_FAIL,
+                ],
+                'default_value' => self::STATUS_ENUM_NEW,
+            ]),
             new Orm\Fields\DatetimeField('EXECUTE_AT', [
-                    'required' => true,
-                ]),
+                'required' => true,
+            ]),
             new Orm\Fields\EnumField('IS_EXECUTE_NOW', [
-                    'values' => ['Y', 'N'],
-                    'default_value' => 'N',
-                ]),
+                'values' => ['Y', 'N'],
+                'default_value' => 'N',
+            ]),
             new Orm\Fields\DatetimeField('LAST_EXECUTE_START'),
         );
     }

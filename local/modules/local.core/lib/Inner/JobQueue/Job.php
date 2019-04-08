@@ -50,7 +50,6 @@ class Job
 
     /**
      * Добавить задание, если такого задания еще не стоит
-     * @see \Local\Core\Inner\JobQueue\Job::add
      *
      * @param Abstracts\Worker           $worker
      * @param \Bitrix\Main\Type\DateTime $executeAt
@@ -58,6 +57,8 @@ class Job
      *
      * @return \Local\Core\Inner\JobQueue\AddResult
      * @throws \Local\Core\Inner\Client\Dadata\Exception\ArgumentException
+     * @see \Local\Core\Inner\JobQueue\Job::add
+     *
      */
     public static function addIfNotExist(
         \Local\Core\Inner\JobQueue\Abstracts\Worker $worker,
@@ -71,20 +72,20 @@ class Job
 
         /** @var $rows \Bitrix\Main\ORM\Query\Result */
         $rows = JobQueueTable::getList([
-                'select' => [
-                    'ID',
-                    'WORKER_CLASS_NAME',
-                    'INPUT_DATA',
-                    'EXECUTE_AT',
-                    'ATTEMPTS_LEFT',
-                ],
-                'filter' => [
-                    'HASH' => $hash,
-                    '>ATTEMPTS_LEFT' => 0,
-                    'STATUS' => ['N', 'E']
-                ],
-                'limit' => 1,
-            ]);
+            'select' => [
+                'ID',
+                'WORKER_CLASS_NAME',
+                'INPUT_DATA',
+                'EXECUTE_AT',
+                'ATTEMPTS_LEFT',
+            ],
+            'filter' => [
+                'HASH' => $hash,
+                '>ATTEMPTS_LEFT' => 0,
+                'STATUS' => ['N', 'E']
+            ],
+            'limit' => 1,
+        ]);
 
         $findJob = $rows->fetch();
 

@@ -33,25 +33,25 @@ class PersonalCompanyListComponent extends \Local\Core\Inner\BxModified\CBitrixC
         $obCache->startDataCache((60 * 60 * 24 * 7),
             md5(__METHOD__.'_user_id='.$GLOBALS['USER']->GetID().'_elem_count='.$this->arParams['ELEM_COUNT'].'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()),
             \Local\Core\Inner\Cache::getComponentCachePath(['personal.company.list'], [
-                    'user_id='.$GLOBALS['USER']->GetID(),
-                    'elem_count='.$this->arParams['ELEM_COUNT'],
-                    'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
-                ]))
+                'user_id='.$GLOBALS['USER']->GetID(),
+                'elem_count='.$this->arParams['ELEM_COUNT'],
+                'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
+            ]))
         ) {
 
 
             $rs = \Local\Core\Model\Data\CompanyTable::getList([
-                    'filter' => [
-                        'USER_OWN_ID' => $GLOBALS['USER']->GetID()
-                    ],
-                    'order' => ['DATE_CREATE' => 'DESC'],
-                    'select' => [
-                        '*'
-                    ],
-                    "count_total" => true,
-                    "offset" => $nav->getOffset(),
-                    "limit" => $nav->getLimit(),
-                ]);
+                'filter' => [
+                    'USER_OWN_ID' => $GLOBALS['USER']->GetID()
+                ],
+                'order' => ['DATE_CREATE' => 'DESC'],
+                'select' => [
+                    '*'
+                ],
+                "count_total" => true,
+                "offset" => $nav->getOffset(),
+                "limit" => $nav->getLimit(),
+            ]);
             if ($rs->getSelectedRowsCount() < 1) {
                 $obCache->abortDataCache();
                 $arResult['ITEMS'] = [];

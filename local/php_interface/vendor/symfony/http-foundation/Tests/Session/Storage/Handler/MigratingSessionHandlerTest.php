@@ -22,68 +22,68 @@ class MigratingSessionHandlerTest extends TestCase
 
     protected function setUp()
     {
-        $this->currentHandler = $this->createMock( \SessionHandlerInterface::class );
-        $this->writeOnlyHandler = $this->createMock( \SessionHandlerInterface::class );
+        $this->currentHandler = $this->createMock(\SessionHandlerInterface::class);
+        $this->writeOnlyHandler = $this->createMock(\SessionHandlerInterface::class);
 
-        $this->dualHandler = new MigratingSessionHandler( $this->currentHandler, $this->writeOnlyHandler );
+        $this->dualHandler = new MigratingSessionHandler($this->currentHandler, $this->writeOnlyHandler);
     }
 
     public function testInstanceOf()
     {
-        $this->assertInstanceOf( \SessionHandlerInterface::class, $this->dualHandler );
-        $this->assertInstanceOf( \SessionUpdateTimestampHandlerInterface::class, $this->dualHandler );
+        $this->assertInstanceOf(\SessionHandlerInterface::class, $this->dualHandler);
+        $this->assertInstanceOf(\SessionUpdateTimestampHandlerInterface::class, $this->dualHandler);
     }
 
     public function testClose()
     {
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'close' )
-            ->will( $this->returnValue( true ) );
+        $this->currentHandler->expects($this->once())
+            ->method('close')
+            ->will($this->returnValue(true));
 
-        $this->writeOnlyHandler->expects( $this->once() )
-            ->method( 'close' )
-            ->will( $this->returnValue( false ) );
+        $this->writeOnlyHandler->expects($this->once())
+            ->method('close')
+            ->will($this->returnValue(false));
 
         $result = $this->dualHandler->close();
 
-        $this->assertTrue( $result );
+        $this->assertTrue($result);
     }
 
     public function testDestroy()
     {
         $sessionId = 'xyz';
 
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'destroy' )
-            ->with( $sessionId )
-            ->will( $this->returnValue( true ) );
+        $this->currentHandler->expects($this->once())
+            ->method('destroy')
+            ->with($sessionId)
+            ->will($this->returnValue(true));
 
-        $this->writeOnlyHandler->expects( $this->once() )
-            ->method( 'destroy' )
-            ->with( $sessionId )
-            ->will( $this->returnValue( false ) );
+        $this->writeOnlyHandler->expects($this->once())
+            ->method('destroy')
+            ->with($sessionId)
+            ->will($this->returnValue(false));
 
-        $result = $this->dualHandler->destroy( $sessionId );
+        $result = $this->dualHandler->destroy($sessionId);
 
-        $this->assertTrue( $result );
+        $this->assertTrue($result);
     }
 
     public function testGc()
     {
         $maxlifetime = 357;
 
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'gc' )
-            ->with( $maxlifetime )
-            ->will( $this->returnValue( true ) );
+        $this->currentHandler->expects($this->once())
+            ->method('gc')
+            ->with($maxlifetime)
+            ->will($this->returnValue(true));
 
-        $this->writeOnlyHandler->expects( $this->once() )
-            ->method( 'gc' )
-            ->with( $maxlifetime )
-            ->will( $this->returnValue( false ) );
+        $this->writeOnlyHandler->expects($this->once())
+            ->method('gc')
+            ->with($maxlifetime)
+            ->will($this->returnValue(false));
 
-        $result = $this->dualHandler->gc( $maxlifetime );
-        $this->assertTrue( $result );
+        $result = $this->dualHandler->gc($maxlifetime);
+        $this->assertTrue($result);
     }
 
     public function testOpen()
@@ -91,19 +91,19 @@ class MigratingSessionHandlerTest extends TestCase
         $savePath = '/path/to/save/location';
         $sessionName = 'xyz';
 
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'open' )
-            ->with( $savePath, $sessionName )
-            ->will( $this->returnValue( true ) );
+        $this->currentHandler->expects($this->once())
+            ->method('open')
+            ->with($savePath, $sessionName)
+            ->will($this->returnValue(true));
 
-        $this->writeOnlyHandler->expects( $this->once() )
-            ->method( 'open' )
-            ->with( $savePath, $sessionName )
-            ->will( $this->returnValue( false ) );
+        $this->writeOnlyHandler->expects($this->once())
+            ->method('open')
+            ->with($savePath, $sessionName)
+            ->will($this->returnValue(false));
 
-        $result = $this->dualHandler->open( $savePath, $sessionName );
+        $result = $this->dualHandler->open($savePath, $sessionName);
 
-        $this->assertTrue( $result );
+        $this->assertTrue($result);
     }
 
     public function testRead()
@@ -111,18 +111,18 @@ class MigratingSessionHandlerTest extends TestCase
         $sessionId = 'xyz';
         $readValue = 'something';
 
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'read' )
-            ->with( $sessionId )
-            ->will( $this->returnValue( $readValue ) );
+        $this->currentHandler->expects($this->once())
+            ->method('read')
+            ->with($sessionId)
+            ->will($this->returnValue($readValue));
 
-        $this->writeOnlyHandler->expects( $this->never() )
-            ->method( 'read' )
-            ->with( $this->any() );
+        $this->writeOnlyHandler->expects($this->never())
+            ->method('read')
+            ->with($this->any());
 
-        $result = $this->dualHandler->read( $sessionId );
+        $result = $this->dualHandler->read($sessionId);
 
-        $this->assertSame( $readValue, $result );
+        $this->assertSame($readValue, $result);
     }
 
     public function testWrite()
@@ -130,19 +130,19 @@ class MigratingSessionHandlerTest extends TestCase
         $sessionId = 'xyz';
         $data = 'my-serialized-data';
 
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'write' )
-            ->with( $sessionId, $data )
-            ->will( $this->returnValue( true ) );
+        $this->currentHandler->expects($this->once())
+            ->method('write')
+            ->with($sessionId, $data)
+            ->will($this->returnValue(true));
 
-        $this->writeOnlyHandler->expects( $this->once() )
-            ->method( 'write' )
-            ->with( $sessionId, $data )
-            ->will( $this->returnValue( false ) );
+        $this->writeOnlyHandler->expects($this->once())
+            ->method('write')
+            ->with($sessionId, $data)
+            ->will($this->returnValue(false));
 
-        $result = $this->dualHandler->write( $sessionId, $data );
+        $result = $this->dualHandler->write($sessionId, $data);
 
-        $this->assertTrue( $result );
+        $this->assertTrue($result);
     }
 
     public function testValidateId()
@@ -150,18 +150,18 @@ class MigratingSessionHandlerTest extends TestCase
         $sessionId = 'xyz';
         $readValue = 'something';
 
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'read' )
-            ->with( $sessionId )
-            ->will( $this->returnValue( $readValue ) );
+        $this->currentHandler->expects($this->once())
+            ->method('read')
+            ->with($sessionId)
+            ->will($this->returnValue($readValue));
 
-        $this->writeOnlyHandler->expects( $this->never() )
-            ->method( 'read' )
-            ->with( $this->any() );
+        $this->writeOnlyHandler->expects($this->never())
+            ->method('read')
+            ->with($this->any());
 
-        $result = $this->dualHandler->validateId( $sessionId );
+        $result = $this->dualHandler->validateId($sessionId);
 
-        $this->assertTrue( $result );
+        $this->assertTrue($result);
     }
 
     public function testUpdateTimestamp()
@@ -169,18 +169,18 @@ class MigratingSessionHandlerTest extends TestCase
         $sessionId = 'xyz';
         $data = 'my-serialized-data';
 
-        $this->currentHandler->expects( $this->once() )
-            ->method( 'write' )
-            ->with( $sessionId, $data )
-            ->will( $this->returnValue( true ) );
+        $this->currentHandler->expects($this->once())
+            ->method('write')
+            ->with($sessionId, $data)
+            ->will($this->returnValue(true));
 
-        $this->writeOnlyHandler->expects( $this->once() )
-            ->method( 'write' )
-            ->with( $sessionId, $data )
-            ->will( $this->returnValue( false ) );
+        $this->writeOnlyHandler->expects($this->once())
+            ->method('write')
+            ->with($sessionId, $data)
+            ->will($this->returnValue(false));
 
-        $result = $this->dualHandler->updateTimestamp( $sessionId, $data );
+        $result = $this->dualHandler->updateTimestamp($sessionId, $data);
 
-        $this->assertTrue( $result );
+        $this->assertTrue($result);
     }
 }

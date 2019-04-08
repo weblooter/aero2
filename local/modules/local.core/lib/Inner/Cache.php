@@ -47,9 +47,9 @@ class Cache
      * @param array $arDirPath
      * @param array $arParams
      *
+     * @return string
      * @see \Local\Core\Inner\Cache::getCachePath()
      *
-     * @return string
      */
     public static function getComponentCachePath(array $arDirPath, array $arParams = [])
     {

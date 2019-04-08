@@ -49,7 +49,7 @@ interface SessionStorageInterface
      *
      * @param string $id
      */
-    public function setId( $id );
+    public function setId($id);
 
     /**
      * Returns the session name.
@@ -63,7 +63,7 @@ interface SessionStorageInterface
      *
      * @param string $name
      */
-    public function setName( $name );
+    public function setName($name);
 
     /**
      * Regenerates id that represents this storage.
@@ -84,7 +84,7 @@ interface SessionStorageInterface
      * Otherwise session data could get lost again for concurrent requests with the
      * new ID. One result could be that you get logged out after just logging in.
      *
-     * @param bool $destroy Destroy session when regenerating?
+     * @param bool $destroy  Destroy session when regenerating?
      * @param int  $lifetime Sets the cookie lifetime for the session cookie. A null value
      *                       will leave the system settings unchanged, 0 sets the cookie
      *                       to expire with browser session. Time is in seconds, and is
@@ -94,7 +94,7 @@ interface SessionStorageInterface
      *
      * @throws \RuntimeException If an error occurs while regenerating this storage
      */
-    public function regenerate( $destroy = false, $lifetime = null );
+    public function regenerate($destroy = false, $lifetime = null);
 
     /**
      * Force the session to be saved and closed.
@@ -123,12 +123,12 @@ interface SessionStorageInterface
      *
      * @throws \InvalidArgumentException If the bag does not exist
      */
-    public function getBag( $name );
+    public function getBag($name);
 
     /**
      * Registers a SessionBagInterface for use.
      */
-    public function registerBag( SessionBagInterface $bag );
+    public function registerBag(SessionBagInterface $bag);
 
     /**
      * @return MetadataBag

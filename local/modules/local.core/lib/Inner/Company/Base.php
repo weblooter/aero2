@@ -25,15 +25,15 @@ class Base
     {
         if (is_null(self::$__register[$intCompanyId])) {
             $ar = \Local\Core\Model\Data\CompanyTable::getList([
-                    'filter' => ['ID' => $intCompanyId],
-                    'select' => [
-                        'ID',
-                        'TYPE',
-                        'NAME',
-                        'USER_OWN_ID',
-                        'VERIFIED'
-                    ]
-                ])
+                'filter' => ['ID' => $intCompanyId],
+                'select' => [
+                    'ID',
+                    'TYPE',
+                    'NAME',
+                    'USER_OWN_ID',
+                    'VERIFIED'
+                ]
+            ])
                 ->fetch();
 
             self::$__register[$intCompanyId] = $ar;

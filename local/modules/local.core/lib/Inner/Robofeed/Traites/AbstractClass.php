@@ -16,8 +16,8 @@ trait AbstractClass
      *
      * @param $strXmlFilePath
      *
-     * @throws \Local\Core\Inner\Exception\FatalException
      * @return $this
+     * @throws \Local\Core\Inner\Exception\FatalException
      */
     public function setXmlPath($strXmlFilePath)
     {

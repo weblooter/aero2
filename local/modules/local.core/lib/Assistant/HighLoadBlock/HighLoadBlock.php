@@ -40,9 +40,9 @@ class HighLoadBlock
 
         if (self::$entities[$highLoadBlockName] == null) {
             $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList([
-                    'filter' => ['NAME' => $highLoadBlockName],
-                    'select' => ['ID']
-                ]);
+                'filter' => ['NAME' => $highLoadBlockName],
+                'select' => ['ID']
+            ]);
             $ar = $rs->fetch();
             if (empty($ar['ID'])) {
                 throw new \Exception('HL by code '.$highLoadBlockName.' not found!');
@@ -80,9 +80,9 @@ class HighLoadBlock
 
         if (self::$entities[$highLoadBlockTableName] == null) {
             $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList([
-                    'filter' => ['TABLE_NAME' => $highLoadBlockTableName],
-                    'select' => ['ID']
-                ]);
+                'filter' => ['TABLE_NAME' => $highLoadBlockTableName],
+                'select' => ['ID']
+            ]);
             $ar = $rs->fetch();
             if (empty($ar['ID'])) {
                 throw new \Exception('HL by table name '.$highLoadBlockTableName.' not found!');
@@ -110,9 +110,9 @@ class HighLoadBlock
 
         if (static::$entitiesTables[$highLoadBlockName] == null) {
             $rs = \Bitrix\Highloadblock\HighloadBlockTable::getList([
-                    'filter' => ['NAME' => $highLoadBlockName],
-                    'select' => ['TABLE_NAME']
-                ]);
+                'filter' => ['NAME' => $highLoadBlockName],
+                'select' => ['TABLE_NAME']
+            ]);
             $ar = $rs->fetch();
             if (empty($ar['TABLE_NAME'])) {
                 throw new \Exception('HL by code '.$highLoadBlockName.' not found!');

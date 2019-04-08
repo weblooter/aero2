@@ -34,11 +34,10 @@ class AcceptHeader
     /**
      * @param AcceptHeaderItem[] $items
      */
-    public function __construct( array $items )
+    public function __construct(array $items)
     {
-        foreach ( $items as $item )
-        {
-            $this->add( $item );
+        foreach ($items as $item) {
+            $this->add($item);
         }
     }
 
@@ -49,21 +48,21 @@ class AcceptHeader
      *
      * @return self
      */
-    public static function fromString( $headerValue )
+    public static function fromString($headerValue)
     {
         $index = 0;
 
-        $parts = HeaderUtils::split( (string)$headerValue, ',;=' );
+        $parts = HeaderUtils::split((string) $headerValue, ',;=');
 
-        return new self( array_map( function ( $subParts ) use ( &$index ) {
-            $part = array_shift( $subParts );
-            $attributes = HeaderUtils::combine( $subParts );
+        return new self(array_map(function ($subParts) use (&$index) {
+            $part = array_shift($subParts);
+            $attributes = HeaderUtils::combine($subParts);
 
-            $item = new AcceptHeaderItem( $part[ 0 ], $attributes );
-            $item->setIndex( $index++ );
+            $item = new AcceptHeaderItem($part[0], $attributes);
+            $item->setIndex($index++);
 
             return $item;
-        }, $parts ) );
+        }, $parts));
     }
 
     /**
@@ -73,7 +72,7 @@ class AcceptHeader
      */
     public function __toString()
     {
-        return implode( ',', $this->items );
+        return implode(',', $this->items);
     }
 
     /**
@@ -83,9 +82,9 @@ class AcceptHeader
      *
      * @return bool
      */
-    public function has( $value )
+    public function has($value)
     {
-        return isset( $this->items[ $value ] );
+        return isset($this->items[$value]);
     }
 
     /**
@@ -95,10 +94,9 @@ class AcceptHeader
      *
      * @return AcceptHeaderItem|null
      */
-    public function get( $value )
+    public function get($value)
     {
-        return $this->items[ $value ] ?? $this->items[ explode( '/',
-                $value )[ 0 ].'/*' ] ?? $this->items[ '*/*' ] ?? $this->items[ '*' ] ?? null;
+        return $this->items[$value] ?? $this->items[explode('/', $value)[0].'/*'] ?? $this->items['*/*'] ?? $this->items['*'] ?? null;
     }
 
     /**
@@ -106,9 +104,9 @@ class AcceptHeader
      *
      * @return $this
      */
-    public function add( AcceptHeaderItem $item )
+    public function add(AcceptHeaderItem $item)
     {
-        $this->items[ $item->getValue() ] = $item;
+        $this->items[$item->getValue()] = $item;
         $this->sorted = false;
 
         return $this;
@@ -133,11 +131,11 @@ class AcceptHeader
      *
      * @return self
      */
-    public function filter( $pattern )
+    public function filter($pattern)
     {
-        return new self( array_filter( $this->items, function ( AcceptHeaderItem $item ) use ( $pattern ) {
-            return preg_match( $pattern, $item->getValue() );
-        } ) );
+        return new self(array_filter($this->items, function (AcceptHeaderItem $item) use ($pattern) {
+            return preg_match($pattern, $item->getValue());
+        }));
     }
 
     /**
@@ -149,7 +147,7 @@ class AcceptHeader
     {
         $this->sort();
 
-        return !empty( $this->items ) ? reset( $this->items ) : null;
+        return !empty($this->items) ? reset($this->items) : null;
     }
 
     /**
@@ -157,19 +155,17 @@ class AcceptHeader
      */
     private function sort()
     {
-        if ( !$this->sorted )
-        {
-            uasort( $this->items, function ( AcceptHeaderItem $a, AcceptHeaderItem $b ) {
+        if (!$this->sorted) {
+            uasort($this->items, function (AcceptHeaderItem $a, AcceptHeaderItem $b) {
                 $qA = $a->getQuality();
                 $qB = $b->getQuality();
 
-                if ( $qA === $qB )
-                {
+                if ($qA === $qB) {
                     return $a->getIndex() > $b->getIndex() ? 1 : -1;
                 }
 
                 return $qA > $qB ? -1 : 1;
-            } );
+            });
 
             $this->sorted = true;
         }

@@ -25,57 +25,51 @@ class ServerDumperTest extends TestCase
 
     public function testDumpForwardsToWrappedDumperWhenServerIsUnavailable()
     {
-        $wrappedDumper = $this->getMockBuilder( DataDumperInterface::class )->getMock();
+        $wrappedDumper = $this->getMockBuilder(DataDumperInterface::class)->getMock();
 
-        $dumper = new ServerDumper( self::VAR_DUMPER_SERVER, $wrappedDumper );
+        $dumper = new ServerDumper(self::VAR_DUMPER_SERVER, $wrappedDumper);
 
         $cloner = new VarCloner();
-        $data = $cloner->cloneVar( 'foo' );
+        $data = $cloner->cloneVar('foo');
 
-        $wrappedDumper->expects( $this->once() )->method( 'dump' )->with( $data );
+        $wrappedDumper->expects($this->once())->method('dump')->with($data);
 
-        $dumper->dump( $data );
+        $dumper->dump($data);
     }
 
     public function testDump()
     {
-        $wrappedDumper = $this->getMockBuilder( DataDumperInterface::class )->getMock();
-        $wrappedDumper->expects( $this->never() )->method( 'dump' ); // test wrapped dumper is not used
+        $wrappedDumper = $this->getMockBuilder(DataDumperInterface::class)->getMock();
+        $wrappedDumper->expects($this->never())->method('dump'); // test wrapped dumper is not used
 
         $cloner = new VarCloner();
-        $data = $cloner->cloneVar( 'foo' );
-        $dumper = new ServerDumper( self::VAR_DUMPER_SERVER, $wrappedDumper, [
-            'foo_provider' => new class() implements ContextProviderInterface
-            {
+        $data = $cloner->cloneVar('foo');
+        $dumper = new ServerDumper(self::VAR_DUMPER_SERVER, $wrappedDumper, [
+            'foo_provider' => new class() implements ContextProviderInterface {
                 public function getContext(): ?array
                 {
                     return ['foo'];
                 }
             },
-        ] );
+        ]);
 
         $dumped = null;
         $process = $this->getServerProcess();
-        $process->start( function ( $type, $buffer ) use ( $process, &$dumped, $dumper, $data ) {
-            if ( Process::ERR === $type )
-            {
+        $process->start(function ($type, $buffer) use ($process, &$dumped, $dumper, $data) {
+            if (Process::ERR === $type) {
                 $process->stop();
                 $this->fail();
-            }
-            elseif ( "READY\n" === $buffer )
-            {
-                $dumper->dump( $data );
-            }
-            else
-            {
+            } elseif ("READY\n" === $buffer) {
+                $dumper->dump($data);
+            } else {
                 $dumped .= $buffer;
             }
-        } );
+        });
 
         $process->wait();
 
-        $this->assertTrue( $process->isSuccessful() );
-        $this->assertStringMatchesFormat( <<<'DUMP'
+        $this->assertTrue($process->isSuccessful());
+        $this->assertStringMatchesFormat(<<<'DUMP'
 (3) "foo"
 [
   "timestamp" => %d.%d
@@ -85,17 +79,17 @@ class ServerDumperTest extends TestCase
 ]
 %d
 DUMP
-            , $dumped );
+        , $dumped);
     }
 
     private function getServerProcess(): Process
     {
-        $process = new PhpProcess( file_get_contents( __DIR__.'/../Fixtures/dump_server.php' ), null, [
+        $process = new PhpProcess(file_get_contents(__DIR__.'/../Fixtures/dump_server.php'), null, [
             'COMPONENT_ROOT' => __DIR__.'/../../',
             'VAR_DUMPER_SERVER' => self::VAR_DUMPER_SERVER,
-        ] );
-        $process->inheritEnvironmentVariables( true );
+        ]);
+        $process->inheritEnvironmentVariables(true);
 
-        return $process->setTimeout( 9 );
+        return $process->setTimeout(9);
     }
 }

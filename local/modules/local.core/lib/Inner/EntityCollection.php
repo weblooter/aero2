@@ -40,12 +40,12 @@ abstract class EntityCollection extends CollectionBase
     }
 
     /**
-     * @internal
-     *
      * @param $index
      *
      * @return mixed
      * @throws Main\ArgumentOutOfRangeException
+     * @internal
+     *
      */
     public function deleteItem($index)
     {
@@ -194,11 +194,11 @@ abstract class EntityCollection extends CollectionBase
     }
 
     /**
-     * @internal
-     *
      * @param \SplObjectStorage $cloneEntity
      *
      * @return EntityCollection
+     * @internal
+     *
      */
     public function createClone(\SplObjectStorage $cloneEntity)
     {

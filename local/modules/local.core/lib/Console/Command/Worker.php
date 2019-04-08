@@ -36,11 +36,11 @@ class Worker extends Command
         cli_set_process_title('kd_queue_job_worker_'.$jobID);
 
         $arJob = JobQueueTable::getList([
-                'filter' => [
-                    'ID' => $jobID,
-                    'EXECUTE_BY' => $executorID,
-                ],
-            ])
+            'filter' => [
+                'ID' => $jobID,
+                'EXECUTE_BY' => $executorID,
+            ],
+        ])
             ->fetch();
 
         if (is_array($arJob)) {

@@ -86,9 +86,9 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
         $this->obReader->close();
 
         $this->obResult->setData([
-                'PRODUCT_TOTAL_COUNT' => $this->intProductTotal,
-                'PRODUCT_SUCCESS_IMPORT' => $this->intProductImportSuccess,
-            ]);
+            'PRODUCT_TOTAL_COUNT' => $this->intProductTotal,
+            'PRODUCT_SUCCESS_IMPORT' => $this->intProductImportSuccess,
+        ]);
 
         return $this->obResult;
     }

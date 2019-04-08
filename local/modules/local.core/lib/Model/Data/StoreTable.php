@@ -22,7 +22,9 @@ use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
  * Нет<br/></li><li>DATE_LAST_IMPORT - Дата последнего импорта | Fields\DatetimeField</li><li>LAST_IMPORT_RESULT - Фактический результат последнего импорта | Fields\EnumField<br/>&emsp;SU =>
  * Успешен<br/>&emsp;ER => Ошибочный<br/></li><li>DATE_LAST_SUCCESS_IMPORT - Дата последнего успешного импорта | Fields\DatetimeField</li><li>PRODUCT_TOTAL_COUNT - Общее кол-во заявленных товаров в
  * Robofeed XML в последней успешной выгрузке | Fields\IntegerField</li><li>PRODUCT_SUCCESS_IMPORT - Кол-во валидных импортированных товаров в последней успешной выгрузке |
- * Fields\IntegerField</li><li>TARIFF_CODE - Тариф [TRIAL_7_DAYS] | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li><li>TARIFF - \Local\Core\Model\Data\Tariff | Fields\Relations\Reference</li><li>IMPORT_LOGS - \Local\Core\Model\Robofeed\ImportLog | Fields\Relations\OneToMany</li><li>TARIFF_LOGS - \Local\Core\Model\Data\StoreTariffChangeLog | Fields\Relations\OneToMany</li></ul>
+ * Fields\IntegerField</li><li>TARIFF_CODE - Тариф [TRIAL_7_DAYS] | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li><li>TARIFF -
+ * \Local\Core\Model\Data\Tariff | Fields\Relations\Reference</li><li>IMPORT_LOGS - \Local\Core\Model\Robofeed\ImportLog | Fields\Relations\OneToMany</li><li>TARIFF_LOGS -
+ * \Local\Core\Model\Data\StoreTariffChangeLog | Fields\Relations\OneToMany</li></ul>
  *
  *
  * @package Local\Core\Model\Data
@@ -68,140 +70,140 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\EnumField('ACTIVE', [
-                    'title' => 'Активность',
-                    'required' => false,
-                    'values' => self::getEnumFieldValues('ACTIVE'),
-                    'default_value' => 'Y'
-                ]),
+                'title' => 'Активность',
+                'required' => false,
+                'values' => self::getEnumFieldValues('ACTIVE'),
+                'default_value' => 'Y'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\DatetimeField('DATE_MODIFIED', [
-                    'title' => 'Дата последнего изменения',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата последнего изменения',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('COMPANY_ID', [
-                    'required' => true,
-                    'title' => 'ID компании'
-                ]),
+                'required' => true,
+                'title' => 'ID компании'
+            ]),
             new Fields\StringField('NAME', [
-                    'required' => true,
-                    'title' => 'Название',
-                ]),
+                'required' => true,
+                'title' => 'Название',
+            ]),
             new Fields\StringField('DOMAIN', [
-                    'required' => false,
-                    'title' => 'Домен',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))?/')
-                            ];
-                        },
-                    'save_data_modification' => function ()
-                        {
-                            return [
-                                function ($value)
-                                    {
-                                        preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/', $value, $arMatches);
-                                        return $arMatches[1];
-                                    }
-                            ];
-                        }
-                ]),
+                'required' => false,
+                'title' => 'Домен',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))?/')
+                        ];
+                    },
+                'save_data_modification' => function ()
+                    {
+                        return [
+                            function ($value)
+                                {
+                                    preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+))/', $value, $arMatches);
+                                    return $arMatches[1];
+                                }
+                        ];
+                    }
+            ]),
             new Fields\EnumField('RESOURCE_TYPE', [
-                    'required' => true,
-                    'title' => 'Источник данных',
-                    'values' => self::getEnumFieldValues('RESOURCE_TYPE')
-                ]),
+                'required' => true,
+                'title' => 'Источник данных',
+                'values' => self::getEnumFieldValues('RESOURCE_TYPE')
+            ]),
 
             new Fields\IntegerField('FILE_ID', [
-                    'required' => false,
-                    'title' => 'Загруженный файл XML',
-                ]),
+                'required' => false,
+                'title' => 'Загруженный файл XML',
+            ]),
 
             new Fields\StringField('FILE_LINK', [
-                    'required' => false,
-                    'title' => 'Ссылка на файл XML',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)?$/')
-                            ];
-                        },
-                    'save_data_modification' => function ()
-                        {
-                            return [
-                                function ($value)
-                                    {
-                                        preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/', $value, $arMatches);
-                                        return $arMatches[1];
-                                    }
-                            ];
-                        }
-                ]),
+                'required' => false,
+                'title' => 'Ссылка на файл XML',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)?$/')
+                        ];
+                    },
+                'save_data_modification' => function ()
+                    {
+                        return [
+                            function ($value)
+                                {
+                                    preg_match('/(https?\:\/\/([a-z0-9\-\_]+\.){0,}([a-z0-9\-\_]+\.[a-z]+)\/.*?\.xml)$/', $value, $arMatches);
+                                    return $arMatches[1];
+                                }
+                        ];
+                    }
+            ]),
             new Fields\EnumField('HTTP_AUTH', [
-                    'required' => false,
-                    'title' => 'Для доступа нужен логин и пароль',
-                    'values' => self::getEnumFieldValues('HTTP_AUTH'),
-                    'default_value' => 'N'
-                ]),
+                'required' => false,
+                'title' => 'Для доступа нужен логин и пароль',
+                'values' => self::getEnumFieldValues('HTTP_AUTH'),
+                'default_value' => 'N'
+            ]),
             new Fields\StringField('HTTP_AUTH_LOGIN', [
-                    'required' => false,
-                    'title' => 'Логин для авторизации',
-                ]),
+                'required' => false,
+                'title' => 'Логин для авторизации',
+            ]),
             new Fields\StringField('HTTP_AUTH_PASS', [
-                    'required' => false,
-                    'title' => 'Пароль для авторизации',
-                ]),
+                'required' => false,
+                'title' => 'Пароль для авторизации',
+            ]),
 
             new Fields\EnumField('BEHAVIOR_IMPORT_ERROR', [
-                    'required' => true,
-                    'title' => 'Поведение импорта при ошибке',
-                    'values' => self::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'),
-                    'default_value' => 'STOP_IMPORT'
-                ]),
+                'required' => true,
+                'title' => 'Поведение импорта при ошибке',
+                'values' => self::getEnumFieldValues('BEHAVIOR_IMPORT_ERROR'),
+                'default_value' => 'STOP_IMPORT'
+            ]),
             new Fields\EnumField('ALERT_IF_XML_NOT_MODIFIED', [
-                    'required' => false,
-                    'title' => 'Информировать о не изменившемся Robofeed XML?',
-                    'values' => self::getEnumFieldValues('ALERT_IF_XML_NOT_MODIFIED'),
-                    'default_value' => 'Y'
-                ]),
+                'required' => false,
+                'title' => 'Информировать о не изменившемся Robofeed XML?',
+                'values' => self::getEnumFieldValues('ALERT_IF_XML_NOT_MODIFIED'),
+                'default_value' => 'Y'
+            ]),
 
             new Fields\DatetimeField('DATE_LAST_IMPORT', [
-                    'title' => 'Дата последнего импорта',
-                    'required' => false,
-                ]),
+                'title' => 'Дата последнего импорта',
+                'required' => false,
+            ]),
             new Fields\EnumField('LAST_IMPORT_RESULT', [
-                    'title' => 'Фактический результат последнего импорта',
-                    'required' => false,
-                    'values' => self::getEnumFieldValues('LAST_IMPORT_RESULT')
-                ]),
+                'title' => 'Фактический результат последнего импорта',
+                'required' => false,
+                'values' => self::getEnumFieldValues('LAST_IMPORT_RESULT')
+            ]),
             new Fields\DatetimeField('DATE_LAST_SUCCESS_IMPORT', [
-                    'title' => 'Дата последнего успешного импорта',
-                    'required' => false,
-                ]),
+                'title' => 'Дата последнего успешного импорта',
+                'required' => false,
+            ]),
             new Fields\IntegerField('PRODUCT_TOTAL_COUNT', [
-                    'required' => false,
-                    'title' => 'Общее кол-во заявленных товаров в Robofeed XML в последней успешной выгрузке'
-                ]),
+                'required' => false,
+                'title' => 'Общее кол-во заявленных товаров в Robofeed XML в последней успешной выгрузке'
+            ]),
             new Fields\IntegerField('PRODUCT_SUCCESS_IMPORT', [
-                    'required' => false,
-                    'title' => 'Кол-во валидных импортированных товаров в последней успешной выгрузке'
-                ]),
+                'required' => false,
+                'title' => 'Кол-во валидных импортированных товаров в последней успешной выгрузке'
+            ]),
             new Fields\StringField('TARIFF_CODE', [
                 'title' => 'Тариф',
                 'required' => true,
@@ -239,12 +241,12 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ]),
 
             new Fields\Relations\Reference('COMPANY', \Local\Core\Model\Data\CompanyTable::class, \Bitrix\Main\ORM\Query\Join::on('this.COMPANY_ID', 'ref.ID'), [
-                    'title' => 'ORM: Компания'
-                ]),
+                'title' => 'ORM: Компания'
+            ]),
 
             new Fields\Relations\Reference('TARIFF', \Local\Core\Model\Data\TariffTable::class, \Bitrix\Main\ORM\Query\Join::on('this.TARIFF_CODE', 'ref.CODE'), [
-                    'title' => 'ORM: Тариф'
-                ]),
+                'title' => 'ORM: Тариф'
+            ]),
             new Fields\Relations\OneToMany('IMPORT_LOGS', \Local\Core\Model\Robofeed\ImportLogTable::class, 'STORE_DATA'),
             new Fields\Relations\OneToMany('TARIFF_LOGS', \Local\Core\Model\Data\StoreTariffChangeLogTable::class, 'STORE_DATA'),
         ];
@@ -522,14 +524,14 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 
             // Удаляет кэш деталки компании
             \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.detail'], [
-                    'company_id='.$arFields['COMPANY_ID']
-                ]);
+                'company_id='.$arFields['COMPANY_ID']
+            ]);
         }
 
         // Удаляет кэш деталки магазина
         \Local\Core\Inner\Cache::deleteComponentCache(['personal.store.detail'], [
-                'store_id='.$arFields['ID']
-            ]);
+            'store_id='.$arFields['ID']
+        ]);
 
         if (self::$__arStoreIdToOldCompanyId[$arFields['ID']] != $arFields['COMPANY_ID']) {
             /*
@@ -540,8 +542,8 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             \Local\Core\Inner\Cache::deleteComponentCache(['personal.store.list'], ['company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]]);
             // Удаляет кэш деталки старой компании
             \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.detail'], [
-                    'company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]
-                ]);
+                'company_id='.self::$__arStoreIdToOldCompanyId[$arFields['ID']]
+            ]);
         }
     }
 
@@ -556,10 +558,10 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     public static function getOrmFiles()
     {
         return self::getList([
-                'filter' => [
-                    '!FILE_ID' => false,
-                ],
-                'select' => ['FILE_ID']
-            ]);
+            'filter' => [
+                '!FILE_ID' => false,
+            ],
+            'select' => ['FILE_ID']
+        ]);
     }
 }

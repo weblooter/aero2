@@ -90,10 +90,10 @@
 
     <?
     $APPLICATION->IncludeComponent("bitrix:main.pagenavigation", "", array(
-            "NAV_OBJECT" => $arResult['NAV_OBJ'],
-            "SEF_MODE" => "N", // ЧПУ пагинация или нет, Y|N
-            "SHOW_COUNT" => "N",
-        ), false);
+        "NAV_OBJECT" => $arResult['NAV_OBJ'],
+        "SEF_MODE" => "N", // ЧПУ пагинация или нет, Y|N
+        "SHOW_COUNT" => "N",
+    ), false);
     ?>
 
 </div>

@@ -31,11 +31,11 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
         $check = $this->checkRights($operation);
         if ($check->isSuccess()) {
             $result->setData([
-                    'uri' => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                        ]),
-                ]);
+                'uri' => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
+                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+                ]),
+            ]);
         } else {
             $result->addErrors($check->getErrors());
         }
@@ -83,12 +83,12 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             try {
 
                 $body = \Local\Core\Model\Data\CompanyTable::getList([
-                        "select" => ["*"],
-                        "filter" => [
-                            "=ID" => (int)$request->get("id")
-                        ],
-                        "limit" => 1
-                    ])
+                    "select" => ["*"],
+                    "filter" => [
+                        "=ID" => (int)$request->get("id")
+                    ],
+                    "limit" => 1
+                ])
                     ->fetch();
 
             } catch (\Exception $e) {
@@ -137,9 +137,9 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 $buttons[] = [
                     "TEXT" => "Добавить",
                     "LINK" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                        ]),
+                        \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                        \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+                    ]),
                     "TITLE" => "Добавить компанию",
                     "ICON" => "btn_new",
                 ];
@@ -394,9 +394,9 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     protected function getListLink()
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => AdminList::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminList::ADMIN_ACTION_VALUE,
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => AdminList::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminList::ADMIN_ACTION_VALUE,
+        ]);
     }
 
     /**
@@ -405,10 +405,10 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     protected function getEditLink($fields = [])
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                "id" => $this->id,
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+            "id" => $this->id,
+        ]);
     }
 
     /**

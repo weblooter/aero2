@@ -49,141 +49,141 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\EnumField('ACTIVE', [
-                    'title' => 'Активность',
-                    'values' => self::getEnumFieldValues('ACTIVE'),
-                    'default_value' => 'Y'
-                ]),
+                'title' => 'Активность',
+                'values' => self::getEnumFieldValues('ACTIVE'),
+                'default_value' => 'Y'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\DatetimeField('DATE_MODIFIED', [
-                    'title' => 'Дата последнего изменения',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата последнего изменения',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
 
             new Fields\IntegerField('USER_OWN_ID', [
-                    'title' => 'Владелец компании',
-                    'default_value' => function ()
-                        {
-                            return $GLOBALS['USER']->GetID();
-                        }
-                ]),
+                'title' => 'Владелец компании',
+                'default_value' => function ()
+                    {
+                        return $GLOBALS['USER']->GetID();
+                    }
+            ]),
             new Fields\EnumField('TYPE', [
-                    'title' => 'Тип компании',
-                    'required' => true,
-                    'values' => self::getEnumFieldValues('TYPE'),
-                    'default_value' => 'FI'
-                ]),
+                'title' => 'Тип компании',
+                'required' => true,
+                'values' => self::getEnumFieldValues('TYPE'),
+                'default_value' => 'FI'
+            ]),
             new Fields\StringField('NAME', [
-                    'title' => 'Название',
-                    'required' => true,
-                ]),
+                'title' => 'Название',
+                'required' => true,
+            ]),
             new Fields\EnumField('VERIFIED', [
-                    'title' => 'Верифицирована',
-                    'values' => self::getEnumFieldValues('VERIFIED'),
-                    'default_value' => 'N'
-                ]),
+                'title' => 'Верифицирована',
+                'values' => self::getEnumFieldValues('VERIFIED'),
+                'default_value' => 'N'
+            ]),
             new Fields\TextField('VERIFIED_NOTE', [
-                    'title' => 'Комментарий верификации, выводится в случае ошибки верификации',
-                ]),
+                'title' => 'Комментарий верификации, выводится в случае ошибки верификации',
+            ]),
 
             new Fields\StringField('COMPANY_INN', [
-                    'title' => 'ИНН',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/([\d]+)?/')
-                            ];
-                        }
-                ]),
+                'title' => 'ИНН',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+)?/')
+                        ];
+                    }
+            ]),
             new Fields\TextField('COMPANY_NAME_SHORT', [
-                    'title' => 'Сокращенное наименование организации',
-                ]),
+                'title' => 'Сокращенное наименование организации',
+            ]),
             new Fields\TextField('COMPANY_NAME_FULL', [
-                    'title' => 'Полное наименование организации',
-                ]),
+                'title' => 'Полное наименование организации',
+            ]),
             new Fields\StringField('COMPANY_OGRN', [
-                    'title' => 'ОГРН/ОГРНИП',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/([\d]+)?/')
-                            ];
-                        }
-                ]),
+                'title' => 'ОГРН/ОГРНИП',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+)?/')
+                        ];
+                    }
+            ]),
             new Fields\StringField('COMPANY_KPP', [
-                    'title' => 'КПП',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/([\d]+|\-?)?/')
-                            ];
-                        }
-                ]),
+                'title' => 'КПП',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+|\-?)?/')
+                        ];
+                    }
+            ]),
             new Fields\StringField('COMPANY_OKPO', [
-                    'title' => 'ОКПО',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/([\d]+)?/')
-                            ];
-                        }
-                ]),
+                'title' => 'ОКПО',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+)?/')
+                        ];
+                    }
+            ]),
             new Fields\StringField('COMPANY_OKTMO', [
-                    'title' => 'ОКТМО',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/([\d]+)?/')
-                            ];
-                        }
-                ]),
+                'title' => 'ОКТМО',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+)?/')
+                        ];
+                    }
+            ]),
             new Fields\TextField('COMPANY_DIRECTOR', [
-                    'title' => 'Ген. директор',
-                ]),
+                'title' => 'Ген. директор',
+            ]),
             new Fields\TextField('COMPANY_ACCOUNTANT', [
-                    'title' => 'Гл. бухгалтер',
-                ]),
+                'title' => 'Гл. бухгалтер',
+            ]),
 
             new Fields\TextField('COMPANY_ADDRESS_COUNTRY', [
-                    'title' => 'Страна',
-                ]),
+                'title' => 'Страна',
+            ]),
             new Fields\TextField('COMPANY_ADDRESS_REGION', [
-                    'title' => 'Область',
-                ]),
+                'title' => 'Область',
+            ]),
             new Fields\TextField('COMPANY_ADDRESS_AREA', [
-                    'title' => 'Район',
-                ]),
+                'title' => 'Район',
+            ]),
             new Fields\TextField('COMPANY_ADDRESS_CITY', [
-                    'title' => 'Город',
-                ]),
+                'title' => 'Город',
+            ]),
             new Fields\TextField('COMPANY_ADDRESS_ADDRESS', [
-                    'title' => 'Улица, дом, корпус, строение',
-                ]),
+                'title' => 'Улица, дом, корпус, строение',
+            ]),
             new Fields\TextField('COMPANY_ADDRESS_OFFICE', [
-                    'title' => 'Квартира / офис',
-                ]),
+                'title' => 'Квартира / офис',
+            ]),
             new Fields\IntegerField('COMPANY_ADDRESS_ZIP', [
-                    'title' => 'Почтовый индекс',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Entity\Validator\RegExp('/([\d]+)?/')
-                            ];
-                        }
-                ]),
+                'title' => 'Почтовый индекс',
+                'validation' => function ()
+                    {
+                        return [
+                            new Entity\Validator\RegExp('/([\d]+)?/')
+                        ];
+                    }
+            ]),
 
             (new Fields\Relations\OneToMany('STORES', \Local\Core\Model\Data\StoreTable::class, 'COMPANY')),
             new Fields\Relations\Reference('USER', \Bitrix\Main\UserTable::class, \Bitrix\Main\ORM\Query\Join::on('this.USER_OWN_ID', 'ref.ID'))

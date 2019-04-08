@@ -21,9 +21,9 @@
                 <div class="media-body">
                     <div class="pull-right">
                         <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'edit', [
-                                '#COMPANY_ID#' => $arParams['COMPANY_ID'],
-                                '#STORE_ID#' => $arItem['ID']
-                            ])?>" title="Редактировать">
+                            '#COMPANY_ID#' => $arParams['COMPANY_ID'],
+                            '#STORE_ID#' => $arItem['ID']
+                        ])?>" title="Редактировать">
                             <ion-icon name="create"></ion-icon>
                         </a>
                         <a href="javascript:void(0)" onclick="wblDeleteStore(<?=$arItem['ID']?>)" title="Удалить">
@@ -32,9 +32,9 @@
                     </div>
                     <h5 class="mt-0">
                         <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', [
-                                '#COMPANY_ID#' => $arParams['COMPANY_ID'],
-                                '#STORE_ID#' => $arItem['ID']
-                            ])?>">[<?=$arItem['ID']?>] <?=$arItem['NAME']?></a>
+                            '#COMPANY_ID#' => $arParams['COMPANY_ID'],
+                            '#STORE_ID#' => $arItem['ID']
+                        ])?>">[<?=$arItem['ID']?>] <?=$arItem['NAME']?></a>
                     </h5>
                     Активность: <?=($arItem['ACTIVE'] == 'Y') ? 'Активен' : 'Деактивирован'?><br />
                     Дата создания: <?=date('Y-m-d H:i:s', $arItem['DATE_CREATE']->getTimestamp())?><br />
@@ -61,10 +61,10 @@
 
     <?
     $APPLICATION->IncludeComponent("bitrix:main.pagenavigation", "", array(
-            "NAV_OBJECT" => $arResult['NAV_OBJ'],
-            "SEF_MODE" => "N", // ЧПУ пагинация или нет, Y|N
-            "SHOW_COUNT" => "N",
-        ), false);
+        "NAV_OBJECT" => $arResult['NAV_OBJ'],
+        "SEF_MODE" => "N", // ЧПУ пагинация или нет, Y|N
+        "SHOW_COUNT" => "N",
+    ), false);
     ?>
 
 </div>

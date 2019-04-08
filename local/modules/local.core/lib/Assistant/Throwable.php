@@ -67,11 +67,12 @@ class Throwable
     }
 
     /**
+     * @param Main\Result          $result
+     * @param Main\ErrorCollection $errorCollection
+     *
      * @internal
      * Метод будет меняться, пока не использовать
      *
-     * @param Main\Result          $result
-     * @param Main\ErrorCollection $errorCollection
      */
     public static function mergeErrorCollection(Main\Result $result, Main\ErrorCollection $errorCollection)
     {

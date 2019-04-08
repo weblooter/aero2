@@ -41,59 +41,59 @@ class ConvertTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\EnumField('ACTIVE', [
-                    'title' => 'Активность',
-                    'values' => self::getEnumFieldValues('ACTIVE'),
-                    'default_value' => 'Y'
-                ]),
+                'title' => 'Активность',
+                'values' => self::getEnumFieldValues('ACTIVE'),
+                'default_value' => 'Y'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\DatetimeField('DATE_MODIFIED', [
-                    'title' => 'Дата последнего изменения',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата последнего изменения',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('USER_ID', [
-                    'title' => 'ID пользователя',
-                    'default_value' => function ()
-                        {
-                            return $GLOBALS['USER']->GetId();
-                        }
-                ]),
+                'title' => 'ID пользователя',
+                'default_value' => function ()
+                    {
+                        return $GLOBALS['USER']->GetId();
+                    }
+            ]),
             new Fields\EnumField('HANDLER', [
-                    'title' => 'Обработчик',
-                    'required' => true,
-                    'values' => self::getEnumFieldValues('HANDLER')
-                ]),
+                'title' => 'Обработчик',
+                'required' => true,
+                'values' => self::getEnumFieldValues('HANDLER')
+            ]),
             new Fields\EnumField('STATUS', [
-                    'title' => 'Статус работы',
-                    'values' => self::getEnumFieldValues('STATUS'),
-                    'default_value' => 'WA'
-                ]),
+                'title' => 'Статус работы',
+                'values' => self::getEnumFieldValues('STATUS'),
+                'default_value' => 'WA'
+            ]),
             new Fields\IntegerField('ORIGINAL_FILE_ID', [
-                    'title' => 'ID изначального файла',
-                ]),
+                'title' => 'ID изначального файла',
+            ]),
             new Fields\StringField('ORIGINAL_FILE_NAME', ['title' => 'Название файла']),
             new Fields\IntegerField('EXPORT_FILE_ID', [
-                    'title' => 'ID готового файла',
-                ]),
+                'title' => 'ID готового файла',
+            ]),
             new Fields\TextField('ERROR_MESSAGE', [
-                    'title' => 'Сообщение об ошибке конвертации',
-                ]),
+                'title' => 'Сообщение об ошибке конвертации',
+            ]),
             new Fields\TextField('VALID_ERROR_MESSAGE', [
-                    'title' => 'Сообщение об ошибке валидации',
-                ]),
+                'title' => 'Сообщение об ошибке валидации',
+            ]),
         ];
     }
 
@@ -107,13 +107,13 @@ class ConvertTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
         }
 
         $intNowInQueue = self::getList([
-                'filter' => [
-                    'USER_ID' => $arFields['USER_ID'],
-                    'STATUS' => 'WA',
-                    'IN'
-                ],
-                'select' => ['ID']
-            ])
+            'filter' => [
+                'USER_ID' => $arFields['USER_ID'],
+                'STATUS' => 'WA',
+                'IN'
+            ],
+            'select' => ['ID']
+        ])
             ->getSelectedRowsCount();
 
         $intMaxInQueue = \Bitrix\Main\Config\Configuration::getInstance()
@@ -152,9 +152,9 @@ class ConvertTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
             ->where(\Bitrix\Main\ORM\Query\Query::filter()
                 ->logic('or')
                 ->where([
-                        ['ORIGINAL_FILE_ID', '!=', false],
-                        ['EXPORT_FILE_ID', '!=', false]
-                    ]))
+                    ['ORIGINAL_FILE_ID', '!=', false],
+                    ['EXPORT_FILE_ID', '!=', false]
+                ]))
             ->setSelect(['ORIGINAL_FILE_ID', 'EXPORT_FILE_ID'])
             ->exec();
     }

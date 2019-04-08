@@ -28,29 +28,29 @@ class BalanceLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMan
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('USER_ID', [
-                    'title' => 'ID пользователя',
-                    'required' => true
-                ]),
+                'title' => 'ID пользователя',
+                'required' => true
+            ]),
             new Fields\IntegerField('OPERATION', [
-                    'title' => 'Операция',
-                    'required' => true
-                ]),
+                'title' => 'Операция',
+                'required' => true
+            ]),
             new Fields\TextField('NOTE', [
-                    'title' => 'Заметка',
-                    'required' => true
-                ])
+                'title' => 'Заметка',
+                'required' => true
+            ])
         ];
     }
 

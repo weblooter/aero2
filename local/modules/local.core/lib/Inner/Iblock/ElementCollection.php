@@ -67,9 +67,11 @@ class ElementCollection extends EntityCollection
 
     /**
      * Установить количество страниц для текущх параметров постаричной навигации
-     * @internal
      *
      * @param $nav_page_count
+     *
+     * @internal
+     *
      */
     protected function setNavPageCount($nav_page_count)
     {
@@ -78,9 +80,11 @@ class ElementCollection extends EntityCollection
 
     /**
      * Установить номер текущей станицы
-     * @internal
      *
      * @param $nav_page_nomer
+     *
+     * @internal
+     *
      */
     protected function setNavPageNomer($nav_page_nomer)
     {
@@ -89,9 +93,11 @@ class ElementCollection extends EntityCollection
 
     /**
      * Установить количество элементов на странице
-     * @internal
      *
      * @param $nav_page_size
+     *
+     * @internal
+     *
      */
     protected function setNavPageSize($nav_page_size)
     {
@@ -100,9 +106,11 @@ class ElementCollection extends EntityCollection
 
     /**
      * Установить флаг отображения всех элементов
-     * @internal
      *
      * @param $nav_show_all
+     *
+     * @internal
+     *
      */
     protected function setNavShowAll($nav_show_all)
     {
@@ -111,9 +119,11 @@ class ElementCollection extends EntityCollection
 
     /**
      * Установить общее количсетво элементов
-     * @internal
      *
      * @param $nav_record_count
+     *
+     * @internal
+     *
      */
     protected function setNavRecordCount($nav_record_count)
     {

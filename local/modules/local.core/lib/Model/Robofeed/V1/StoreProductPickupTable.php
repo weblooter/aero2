@@ -50,16 +50,16 @@ class StoreProductPickupTable extends \Local\Core\Inner\BxModified\Main\ORM\Data
                 'Scheme',
                 'ReferenceField'
             ], [
-                    'class='.(implode('_', array_slice(explode('\\', $strClass), -2))),
-                    'column_name='.$strColumnName
-                ]))
+                'class='.(implode('_', array_slice(explode('\\', $strClass), -2))),
+                'column_name='.$strColumnName
+            ]))
             ) {
                 /** @var \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager $strClass */
 
                 $rs = $strClass::getList([
-                        'order' => ['SORT' => 'ASC'],
-                        'select' => [$strColumnName]
-                    ]);
+                    'order' => ['SORT' => 'ASC'],
+                    'select' => [$strColumnName]
+                ]);
                 if ($rs->getSelectedRowsCount() < 1) {
                     $obCache->abortDataCache();
                 } else {
@@ -84,54 +84,54 @@ class StoreProductPickupTable extends \Local\Core\Inner\BxModified\Main\ORM\Data
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('ROBOFEED_VERSION', [
-                    'required' => false,
-                    'title' => 'Версия Robofeed XML'
-                ]),
+                'required' => false,
+                'title' => 'Версия Robofeed XML'
+            ]),
             new Fields\IntegerField('PRODUCT_ID', [
-                    'required' => true,
-                    'title' => 'ID товара'
-                ]),
+                'required' => true,
+                'title' => 'ID товара'
+            ]),
             new Fields\IntegerField('PRICE', [
-                    'required' => true,
-                    'title' => 'Стоимость самовывоза'
-                ]),
+                'required' => true,
+                'title' => 'Стоимость самовывоза'
+            ]),
             new Fields\EnumField('CURRENCY_CODE', [
-                    'required' => true,
-                    'title' => 'Символьный код валюты стоимости',
-                    'values' => self::getEnumFieldValues('CURRENCY_CODE')
-                ]),
+                'required' => true,
+                'title' => 'Символьный код валюты стоимости',
+                'values' => self::getEnumFieldValues('CURRENCY_CODE')
+            ]),
             new Fields\IntegerField('SUPPLY_FROM', [
-                    'required' => true,
-                    'title' => 'Сроки поступления товара в магазин/на склад "от" в днях'
-                ]),
+                'required' => true,
+                'title' => 'Сроки поступления товара в магазин/на склад "от" в днях'
+            ]),
             new Fields\IntegerField('SUPPLY_TO', [
-                    'required' => true,
-                    'title' => 'Сроки поступления товара в магазин/на склад "до" в днях'
-                ]),
+                'required' => true,
+                'title' => 'Сроки поступления товара в магазин/на склад "до" в днях'
+            ]),
             new Fields\IntegerField('ORDER_BEFORE', [
-                    'required' => false,
-                    'title' => 'Временные рамки "сделать заказ до N часов", что бы вариант самовывоза был актуален'
-                ]),
+                'required' => false,
+                'title' => 'Временные рамки "сделать заказ до N часов", что бы вариант самовывоза был актуален'
+            ]),
             new Fields\IntegerField('ORDER_AFTER', [
-                    'required' => false,
-                    'title' => 'Временные рамки "сделать заказ после N часов", что бы вариант самовывоза был актуален'
-                ]),
+                'required' => false,
+                'title' => 'Временные рамки "сделать заказ после N часов", что бы вариант самовывоза был актуален'
+            ]),
 
             (new Fields\Relations\Reference('PRODUCT', get_class(StoreProductFactory::factory(1)
-                    ->setStoreId(self::$intStoreId)), \Bitrix\Main\ORM\Query\Join::on('this.PRODUCT_ID', 'ref.ID')))
+                ->setStoreId(self::$intStoreId)), \Bitrix\Main\ORM\Query\Join::on('this.PRODUCT_ID', 'ref.ID')))
         ];
     }
 }

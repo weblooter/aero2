@@ -24,27 +24,26 @@ final class RequestContextProvider implements ContextProviderInterface
     private $requestStack;
     private $cloner;
 
-    public function __construct( RequestStack $requestStack )
+    public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
         $this->cloner = new VarCloner();
-        $this->cloner->setMaxItems( 0 );
+        $this->cloner->setMaxItems(0);
     }
 
     public function getContext(): ?array
     {
-        if ( null === $request = $this->requestStack->getCurrentRequest() )
-        {
+        if (null === $request = $this->requestStack->getCurrentRequest()) {
             return null;
         }
 
-        $controller = $request->attributes->get( '_controller' );
+        $controller = $request->attributes->get('_controller');
 
         return [
             'uri' => $request->getUri(),
             'method' => $request->getMethod(),
-            'controller' => $controller ? $this->cloner->cloneVar( $controller ) : $controller,
-            'identifier' => spl_object_hash( $request ),
+            'controller' => $controller ? $this->cloner->cloneVar($controller) : $controller,
+            'identifier' => spl_object_hash($request),
         ];
     }
 }

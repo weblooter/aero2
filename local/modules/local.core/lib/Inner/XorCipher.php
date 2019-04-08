@@ -15,7 +15,8 @@ class XorCipher
      */
     public static function encrypt($plaintext)
     {
-        $key = self::text2ascii( \Bitrix\Main\Config\Configuration::getInstance()->get('local.core')['xor_key'] );
+        $key = self::text2ascii(\Bitrix\Main\Config\Configuration::getInstance()
+            ->get('local.core')['xor_key']);
         $plaintext = self::text2ascii($plaintext);
         $keysize = count($key);
         $input_size = count($plaintext);
@@ -37,7 +38,8 @@ class XorCipher
      */
     public static function decrypt($cipher)
     {
-        $key = self::text2ascii( \Bitrix\Main\Config\Configuration::getInstance()->get('local.core')['xor_key'] );
+        $key = self::text2ascii(\Bitrix\Main\Config\Configuration::getInstance()
+            ->get('local.core')['xor_key']);
         $cipher = self::text2ascii($cipher);
         $keysize = count($key);
         $input_size = count($cipher);

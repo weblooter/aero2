@@ -26,31 +26,30 @@ class Package implements PackageInterface
     private $versionStrategy;
     private $context;
 
-    public function __construct( VersionStrategyInterface $versionStrategy, ContextInterface $context = null )
+    public function __construct(VersionStrategyInterface $versionStrategy, ContextInterface $context = null)
     {
         $this->versionStrategy = $versionStrategy;
-        $this->context = $context ? : new NullContext();
+        $this->context = $context ?: new NullContext();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getVersion( $path )
+    public function getVersion($path)
     {
-        return $this->versionStrategy->getVersion( $path );
+        return $this->versionStrategy->getVersion($path);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getUrl( $path )
+    public function getUrl($path)
     {
-        if ( $this->isAbsoluteUrl( $path ) )
-        {
+        if ($this->isAbsoluteUrl($path)) {
             return $path;
         }
 
-        return $this->versionStrategy->applyVersion( $path );
+        return $this->versionStrategy->applyVersion($path);
     }
 
     /**
@@ -69,8 +68,8 @@ class Package implements PackageInterface
         return $this->versionStrategy;
     }
 
-    protected function isAbsoluteUrl( $url )
+    protected function isAbsoluteUrl($url)
     {
-        return false !== strpos( $url, '://' ) || '//' === substr( $url, 0, 2 );
+        return false !== strpos($url, '://') || '//' === substr($url, 0, 2);
     }
 }

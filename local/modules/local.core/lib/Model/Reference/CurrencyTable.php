@@ -30,66 +30,66 @@ class CurrencyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\DatetimeField('DATE_MODIFIED', [
-                    'title' => 'Дата последнего изменения',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата последнего изменения',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('SORT', [
-                    'required' => false,
-                    'title' => 'Сортировка',
-                    'default_value' => 50,
-                    'save_data_modification' => function ()
-                        {
-                            return [
-                                function ($value)
-                                    {
-                                        return ($value > 0) ? $value : 50;
-                                    }
-                            ];
-                        }
-                ]),
+                'required' => false,
+                'title' => 'Сортировка',
+                'default_value' => 50,
+                'save_data_modification' => function ()
+                    {
+                        return [
+                            function ($value)
+                                {
+                                    return ($value > 0) ? $value : 50;
+                                }
+                        ];
+                    }
+            ]),
             new Fields\StringField('NAME', [
-                    'required' => true,
-                    'title' => 'Название'
-                ]),
+                'required' => true,
+                'title' => 'Название'
+            ]),
             new Fields\StringField('CODE', [
-                    'required' => true,
-                    'title' => 'Символьный код',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Fields\Validators\UniqueValidator(),
-                                new Fields\Validators\RegExpValidator('/[A-Z0-9_]+/')
-                            ];
-                        }
-                ]),
+                'required' => true,
+                'title' => 'Символьный код',
+                'validation' => function ()
+                    {
+                        return [
+                            new Fields\Validators\UniqueValidator(),
+                            new Fields\Validators\RegExpValidator('/[A-Z0-9_]+/')
+                        ];
+                    }
+            ]),
             new Fields\IntegerField('NUMBER_OF_CURRENCY', [
-                    'required' => true,
-                    'title' => 'Код валюты',
-                    'validation' => function ()
-                        {
-                            return [
-                                new Fields\Validators\UniqueValidator(),
-                                new Fields\Validators\RegExpValidator('/[0-9]+/')
-                            ];
-                        }
-                ]),
+                'required' => true,
+                'title' => 'Код валюты',
+                'validation' => function ()
+                    {
+                        return [
+                            new Fields\Validators\UniqueValidator(),
+                            new Fields\Validators\RegExpValidator('/[0-9]+/')
+                        ];
+                    }
+            ]),
         ];
     }
 

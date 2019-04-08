@@ -35,11 +35,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $check = $this->checkRights($operation);
         if ($check->isSuccess()) {
             $result->setData([
-                    "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                        ]),
-                ]);
+                "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
+                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+                ]),
+            ]);
         } else {
             $result->addErrors($check->getErrors());
         }
@@ -182,12 +182,12 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getList()
     {
         return \Local\Core\Model\Reference\CountryTable::getlist([
-                "select" => [
-                    "*",
-                ],
-                "filter" => $this->filterList,
-                "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
-            ]);
+            "select" => [
+                "*",
+            ],
+            "filter" => $this->filterList,
+            "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
+        ]);
     }
 
     /**
@@ -345,10 +345,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     public function getEditLink($fields = [])
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
-                "id" => $fields["ID"],
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
+            "id" => $fields["ID"],
+        ]);
     }
 
     /**
@@ -357,9 +357,9 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getFilterUri(array $arData = []): string
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+        ]);
     }
 
     /**
@@ -368,9 +368,9 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getSortUri(): string
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+        ]);
     }
 
     /**

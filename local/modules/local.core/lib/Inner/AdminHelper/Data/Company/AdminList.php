@@ -35,11 +35,11 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $check = $this->checkRights($operation);
         if ($check->isSuccess()) {
             $result->setData([
-                    "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-                        ]),
-                ]);
+                "uri" => \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
+                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+                    \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+                ]),
+            ]);
         } else {
             $result->addErrors($check->getErrors());
         }
@@ -290,16 +290,16 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         //            "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
         //        ]);
         return \Local\Core\Model\Data\CompanyTable::getlist([
-                "select" => [
-                    "*",
-                    'OWN_DATA_' => 'OWN'
-                ],
-                "filter" => $this->filterList,
-                "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
-                'runtime' => [
-                    new \Bitrix\Main\ORM\Fields\Relations\Reference('OWN', \Bitrix\Main\UserTable::class, \Bitrix\Main\ORM\Query\Join::on('this.USER_OWN_ID', 'ref.ID'))
-                ]
-            ]);
+            "select" => [
+                "*",
+                'OWN_DATA_' => 'OWN'
+            ],
+            "filter" => $this->filterList,
+            "order" => [$this->CAdminList->sort->getField() => $this->CAdminList->sort->getOrder()],
+            'runtime' => [
+                new \Bitrix\Main\ORM\Fields\Relations\Reference('OWN', \Bitrix\Main\UserTable::class, \Bitrix\Main\ORM\Query\Join::on('this.USER_OWN_ID', 'ref.ID'))
+            ]
+        ]);
     }
 
     /**
@@ -460,10 +460,10 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     public function getEditLink($fields = [])
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
-                "id" => $fields["ID"],
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => AdminEdit::ADMIN_ACTION_VALUE,
+            "id" => $fields["ID"],
+        ]);
     }
 
     /**
@@ -472,9 +472,9 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getFilterUri(array $arData = []): string
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+        ]);
     }
 
     /**
@@ -483,9 +483,9 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
     protected function getSortUri(): string
     {
         return \Local\Core\Inner\AdminHelper\AdminRoute::getUri([
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
-                \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
-            ]);
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ENTITY => self::ADMIN_ENTITY_VALUE,
+            \Local\Core\Inner\AdminHelper\AdminRoute::ADMIN_ACTION => self::ADMIN_ACTION_VALUE,
+        ]);
     }
 
     /**

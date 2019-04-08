@@ -19,14 +19,14 @@ class ApacheRequestTest extends TestCase
     /**
      * @dataProvider provideServerVars
      */
-    public function testUriMethods( $server, $expectedRequestUri, $expectedBaseUrl, $expectedPathInfo )
+    public function testUriMethods($server, $expectedRequestUri, $expectedBaseUrl, $expectedPathInfo)
     {
         $request = new ApacheRequest();
-        $request->server->replace( $server );
+        $request->server->replace($server);
 
-        $this->assertEquals( $expectedRequestUri, $request->getRequestUri(), '->getRequestUri() is correct' );
-        $this->assertEquals( $expectedBaseUrl, $request->getBaseUrl(), '->getBaseUrl() is correct' );
-        $this->assertEquals( $expectedPathInfo, $request->getPathInfo(), '->getPathInfo() is correct' );
+        $this->assertEquals($expectedRequestUri, $request->getRequestUri(), '->getRequestUri() is correct');
+        $this->assertEquals($expectedBaseUrl, $request->getBaseUrl(), '->getBaseUrl() is correct');
+        $this->assertEquals($expectedPathInfo, $request->getPathInfo(), '->getPathInfo() is correct');
     }
 
     public function provideServerVars()

@@ -1,4 +1,5 @@
 <?
+
 namespace Local\Core\Inner\TriggerMail;
 
 

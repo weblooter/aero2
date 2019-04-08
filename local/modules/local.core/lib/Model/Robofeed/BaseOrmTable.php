@@ -24,22 +24,22 @@ class BaseOrmTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('STORE_ID', [
-                    'required' => true,
-                    'title' => 'ID магазина'
-                ]),
+                'required' => true,
+                'title' => 'ID магазина'
+            ]),
         ];
     }
 }

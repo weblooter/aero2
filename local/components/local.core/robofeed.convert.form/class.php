@@ -39,9 +39,9 @@ class RobofeedConvertFormComponent extends \Local\Core\Inner\BxModified\CBitrixC
             ->getContext()
             ->getRequest()
             ->getFile('CONVERT')), array_column(\Bitrix\Main\Application::getInstance()
-                ->getContext()
-                ->getRequest()
-                ->getFile('CONVERT'), 'FILE'));
+            ->getContext()
+            ->getRequest()
+            ->getFile('CONVERT'), 'FILE'));
 
         $arPostFields = \Bitrix\Main\Application::getInstance()
             ->getContext()

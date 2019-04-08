@@ -20,10 +20,10 @@ class PathPackageTest extends TestCase
     /**
      * @dataProvider getConfigs
      */
-    public function testGetUrl( $basePath, $format, $path, $expected )
+    public function testGetUrl($basePath, $format, $path, $expected)
     {
-        $package = new PathPackage( $basePath, new StaticVersionStrategy( 'v1', $format ) );
-        $this->assertEquals( $expected, $package->getUrl( $path ) );
+        $package = new PathPackage($basePath, new StaticVersionStrategy('v1', $format));
+        $this->assertEquals($expected, $package->getUrl($path));
     }
 
     public function getConfigs()
@@ -51,12 +51,11 @@ class PathPackageTest extends TestCase
     /**
      * @dataProvider getContextConfigs
      */
-    public function testGetUrlWithContext( $basePathRequest, $basePath, $format, $path, $expected )
+    public function testGetUrlWithContext($basePathRequest, $basePath, $format, $path, $expected)
     {
-        $package = new PathPackage( $basePath, new StaticVersionStrategy( 'v1', $format ),
-            $this->getContext( $basePathRequest ) );
+        $package = new PathPackage($basePath, new StaticVersionStrategy('v1', $format), $this->getContext($basePathRequest));
 
-        $this->assertEquals( $expected, $package->getUrl( $path ) );
+        $this->assertEquals($expected, $package->getUrl($path));
     }
 
     public function getContextConfigs()
@@ -78,19 +77,19 @@ class PathPackageTest extends TestCase
 
     public function testVersionStrategyGivesAbsoluteURL()
     {
-        $versionStrategy = $this->getMockBuilder( 'Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface' )->getMock();
-        $versionStrategy->expects( $this->any() )
-            ->method( 'applyVersion' )
-            ->willReturn( 'https://cdn.com/bar/main.css' );
-        $package = new PathPackage( '/subdirectory', $versionStrategy, $this->getContext( '/bar' ) );
+        $versionStrategy = $this->getMockBuilder('Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface')->getMock();
+        $versionStrategy->expects($this->any())
+            ->method('applyVersion')
+            ->willReturn('https://cdn.com/bar/main.css');
+        $package = new PathPackage('/subdirectory', $versionStrategy, $this->getContext('/bar'));
 
-        $this->assertEquals( 'https://cdn.com/bar/main.css', $package->getUrl( 'main.css' ) );
+        $this->assertEquals('https://cdn.com/bar/main.css', $package->getUrl('main.css'));
     }
 
-    private function getContext( $basePath )
+    private function getContext($basePath)
     {
-        $context = $this->getMockBuilder( 'Symfony\Component\Asset\Context\ContextInterface' )->getMock();
-        $context->expects( $this->any() )->method( 'getBasePath' )->will( $this->returnValue( $basePath ) );
+        $context = $this->getMockBuilder('Symfony\Component\Asset\Context\ContextInterface')->getMock();
+        $context->expects($this->any())->method('getBasePath')->will($this->returnValue($basePath));
 
         return $context;
     }

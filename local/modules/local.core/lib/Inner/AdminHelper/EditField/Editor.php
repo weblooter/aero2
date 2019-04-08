@@ -26,13 +26,13 @@ class Editor extends Base
         ob_start();
 
         \CFileMan::AddHTMLEditorFrame($this->getCode(), $this->getValue(), "", "html", [
-                "height" => 450,
-                "width" => "100%"
-            ], "N", 0, "", "", "s1", true, false, [
-                "toolbarConfig" => \CFileMan::GetEditorToolbarConfig("admin"),
-                "saveEditorKey" => 1,
-                "hideTypeSelector" => "N",
-            ]);
+            "height" => 450,
+            "width" => "100%"
+        ], "N", 0, "", "", "s1", true, false, [
+            "toolbarConfig" => \CFileMan::GetEditorToolbarConfig("admin"),
+            "saveEditorKey" => 1,
+            "hideTypeSelector" => "N",
+        ]);
 
         $as = ob_get_contents();
         ob_end_clean();

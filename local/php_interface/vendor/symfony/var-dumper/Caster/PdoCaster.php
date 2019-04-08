@@ -57,75 +57,62 @@ class PdoCaster
         ],
     ];
 
-    public static function castPdo( \PDO $c, array $a, Stub $stub, $isNested )
+    public static function castPdo(\PDO $c, array $a, Stub $stub, $isNested)
     {
         $attr = [];
-        $errmode = $c->getAttribute( \PDO::ATTR_ERRMODE );
-        $c->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
+        $errmode = $c->getAttribute(\PDO::ATTR_ERRMODE);
+        $c->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        foreach ( self::$pdoAttributes as $k => $v )
-        {
-            if ( !isset( $k[ 0 ] ) )
-            {
+        foreach (self::$pdoAttributes as $k => $v) {
+            if (!isset($k[0])) {
                 $k = $v;
                 $v = [];
             }
 
-            try
-            {
-                $attr[ $k ] = 'ERRMODE' === $k ? $errmode : $c->getAttribute( \constant( 'PDO::ATTR_'.$k ) );
-                if ( $v && isset( $v[ $attr[ $k ] ] ) )
-                {
-                    $attr[ $k ] = new ConstStub( $v[ $attr[ $k ] ], $attr[ $k ] );
+            try {
+                $attr[$k] = 'ERRMODE' === $k ? $errmode : $c->getAttribute(\constant('PDO::ATTR_'.$k));
+                if ($v && isset($v[$attr[$k]])) {
+                    $attr[$k] = new ConstStub($v[$attr[$k]], $attr[$k]);
                 }
-            }
-            catch ( \Exception $e )
-            {
+            } catch (\Exception $e) {
             }
         }
-        if ( isset( $attr[ $k = 'STATEMENT_CLASS' ][ 1 ] ) )
-        {
-            if ( $attr[ $k ][ 1 ] )
-            {
-                $attr[ $k ][ 1 ] = new ArgsStub( $attr[ $k ][ 1 ], '__construct', $attr[ $k ][ 0 ] );
+        if (isset($attr[$k = 'STATEMENT_CLASS'][1])) {
+            if ($attr[$k][1]) {
+                $attr[$k][1] = new ArgsStub($attr[$k][1], '__construct', $attr[$k][0]);
             }
-            $attr[ $k ][ 0 ] = new ClassStub( $attr[ $k ][ 0 ] );
+            $attr[$k][0] = new ClassStub($attr[$k][0]);
         }
 
         $prefix = Caster::PREFIX_VIRTUAL;
         $a += [
-            $prefix.'inTransaction' => method_exists( $c, 'inTransaction' ),
+            $prefix.'inTransaction' => method_exists($c, 'inTransaction'),
             $prefix.'errorInfo' => $c->errorInfo(),
-            $prefix.'attributes' => new EnumStub( $attr ),
+            $prefix.'attributes' => new EnumStub($attr),
         ];
 
-        if ( $a[ $prefix.'inTransaction' ] )
-        {
-            $a[ $prefix.'inTransaction' ] = $c->inTransaction();
-        }
-        else
-        {
-            unset( $a[ $prefix.'inTransaction' ] );
+        if ($a[$prefix.'inTransaction']) {
+            $a[$prefix.'inTransaction'] = $c->inTransaction();
+        } else {
+            unset($a[$prefix.'inTransaction']);
         }
 
-        if ( !isset( $a[ $prefix.'errorInfo' ][ 1 ], $a[ $prefix.'errorInfo' ][ 2 ] ) )
-        {
-            unset( $a[ $prefix.'errorInfo' ] );
+        if (!isset($a[$prefix.'errorInfo'][1], $a[$prefix.'errorInfo'][2])) {
+            unset($a[$prefix.'errorInfo']);
         }
 
-        $c->setAttribute( \PDO::ATTR_ERRMODE, $errmode );
+        $c->setAttribute(\PDO::ATTR_ERRMODE, $errmode);
 
         return $a;
     }
 
-    public static function castPdoStatement( \PDOStatement $c, array $a, Stub $stub, $isNested )
+    public static function castPdoStatement(\PDOStatement $c, array $a, Stub $stub, $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
-        $a[ $prefix.'errorInfo' ] = $c->errorInfo();
+        $a[$prefix.'errorInfo'] = $c->errorInfo();
 
-        if ( !isset( $a[ $prefix.'errorInfo' ][ 1 ], $a[ $prefix.'errorInfo' ][ 2 ] ) )
-        {
-            unset( $a[ $prefix.'errorInfo' ] );
+        if (!isset($a[$prefix.'errorInfo'][1], $a[$prefix.'errorInfo'][2])) {
+            unset($a[$prefix.'errorInfo']);
         }
 
         return $a;

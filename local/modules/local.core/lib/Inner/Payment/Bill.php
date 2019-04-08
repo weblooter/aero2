@@ -32,7 +32,8 @@ class Bill implements PaymentInterface
             ->getRequestedPageDirectory()?>/?handler=<?=self::getCode()?>" method="post">
             <?=bitrix_sessid_post()?>
 
-            <?if( empty($obRequest->getPost('type')) ):?>
+            <?
+            if (empty($obRequest->getPost('type'))):?>
                 <div class="form-group">
                     <label>Выставить счет</label>
                     <select class="form-control" name="type" onchange="this.form.submit()">
@@ -41,18 +42,17 @@ class Bill implements PaymentInterface
                         <option value="UR" <?=$obRequest->getPost('type') == 'UR' ? 'selected' : ''?>>Юридическому лицу</option>
                     </select>
                 </div>
-            <?else:?>
+            <? else:?>
                 <input type="hidden" name="type" value="<?=$obRequest->getPost('type')?>" />
-            <?endif;?>
+            <?endif; ?>
 
             <?
             switch ($obRequest->getPost('type')) {
                 case 'FIZ':
                     $arRequest = $obRequest->getPost('FIZ');
 
-                    if( $obRequest->getPost('make_bill') == 'Y' )
-                    {
-                        $obPdf = ( new \Local\Core\Inner\Payment\Bill() )->makeBillPdf([
+                    if ($obRequest->getPost('make_bill') == 'Y') {
+                        $obPdf = (new \Local\Core\Inner\Payment\Bill())->makeBillPdf([
                             [
                                 'NAME' => 'Пополнение счета на Robofeed.ru',
                                 'COUNT' => '1',
@@ -63,7 +63,8 @@ class Bill implements PaymentInterface
                         \Local\Core\Model\Data\AttemptsTopUpBalanceLogTable::add([
                             'USER_ID' => $GLOBALS['USER']->GetId(),
                             'HANDLER' => self::getCode(),
-                            'QUERY_DATA' => json_encode($obRequest->getPostList()->toArray()),
+                            'QUERY_DATA' => json_encode($obRequest->getPostList()
+                                ->toArray()),
                             'ADDITIONAL_DATA' => $obPdf->getBase64(),
                             'QUERY_CHECK_RESULT' => 'SU',
                             'TRY_TOP_UP_BALANCE_RESULT' => 'SU'
@@ -113,22 +114,21 @@ class Bill implements PaymentInterface
                 case 'UR':
                     $arRequest = $obRequest->getPost('UR');
 
-                    if( $obRequest->getPost('make_bill') == 'Y' )
-                    {
-                        $obPdf = ( new \Local\Core\Inner\Payment\Bill() )->makeBillPdf([
+                    if ($obRequest->getPost('make_bill') == 'Y') {
+                        $obPdf = (new \Local\Core\Inner\Payment\Bill())->makeBillPdf([
                             [
                                 'NAME' => 'Пополнение счета на Robofeed.ru',
                                 'COUNT' => '1',
                                 'UNIT' => 'шт.',
                                 'PRICE' => $arRequest['TOP_UP_SUMM'] // TODO проверить на число более 0
                             ]
-                        ],
-                            $arRequest['ORG_NAME'].', ИНН '.$arRequest['INN'].', '.$arRequest['ZIP'].', '.$arRequest['ADDRESS'].', '.$arRequest['LAST_NAME'].' '.$arRequest['NAME'].' '.$arRequest['SECOND_NAME']
-                        );
+                        ], $arRequest['ORG_NAME'].', ИНН '.$arRequest['INN'].', '.$arRequest['ZIP'].', '.$arRequest['ADDRESS'].', '.$arRequest['LAST_NAME'].' '.$arRequest['NAME'].' '
+                           .$arRequest['SECOND_NAME']);
                         \Local\Core\Model\Data\AttemptsTopUpBalanceLogTable::add([
                             'USER_ID' => $GLOBALS['USER']->GetId(),
                             'HANDLER' => self::getCode(),
-                            'QUERY_DATA' => json_encode($obRequest->getPostList()->toArray()),
+                            'QUERY_DATA' => json_encode($obRequest->getPostList()
+                                ->toArray()),
                             'ADDITIONAL_DATA' => $obPdf->getBase64(),
                             'QUERY_CHECK_RESULT' => 'SU',
                             'TRY_TOP_UP_BALANCE_RESULT' => 'SU'
@@ -251,8 +251,8 @@ class Bill implements PaymentInterface
      * @param string $strPurchaser     Строка с данными о покупателе
      * @param int    $strAccountNumber Номер счета
      *
-     * @see \Local\Core\Inner\Payment\Bill::makeBillPdf()
      * @return string
+     * @see \Local\Core\Inner\Payment\Bill::makeBillPdf()
      */
     private static function makeBillHtml(array $arProductList, $strPurchaser, $strAccountNumber)
     {
@@ -571,16 +571,15 @@ class Bill implements PaymentInterface
      *
      * @param string $strPath Абсоютный пусть сохранения файла. Предпочтительно генерировать методом \Local\Core\Inner\BxModified\CFile::makeLocalCorePath()
      *
-     * @see \Local\Core\Inner\BxModified\CFile::makeLocalCorePath()
      * @throws \Exception
+     * @see \Local\Core\Inner\BxModified\CFile::makeLocalCorePath()
      */
     public function saveTo($strPath)
     {
         if (is_null($this->obPdf)) {
             throw new \Exception('PDF надо сгенерировать');
         }
-        if( is_null( $this->obPdfOutputed ) )
-        {
+        if (is_null($this->obPdfOutputed)) {
             $this->obPdfOutputed = $this->obPdf->output();
         }
         file_put_contents($strPath, $this->obPdfOutputed);
@@ -599,13 +598,13 @@ class Bill implements PaymentInterface
         if (is_null($this->obPdf)) {
             throw new \Exception('PDF надо сгенерировать');
         }
-        if( is_null( $this->obPdfOutputed ) )
-        {
+        if (is_null($this->obPdfOutputed)) {
             $this->obPdfOutputed = $this->obPdf->output();
         }
 
-        if( empty($strFileName) )
+        if (empty($strFileName)) {
             $strFileName = 'Bill #'.$this->accountNumber;
+        }
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
@@ -632,8 +631,7 @@ class Bill implements PaymentInterface
         if (is_null($this->obPdf)) {
             throw new \Exception('PDF надо сгенерировать');
         }
-        if( is_null( $this->obPdfOutputed ) )
-        {
+        if (is_null($this->obPdfOutputed)) {
             $this->obPdfOutputed = $this->obPdf->output();
         }
         return base64_encode($this->obPdfOutputed);
@@ -642,12 +640,12 @@ class Bill implements PaymentInterface
     /**
      * Выводи изобрадения pdf по base64
      *
-     * @param string $base64, полученный через \Local\Core\Inner\Payment\Bill::getBase64()
-     * @param string $width Ширина блока
+     * @param string $base64 , полученный через \Local\Core\Inner\Payment\Bill::getBase64()
+     * @param string $width  Ширина блока
      * @param string $height Высота блока
      *
-     * @see \Local\Core\Inner\Payment\Bill::getBase64()
      * @return string
+     * @see \Local\Core\Inner\Payment\Bill::getBase64()
      */
     public static function printByBase64($base64, $width = '100%', $height = 600)
     {

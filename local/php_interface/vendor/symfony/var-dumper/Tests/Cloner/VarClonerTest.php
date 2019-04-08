@@ -24,7 +24,7 @@ class VarClonerTest extends TestCase
         $data = [PHP_INT_MAX => 123];
 
         $cloner = new VarCloner();
-        $clone = $cloner->cloneVar( $data );
+        $clone = $cloner->cloneVar($data);
 
         $expected = <<<EOTXT
 Symfony\Component\VarDumper\Cloner\Data Object
@@ -55,15 +55,15 @@ Symfony\Component\VarDumper\Cloner\Data Object
 )
 
 EOTXT;
-        $this->assertSame( sprintf( $expected, PHP_INT_MAX ), print_r( $clone, true ) );
+        $this->assertSame(sprintf($expected, PHP_INT_MAX), print_r($clone, true));
     }
 
     public function testClone()
     {
-        $json = json_decode( '{"1":{"var":"val"},"2":{"var":"val"}}' );
+        $json = json_decode('{"1":{"var":"val"},"2":{"var":"val"}}');
 
         $cloner = new VarCloner();
-        $clone = $cloner->cloneVar( $json );
+        $clone = $cloner->cloneVar($json);
 
         $expected = <<<EOTXT
 Symfony\Component\VarDumper\Cloner\Data Object
@@ -143,7 +143,7 @@ Symfony\Component\VarDumper\Cloner\Data Object
 )
 
 EOTXT;
-        $this->assertStringMatchesFormat( $expected, print_r( $clone, true ) );
+        $this->assertStringMatchesFormat($expected, print_r($clone, true));
     }
 
     public function testLimits()
@@ -187,10 +187,10 @@ EOTXT;
         ];
 
         $cloner = new VarCloner();
-        $cloner->setMinDepth( 2 );
-        $cloner->setMaxItems( 5 );
-        $cloner->setMaxString( 20 );
-        $clone = $cloner->cloneVar( $data );
+        $cloner->setMinDepth(2);
+        $cloner->setMaxItems(5);
+        $cloner->setMaxString(20);
+        $clone = $cloner->cloneVar($data);
 
         $expected = <<<EOTXT
 Symfony\Component\VarDumper\Cloner\Data Object
@@ -311,20 +311,19 @@ Symfony\Component\VarDumper\Cloner\Data Object
 )
 
 EOTXT;
-        $this->assertStringMatchesFormat( $expected, print_r( $clone, true ) );
+        $this->assertStringMatchesFormat($expected, print_r($clone, true));
     }
 
     public function testJsonCast()
     {
-        if ( 2 == ini_get( 'xdebug.overload_var_dump' ) )
-        {
-            $this->markTestSkipped( 'xdebug is active' );
+        if (2 == ini_get('xdebug.overload_var_dump')) {
+            $this->markTestSkipped('xdebug is active');
         }
 
-        $data = (array)json_decode( '{"1":{}}' );
+        $data = (array) json_decode('{"1":{}}');
 
         $cloner = new VarCloner();
-        $clone = $cloner->cloneVar( $data );
+        $clone = $cloner->cloneVar($data);
 
         $expected = <<<'EOTXT'
 object(Symfony\Component\VarDumper\Cloner\Data)#%i (6) {
@@ -376,24 +375,23 @@ object(Symfony\Component\VarDumper\Cloner\Data)#%i (6) {
 
 EOTXT;
         ob_start();
-        var_dump( $clone );
-        $this->assertStringMatchesFormat( \PHP_VERSION_ID >= 70200 ? str_replace( '"1"', '1', $expected ) : $expected,
-            ob_get_clean() );
+        var_dump($clone);
+        $this->assertStringMatchesFormat(\PHP_VERSION_ID >= 70200 ? str_replace('"1"', '1', $expected) : $expected, ob_get_clean());
     }
 
     public function testCaster()
     {
-        $cloner = new VarCloner( [
-            '*' => function ( $obj, $array ) {
+        $cloner = new VarCloner([
+            '*' => function ($obj, $array) {
                 return ['foo' => 123];
             },
-            __CLASS__ => function ( $obj, $array ) {
-                ++$array[ 'foo' ];
+            __CLASS__ => function ($obj, $array) {
+                ++$array['foo'];
 
                 return $array;
             },
-        ] );
-        $clone = $cloner->cloneVar( $this );
+        ]);
+        $clone = $cloner->cloneVar($this);
 
         $expected = <<<EOTXT
 Symfony\Component\VarDumper\Cloner\Data Object
@@ -434,6 +432,6 @@ Symfony\Component\VarDumper\Cloner\Data Object
 )
 
 EOTXT;
-        $this->assertStringMatchesFormat( $expected, print_r( $clone, true ) );
+        $this->assertStringMatchesFormat($expected, print_r($clone, true));
     }
 }

@@ -25,30 +25,26 @@ class VarDumper
 {
     private static $handler;
 
-    public static function dump( $var )
+    public static function dump($var)
     {
-        if ( null === self::$handler )
-        {
+        if (null === self::$handler) {
             $cloner = new VarCloner();
 
-            if ( isset( $_SERVER[ 'VAR_DUMPER_FORMAT' ] ) )
-            {
-                $dumper = 'html' === $_SERVER[ 'VAR_DUMPER_FORMAT' ] ? new HtmlDumper() : new CliDumper();
-            }
-            else
-            {
-                $dumper = \in_array( \PHP_SAPI, ['cli', 'phpdbg'] ) ? new CliDumper() : new HtmlDumper();
+            if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
+                $dumper = 'html' === $_SERVER['VAR_DUMPER_FORMAT'] ? new HtmlDumper() : new CliDumper();
+            } else {
+                $dumper = \in_array(\PHP_SAPI, ['cli', 'phpdbg']) ? new CliDumper() : new HtmlDumper();
             }
 
-            self::$handler = function ( $var ) use ( $cloner, $dumper ) {
-                $dumper->dump( $cloner->cloneVar( $var ) );
+            self::$handler = function ($var) use ($cloner, $dumper) {
+                $dumper->dump($cloner->cloneVar($var));
             };
         }
 
-        return ( self::$handler )( $var );
+        return (self::$handler)($var);
     }
 
-    public static function setHandler( callable $callable = null )
+    public static function setHandler(callable $callable = null)
     {
         $prevHandler = self::$handler;
         self::$handler = $callable;

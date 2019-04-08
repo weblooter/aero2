@@ -92,8 +92,8 @@ abstract class Entity
     }
 
     /**
-     * @throws Main\NotImplementedException
      * @return array
+     * @throws Main\NotImplementedException
      */
     protected static function getFieldsMap()
     {
@@ -159,12 +159,12 @@ abstract class Entity
     }
 
     /**
-     * @internal
-     *
      * @param $name
      * @param $value
      *
      * @throws Main\ArgumentOutOfRangeException
+     * @internal
+     *
      */
     public function setFieldNoDemand($name, $value)
     {
@@ -211,10 +211,10 @@ abstract class Entity
             $eventsList = $eventManager->findEventHandlers('sale', 'OnBefore'.$this->eventName.'SetFields')
             ) {
                 $event = new Main\Event('sale', 'OnBefore'.$this->eventName.'SetFields', array(
-                        'ENTITY' => $this,
-                        'VALUES' => $values,
-                        'OLD_VALUES' => $oldValues
-                    ));
+                    'ENTITY' => $this,
+                    'VALUES' => $values,
+                    'OLD_VALUES' => $oldValues
+                ));
                 $event->send();
 
                 if ($event->getResults()) {
@@ -285,11 +285,11 @@ abstract class Entity
     }
 
     /**
-     * @internal
-     *
      * @param array $values
      *
      * @throws Main\ArgumentOutOfRangeException
+     * @internal
+     *
      */
     public function setFieldsNoDemand(array $values)
     {
@@ -299,12 +299,12 @@ abstract class Entity
     }
 
     /**
-     * @internal
-     *
      * @param $name
      * @param $value
      *
      * @throws Main\ArgumentOutOfRangeException
+     * @internal
+     *
      */
     public function initField($name, $value)
     {
@@ -317,11 +317,11 @@ abstract class Entity
     }
 
     /**
-     * @internal
-     *
      * @param array $values
      *
      * @throws Main\ArgumentOutOfRangeException
+     * @internal
+     *
      */
     public function initFields(array $values)
     {
@@ -339,8 +339,8 @@ abstract class Entity
     }
 
     /**
-     * @internal
      * @return Fields
+     * @internal
      */
     public function getFields()
     {
@@ -384,9 +384,9 @@ abstract class Entity
     }
 
     /**
+     * @return null|string
      * @internal
      *
-     * @return null|string
      */
     public static function getEntityEventName()
     {

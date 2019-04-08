@@ -31,7 +31,7 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @param string $cmd The command to run to get the mime type of a file
      */
-    public function __construct( string $cmd = 'file -b --mime %s 2>/dev/null' )
+    public function __construct(string $cmd = 'file -b --mime %s 2>/dev/null')
     {
         $this->cmd = $cmd;
     }
@@ -45,19 +45,17 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
     {
         static $supported = null;
 
-        if ( null !== $supported )
-        {
+        if (null !== $supported) {
             return $supported;
         }
 
-        if ( '\\' === \DIRECTORY_SEPARATOR || !\function_exists( 'passthru' ) || !\function_exists( 'escapeshellarg' ) )
-        {
+        if ('\\' === \DIRECTORY_SEPARATOR || !\function_exists('passthru') || !\function_exists('escapeshellarg')) {
             return $supported = false;
         }
 
         ob_start();
-        passthru( 'command -v file', $exitStatus );
-        $binPath = trim( ob_get_clean() );
+        passthru('command -v file', $exitStatus);
+        $binPath = trim(ob_get_clean());
 
         return $supported = 0 === $exitStatus && '' !== $binPath;
     }
@@ -65,42 +63,37 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guess( $path )
+    public function guess($path)
     {
-        if ( !is_file( $path ) )
-        {
-            throw new FileNotFoundException( $path );
+        if (!is_file($path)) {
+            throw new FileNotFoundException($path);
         }
 
-        if ( !is_readable( $path ) )
-        {
-            throw new AccessDeniedException( $path );
+        if (!is_readable($path)) {
+            throw new AccessDeniedException($path);
         }
 
-        if ( !self::isSupported() )
-        {
+        if (!self::isSupported()) {
             return;
         }
 
         ob_start();
 
         // need to use --mime instead of -i. see #6641
-        passthru( sprintf( $this->cmd, escapeshellarg( $path ) ), $return );
-        if ( $return > 0 )
-        {
+        passthru(sprintf($this->cmd, escapeshellarg($path)), $return);
+        if ($return > 0) {
             ob_end_clean();
 
             return;
         }
 
-        $type = trim( ob_get_clean() );
+        $type = trim(ob_get_clean());
 
-        if ( !preg_match( '#^([a-z0-9\-]+/[a-z0-9\-\.]+)#i', $type, $match ) )
-        {
+        if (!preg_match('#^([a-z0-9\-]+/[a-z0-9\-\.]+)#i', $type, $match)) {
             // it's not a type, but an error message
             return;
         }
 
-        return $match[ 1 ];
+        return $match[1];
     }
 }

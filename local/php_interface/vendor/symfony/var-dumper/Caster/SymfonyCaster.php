@@ -25,19 +25,16 @@ class SymfonyCaster
         'format' => 'getRequestFormat',
     ];
 
-    public static function castRequest( Request $request, array $a, Stub $stub, $isNested )
+    public static function castRequest(Request $request, array $a, Stub $stub, $isNested)
     {
         $clone = null;
 
-        foreach ( self::$requestGetters as $prop => $getter )
-        {
-            if ( null === $a[ Caster::PREFIX_PROTECTED.$prop ] )
-            {
-                if ( null === $clone )
-                {
+        foreach (self::$requestGetters as $prop => $getter) {
+            if (null === $a[Caster::PREFIX_PROTECTED.$prop]) {
+                if (null === $clone) {
                     $clone = clone $request;
                 }
-                $a[ Caster::PREFIX_VIRTUAL.$prop ] = $clone->{$getter}();
+                $a[Caster::PREFIX_VIRTUAL.$prop] = $clone->{$getter}();
             }
         }
 

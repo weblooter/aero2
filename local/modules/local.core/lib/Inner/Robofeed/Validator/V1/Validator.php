@@ -14,9 +14,9 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
     }
 
     /**
+     * @return \Bitrix\Main\Result|void
      * @deprecated
      *
-     * @return \Bitrix\Main\Result|void
      */
     public function run()
     {
@@ -192,11 +192,11 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                         } else {
                             // Нет информации по доставке
                             self::sendErrorByCodeToResult('LOCAL_CORE_FIELD_IS_REQUIRED', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
-                                        'title' => 'Группа доставки',
-                                        'reqired' => true,
-                                        'xml_path' => 'robofeed->offers->offer->delivery',
-                                        'xml_expected_type' => 'валидные условия самовывоза'
-                                    ]), $obOfferValRes);
+                                'title' => 'Группа доставки',
+                                'reqired' => true,
+                                'xml_path' => 'robofeed->offers->offer->delivery',
+                                'xml_expected_type' => 'валидные условия самовывоза'
+                            ]), $obOfferValRes);
                         }
                     }
                     break;
@@ -214,11 +214,11 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                         } else {
                             // Нет информации по самовывозу
                             self::sendErrorByCodeToResult('LOCAL_CORE_FIELD_IS_REQUIRED', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('pickup__option', [
-                                        'title' => 'Группа самовывоза',
-                                        'reqired' => true,
-                                        'xml_path' => 'robofeed->offers->offer->pickup',
-                                        'xml_expected_type' => 'валидные условия самовывоза'
-                                    ]), $obOfferValRes);
+                                'title' => 'Группа самовывоза',
+                                'reqired' => true,
+                                'xml_path' => 'robofeed->offers->offer->pickup',
+                                'xml_expected_type' => 'валидные условия самовывоза'
+                            ]), $obOfferValRes);
                         }
                     }
                     break;
@@ -266,9 +266,9 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
      * @param array             $obField       филд delivery из маппинга
      * @param string            $xmlPath       Примиска для xml_path. Используется для вывода ошибок из филда, грененрированного на лету
      *
-     * @throws \Bitrix\Main\SystemException
-     * @throws \Local\Core\Inner\Exception\FatalException
      * @return \Bitrix\Main\Result
+     * @throws \Local\Core\Inner\Exception\FatalException
+     * @throws \Bitrix\Main\SystemException
      */
     private function validDelivery($obXmlDelivery, $obField, $xmlPath)
     {
@@ -314,20 +314,20 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                 // Перебрали все условия, проверим есть ли валидные
                 if (empty($arReturn['option'])) {
                     self::sendErrorByCodeToResult('LOCAL_CORE_DELIVERY_NO_ONE_OPTION_NOT_VALID', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
-                                'title' => '',
-                                'reqired' => true,
-                                'xml_path' => $xmlPath.'->delivery->option',
-                                'xml_expected_type' => 'валидные условия доставки'
-                            ]), $obReturnResult);
+                        'title' => '',
+                        'reqired' => true,
+                        'xml_path' => $xmlPath.'->delivery->option',
+                        'xml_expected_type' => 'валидные условия доставки'
+                    ]), $obReturnResult);
                 }
             } else {
                 // Нет условий доставок
                 self::sendErrorByCodeToResult('LOCAL_CORE_DELIVERY_EMPTY', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
-                            'title' => '',
-                            'reqired' => true,
-                            'xml_path' => $xmlPath.'->delivery->option',
-                            'xml_expected_type' => 'валидные условия доставки'
-                        ]), $obReturnResult);
+                    'title' => '',
+                    'reqired' => true,
+                    'xml_path' => $xmlPath.'->delivery->option',
+                    'xml_expected_type' => 'валидные условия доставки'
+                ]), $obReturnResult);
             }
         }
 
@@ -342,9 +342,9 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
      * @param array             $obField     филд pickup из маппинга
      * @param string            $xmlPath     Примиска для xml_path. Используется для вывода ошибок из филда, грененрированного на лету
      *
-     * @throws \Bitrix\Main\SystemException
-     * @throws \Local\Core\Inner\Exception\FatalException
      * @return \Bitrix\Main\Result
+     * @throws \Local\Core\Inner\Exception\FatalException
+     * @throws \Bitrix\Main\SystemException
      */
     private function validPickup($obXmlPickup, $obField, $xmlPath)
     {
@@ -390,20 +390,20 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                 // Перебрали все условия, проверим есть ли валидные
                 if (empty($arReturn['option'])) {
                     self::sendErrorByCodeToResult('LOCAL_CORE_PICKUP_NO_ONE_OPTION_NOT_VALID', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
-                                'title' => '',
-                                'reqired' => true,
-                                'xml_path' => $xmlPath.'->pickup->option',
-                                'xml_expected_type' => 'валидные условия самовывоза'
-                            ]), $obReturnResult);
+                        'title' => '',
+                        'reqired' => true,
+                        'xml_path' => $xmlPath.'->pickup->option',
+                        'xml_expected_type' => 'валидные условия самовывоза'
+                    ]), $obReturnResult);
                 }
             } else {
                 // Нет условий самовывоза
                 self::sendErrorByCodeToResult('LOCAL_CORE_PICKUP_EMPTY', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
-                            'title' => '',
-                            'reqired' => true,
-                            'xml_path' => $xmlPath.'->pickup->option',
-                            'xml_expected_type' => 'валидные условия самовывоза'
-                        ]), $obReturnResult);
+                    'title' => '',
+                    'reqired' => true,
+                    'xml_path' => $xmlPath.'->pickup->option',
+                    'xml_expected_type' => 'валидные условия самовывоза'
+                ]), $obReturnResult);
             }
         }
 
@@ -423,10 +423,10 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
             if (empty($arCategories[$arFields['categoryId']])) {
                 // Данной категории нет в списке
                 AbstractValidator::sendErrorByCodeToResult('LOCAL_CORE_UNDEFINED_CATEGORY', new \Local\Core\Inner\Robofeed\SchemaFields\StringField('delivery__option', [
-                            'title' => 'ID категории товара',
-                            'xml_path' => 'robofeed->offers->offer->categoryId',
-                            'xml_expected_type' => 'валидные условия самовывоза'
-                        ]), $obOfferCheckResult);
+                    'title' => 'ID категории товара',
+                    'xml_path' => 'robofeed->offers->offer->categoryId',
+                    'xml_expected_type' => 'валидные условия самовывоза'
+                ]), $obOfferCheckResult);
             }
         }
 
@@ -435,9 +435,9 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
             {
                 if (!empty($val) && empty($valUnitCode)) {
                     self::sendErrorByCodeToResult($ERROR_CODE, new \Local\Core\Inner\Robofeed\SchemaFields\StringField('q', [
-                                'xml_path' => $xmlPath,
-                                'xml_expected_type' => 'значение из справочника'
-                            ]), $obOfferCheckResult);
+                        'xml_path' => $xmlPath,
+                        'xml_expected_type' => 'значение из справочника'
+                    ]), $obOfferCheckResult);
                 }
             };
 

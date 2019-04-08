@@ -161,19 +161,19 @@ final class Runner
         }
 
         $ar = Model\Data\JobQueueTable::getList([
-                'filter' => [
-                    '>ATTEMPTS_LEFT' => 0,
-                    '<=EXECUTE_AT' => \Bitrix\Main\Type\DateTime::createFromTimestamp(time()),
-                    '=STATUS' => [
-                        Model\Data\JobQueueTable::STATUS_ENUM_NEW,
-                        Model\Data\JobQueueTable::STATUS_ENUM_ERROR,
-                    ],
-                    '=IS_EXECUTE_NOW' => 'N',
-                    '=EXECUTE_BY' => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
+            'filter' => [
+                '>ATTEMPTS_LEFT' => 0,
+                '<=EXECUTE_AT' => \Bitrix\Main\Type\DateTime::createFromTimestamp(time()),
+                '=STATUS' => [
+                    Model\Data\JobQueueTable::STATUS_ENUM_NEW,
+                    Model\Data\JobQueueTable::STATUS_ENUM_ERROR,
                 ],
-                'limit' => $maximum,
-                'select' => ['ID'],
-            ])
+                '=IS_EXECUTE_NOW' => 'N',
+                '=EXECUTE_BY' => Model\Data\JobQueueTable::EXECUTE_BY_DEFAULT,
+            ],
+            'limit' => $maximum,
+            'select' => ['ID'],
+        ])
             ->fetchAll();
 
         return is_array($ar) ? $ar : [];

@@ -163,9 +163,9 @@ abstract class EditBase
     {
         $editLink = new \Bitrix\Main\Web\Uri($this->app->GetCurPage());
         $editLink->addParams(array_merge([
-                "id" => $this->id,
-                "lang" => LANGUAGE_ID,
-            ], $fields));
+            "id" => $this->id,
+            "lang" => LANGUAGE_ID,
+        ], $fields));
 
         return $editLink->getUri();
     }
@@ -182,17 +182,17 @@ abstract class EditBase
     {
         $editLink = new \Bitrix\Main\Web\Uri($this->app->GetCurPage());
         $editLink->addParams(array_merge([
-                "lang" => LANGUAGE_ID,
-            ], [
-                    'adminEntity' => \Bitrix\Main\Application::getInstance()
-                        ->getContext()
-                        ->getRequest()
-                        ->get('adminEntity'),
-                    'adminAction' => \Bitrix\Main\Application::getInstance()
-                        ->getContext()
-                        ->getRequest()
-                        ->get('adminAction'),
-                ], $fields));
+            "lang" => LANGUAGE_ID,
+        ], [
+            'adminEntity' => \Bitrix\Main\Application::getInstance()
+                ->getContext()
+                ->getRequest()
+                ->get('adminEntity'),
+            'adminAction' => \Bitrix\Main\Application::getInstance()
+                ->getContext()
+                ->getRequest()
+                ->get('adminAction'),
+        ], $fields));
 
         return $editLink->getUri();
     }
@@ -305,10 +305,10 @@ abstract class EditBase
         }
 
         $this->CAdminTabControl->Buttons([
-                "disabled" => false,
-                "back_url" => $this->getListLink(),
-                'btnSaveAndAdd' => true
-            ]);
+            "disabled" => false,
+            "back_url" => $this->getListLink(),
+            'btnSaveAndAdd' => true
+        ]);
         $this->CAdminTabControl->End();
 
         if (!empty($this->getNote())) {

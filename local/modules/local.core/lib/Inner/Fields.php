@@ -79,12 +79,12 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @internal
-     *
      * @param string $name
      * @param mixed  $value
      *
      * @return bool
+     * @internal
+     *
      */
     public function init($name, $value)
     {
@@ -298,11 +298,11 @@ class Fields implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @internal
-     *
      * @param \SplObjectStorage $cloneEntity
      *
      * @return Fields
+     * @internal
+     *
      */
     public function createClone(\SplObjectStorage $cloneEntity)
     {

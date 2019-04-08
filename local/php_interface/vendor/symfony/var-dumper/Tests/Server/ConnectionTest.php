@@ -25,39 +25,33 @@ class ConnectionTest extends TestCase
     public function testDump()
     {
         $cloner = new VarCloner();
-        $data = $cloner->cloneVar( 'foo' );
-        $connection = new Connection( self::VAR_DUMPER_SERVER, [
-            'foo_provider' => new class() implements ContextProviderInterface
-            {
+        $data = $cloner->cloneVar('foo');
+        $connection = new Connection(self::VAR_DUMPER_SERVER, [
+            'foo_provider' => new class() implements ContextProviderInterface {
                 public function getContext(): ?array
                 {
                     return ['foo'];
                 }
             },
-        ] );
+        ]);
 
         $dumped = null;
         $process = $this->getServerProcess();
-        $process->start( function ( $type, $buffer ) use ( $process, &$dumped, $connection, $data ) {
-            if ( Process::ERR === $type )
-            {
+        $process->start(function ($type, $buffer) use ($process, &$dumped, $connection, $data) {
+            if (Process::ERR === $type) {
                 $process->stop();
                 $this->fail();
-            }
-            elseif ( "READY\n" === $buffer )
-            {
-                $connection->write( $data );
-            }
-            else
-            {
+            } elseif ("READY\n" === $buffer) {
+                $connection->write($data);
+            } else {
                 $dumped .= $buffer;
             }
-        } );
+        });
 
         $process->wait();
 
-        $this->assertTrue( $process->isSuccessful() );
-        $this->assertStringMatchesFormat( <<<'DUMP'
+        $this->assertTrue($process->isSuccessful());
+        $this->assertStringMatchesFormat(<<<'DUMP'
 (3) "foo"
 [
   "timestamp" => %d.%d
@@ -68,27 +62,27 @@ class ConnectionTest extends TestCase
 %d
 
 DUMP
-            , $dumped );
+        , $dumped);
     }
 
     public function testNoServer()
     {
         $cloner = new VarCloner();
-        $data = $cloner->cloneVar( 'foo' );
-        $connection = new Connection( self::VAR_DUMPER_SERVER );
-        $start = microtime( true );
-        $this->assertFalse( $connection->write( $data ) );
-        $this->assertLessThan( 1, microtime( true ) - $start );
+        $data = $cloner->cloneVar('foo');
+        $connection = new Connection(self::VAR_DUMPER_SERVER);
+        $start = microtime(true);
+        $this->assertFalse($connection->write($data));
+        $this->assertLessThan(1, microtime(true) - $start);
     }
 
     private function getServerProcess(): Process
     {
-        $process = new PhpProcess( file_get_contents( __DIR__.'/../Fixtures/dump_server.php' ), null, [
+        $process = new PhpProcess(file_get_contents(__DIR__.'/../Fixtures/dump_server.php'), null, [
             'COMPONENT_ROOT' => __DIR__.'/../../',
             'VAR_DUMPER_SERVER' => self::VAR_DUMPER_SERVER,
-        ] );
-        $process->inheritEnvironmentVariables( true );
+        ]);
+        $process->inheritEnvironmentVariables(true);
 
-        return $process->setTimeout( 9 );
+        return $process->setTimeout(9);
     }
 }

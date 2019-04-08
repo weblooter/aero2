@@ -26,13 +26,12 @@ class Connection
     private $socket;
 
     /**
-     * @param string                     $host The server host
+     * @param string                     $host             The server host
      * @param ContextProviderInterface[] $contextProviders Context providers indexed by context name
      */
-    public function __construct( string $host, array $contextProviders = [] )
+    public function __construct(string $host, array $contextProviders = [])
     {
-        if ( false === strpos( $host, '://' ) )
-        {
+        if (false === strpos($host, '://')) {
             $host = 'tcp://'.$host;
         }
 
@@ -45,63 +44,51 @@ class Connection
         return $this->contextProviders;
     }
 
-    public function write( Data $data ): bool
+    public function write(Data $data): bool
     {
         $socketIsFresh = !$this->socket;
-        if ( !$this->socket = $this->socket ? : $this->createSocket() )
-        {
+        if (!$this->socket = $this->socket ?: $this->createSocket()) {
             return false;
         }
 
-        $context = ['timestamp' => microtime( true )];
-        foreach ( $this->contextProviders as $name => $provider )
-        {
-            $context[ $name ] = $provider->getContext();
+        $context = ['timestamp' => microtime(true)];
+        foreach ($this->contextProviders as $name => $provider) {
+            $context[$name] = $provider->getContext();
         }
-        $context = array_filter( $context );
-        $encodedPayload = base64_encode( serialize( [$data, $context] ) )."\n";
+        $context = array_filter($context);
+        $encodedPayload = base64_encode(serialize([$data, $context]))."\n";
 
-        set_error_handler( [self::class, 'nullErrorHandler'] );
-        try
-        {
-            if ( -1 !== stream_socket_sendto( $this->socket, $encodedPayload ) )
-            {
+        set_error_handler([self::class, 'nullErrorHandler']);
+        try {
+            if (-1 !== stream_socket_sendto($this->socket, $encodedPayload)) {
                 return true;
             }
-            if ( !$socketIsFresh )
-            {
-                stream_socket_shutdown( $this->socket, STREAM_SHUT_RDWR );
-                fclose( $this->socket );
+            if (!$socketIsFresh) {
+                stream_socket_shutdown($this->socket, STREAM_SHUT_RDWR);
+                fclose($this->socket);
                 $this->socket = $this->createSocket();
             }
-            if ( -1 !== stream_socket_sendto( $this->socket, $encodedPayload ) )
-            {
+            if (-1 !== stream_socket_sendto($this->socket, $encodedPayload)) {
                 return true;
             }
-        }
-        finally
-        {
+        } finally {
             restore_error_handler();
         }
 
         return false;
     }
 
-    private static function nullErrorHandler( $t, $m )
+    private static function nullErrorHandler($t, $m)
     {
         // no-op
     }
 
     private function createSocket()
     {
-        set_error_handler( [self::class, 'nullErrorHandler'] );
-        try
-        {
-            return stream_socket_client( $this->host, $errno, $errstr, 3,
-                STREAM_CLIENT_CONNECT | STREAM_CLIENT_ASYNC_CONNECT );
-        }
-        finally
-        {
+        set_error_handler([self::class, 'nullErrorHandler']);
+        try {
+            return stream_socket_client($this->host, $errno, $errstr, 3, STREAM_CLIENT_CONNECT | STREAM_CLIENT_ASYNC_CONNECT);
+        } finally {
             restore_error_handler();
         }
     }

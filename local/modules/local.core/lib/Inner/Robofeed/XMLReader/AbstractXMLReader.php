@@ -60,8 +60,8 @@ abstract class AbstractXMLReader
      *
      * @param $constScript
      *
-     * @throws FatalException
      * @return $this
+     * @throws FatalException
      */
     public function setScript($constScript)
     {

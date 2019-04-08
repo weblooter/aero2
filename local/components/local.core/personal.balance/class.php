@@ -4,8 +4,9 @@ class PersonalBalanceComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
 {
     public function executeComponent()
     {
-        if( !$GLOBALS['USER']->IsAuthorized() )
+        if (!$GLOBALS['USER']->IsAuthorized()) {
             $this->_show404Page();
+        }
 
         $this->fillResult();
         $this->includeComponentTemplate();
@@ -29,7 +30,8 @@ class PersonalBalanceComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
             ],
             'limit' => 10,
             'offset' => 0
-        ])->fetchAll();
+        ])
+            ->fetchAll();
 
         $this->arResult = $arResult;
     }

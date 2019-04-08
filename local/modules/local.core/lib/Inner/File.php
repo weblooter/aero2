@@ -46,9 +46,9 @@ class File extends CollectableEntity
                     if ($property->getPropertyType() == 'F') {
                         if ($property->isMultiple()) {
                             $values = array_filter(array_map(function ($v)
-                                    {
-                                        return (int)$v;
-                                    }, (array)$property->getField('VALUE')));
+                                {
+                                    return (int)$v;
+                                }, (array)$property->getField('VALUE')));
 
                             if ($values) {
                                 $file_ids = array_merge($file_ids, $values);

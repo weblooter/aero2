@@ -30,11 +30,11 @@ class PersonalCompanyFormComponent extends \Local\Core\Inner\BxModified\CBitrixC
         $arCompanyFields = [];
         if ($this->arParams['COMPANY_ID'] > 0) {
             $rs = \Local\Core\Model\Data\CompanyTable::getList([
-                    'filter' => [
-                        'ID' => $this->arParams['COMPANY_ID'],
-                        'USER_OWN_ID' => $GLOBALS['USER']->GetID()
-                    ]
-                ]);
+                'filter' => [
+                    'ID' => $this->arParams['COMPANY_ID'],
+                    'USER_OWN_ID' => $GLOBALS['USER']->GetID()
+                ]
+            ]);
             $arCompanyFields = $rs->fetch();
         }
 

@@ -30,7 +30,7 @@ class JsonManifestVersionStrategy implements VersionStrategyInterface
     /**
      * @param string $manifestPath Absolute path to the manifest file
      */
-    public function __construct( string $manifestPath )
+    public function __construct(string $manifestPath)
     {
         $this->manifestPath = $manifestPath;
     }
@@ -40,34 +40,29 @@ class JsonManifestVersionStrategy implements VersionStrategyInterface
      * the version is. Instead, this returns the path to the
      * versioned file.
      */
-    public function getVersion( $path )
+    public function getVersion($path)
     {
-        return $this->applyVersion( $path );
+        return $this->applyVersion($path);
     }
 
-    public function applyVersion( $path )
+    public function applyVersion($path)
     {
-        return $this->getManifestPath( $path ) ? : $path;
+        return $this->getManifestPath($path) ?: $path;
     }
 
-    private function getManifestPath( $path )
+    private function getManifestPath($path)
     {
-        if ( null === $this->manifestData )
-        {
-            if ( !file_exists( $this->manifestPath ) )
-            {
-                throw new \RuntimeException( sprintf( 'Asset manifest file "%s" does not exist.',
-                    $this->manifestPath ) );
+        if (null === $this->manifestData) {
+            if (!file_exists($this->manifestPath)) {
+                throw new \RuntimeException(sprintf('Asset manifest file "%s" does not exist.', $this->manifestPath));
             }
 
-            $this->manifestData = json_decode( file_get_contents( $this->manifestPath ), true );
-            if ( 0 < json_last_error() )
-            {
-                throw new \RuntimeException( sprintf( 'Error parsing JSON from asset manifest file "%s" - %s',
-                    $this->manifestPath, json_last_error_msg() ) );
+            $this->manifestData = json_decode(file_get_contents($this->manifestPath), true);
+            if (0 < json_last_error()) {
+                throw new \RuntimeException(sprintf('Error parsing JSON from asset manifest file "%s" - %s', $this->manifestPath, json_last_error_msg()));
             }
         }
 
-        return isset( $this->manifestData[ $path ] ) ? $this->manifestData[ $path ] : null;
+        return isset($this->manifestData[$path]) ? $this->manifestData[$path] : null;
     }
 }

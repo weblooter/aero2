@@ -22,10 +22,10 @@ class PhpBridgeSessionStorage extends NativeSessionStorage
      * @param \SessionHandlerInterface|null $handler
      * @param MetadataBag                   $metaBag MetadataBag
      */
-    public function __construct( $handler = null, MetadataBag $metaBag = null )
+    public function __construct($handler = null, MetadataBag $metaBag = null)
     {
-        $this->setMetadataBag( $metaBag );
-        $this->setSaveHandler( $handler );
+        $this->setMetadataBag($metaBag);
+        $this->setSaveHandler($handler);
     }
 
     /**
@@ -33,8 +33,7 @@ class PhpBridgeSessionStorage extends NativeSessionStorage
      */
     public function start()
     {
-        if ( $this->started )
-        {
+        if ($this->started) {
             return true;
         }
 
@@ -50,8 +49,7 @@ class PhpBridgeSessionStorage extends NativeSessionStorage
     {
         // clear out the bags and nothing else that may be set
         // since the purpose of this driver is to share a handler
-        foreach ( $this->bags as $bag )
-        {
+        foreach ($this->bags as $bag) {
             $bag->clear();
         }
 

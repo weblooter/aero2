@@ -39,7 +39,7 @@ class RedisSessionHandler extends AbstractSessionHandler
      *
      * @throws \InvalidArgumentException When unsupported client or options are passed
      */
-    public function __construct( $redis, array $options = [] )
+    public function __construct($redis, array $options = [])
     {
         if (
             !$redis instanceof \Redis &&
@@ -48,36 +48,32 @@ class RedisSessionHandler extends AbstractSessionHandler
             !$redis instanceof \Predis\Client &&
             !$redis instanceof RedisProxy &&
             !$redis instanceof RedisClusterProxy
-        )
-        {
-            throw new \InvalidArgumentException( sprintf( '%s() expects parameter 1 to be Redis, RedisArray, RedisCluster or Predis\Client, %s given',
-                __METHOD__, \is_object( $redis ) ? \get_class( $redis ) : \gettype( $redis ) ) );
+        ) {
+            throw new \InvalidArgumentException(sprintf('%s() expects parameter 1 to be Redis, RedisArray, RedisCluster or Predis\Client, %s given', __METHOD__, \is_object($redis) ? \get_class($redis) : \gettype($redis)));
         }
 
-        if ( $diff = array_diff( array_keys( $options ), ['prefix'] ) )
-        {
-            throw new \InvalidArgumentException( sprintf( 'The following options are not supported "%s"',
-                implode( ', ', $diff ) ) );
+        if ($diff = array_diff(array_keys($options), ['prefix'])) {
+            throw new \InvalidArgumentException(sprintf('The following options are not supported "%s"', implode(', ', $diff)));
         }
 
         $this->redis = $redis;
-        $this->prefix = $options[ 'prefix' ] ?? 'sf_s';
+        $this->prefix = $options['prefix'] ?? 'sf_s';
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doRead( $sessionId ): string
+    protected function doRead($sessionId): string
     {
-        return $this->redis->get( $this->prefix.$sessionId ) ? : '';
+        return $this->redis->get($this->prefix.$sessionId) ?: '';
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doWrite( $sessionId, $data ): bool
+    protected function doWrite($sessionId, $data): bool
     {
-        $result = $this->redis->setEx( $this->prefix.$sessionId, (int)ini_get( 'session.gc_maxlifetime' ), $data );
+        $result = $this->redis->setEx($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
 
         return $result && !$result instanceof ErrorInterface;
     }
@@ -85,9 +81,9 @@ class RedisSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy( $sessionId ): bool
+    protected function doDestroy($sessionId): bool
     {
-        $this->redis->del( $this->prefix.$sessionId );
+        $this->redis->del($this->prefix.$sessionId);
 
         return true;
     }
@@ -103,7 +99,7 @@ class RedisSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function gc( $maxlifetime ): bool
+    public function gc($maxlifetime): bool
     {
         return true;
     }
@@ -111,8 +107,8 @@ class RedisSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp( $sessionId, $data )
+    public function updateTimestamp($sessionId, $data)
     {
-        return (bool)$this->redis->expire( $this->prefix.$sessionId, (int)ini_get( 'session.gc_maxlifetime' ) );
+        return (bool) $this->redis->expire($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'));
     }
 }

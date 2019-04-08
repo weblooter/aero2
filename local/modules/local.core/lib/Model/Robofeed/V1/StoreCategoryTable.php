@@ -29,34 +29,34 @@ class StoreCategoryTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\Data
     {
         return [
             new Fields\IntegerField('ID', [
-                    'primary' => true,
-                    'autocomplete' => true,
-                    'title' => 'ID'
-                ]),
+                'primary' => true,
+                'autocomplete' => true,
+                'title' => 'ID'
+            ]),
             new Fields\DatetimeField('DATE_CREATE', [
-                    'title' => 'Дата создания',
-                    'required' => false,
-                    'default_value' => function ()
-                        {
-                            return new \Bitrix\Main\Type\DateTime();
-                        }
-                ]),
+                'title' => 'Дата создания',
+                'required' => false,
+                'default_value' => function ()
+                    {
+                        return new \Bitrix\Main\Type\DateTime();
+                    }
+            ]),
             new Fields\IntegerField('ROBOFEED_VERSION', [
-                    'required' => false,
-                    'title' => 'Версия Robofeed XML'
-                ]),
+                'required' => false,
+                'title' => 'Версия Robofeed XML'
+            ]),
             new Fields\IntegerField('CATEGORY_ID', [
-                    'required' => true,
-                    'title' => 'ID категории'
-                ]),
+                'required' => true,
+                'title' => 'ID категории'
+            ]),
             new Fields\IntegerField('CATEGORY_PARENT_ID', [
-                    'required' => false,
-                    'title' => 'ID родительской категории'
-                ]),
+                'required' => false,
+                'title' => 'ID родительской категории'
+            ]),
             new Fields\StringField('CATEGORY_NAME', [
-                    'required' => true,
-                    'title' => 'Название категории'
-                ]),
+                'required' => true,
+                'title' => 'Название категории'
+            ]),
         ];
     }
 }

@@ -62,11 +62,11 @@ class CLocalCore
     /**
      * Обновляет ORM таблицу, пока не работает
      *
-     * @deprecated
-     *
      * @param \Bitrix\Main\ORM\Data\DataManager $strClass
      *
      * @throws \Bitrix\Main\Db\SqlQueryException
+     * @deprecated
+     *
      */
     public static function generateAlterTableSql($strClass)
     {

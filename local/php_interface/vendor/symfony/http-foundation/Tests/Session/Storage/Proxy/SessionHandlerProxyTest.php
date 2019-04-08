@@ -36,8 +36,8 @@ class SessionHandlerProxyTest extends TestCase
 
     protected function setUp()
     {
-        $this->mock = $this->getMockBuilder( 'SessionHandlerInterface' )->getMock();
-        $this->proxy = new SessionHandlerProxy( $this->mock );
+        $this->mock = $this->getMockBuilder('SessionHandlerInterface')->getMock();
+        $this->proxy = new SessionHandlerProxy($this->mock);
     }
 
     protected function tearDown()
@@ -48,78 +48,78 @@ class SessionHandlerProxyTest extends TestCase
 
     public function testOpenTrue()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'open' )
-            ->will( $this->returnValue( true ) );
+        $this->mock->expects($this->once())
+            ->method('open')
+            ->will($this->returnValue(true));
 
-        $this->assertFalse( $this->proxy->isActive() );
-        $this->proxy->open( 'name', 'id' );
-        $this->assertFalse( $this->proxy->isActive() );
+        $this->assertFalse($this->proxy->isActive());
+        $this->proxy->open('name', 'id');
+        $this->assertFalse($this->proxy->isActive());
     }
 
     public function testOpenFalse()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'open' )
-            ->will( $this->returnValue( false ) );
+        $this->mock->expects($this->once())
+            ->method('open')
+            ->will($this->returnValue(false));
 
-        $this->assertFalse( $this->proxy->isActive() );
-        $this->proxy->open( 'name', 'id' );
-        $this->assertFalse( $this->proxy->isActive() );
+        $this->assertFalse($this->proxy->isActive());
+        $this->proxy->open('name', 'id');
+        $this->assertFalse($this->proxy->isActive());
     }
 
     public function testClose()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'close' )
-            ->will( $this->returnValue( true ) );
+        $this->mock->expects($this->once())
+            ->method('close')
+            ->will($this->returnValue(true));
 
-        $this->assertFalse( $this->proxy->isActive() );
+        $this->assertFalse($this->proxy->isActive());
         $this->proxy->close();
-        $this->assertFalse( $this->proxy->isActive() );
+        $this->assertFalse($this->proxy->isActive());
     }
 
     public function testCloseFalse()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'close' )
-            ->will( $this->returnValue( false ) );
+        $this->mock->expects($this->once())
+            ->method('close')
+            ->will($this->returnValue(false));
 
-        $this->assertFalse( $this->proxy->isActive() );
+        $this->assertFalse($this->proxy->isActive());
         $this->proxy->close();
-        $this->assertFalse( $this->proxy->isActive() );
+        $this->assertFalse($this->proxy->isActive());
     }
 
     public function testRead()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'read' );
+        $this->mock->expects($this->once())
+            ->method('read');
 
-        $this->proxy->read( 'id' );
+        $this->proxy->read('id');
     }
 
     public function testWrite()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'write' );
+        $this->mock->expects($this->once())
+            ->method('write');
 
-        $this->proxy->write( 'id', 'data' );
+        $this->proxy->write('id', 'data');
     }
 
     public function testDestroy()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'destroy' );
+        $this->mock->expects($this->once())
+            ->method('destroy');
 
-        $this->proxy->destroy( 'id' );
+        $this->proxy->destroy('id');
     }
 
     public function testGc()
     {
-        $this->mock->expects( $this->once() )
-            ->method( 'gc' );
+        $this->mock->expects($this->once())
+            ->method('gc');
 
-        $this->proxy->gc( 86400 );
+        $this->proxy->gc(86400);
     }
 
     /**
@@ -127,17 +127,14 @@ class SessionHandlerProxyTest extends TestCase
      */
     public function testValidateId()
     {
-        $mock = $this->getMockBuilder( [
-            'SessionHandlerInterface',
-            'SessionUpdateTimestampHandlerInterface'
-        ] )->getMock();
-        $mock->expects( $this->once() )
-            ->method( 'validateId' );
+        $mock = $this->getMockBuilder(['SessionHandlerInterface', 'SessionUpdateTimestampHandlerInterface'])->getMock();
+        $mock->expects($this->once())
+            ->method('validateId');
 
-        $proxy = new SessionHandlerProxy( $mock );
-        $proxy->validateId( 'id' );
+        $proxy = new SessionHandlerProxy($mock);
+        $proxy->validateId('id');
 
-        $this->assertTrue( $this->proxy->validateId( 'id' ) );
+        $this->assertTrue($this->proxy->validateId('id'));
     }
 
     /**
@@ -145,19 +142,16 @@ class SessionHandlerProxyTest extends TestCase
      */
     public function testUpdateTimestamp()
     {
-        $mock = $this->getMockBuilder( [
-            'SessionHandlerInterface',
-            'SessionUpdateTimestampHandlerInterface'
-        ] )->getMock();
-        $mock->expects( $this->once() )
-            ->method( 'updateTimestamp' );
+        $mock = $this->getMockBuilder(['SessionHandlerInterface', 'SessionUpdateTimestampHandlerInterface'])->getMock();
+        $mock->expects($this->once())
+            ->method('updateTimestamp');
 
-        $proxy = new SessionHandlerProxy( $mock );
-        $proxy->updateTimestamp( 'id', 'data' );
+        $proxy = new SessionHandlerProxy($mock);
+        $proxy->updateTimestamp('id', 'data');
 
-        $this->mock->expects( $this->once() )
-            ->method( 'write' );
+        $this->mock->expects($this->once())
+            ->method('write');
 
-        $this->proxy->updateTimestamp( 'id', 'data' );
+        $this->proxy->updateTimestamp('id', 'data');
     }
 }

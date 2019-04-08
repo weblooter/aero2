@@ -18,56 +18,56 @@ class RequestStackContextTest extends TestCase
 {
     public function testGetBasePathEmpty()
     {
-        $requestStack = $this->getMockBuilder( 'Symfony\Component\HttpFoundation\RequestStack' )->getMock();
-        $requestStackContext = new RequestStackContext( $requestStack );
+        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
+        $requestStackContext = new RequestStackContext($requestStack);
 
-        $this->assertEmpty( $requestStackContext->getBasePath() );
+        $this->assertEmpty($requestStackContext->getBasePath());
     }
 
     public function testGetBasePathSet()
     {
         $testBasePath = 'test-path';
 
-        $request = $this->getMockBuilder( 'Symfony\Component\HttpFoundation\Request' )->getMock();
-        $request->method( 'getBasePath' )
-            ->willReturn( $testBasePath );
-        $requestStack = $this->getMockBuilder( 'Symfony\Component\HttpFoundation\RequestStack' )->getMock();
-        $requestStack->method( 'getMasterRequest' )
-            ->willReturn( $request );
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $request->method('getBasePath')
+            ->willReturn($testBasePath);
+        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
+        $requestStack->method('getMasterRequest')
+            ->willReturn($request);
 
-        $requestStackContext = new RequestStackContext( $requestStack );
+        $requestStackContext = new RequestStackContext($requestStack);
 
-        $this->assertEquals( $testBasePath, $requestStackContext->getBasePath() );
+        $this->assertEquals($testBasePath, $requestStackContext->getBasePath());
     }
 
     public function testIsSecureFalse()
     {
-        $requestStack = $this->getMockBuilder( 'Symfony\Component\HttpFoundation\RequestStack' )->getMock();
-        $requestStackContext = new RequestStackContext( $requestStack );
+        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
+        $requestStackContext = new RequestStackContext($requestStack);
 
-        $this->assertFalse( $requestStackContext->isSecure() );
+        $this->assertFalse($requestStackContext->isSecure());
     }
 
     public function testIsSecureTrue()
     {
-        $request = $this->getMockBuilder( 'Symfony\Component\HttpFoundation\Request' )->getMock();
-        $request->method( 'isSecure' )
-            ->willReturn( true );
-        $requestStack = $this->getMockBuilder( 'Symfony\Component\HttpFoundation\RequestStack' )->getMock();
-        $requestStack->method( 'getMasterRequest' )
-            ->willReturn( $request );
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $request->method('isSecure')
+            ->willReturn(true);
+        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
+        $requestStack->method('getMasterRequest')
+            ->willReturn($request);
 
-        $requestStackContext = new RequestStackContext( $requestStack );
+        $requestStackContext = new RequestStackContext($requestStack);
 
-        $this->assertTrue( $requestStackContext->isSecure() );
+        $this->assertTrue($requestStackContext->isSecure());
     }
 
     public function testDefaultContext()
     {
-        $requestStack = $this->getMockBuilder( 'Symfony\Component\HttpFoundation\RequestStack' )->getMock();
-        $requestStackContext = new RequestStackContext( $requestStack, 'default-path', true );
+        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock();
+        $requestStackContext = new RequestStackContext($requestStack, 'default-path', true);
 
-        $this->assertSame( 'default-path', $requestStackContext->getBasePath() );
-        $this->assertTrue( $requestStackContext->isSecure() );
+        $this->assertSame('default-path', $requestStackContext->getBasePath());
+        $this->assertTrue($requestStackContext->isSecure());
     }
 }
