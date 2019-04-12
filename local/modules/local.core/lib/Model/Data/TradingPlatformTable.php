@@ -7,6 +7,8 @@ use \Bitrix\Main\ORM\Fields;
 /**
  * ORM торговых пощадок
  *
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [12.04.2019 19:21:57] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [12.04.2019 19:21:57] | Fields\DatetimeField</li><li>NAME - Название | Fields\StringField</li><li>STORE_ID - ID магазина | Fields\IntegerField</li><li>HANDLER - Обработчик | Fields\StringField</li><li>HANDLER_RULES - Правила обработчика | Fields\TextField</li><li>PAYED_FROM - Оплачено с | Fields\DatetimeField</li><li>PAYED_TO - Оплачено до | Fields\DatetimeField</li><li>STORE - \Local\Core\Model\Data\Store | Fields\Relations\Reference</li></ul>
+ *
  * @package Local\Core\Model\Data
  */
 class TradingPlatformTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
@@ -47,6 +49,10 @@ class TradingPlatformTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\Da
                     }
             ]),
 
+            new Fields\StringField('NAME', [
+                'title' => 'Название',
+                'required' => true
+            ]),
             new Fields\IntegerField('STORE_ID', [
                 'title' => 'ID магазина',
                 'required' => true

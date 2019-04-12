@@ -9,6 +9,8 @@ namespace Local\Core\Inner\TradingPlatform\Field;
  */
 abstract class AbstractField
 {
+    use Traits\IsReadOnly;
+
     /* ************* */
     /* FIELD METHODS */
     /* ************* */
@@ -132,7 +134,7 @@ abstract class AbstractField
      *
      * @return $this
      */
-    public function setIsRequired(bool $bool)
+    public function setIsRequired(bool $bool = true)
     {
         $this->_fieldIsRequired = $bool;
         return $this;
@@ -149,33 +151,6 @@ abstract class AbstractField
     }
 
 
-    /** @var bool $_fieldIsReadOnly Признак доступа только на чтение поля */
-    protected $_fieldIsReadOnly = false;
-
-    /**
-     * Задать признак "только для чтения"
-     *
-     * @param bool $bool
-     *
-     * @return $this
-     */
-    public function setIsReadOnly(bool $bool)
-    {
-        $this->_fieldIsReadOnly = $bool;
-        return $this;
-    }
-
-    /**
-     * Получить признак "только для чтения"
-     *
-     * @return bool
-     */
-    protected function getIsReadOnly()
-    {
-        return $this->_fieldIsReadOnly;
-    }
-
-
     /** @var bool $_fieldIsMultiple Признак множественности поля */
     protected $_fieldIsMultiple = false;
 
@@ -186,7 +161,7 @@ abstract class AbstractField
      *
      * @return $this
      */
-    public function setIsMultiple(bool $bool)
+    public function setIsMultiple(bool $bool = true)
     {
         $this->_fieldIsMultiple = $bool;
         return $this;
@@ -287,86 +262,6 @@ abstract class AbstractField
         return implode(' ', $ar);
     }
 
-
-    /** @var string $_fieldPlaceholder Placeholder поля, если таковой есть у поля */
-    protected $_fieldPlaceholder;
-
-    /**
-     * Задать плейсхолдер поля
-     *
-     * @param string $str
-     *
-     * @return $this
-     */
-    public function setPlaceholder($str)
-    {
-        $this->_fieldPlaceholder = $str;
-        return $this;
-    }
-
-    /**
-     * Получить плейсхолдер поля
-     *
-     * @return string
-     */
-    protected function getPlaceholder()
-    {
-        return $this->_fieldPlaceholder;
-    }
-
-
-    /** @var bool $_fieldIsCanAddNewInput Признак возможности добавить еще одно поле */
-    protected $_fieldIsCanAddNewInput = false;
-
-    /**
-     * Задает признак возможности добавить еще одно поле.
-     *
-     * @param bool $bool
-     *
-     * @return $this
-     */
-    public function setIsCanAddNewInput(bool $bool)
-    {
-        $this->_fieldIsCanAddNewInput = $bool;
-        return $this;
-    }
-
-    /**
-     * Получить признак возможности добавить еще одно поле.
-     *
-     * @return bool
-     */
-    protected function getIsCanAddNewInput()
-    {
-        return $this->_fieldIsCanAddNewInput;
-    }
-
-    /** @var int $_intAdditionalInputsCount Кол-во дополнительных полей, если поле помечено как множественное */
-    protected $_intAdditionalInputsCount = 2;
-
-    /**
-     * Задать кол-во дополнительных полей. Применяется если поле множественное
-     *
-     * @param $int
-     *
-     * @return $this
-     */
-    public function setAdditionalInputsCount($int)
-    {
-        $this->_intAdditionalInputsCount = $int;
-        return $this;
-    }
-
-    /**
-     * Получить кол-во дополнительных полей
-     *
-     * @return int
-     */
-    protected function getAdditionalInputsCount()
-    {
-        return $this->_intAdditionalInputsCount;
-    }
-
     /* ****** */
     /* RENDER */
     /* ****** */
@@ -400,7 +295,33 @@ abstract class AbstractField
     public function getRender()
     {
         $this->execute();
+        if( !is_null($this->getEpilog()) && $this->getEpilog() instanceof AbstractField)
+        {
+            $this->addToRender( $this->getEpilog()->getRender() );
+        }
+        $this->makeReadOnlyValue();
         return $this->_renderHtml;
+    }
+
+    /**
+     * Дополняет рендер значениями, если поле помечено как readonly и значения не пустые.<br/>
+     * Вызывается в \Local\Core\Inner\TradingPlatform\Field\AbstractField::getRender();<br/>
+     * Может быть переиницилизаровано в случае необходимости.
+     *
+     * @see \Local\Core\Inner\TradingPlatform\Field\AbstractField::getRender();
+     */
+    protected function makeReadOnlyValue()
+    {
+        if (
+            $this->getIsReadOnly()
+            && (!is_null($this->getValue()) && !empty($this->getValue()))
+            && !(static::class instanceof InputHidden)
+        ) {
+            $this->addToRender((new InputHidden())->setValue($this->getValue())
+                ->setName($this->getName())
+                ->setIsMultiple($this->getIsMultiple())
+                ->getRender());
+        }
     }
 
     /**
@@ -421,7 +342,13 @@ abstract class AbstractField
     protected function getRow($htmlInputRender)
     {
         $strTitle = (($this->getIsRequired()) ? '<b>'.$this->getTitle().'</b>' : $this->getTitle()).':';
-        $strDesc = (!is_null($this->getDescription())) ? '<br/><small>'.$this->getDescription().'</small>' : null;
+        $strDesc = (!is_null($this->getDescription())) ? '<br/><small>'.$this->getDescription().'</small>' : '';
+
+        if( $GLOBALS['USER']->IsAdmin() && !empty( $this->getName() ) )
+        {
+            $strDesc .= '<br/><small><mark>'.$this->getName().'</mark></small>';
+        }
+
         return <<<DOCHERE
 <div class="form-group">
     <div class="row">

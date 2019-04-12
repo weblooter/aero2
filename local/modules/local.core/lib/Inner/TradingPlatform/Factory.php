@@ -1,6 +1,8 @@
 <?php
 namespace Local\Core\Inner\TradingPlatform;
 
+use Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException;
+
 /**
  * Фабрика ТП
  *
@@ -15,6 +17,7 @@ class Factory
      * @param $factory
      *
      * @return Handler\AbstractHandler|null
+     * @throws HandlerNotFoundException
      */
     public static function factory($factory)
     {
@@ -25,13 +28,14 @@ class Factory
                 break;
 
             default:
-                return null;
+                throw new \Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException();
                 break;
         }
     }
 
     /**
-     * Получить список доступных фабрик
+     * Получить список доступных фабрик.<br/>
+     * Для контроля публикации необходимо дополнять вручную
      *
      * @return array
      */

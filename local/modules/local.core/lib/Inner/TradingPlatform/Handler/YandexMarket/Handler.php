@@ -18,7 +18,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     }
 
     /** @inheritDoc */
-    protected static function getHandlerFields()
+    protected function getHandlerFields()
     {
         return [];
     }

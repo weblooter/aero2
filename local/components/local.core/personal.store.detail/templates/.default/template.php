@@ -225,6 +225,20 @@
         <? endif; ?>
 
         <div class="col-6">
+            <div class="btn-group" role="group">
+                <button id="btnGroupDrop21" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Добавить торговую площадку
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop21">
+                    <?
+                    foreach (Local\Core\Inner\TradingPlatform\Factory::getFactoryList() as $k => $v){
+                        ?>
+                        <a href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add', ['#COMPANY_ID#' => $arResult['ITEM']['COMPANY_ID'], '#STORE_ID#' => $arResult['ITEM']['ID'], '#HANDLER#' => $k])?>" class="dropdown-item "><?=$v?></a>
+                        <?
+                    }
+                    ?>
+                </div>
+            </div>
             <div class="alert alert-primary" role="alert">
                 // TODO<br />
                 Список выбранных фидов<br />

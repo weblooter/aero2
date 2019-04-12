@@ -9,28 +9,26 @@ namespace Local\Core\Inner\TradingPlatform\Field;
  */
 class InputText extends AbstractField
 {
+    use Traits\Placeholder;
+    use Traits\AddNewInput;
+    use Traits\AdditionalInputsCount;
+
+    /** @inheritDoc */
     protected function execute()
     {
         if ($this->getIsMultiple()) {
-            if (!is_array($this->getValue())) {
+            if (!is_array($this->getValue()) && !is_null($this->getValue())) {
                 $this->setValue([$this->getValue()]);
             }
 
             for ($i = 0; $i < (sizeof($this->getValue()) + $this->getAdditionalInputsCount()); $i++) {
-                $strInput = '<div class="input-group mb-3"><input class="form-control" name="'.$this->getName().'[]"';
-
-                $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
-                $strInput .= (!empty($this->getPlaceholder())) ? ' placeholder="'.htmlspecialchars($this->getPlaceholder()).'"' : '';
-                $strInput .= ($this->getIsRequired()) ? ' required' : '';
-                $strInput .= ' value="'.htmlspecialchars($this->getValue()[$i]).'"';
-
-                $strInput .= ' />';
+                $strInput = '<div class="input-group mb-3">';
+                $strInput .= $this->makeInput($this->getValue()[$i]);
 
                 if ($this->getIsCanAddNewInput()) {
                     $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-warning">+</a></div>';
                 }
-                if( $i > 0 )
-                {
+                if ($i > 0) {
                     $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-danger">-</a></div>';
                 }
                 $strInput .= '</div>';
@@ -42,15 +40,23 @@ class InputText extends AbstractField
                 $this->setValue(implode(', ', $this->getValue()));
             }
 
-            $strInput = '<input class="form-control" name="'.$this->getName().'"';
-
-            $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
-            $strInput .= (!empty($this->getPlaceholder())) ? ' placeholder="'.htmlspecialchars($this->getPlaceholder()).'"' : '';
-            $strInput .= ($this->getIsRequired()) ? ' required' : '';
-            $strInput .= ' value="'.htmlspecialchars($this->getValue()).'"';
-
-            $strInput .= ' />';
-            $this->addToRender($strInput);
+            $this->addToRender($this->makeInput($this->getValue()));
         }
     }
+
+    private function makeInput($value)
+    {
+        $strInput = '<input type="text" class="form-control" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
+
+        $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
+        $strInput .= (!empty($this->getPlaceholder())) ? ' placeholder="'.htmlspecialchars($this->getPlaceholder()).'"' : '';
+        $strInput .= ($this->getIsRequired()) ? ' required' : '';
+        $strInput .= ($this->getIsReadOnly()) ? ' readonly' : '';
+        $strInput .= ' value="'.htmlspecialchars($value).'"';
+
+        $strInput .= ' />';
+
+        return $strInput;
+    }
+
 }

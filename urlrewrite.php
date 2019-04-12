@@ -80,5 +80,13 @@ $arUrlRewrite = array(
         "PATH" => "/personal/balance-top-up.php",
         "SORT" => "320",
     ),
+
+    array(
+        "CONDITION" => "#^/personal/company/([0-9]+)/store/([0-9]+)/tradingplatform/add/(\?.*)?$#",
+        "RULE" => "COMPANY_ID=$1&STORE_ID=$2&TMP=$3",
+        "ID" => "",
+        "PATH" => "/personal/tradingplatform-add.php",
+        "SORT" => "410",
+    ),
 );
 ?>
