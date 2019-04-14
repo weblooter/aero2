@@ -7,7 +7,7 @@ namespace Local\Core\Inner\TradingPlatform\Field;
  *
  * @package Local\Core\Inner\TradingPlatform\Field
  */
-class InputText extends AbstractField
+class Textarea extends AbstractField
 {
     use Traits\Placeholder;
     use Traits\AddNewInput;
@@ -46,15 +46,14 @@ class InputText extends AbstractField
 
     private function makeInput($value)
     {
-        $strInput = '<input type="text" class="form-control '.( $this->getIsMultiple() ? '' : ' mb-3' ).'" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
+        $strInput = '<textarea type="text" class="form-control '.( $this->getIsMultiple() ? '' : ' mb-3' ).'" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
 
         $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
         $strInput .= (!empty($this->getPlaceholder())) ? ' placeholder="'.htmlspecialchars($this->getPlaceholder()).'"' : '';
 //        $strInput .= ($this->getIsRequired()) ? ' required' : '';
         $strInput .= ($this->getIsReadOnly()) ? ' readonly' : '';
-        $strInput .= ' value="'.htmlspecialchars($value).'"';
 
-        $strInput .= ' />';
+        $strInput .= '>'.$value.'</textarea>';
 
         return $strInput;
     }

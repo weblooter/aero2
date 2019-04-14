@@ -15,7 +15,7 @@ class Header extends AbstractField
     }
 
     /** @inheritDoc */
-    protected function getRow($htmlInputRender)
+    public function getRow($htmlInputRender)
     {
         return '<div class="row">
     <div class="col-12">

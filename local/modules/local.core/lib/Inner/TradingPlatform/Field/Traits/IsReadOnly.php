@@ -27,7 +27,7 @@ trait IsReadOnly
      *
      * @return bool
      */
-    protected function getIsReadOnly()
+    public function getIsReadOnly()
     {
         return $this->_fieldIsReadOnly;
     }

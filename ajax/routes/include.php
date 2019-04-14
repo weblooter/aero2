@@ -35,6 +35,7 @@ return [
         'args' => ['company_id' => '[0-9]+'],
         'handler' => \Local\Core\Ajax\Handler\Company::class.':delete'
     ],
+
     'store_delete' => [
         'path' => '/store/delete/{store_id}/',
         'methods' => ['POST'],
@@ -46,5 +47,18 @@ return [
         'methods' => ['POST'],
         'args' => ['store_id' => '[0-9]+', 'tariff_code' => '[A-Z0-9\_]+'],
         'handler' => \Local\Core\Ajax\Handler\Store::class.':changeTariff'
+    ],
+
+    'tradingplatform_delete' => [
+        'path' => '/trading-platform/delete/{tp_id}/',
+        'methods' => ['POST'],
+        'args' => ['tp_id' => '[0-9]+'],
+        'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':delete'
+    ],
+
+    'tradingplatform_form_refresh_row' => [
+        'path' => '/trading-platform-form/refresh-row/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':refreshRow'
     ]
 ];

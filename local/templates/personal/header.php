@@ -21,11 +21,17 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
         ->addJs('https://unpkg.com/ionicons@4.4.4/dist/ionicons.js');
 
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs('https://unpkg.com/axios/dist/axios.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
+
+    \Bitrix\Main\Page\Asset::getInstance()
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/qs.js');
     ?>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <script type="text/javascript">
         axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
+        axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        axios.defaults.headers.common['Content-Type'] = 'application/json';
+        var qs = Qs;
     </script>
 </head>
 <body>

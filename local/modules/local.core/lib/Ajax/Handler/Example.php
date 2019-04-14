@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Core\Ajax;
+namespace Local\Core\Ajax\Handler;
 
 
 class Example

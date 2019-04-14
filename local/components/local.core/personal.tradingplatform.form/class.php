@@ -5,6 +5,12 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
     public function executeComponent()
     {
         $this->_checkStoreAccess($this->arParams['STORE_ID'], $GLOBALS['USER']->GetID());
+        if( $this->arParams['TP_ID'] > 0 )
+        {
+            $this->_checkTradingPlatformAccess($this->arParams['TP_ID'], $GLOBALS['USER']->GetID());
+        }
+
+        $this->_checkRequest();
 
         $this->__fillResult();
 
@@ -28,11 +34,49 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
         return $arParams;
     }
 
+    private function _checkRequest()
+    {
+        $arResult = [];
+        if( check_bitrix_sessid() )
+        {
+            $obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+
+            $arUpdateFields = [];
+
+            $arUpdateFields['NAME'] = $obRequest->getPost('TP_DATA')['NAME'];
+            $arUpdateFields['HANDLER_RULES'] = $obRequest->getPost('HANDLER_RULES') ;
+
+            if( $this->arParams['TP_ID'] > 0 )
+            {
+
+            }
+            else
+            {
+                $arUpdateFields['HANDLER'] = $obRequest->getPost('TP_DATA')['HANDLER'];
+                $arUpdateFields['STORE_ID'] = $this->arParams['STORE_ID'];
+
+                $obRes = \Local\Core\Model\Data\TradingPlatformTable::add($arUpdateFields);
+                if( $obRes->isSuccess() )
+                {
+                    $arResult['STATUS'] = 'ADD_SUCCESS';
+                    $arResult['ADD_ID'] = $obRes->getId();
+                }
+                else
+                {
+                    $arResult['STATUS'] = 'ERROR';
+                    $arResult['ERROR_TEXT'] = implode('<br/>', $obRes->getErrorMessages());
+                }
+            }
+        }
+
+        $this->arResult = $arResult;
+    }
+
     private function __fillResult()
     {
         $arResult = [];
 
-        $obTp = ( new Local\Core\Inner\TradingPlatform\Base );
+        $obTp = ( new Local\Core\Inner\TradingPlatform\TradingPlatform() );
         try
         {
             if( $this->arParams['TP_ID'] < 1 && !empty( \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('handler') ) )
@@ -43,6 +87,7 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
             {
                 $obTp->load($this->arParams['TP_ID']);
                 $arResult['OB_HANDLER'] = $obTp->getHandler();
+                $arResult['TP_DATA'] = $obTp->getData();
             }
         }
         catch (\Local\Core\Inner\TradingPlatform\Exceptions\TradingPlatformNotFoundException $e)
@@ -62,6 +107,6 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
         }
 
 
-        $this->arResult = $arResult;
+        $this->arResult = array_merge($this->arResult, $arResult);
     }
 }

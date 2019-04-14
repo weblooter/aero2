@@ -19,7 +19,7 @@ class Infoblock extends AbstractField
     }
 
     /** @inheritDoc */
-    protected function getRow($htmlInputRender)
+    public function getRow($htmlInputRender)
     {
         return '<div class="row"><div class="col-12">'.$htmlInputRender.'</div></div>';
     }
@@ -46,7 +46,7 @@ class Infoblock extends AbstractField
         return $this;
     }
 
-    protected function getType()
+    public function getType()
     {
         return $this->_fieldType;
     }

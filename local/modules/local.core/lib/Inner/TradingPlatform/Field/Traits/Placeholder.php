@@ -25,7 +25,7 @@ trait Placeholder
      *
      * @return string
      */
-    protected function getPlaceholder()
+    public function getPlaceholder()
     {
         return $this->_fieldPlaceholder;
     }

@@ -40,7 +40,7 @@ class InputHidden extends AbstractField
     }
 
     /** @inheritDoc */
-    protected function getRow($htmlInputRender)
+    public function getRow($htmlInputRender)
     {
         return $htmlInputRender;
     }

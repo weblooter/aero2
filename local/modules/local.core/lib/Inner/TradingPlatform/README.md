@@ -1,11 +1,11 @@
-## \Local\Core\Inner\TradingPlatform\Base
+## \Local\Core\Inner\TradingPlatform\TradingPlatform
 
-Это базовый класс для работы с торговыми пощадками. Стоит воспринимать его как Sale\Order для работы с заказами. Он - единственная точка входа.
+Это основной класс для работы с торговыми пощадками. Стоит воспринимать его как Sale\Order для работы с заказами. Он - единственная точка входа.
 
 Примеры вызыва формы редактирования/создания ТП
 ```php
 // Для новых ТП
-$obTp = ( new Local\Core\Inner\TradingPlatform\Base );
+$obTp = ( new \Local\Core\Inner\TradingPlatform\TradingPlatform );
 try
 {
     $obHandler = $obTp->getHandler('yandex_market');
@@ -22,7 +22,7 @@ catch (\Throwable $e)
 
 
 // Для созданных ранее ТП
-$obTp = ( new Local\Core\Inner\TradingPlatform\Base );
+$obTp = ( new \Local\Core\Inner\TradingPlatform\TradingPlatform );
 try
 {
     $obTp->load(1);

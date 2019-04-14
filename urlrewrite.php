@@ -88,5 +88,19 @@ $arUrlRewrite = array(
         "PATH" => "/personal/tradingplatform-add.php",
         "SORT" => "410",
     ),
+    array(
+        "CONDITION" => "#^/personal/company/([0-9]+)/store/([0-9]+)/tradingplatform/([0-9]+)/(\?.*)?$#",
+        "RULE" => "COMPANY_ID=$1&STORE_ID=$2&TP_ID=$3&TMP=$4",
+        "ID" => "",
+        "PATH" => "/personal/tradingplatform-detail.php",
+        "SORT" => "420",
+    ),
+    array(
+        "CONDITION" => "#^/personal/company/([0-9]+)/store/([0-9]+)/tradingplatform/([0-9]+)/edit/(\?.*)?$#",
+        "RULE" => "COMPANY_ID=$1&STORE_ID=$2&TP_ID=$3&TMP=$4",
+        "ID" => "",
+        "PATH" => "/personal/tradingplatform-edit.php",
+        "SORT" => "430",
+    ),
 );
 ?>

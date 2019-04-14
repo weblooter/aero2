@@ -36,7 +36,7 @@ abstract class AbstractField
      *
      * @return string
      */
-    protected function getTitle()
+    public function getTitle()
     {
         return $this->_fieldTitle;
     }
@@ -63,7 +63,7 @@ abstract class AbstractField
      *
      * @return string
      */
-    protected function getDescription()
+    public function getDescription()
     {
         return $this->_filedDescription;
     }
@@ -71,6 +71,9 @@ abstract class AbstractField
 
     /** @var string $_fieldName Аттрибут NAME поля */
     protected $_fieldName;
+
+    /** @var static $_fieldRowHash Хэш блока. Служит для аяксового обновления блока */
+    protected $_fieldRowHash;
 
     /**
      * Задать название
@@ -82,6 +85,7 @@ abstract class AbstractField
     public function setName($name)
     {
         $this->_fieldName = $name;
+        $this->_fieldRowHash = sha1($name);
         return $this;
     }
 
@@ -90,9 +94,19 @@ abstract class AbstractField
      *
      * @return string
      */
-    protected function getName()
+    public function getName()
     {
         return $this->_fieldName;
+    }
+
+    /**
+     * Возвращает хэш блока
+     *
+     * @return mixed
+     */
+    public function getRowHash()
+    {
+        return $this->_fieldRowHash;
     }
 
 
@@ -118,7 +132,7 @@ abstract class AbstractField
      *
      * @return string|array|null
      */
-    protected function getValue()
+    public function getValue()
     {
         return $this->_fieldValue;
     }
@@ -145,7 +159,7 @@ abstract class AbstractField
      *
      * @return bool
      */
-    protected function getIsRequired()
+    public function getIsRequired()
     {
         return $this->_fieldIsRequired;
     }
@@ -172,7 +186,7 @@ abstract class AbstractField
      *
      * @return bool
      */
-    protected function getIsMultiple()
+    public function getIsMultiple()
     {
         return $this->_fieldIsMultiple;
     }
@@ -199,7 +213,7 @@ abstract class AbstractField
      *
      * @return AbstractField
      */
-    protected function getEpilog()
+    public function getEpilog()
     {
         return $this->_fieldEpilog;
     }
@@ -238,7 +252,7 @@ abstract class AbstractField
      *
      * @return array
      */
-    protected function getEvent()
+    public function getEvent()
     {
         return $this->_fieldEvent;
     }
@@ -248,7 +262,7 @@ abstract class AbstractField
      *
      * @return string
      */
-    protected function getEventCollected()
+    public function getEventCollected()
     {
         $ar = $this->getEvent();
         foreach ($ar as $k => &$v) {
@@ -339,7 +353,7 @@ abstract class AbstractField
      *
      * @return string
      */
-    protected function getRow($htmlInputRender)
+    public function getRow($htmlInputRender)
     {
         $strTitle = (($this->getIsRequired()) ? '<b>'.$this->getTitle().'</b>' : $this->getTitle()).':';
         $strDesc = (!is_null($this->getDescription())) ? '<br/><small>'.$this->getDescription().'</small>' : '';
@@ -348,9 +362,10 @@ abstract class AbstractField
         {
             $strDesc .= '<br/><small><mark>'.$this->getName().'</mark></small>';
         }
+        $strRowHash = $this->getRowHash();
 
         return <<<DOCHERE
-<div class="form-group">
+<div class="form-group" id="$strRowHash">
     <div class="row">
         <div class="col-4 text-right">
             <label>$strTitle</label>

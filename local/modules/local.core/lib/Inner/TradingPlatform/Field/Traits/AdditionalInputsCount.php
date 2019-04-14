@@ -27,7 +27,7 @@ trait AdditionalInputsCount
      *
      * @return int
      */
-    protected function getAdditionalInputsCount()
+    public function getAdditionalInputsCount()
     {
         return $this->_intAdditionalInputsCount;
     }

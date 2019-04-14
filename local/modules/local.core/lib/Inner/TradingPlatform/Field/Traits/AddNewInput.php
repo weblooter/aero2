@@ -24,7 +24,7 @@ trait AddNewInput
      *
      * @return bool
      */
-    protected function getIsCanAddNewInput()
+    public function getIsCanAddNewInput()
     {
         return $this->_fieldIsCanAddNewInput;
     }

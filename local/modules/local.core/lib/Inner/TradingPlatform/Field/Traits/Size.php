@@ -26,7 +26,7 @@ trait Size
      *
      * @return int
      */
-    protected function getSize()
+    public function getSize()
     {
         return $this->_fieldSize;
     }

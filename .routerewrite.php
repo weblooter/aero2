@@ -117,7 +117,28 @@ $arLocalRoutes = [
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs('tradingplatform', 'list', ['COMPANY_ID' => $arParams['COMPANY_ID'], 'STORE_ID' => $arParams['STORE_ID']]);
 
-                    $GLOBALS['APPLICATION']->AddChainItem('Добавить торговую площадку', \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']]));
+                    $GLOBALS['APPLICATION']->AddChainItem('Добавить торговую площадку',
+                        \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']]));
+                }
+        ],
+        'detail' => [
+            'URL' => '/personal/company/#COMPANY_ID#/store/#STORE_ID#/tradingplatform/#TP_ID#/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('tradingplatform', 'list', ['COMPANY_ID' => $arParams['COMPANY_ID'], 'STORE_ID' => $arParams['STORE_ID']]);
+
+                    $GLOBALS['APPLICATION']->AddChainItem( \Local\Core\Inner\TradingPlatform\Base::getName($arParams['TP_ID']) ,
+                        \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'detail', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#TP_ID#' => $arParams['TP_ID']]));
+                }
+        ],
+        'edit' => [
+            'URL' => '/personal/company/#COMPANY_ID#/store/#STORE_ID#/tradingplatform/#TP_ID#/edit/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('tradingplatform', 'detail', ['COMPANY_ID' => $arParams['COMPANY_ID'], 'STORE_ID' => $arParams['STORE_ID'], 'TP_ID' => $arParams['TP_ID']]);
+
+                    $GLOBALS['APPLICATION']->AddChainItem('Редактирование',
+                        \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'edit', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#TP_ID#' => $arParams['TP_ID']]));
                 }
         ]
     ]

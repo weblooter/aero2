@@ -35,7 +35,7 @@ abstract class AbstractHandler
      *
      * @return array
      */
-    protected function getFields()
+    public function getFields()
     {
         return array_merge($this->getGeneralFields(), $this->getHandlerFields());
     }
@@ -117,8 +117,8 @@ DOCHERE
     abstract protected function getHandlerFields();
 
 
-    /** @var array $arTradingPlatformSettings Массив fetch от ORM ТП */
-    protected $arTradingPlatformSettings = [];
+    /** @var array $arTradingPlatformData Массив fetch от ORM ТП */
+    protected $arTradingPlatformData = [];
 
     /**
      * Загрузить в обработчик данные о ТП
@@ -127,9 +127,9 @@ DOCHERE
      *
      * @return $this
      */
-    public function fillTradingPlatformSettings($ar)
+    public function fillTradingPlatformData($ar)
     {
-        $this->arTradingPlatformSettings = $ar;
+        $this->arTradingPlatformData = $ar;
     }
 
     /**
@@ -139,13 +139,20 @@ DOCHERE
      */
     protected function getHandlerRules()
     {
-        if (!is_null($this->arTradingPlatformSettings['HANDLER_RULES']) && !is_array($this->arTradingPlatformSettings['HANDLER_RULES'])) {
-            $this->arTradingPlatformSettings['HANDLER_RULES'] = json_decode($this->arTradingPlatformSettings['HANDLER_RULES'], true);
-        } elseif (is_null($this->arTradingPlatformSettings['HANDLER_RULES']) || empty($this->arTradingPlatformSettings['HANDLER_RULES'])) {
-            $this->arTradingPlatformSettings['HANDLER_RULES'] = [];
+        if (is_null($this->arTradingPlatformData['HANDLER_RULES']) || empty($this->arTradingPlatformData['HANDLER_RULES'])) {
+            $this->arTradingPlatformData['HANDLER_RULES'] = [];
         }
 
-        return $this->arTradingPlatformSettings['HANDLER_RULES'];
+        return $this->arTradingPlatformData['HANDLER_RULES'];
     }
 
+    /**
+     * Получить ID магазина из данных ТП
+     *
+     * @return mixed
+     */
+    protected function getTradingPlatformStoreId()
+    {
+        return $this->arTradingPlatformData['STORE_ID'];
+    }
 }
