@@ -94,10 +94,9 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     Field\Resource::TYPE_SIMPLE,
                     Field\Resource::TYPE_SELECT,
                 ])
-                ->setSimpleField(
-                    ( new Field\Textarea() )
-                    ->setIsMultiple()
-                )
+                ->setValue([
+                    'TYPE' => 'SOURCE'
+                ])
         ];
 
         return $arFields;

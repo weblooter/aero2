@@ -52,6 +52,8 @@ class ImportData
                 $arLoggerData['BEHAVIOR_IMPORT_ERROR'] = $arStore['BEHAVIOR_IMPORT_ERROR'];
                 $arLoggerData['ALERT_IF_XML_NOT_MODIFIED'] = $arStore['ALERT_IF_XML_NOT_MODIFIED'];
 
+                $arStoreImportData['LAST_IMPORT_VERSION'] = $arLoggerData['ROBOFEED_VERSION'];
+
                 $rsLastLog = ImportLogTable::getList([
                     'filter' => [
                         'STORE_ID' => $arLoggerData['STORE_ID'],
@@ -157,6 +159,7 @@ class ImportData
                     $arStoreImportData['DATE_LAST_SUCCESS_IMPORT'] = $arLoggerData['DATE_CREATE'];
                     $arStoreImportData['PRODUCT_TOTAL_COUNT'] = $arLoggerData['PRODUCT_TOTAL_COUNT'];
                     $arStoreImportData['PRODUCT_SUCCESS_IMPORT'] = $arLoggerData['PRODUCT_SUCCESS_IMPORT'];
+                    $arStoreImportData['LAST_SUCCESS_IMPORT_VERSION'] = $arLoggerData['ROBOFEED_VERSION'];
 
                     if (!empty($arLoggerData['ERROR_TEXT'])) {
                         \Local\Core\Inner\TriggerMail\Robofeed\Import::successWithWarning([

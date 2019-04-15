@@ -35,7 +35,11 @@ class Base
                     'DOMAIN',
                     'COMPANY_ID',
                     'COMPANY_DATA_' => 'COMPANY',
-                    'TARIFF_CODE'
+                    'TARIFF_CODE',
+                    'DATE_LAST_SUCCESS_IMPORT',
+                    'PRODUCT_SUCCESS_IMPORT',
+                    'LAST_IMPORT_VERSION',
+                    'LAST_SUCCESS_IMPORT_VERSION',
                 ]
             ])
                 ->fetch();
@@ -46,7 +50,12 @@ class Base
                 'DOMAIN' => $arTmp['DOMAIN'],
                 'COMPANY_ID' => $arTmp['COMPANY_ID'],
                 'COMPANY_USER_OWN_ID' => $arTmp['COMPANY_DATA_USER_OWN_ID'],
-                'TARIFF_CODE' => $arTmp['TARIFF_CODE']
+                'TARIFF_CODE' => $arTmp['TARIFF_CODE'],
+                'LAST_IMPORT_RESULT' => $arTmp['LAST_IMPORT_RESULT'],
+                'DATE_LAST_SUCCESS_IMPORT' => $arTmp['DATE_LAST_SUCCESS_IMPORT'],
+                'PRODUCT_SUCCESS_IMPORT' => $arTmp['PRODUCT_SUCCESS_IMPORT'],
+                'LAST_IMPORT_VERSION' => $arTmp['LAST_IMPORT_VERSION'],
+                'LAST_SUCCESS_IMPORT_VERSION' => $arTmp['LAST_SUCCESS_IMPORT_VERSION'],
             ];
 
             self::$__register[$intStoreId] = $ar;
@@ -276,5 +285,61 @@ class Base
         }
 
         return $arReturn;
+    }
+
+    /**
+     * Проверяет был ли ранее у магазина успешный импорт
+     *
+     * @param $intStoreId
+     *
+     * @return bool
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function hasSuccessImport($intStoreId)
+    {
+        $boolRes = false;
+        $ar = self::__getStoreRegister($intStoreId);
+        if( $ar['DATE_LAST_SUCCESS_IMPORT'] instanceof \Bitrix\Main\Type\DateTime )
+        {
+            if( $ar['PRODUCT_SUCCESS_IMPORT'] > 0 )
+                $boolRes = true;
+        }
+        return $boolRes;
+    }
+
+    /**
+     * Возвращает версию робофида последнего импорта
+     *
+     * @param $intStoreId
+     *
+     * @return mixed
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getLastImportVersion($intStoreId)
+    {
+        $ar = self::__getStoreRegister($intStoreId);
+        $intVersionId = $ar['LAST_IMPORT_VERSION'];
+        return $intVersionId;
+    }
+
+    /**
+     * Возвращает версию робофида последнего УСПЕШНОГО импорта
+     *
+     * @param $intStoreId
+     *
+     * @return mixed
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getLastSuccessImportVersion($intStoreId)
+    {
+        $ar = self::__getStoreRegister($intStoreId);
+        $intVersionId = $ar['LAST_SUCCESS_IMPORT_VERSION'];
+        return $intVersionId;
     }
 }
