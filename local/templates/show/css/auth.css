@@ -1,0 +1,172 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.authbackground {
+    background: var(--darkgray);
+    background-image: url(../images/authbg.svg);
+    background-position: center;
+    background-size: 2000px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+}
+
+.loading .authbackground,
+.loading .authscreen_decor{
+    animation: rotate 3s 1 ease;
+}
+
+  ::-webkit-input-placeholder {color:rgba(255, 255, 255, 0.3); opacity:1;}/* webkit */
+  ::-moz-placeholder          {color:rgba(255, 255, 255, 0.3); opacity:1;}/* Firefox 19+ */
+  :-moz-placeholder           {color:rgba(255, 255, 255, 0.3); opacity:1;}/* Firefox 18- */
+  :-ms-input-placeholder      {color:rgba(255, 255, 255, 0.3); opacity:1;}/* IE */
+
+.authscreen_holder {
+    width: 500px;
+    height: 500px;
+    position: relative;
+}
+
+.authscreen_decor {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    border-radius: 50%;
+    background-image: url(../images/authbg.svg);
+    background-position: center;
+    background-size: 2000px;
+    background-repeat: no-repeat;
+    filter: blur(10px);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+}
+
+.authscreen {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    padding: 125px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: rgba(34, 34, 34, 0.7);
+}
+
+.authscreen .logo {
+    text-align: center;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    margin: auto;
+    line-height: 160px;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    display: table;
+    margin-top: -70px;
+    margin-bottom: 25px;
+    background-image: url(../images/circlelogo.svg);
+    background-size: contain;
+}
+
+.authscreen .inputwrap {
+    position: relative;
+}
+
+.authscreen .inputwrap:before {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+    top: 11px;
+    left: 15px;
+}
+
+.authscreen .inputwrap input {
+    background: transparent;
+}
+
+.authscreen input[type="text"],  
+.authscreen input[type="password"] {
+    width: 100%;
+    line-height: 38px;
+    height: 38px;
+    padding: 0 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    padding-left: 50px;
+    color: white;
+    font-weight: 300;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-family: Montserrat;
+}
+
+.authscreen input[type="submit"] {
+    width: 100%;
+    margin-top: 20px;
+    background-image: -webkit-linear-gradient(left, #f1bc2e, #fc7751);
+    background-image: -o-linear-gradient(left, #f1bc2e, #fc7751);
+    background-image: linear-gradient(to right, #f1bc2e, #fc7751);
+    border: none;
+    height: 38px;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #222222;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.authscreen p {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.authscreen p a {
+    float: left;
+    color: #f1ba2f;
+}
+
+.authscreen p a + a {
+    float: right;
+    color: #fc7d4f;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.authscreen_errors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 3;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.authscreen_errors p {
+    margin: 5px 0;
+    color: #ff4400;
+}

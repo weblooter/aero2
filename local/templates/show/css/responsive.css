@@ -1,0 +1,243 @@
+@media screen and (max-width: 1199px){
+    header ul.mainmenu {
+        margin-right: 15px;
+    }
+    
+    .firstslide .triple .item {
+        padding: 55px 30px 30px 30px;
+        text-align: center;
+    }
+    
+    .firstslide .triple .item .image {
+        left: calc(50% - 40px);
+        top: -40px;
+        background-color: white;
+    }
+    
+    section.platforms .platforms_items .platform .image {
+        background-size: 100px;
+        height: 90px;
+    }
+}
+
+@media screen and (max-width: 991px){
+    .firstslide h1 {
+        line-height: 44px;
+    }
+    
+    .firstslide {
+        padding-top: 100px;
+    }
+    
+    h1 {
+        font-size: 32px;
+    }
+    
+    .h2, h2 {
+        font-size: 26px;
+    }
+    
+    p {
+        font-size: 14px;
+    }
+    
+    .mainmenu {
+        position: fixed;
+        background: rgba(255, 255, 255, 0.9);
+        width: 100%;
+        left: 0;
+        top: 100px;
+        display: none;
+    }
+    
+    header ul.mainmenu li a {
+        color: var(--darkgray);
+    }
+    
+    header ul.mainmenu li.active a {
+        color: var(--orange);
+    }
+    
+    header ul.mainmenu {
+        text-align: center;
+    }
+    
+    header.fixed ul.mainmenu {
+        top: 71px;
+    }
+    
+    footer ul.footermenu li {
+        margin: 0 5px;
+    }
+    
+    .slick-dots {
+        padding-left: 0;
+        list-style: none;
+        margin-top: 20px;
+    }
+    
+    .slick-dots li {
+        display: inline-block;
+        margin: 10px;
+    }
+    
+    .slick-dots li button {
+        font-size: 0;
+        height: 15px;
+        width: 15px;
+        padding: 0;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid var(--orange);
+    }
+    
+    .slick-dots li.slick-active button {
+        border: 2px solid white;
+        background: var(--orange);
+    }
+    
+    section.about .robotblock .robot {
+        display: none;
+    }
+    
+    section.about .robotblock {
+        display: flex;
+        align-items: center;
+    }
+    
+    section.about .pros {
+        margin-bottom: 60px;
+    }
+    
+    .pros_block .row > div:last-child .pros {
+        margin-bottom: 0;
+    }
+    
+    section.platforms {
+        padding: 50px 0;
+    }
+    
+    input[type="checkbox"].calccheckbox + label {
+        background-size: 75px;
+    }
+    
+    .calculator .addshop {
+        margin-top: 0;
+    }
+    
+    header .mobilemenu_toggle {
+        display: inline-block;
+    }
+    
+    header.fixed .mobilemenu_toggle {
+        display: inline-block;
+        background: var(--yellow);
+        margin-top: 17px;
+    }
+    
+    section.about .robotblock > img {
+        display: block;
+    }
+    
+    section.about {
+        padding-top: 50px;
+    }
+}
+
+@media screen and (max-width: 767px){
+    a.btn {
+        font-size: 14px;
+    }
+    
+    h1, h2, .h2 {
+        font-size: 24px;
+    }
+    
+    .firstslide h1 {
+        line-height: 28px;
+    }
+    
+    header a.btn.white.cabinet {
+        font-size: 0;
+        height: 38px;
+        padding: 8px;
+        text-shadow: none;
+    }
+    
+    header .mobilemenu_toggle {
+        margin-right: 20px;
+    }
+    
+    header a.btn.white.cabinet:before {
+        margin: 0;
+    }
+    
+    header a.logo {
+        font-size: 26px;
+    }
+    
+    header ul.mainmenu li {
+        width: 100%;
+        line-height: 50px;
+        padding: 0 10px;
+        margin: 0 0px;
+    }
+    
+    header.fixed ul.mainmenu li {
+        line-height: 50px;
+    }
+    
+    section.about .pros {
+        padding-left: 0;
+        padding-top: 85px;
+        margin-bottom: 45px;
+    }
+    
+    section.about .pros .image {
+        width: 80px;
+        height: 80px;
+        left: calc(50% - 40px);
+        top: 0;
+    }
+    
+    section.about .pros h4,
+    section.about .pros p {
+        text-align: center;
+    }
+    
+    section.platforms {
+        padding: 20px 0;
+    }
+    
+    .footermenu {
+        display: none;
+    }
+    
+    footer .logo {
+        display: table;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .faqblock .faq .question {
+        padding-left: 45px;
+    }
+    
+    .faqblock .faq .question:before {
+        left: 0;
+        top: calc(50% - 15px);
+    }
+    
+    .faqblock .faq .question .arrowicon {
+        top: calc(50% - 14px);
+        right: 0px;
+    }
+    
+    section.about .robotblock {
+        display: none;
+    }
+    
+    section.about {
+        padding-top: 0;
+    }
+}

@@ -4,28 +4,28 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 }
 ?>
 </div>
-</div>
-
-<hr />
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <? $APPLICATION->IncludeComponent("bitrix:menu", ".default", Array(
+<footer>
+    <div class="container">
+        <a href="/" class="logo">ROBOFEED</a>
+        <?$APPLICATION->IncludeComponent(
+            "bitrix:menu",
+            "footermenu",
+            Array(
                 "ALLOW_MULTI_SELECT" => "N",
                 "CHILD_MENU_TYPE" => "left",
-                "COMPONENT_TEMPLATE" => "horizontal_multilevel",
                 "DELAY" => "N",
-                "MAX_LEVEL" => "2",
-                "MENU_CACHE_GET_VARS" => array(),
+                "MAX_LEVEL" => "1",
+                "MENU_CACHE_GET_VARS" => array(""),
                 "MENU_CACHE_TIME" => "3600",
                 "MENU_CACHE_TYPE" => "N",
                 "MENU_CACHE_USE_GROUPS" => "Y",
-                "MENU_THEME" => "site",
-                "ROOT_MENU_TYPE" => "bottom",
+                "ROOT_MENU_TYPE" => "top",
                 "USE_EXT" => "N"
-            )); ?>
-        </div>
+            )
+        );?>
+        <p class="copyright">© ROBOFEED <?=date('Y')?></p>
     </div>
-</div>
+</footer>
 </body>
+
 </html>
