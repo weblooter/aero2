@@ -5,6 +5,7 @@ namespace Local\Core\Model\Data;
 use Bitrix\Main\ORM\EntityError;
 use Bitrix\Main\ORM\Event;
 use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
+use Bitrix\Seo\LeadAds\Field;
 
 // TODO сделать OnAfterAdd OnAfterUpdate, которое будет ставить очередь на выполнение проверки файла
 // TODO добавить в getMap данные по последней проверке (подключать orm логов сайтов)
@@ -12,19 +13,7 @@ use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
 /**
  * Класс ORM магазинов компаний.
  *
- * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [01.04.2019 20:43:39] |
- * Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [01.04.2019 20:43:39] | Fields\DatetimeField</li><li>COMPANY_ID - ID компании | Fields\IntegerField</li><li>NAME - Название |
- * Fields\StringField</li><li>DOMAIN - Домен | Fields\StringField</li><li>RESOURCE_TYPE - Источник данных | Fields\EnumField<br/>&emsp;LINK => Ссылка на файл<br/>&emsp;FILE => Загрузить
- * файл<br/></li><li>FILE_ID - Загруженный файл XML | Fields\IntegerField</li><li>FILE_LINK - Ссылка на файл XML | Fields\StringField</li><li>HTTP_AUTH - Для доступа нужен логин и пароль [N] |
- * Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>HTTP_AUTH_LOGIN - Логин для авторизации | Fields\StringField</li><li>HTTP_AUTH_PASS - Пароль для авторизации |
- * Fields\StringField</li><li>BEHAVIOR_IMPORT_ERROR - Поведение импорта при ошибке [STOP_IMPORT] | Fields\EnumField<br/>&emsp;STOP_IMPORT => Не актуализировать данные<br/>&emsp;IMPORT_ONLY_VALID =>
- * Актуализировать только валидные<br/></li><li>ALERT_IF_XML_NOT_MODIFIED - Информировать о не изменившемся Robofeed XML? [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N =>
- * Нет<br/></li><li>DATE_LAST_IMPORT - Дата последнего импорта | Fields\DatetimeField</li><li>LAST_IMPORT_RESULT - Фактический результат последнего импорта | Fields\EnumField<br/>&emsp;SU =>
- * Успешен<br/>&emsp;ER => Ошибочный<br/></li><li>DATE_LAST_SUCCESS_IMPORT - Дата последнего успешного импорта | Fields\DatetimeField</li><li>PRODUCT_TOTAL_COUNT - Общее кол-во заявленных товаров в
- * Robofeed XML в последней успешной выгрузке | Fields\IntegerField</li><li>PRODUCT_SUCCESS_IMPORT - Кол-во валидных импортированных товаров в последней успешной выгрузке |
- * Fields\IntegerField</li><li>TARIFF_CODE - Тариф [TRIAL_7_DAYS] | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li><li>TARIFF -
- * \Local\Core\Model\Data\Tariff | Fields\Relations\Reference</li><li>IMPORT_LOGS - \Local\Core\Model\Robofeed\ImportLog | Fields\Relations\OneToMany</li><li>TARIFF_LOGS -
- * \Local\Core\Model\Data\StoreTariffChangeLog | Fields\Relations\OneToMany</li></ul>
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>ACTIVE - Активность [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_CREATE - Дата создания [15.04.2019 19:00:49] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [15.04.2019 19:00:49] | Fields\DatetimeField</li><li>COMPANY_ID - ID компании | Fields\IntegerField</li><li>NAME - Название | Fields\StringField</li><li>DOMAIN - Домен | Fields\StringField</li><li>RESOURCE_TYPE - Источник данных | Fields\EnumField<br/>&emsp;LINK => Ссылка на файл<br/>&emsp;FILE => Загрузить файл<br/></li><li>FILE_ID - Загруженный файл XML | Fields\IntegerField</li><li>FILE_LINK - Ссылка на файл XML | Fields\StringField</li><li>HTTP_AUTH - Для доступа нужен логин и пароль [N] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>HTTP_AUTH_LOGIN - Логин для авторизации | Fields\StringField</li><li>HTTP_AUTH_PASS - Пароль для авторизации | Fields\StringField</li><li>BEHAVIOR_IMPORT_ERROR - Поведение импорта при ошибке [STOP_IMPORT] | Fields\EnumField<br/>&emsp;STOP_IMPORT => Не актуализировать данные<br/>&emsp;IMPORT_ONLY_VALID => Актуализировать только валидные<br/></li><li>ALERT_IF_XML_NOT_MODIFIED - Информировать о не изменившемся Robofeed XML? [Y] | Fields\EnumField<br/>&emsp;Y => Да<br/>&emsp;N => Нет<br/></li><li>DATE_LAST_IMPORT - Дата последнего импорта | Fields\DatetimeField</li><li>LAST_IMPORT_RESULT - Фактический результат последнего импорта | Fields\EnumField<br/>&emsp;SU => Успешен<br/>&emsp;ER => Ошибочный<br/></li><li>LAST_IMPORT_VERSION - Версия Robofeed в последнем импорте | Fields\IntegerField</li><li>DATE_LAST_SUCCESS_IMPORT - Дата последнего успешного импорта | Fields\DatetimeField</li><li>LAST_SUCCESS_IMPORT_VERSION - Версия Robofeed в последнем успешном импорте | Fields\IntegerField</li><li>PRODUCT_TOTAL_COUNT - Общее кол-во заявленных товаров в Robofeed XML в последней успешной выгрузке | Fields\IntegerField</li><li>PRODUCT_SUCCESS_IMPORT - Кол-во валидных импортированных товаров в последней успешной выгрузке | Fields\IntegerField</li><li>TARIFF_CODE - Тариф [TRIAL_7_DAYS] | Fields\StringField</li><li>COMPANY - \Local\Core\Model\Data\Company | Fields\Relations\Reference</li><li>TARIFF - \Local\Core\Model\Data\Tariff | Fields\Relations\Reference</li><li>IMPORT_LOGS - \Local\Core\Model\Robofeed\ImportLog | Fields\Relations\OneToMany</li><li>TARIFF_LOGS - \Local\Core\Model\Data\StoreTariffChangeLog | Fields\Relations\OneToMany</li></ul>
  *
  *
  * @package Local\Core\Model\Data
@@ -76,13 +65,11 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ]),
             new Fields\EnumField('ACTIVE', [
                 'title' => 'Активность',
-                'required' => false,
                 'values' => self::getEnumFieldValues('ACTIVE'),
                 'default_value' => 'Y'
             ]),
             new Fields\DatetimeField('DATE_CREATE', [
                 'title' => 'Дата создания',
-                'required' => false,
                 'default_value' => function ()
                     {
                         return new \Bitrix\Main\Type\DateTime();
@@ -90,7 +77,6 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ]),
             new Fields\DatetimeField('DATE_MODIFIED', [
                 'title' => 'Дата последнего изменения',
-                'required' => false,
                 'default_value' => function ()
                     {
                         return new \Bitrix\Main\Type\DateTime();
@@ -105,7 +91,6 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                 'title' => 'Название',
             ]),
             new Fields\StringField('DOMAIN', [
-                'required' => false,
                 'title' => 'Домен',
                 'validation' => function ()
                     {
@@ -131,12 +116,10 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ]),
 
             new Fields\IntegerField('FILE_ID', [
-                'required' => false,
                 'title' => 'Загруженный файл XML',
             ]),
 
             new Fields\StringField('FILE_LINK', [
-                'required' => false,
                 'title' => 'Ссылка на файл XML',
                 'validation' => function ()
                     {
@@ -156,17 +139,14 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                     }
             ]),
             new Fields\EnumField('HTTP_AUTH', [
-                'required' => false,
                 'title' => 'Для доступа нужен логин и пароль',
                 'values' => self::getEnumFieldValues('HTTP_AUTH'),
                 'default_value' => 'N'
             ]),
             new Fields\StringField('HTTP_AUTH_LOGIN', [
-                'required' => false,
                 'title' => 'Логин для авторизации',
             ]),
             new Fields\StringField('HTTP_AUTH_PASS', [
-                'required' => false,
                 'title' => 'Пароль для авторизации',
             ]),
 
@@ -177,7 +157,6 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
                 'default_value' => 'STOP_IMPORT'
             ]),
             new Fields\EnumField('ALERT_IF_XML_NOT_MODIFIED', [
-                'required' => false,
                 'title' => 'Информировать о не изменившемся Robofeed XML?',
                 'values' => self::getEnumFieldValues('ALERT_IF_XML_NOT_MODIFIED'),
                 'default_value' => 'Y'
@@ -185,16 +164,19 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 
             new Fields\DatetimeField('DATE_LAST_IMPORT', [
                 'title' => 'Дата последнего импорта',
-                'required' => false,
             ]),
             new Fields\EnumField('LAST_IMPORT_RESULT', [
                 'title' => 'Фактический результат последнего импорта',
-                'required' => false,
                 'values' => self::getEnumFieldValues('LAST_IMPORT_RESULT')
+            ]),
+            new Fields\IntegerField('LAST_IMPORT_VERSION',[
+                'title' => 'Версия Robofeed в последнем импорте'
             ]),
             new Fields\DatetimeField('DATE_LAST_SUCCESS_IMPORT', [
                 'title' => 'Дата последнего успешного импорта',
-                'required' => false,
+            ]),
+            new Fields\IntegerField('LAST_SUCCESS_IMPORT_VERSION',[
+                'title' => 'Версия Robofeed в последнем успешном импорте'
             ]),
             new Fields\IntegerField('PRODUCT_TOTAL_COUNT', [
                 'required' => false,

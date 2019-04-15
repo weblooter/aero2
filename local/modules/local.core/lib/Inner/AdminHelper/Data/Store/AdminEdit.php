@@ -324,6 +324,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 new \Local\Core\Inner\AdminHelper\EditField\Html($columnName["DATE_LAST_SUCCESS_IMPORT"], "DATE_LAST_SUCCESS_IMPORT"),
                 new \Local\Core\Inner\AdminHelper\EditField\Html($columnName["PRODUCT_TOTAL_COUNT"], "PRODUCT_TOTAL_COUNT"),
                 new \Local\Core\Inner\AdminHelper\EditField\Html($columnName["PRODUCT_SUCCESS_IMPORT"], "PRODUCT_SUCCESS_IMPORT"),
+                new \Local\Core\Inner\AdminHelper\EditField\Html($columnName["LAST_IMPORT_VERSION"], "LAST_IMPORT_VERSION"),
+                new \Local\Core\Inner\AdminHelper\EditField\Html($columnName["LAST_SUCCESS_IMPORT_VERSION"], "LAST_SUCCESS_IMPORT_VERSION"),
             ],
 
             'import_logs' => [
