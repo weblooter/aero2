@@ -236,4 +236,24 @@ class CLocalCore
 
         }
     }
+
+    /**
+     * Возвращает путь до assets модуля от корня сайта
+     *
+     * @return mixed
+     */
+    public static function getModuleAssetsPath()
+    {
+        return str_replace(\Bitrix\Main\Application::getDocumentRoot(), '', __DIR__.'/assets');
+    }
+
+    /**
+     * Получить абсолютный путь до модуля
+     *
+     * @return string
+     */
+    public static function getAbsoluteModulePath()
+    {
+        return __DIR__;
+    }
 }

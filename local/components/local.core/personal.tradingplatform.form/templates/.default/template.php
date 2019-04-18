@@ -109,6 +109,15 @@
             </div>
         <? endif; ?>
 
+        <script type="text/javascript">
+            <?
+            $arOptions = (new \Local\Core\Inner\TradingPlatform\Field\Resource())
+                    ->setStoreId($arParams['STORE_ID'])
+                    ->getSourceOptionsToJs();
+            ?>
+            LocalCoreTradingPlatform.setBuilderOptions(JSON.parse('<?=$arOptions?>'));
+        </script>
+
     <? endif; ?>
 
 <? endif; ?>

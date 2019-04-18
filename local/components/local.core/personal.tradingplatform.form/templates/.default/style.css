@@ -1,0 +1,4 @@
+.local-core-dropdown-line {display: inline-block;}
+.local-core-dropdown-title {text-decoration: none !important; border-bottom: 1px dashed blue;}
+.local-core-dropdown-input-line {display: inline-block;}
+.local-core-dropdown-input-line .form-control {width: auto;}

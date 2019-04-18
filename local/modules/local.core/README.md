@@ -351,19 +351,25 @@ public static function delete(\Bitrix\Main\HttpRequest $request, \Local\Core\Inn
 Пример функции, которая отправляет запрос ajax и обрабатывает его
 ```js
 <script type="text/javascript">
-    function wblDeleteCompany(intId) {
-        axios.post('/ajax/company/delete/'+intId+'/')
-            .then(function (response) {
-                if( response.data.result == 'SUCCESS' )
-                {
-                    alert('OK!');
-                }
-                else
-                {
-                    alert('ERROR!')
-                }
-            })
-    }
+    var data = {
+        "qq": "aa",
+        "ww": "rr"
+    },
+    intId = 12;
+    axios.post('/ajax/company/delete/'+intId+'/', qs.stringify(data))
+        .then(function (response) {
+             if( response.data.result == 'SUCCESS' )
+             {
+                 alert('OK!');
+             }
+             else
+             {
+                 alert('ERROR!')
+             }
+        })
+        .then(function (catchResponse) {
+             console.log(catchResponse);
+        })
 </script>
 ```
 
