@@ -60,5 +60,17 @@ return [
         'path' => '/trading-platform-form/refresh-row/',
         'methods' => ['POST'],
         'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':refreshRow'
+    ],
+
+    'system_auth_authorize' => [
+        'path' => '/system-auth-authorize/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\SystemAuthAuthorize::class.':try'
+    ],
+
+    'system_auth_register' => [
+        'path' => '/system-auth-register/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\SystemAuthRegister::class.':try'
     ]
 ];

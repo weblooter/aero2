@@ -220,6 +220,8 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Ajax\\Handler\\Company' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/Company.php',
         'Local\\Core\\Ajax\\Handler\\Example' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/Example.php',
         'Local\\Core\\Ajax\\Handler\\Store' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/Store.php',
+        'Local\\Core\\Ajax\\Handler\\SystemAuthAuthorize' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/SystemAuthAuthorize.php',
+        'Local\\Core\\Ajax\\Handler\\SystemAuthRegister' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/SystemAuthRegister.php',
         'Local\\Core\\Ajax\\Handler\\TradingPlatform' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/TradingPlatform.php',
         'Local\\Core\\Assistant\\Arrays' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/Arrays.php',
         'Local\\Core\\Assistant\\Cache' => __DIR__ . '/../..' . '/../modules/local.core/lib/Assistant/Cache.php',

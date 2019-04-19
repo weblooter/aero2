@@ -184,6 +184,10 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         ];
     }
 
+    public static function clearCalcCache()
+    {
+        \Local\Core\Inner\Cache::deleteComponentCache(['mainpage.calc']);
+    }
 
     public static function OnBeforeUpdate(\Bitrix\Main\ORM\Event $event)
     {
@@ -196,15 +200,24 @@ class TariffTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         return $result;
     }
 
+    public static function OnAfterAdd(\Bitrix\Main\ORM\Event $event)
+    {
+        # Вызывается строго в конце
+        self::_initClearComponentCache($event, []);
+        self::clearCalcCache();
+    }
+
     public static function OnAfterUpdate(\Bitrix\Main\ORM\Event $event)
     {
         # Вызывается строго в конце
         self::_initClearComponentCache($event, []);
+        self::clearCalcCache();
     }
 
     public static function OnDelete(\Bitrix\Main\ORM\Event $event)
     {
         # Вызывается строго в конце
         self::_initClearComponentCache($event, []);
+        self::clearCalcCache();
     }
 }

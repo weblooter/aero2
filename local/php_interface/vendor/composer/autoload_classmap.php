@@ -129,6 +129,8 @@ return array(
     'Local\\Core\\Ajax\\Handler\\Company' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/Company.php',
     'Local\\Core\\Ajax\\Handler\\Example' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/Example.php',
     'Local\\Core\\Ajax\\Handler\\Store' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/Store.php',
+    'Local\\Core\\Ajax\\Handler\\SystemAuthAuthorize' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/SystemAuthAuthorize.php',
+    'Local\\Core\\Ajax\\Handler\\SystemAuthRegister' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/SystemAuthRegister.php',
     'Local\\Core\\Ajax\\Handler\\TradingPlatform' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/TradingPlatform.php',
     'Local\\Core\\Assistant\\Arrays' => $baseDir . '/../modules/local.core/lib/Assistant/Arrays.php',
     'Local\\Core\\Assistant\\Cache' => $baseDir . '/../modules/local.core/lib/Assistant/Cache.php',

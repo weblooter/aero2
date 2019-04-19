@@ -11,46 +11,46 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     <title><? $APPLICATION->ShowTitle(); ?></title>
     <?
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/popper.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs('https://unpkg.com/ionicons@4.4.4/dist/ionicons.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/ionicons.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs('https://unpkg.com/axios/dist/axios.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/js/jquery-1.12.1.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery-1.12.1.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/js/bootstrap.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/js/bootstrap-select.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap-select.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/js/slick.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/slick.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/js/ion.rangeSlider.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/ion.rangeSlider.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/js/jquery.sticky-kit.min.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery.sticky-kit.min.js');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/js/script.js');
+        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/script.js');
 
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss('https://fonts.googleapis.com/css?family=Montserrat:400,400i,600,700,900&amp;subset=cyrillic');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/montseratt.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/simple-line-icons.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/simple-line-icons.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/bootstrap.min.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/bootstrap-select.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-select.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/slick.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/slick.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/ion.rangeSlider.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/ion.rangeSlider.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/github.min.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/github.min.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/ui.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/ui.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/style.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/style.css');
     \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/css/responsive.css');
+        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/responsive.css');
     ?>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <script type="text/javascript">
