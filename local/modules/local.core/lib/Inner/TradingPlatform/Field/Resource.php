@@ -7,11 +7,14 @@ use Bitrix\Seo\LeadAds\Field;
 
 class Resource extends AbstractField
 {
+    use Traits\StoreId;
+
     const TYPE_SOURCE = 'SOURCE';
     const TYPE_SIMPLE = 'SIMPLE';
     const TYPE_BUILDER = 'BUILDER';
     const TYPE_SELECT = 'SELECT';
     const TYPE_LOGIC = 'LOGIC';
+    const TYPE_SMART_LOGIC = 'SMART_LOGIC';
     const TYPE_IGNORE = 'IGNORE';
 
     /**
@@ -59,32 +62,6 @@ class Resource extends AbstractField
     private function getAllowTypeList()
     {
         return $this->arAllowTypeList;
-    }
-
-    /** @var integer $intStoreId ID магазина */
-    protected $intStoreId;
-
-    /**
-     * Задать ID магазина
-     *
-     * @param $intStoreId
-     *
-     * @return $this
-     */
-    public function setStoreId($intStoreId)
-    {
-        $this->intStoreId = $intStoreId;
-        return $this;
-    }
-
-    /**
-     * Получить ID магазина
-     *
-     * @return int
-     */
-    protected function getStoreId()
-    {
-        return $this->intStoreId;
     }
 
 
@@ -156,7 +133,7 @@ class Resource extends AbstractField
             ->setValue($this->getValue()['TYPE'] ?? null)
             ->setEvent([
                 'onchange' => [
-                    'LocalCoreTradingPlatform.refreshRow(\''.$this->getRowHash().'\')'
+                    'PersonalTradingplatformFormComponent.refreshRow(\''.$this->getRowHash().'\')'
                 ]
             ]);
 
@@ -298,8 +275,8 @@ class Resource extends AbstractField
             ->getSchemaMap();
 
         $arBaseOptions = [
-            'BASE_FIELD#PRODUCT_ID' => 'Идентификатор товара, уникален',
-            'BASE_FIELD#PRODUCT_GROUP_ID' => 'Идентификатор группы товара, которые повторяются в рамках робофида',
+            'BASE_FIELD#PRODUCT_ID' => 'Идентификатор товара',
+            'BASE_FIELD#PRODUCT_GROUP_ID' => 'Идентификатор группы товара, которые повторяются',
         ];
         $arPriceOptions = [];
         $arSizeAndDimensionsOptions = [];

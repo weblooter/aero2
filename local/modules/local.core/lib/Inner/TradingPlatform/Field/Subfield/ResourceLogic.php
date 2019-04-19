@@ -37,7 +37,7 @@ class ResourceLogic extends \Local\Core\Inner\TradingPlatform\Field\AbstractFiel
 
         $funMakeOption = function ($k, $v) use ($strDropdownHash)
             {
-                return '<a class="dropdown-item" href="javascript:void(0)" onclick="LocalCoreTradingPlatform.changeLogicFieldValue(\''.$k.'\', \''.htmlspecialchars($v).'\', \''.$strDropdownHash.'\');">'.$v.'</a>';
+                return '<a class="dropdown-item" href="javascript:void(0)" onclick="PersonalTradingplatformFormComponent.changeLogicFieldValue(\''.$k.'\', \''.htmlspecialchars($v).'\', \''.$strDropdownHash.'\');">'.$v.'</a>';
             };
 
         foreach ($this->getOptions() as $h => $a) {

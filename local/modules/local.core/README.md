@@ -148,7 +148,13 @@ echo \CLocalCore::getOrmFieldsTable( Local\Core\Model\Data\SiteTable::class );
 $obCache->startDataCache(
     ( 60 * 60 * 24 * 7 ),
     md5( __METHOD__.'_user_id='.$GLOBALS[ 'USER' ]->GetID().'_page='.$nav->getCurrentPage().'&offset='.$nav->getOffset() ),
-    \Local\Core\Inner\Cache::getComponentCachePath( ['personal.company.list'], ['user_id='.$GLOBALS[ 'USER' ]->GetID(), 'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()] )
+    \Local\Core\Inner\Cache::getComponentCachePath( 
+        ['personal.company.list'], 
+        [
+            'user_id='.$GLOBALS[ 'USER' ]->GetID(), 
+            'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
+        ] 
+    )
 );
 ```
 Используя данную конструкцию наш кэш будет записывать по пути
@@ -164,6 +170,43 @@ $obCache->startDataCache(
 ```
 Такая архитектура удобна и наглядна.
 > При работе с компонентами с построничкой необходимо всегда заполнять **page** и **offset**, что бы не плодить **page=&offset=** и **page=1&offset=0**, т.к. это одно и то же
+
+Так же стоит обратить внимание на стилистику написания аргументов в зависимости от выбраного метода получения кэша.
+
+**getCachePath** используется в основном для получения выборки из ORM или других данных, поэтому его путь **должен** быть прописан до класса, а дальше параметры и/или action.
+
+```php
+// Пример получения пути в Condition при построении списка разделов
+\Local\Core\Inner\Cache::getCachePath(
+    ['Model', 'Robofeed', 'V1', 'StoreCategoryTable'],
+    ['CategoryConditionList', 'storeId='.self::$intStoreId]
+);
+
+// Пример получения пути в Condition при построении списка валют
+\Local\Core\Inner\Cache::getCachePath(
+    ['Model','Reference','MeasureTable'],
+    ['getOptionsToCondition']
+);
+```
+
+**getComponentCachePath** в свою очередь используется только при кэшировании arResult коспонентов, поэтому в него **нужно** передавать **название компонента**,а дальше параметры и/или action.
+
+```php
+// Пример получения пути для personal.store.detail
+\Local\Core\Inner\Cache::getComponentCachePath(
+    ['personal.store.detail'],
+    ['storeId='.$this->arParams['STORE_ID']]
+);
+
+// Пример получения пути для presonal.company.list
+\Local\Core\Inner\Cache::getComponentCachePath(
+    ['personal.company.list'], 
+    [
+        'user_id='.$GLOBALS[ 'USER' ]->GetID(), 
+        'page='.$nav->getCurrentPage().'&offset='.$nav->getOffset()
+    ]
+);
+```
 
 #### deleteCache()
 Продолжая пример и логику выше предположим, что данные в ORM CompanyTable поменялись, и теперь необходимо скинуть кэш компонента **personal.company.list**, но для пользователя с ID 1. Именно на этот случай мы в **$arParams** в **getComponentCachePath()** мы передавали параметры в порядке:

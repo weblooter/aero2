@@ -14,7 +14,7 @@ class ResourceBuilder extends \Local\Core\Inner\TradingPlatform\Field\AbstractFi
         $smallTextHash = sha1($this->getName().time());
 
         $this->addToRender('<div class="input-group">
-    <textarea class="form-control" name="'.$this->getName().'" onkeyup="LocalCoreTradingPlatform.replaceBuilderSmallString(this)" data-small-text-hash="'.$smallTextHash.'">'.$this->getValue().'</textarea>
+    <textarea class="form-control" name="'.$this->getName().'" onkeyup="PersonalTradingplatformFormComponent.replaceBuilderSmallString(this)" data-small-text-hash="'.$smallTextHash.'">'.$this->getValue().'</textarea>
     <div class="input-group-append">
         <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить</button>
         <div class="dropdown-menu" style="max-height: 300px; overflow-y: scroll;">');
@@ -22,7 +22,7 @@ class ResourceBuilder extends \Local\Core\Inner\TradingPlatform\Field\AbstractFi
             $this->addToRender('<h4 class="dropdown-header">'.$h.'</h4>');
 
             foreach ($a as $k => $v) {
-                $this->addToRender('<a class="dropdown-item" href="javascript:void(0)" onclick="LocalCoreTradingPlatform.addBuilderValueToInput(\'{{'.$k.'}}\', \''.$this->getName().'\');">'.$v
+                $this->addToRender('<a class="dropdown-item" href="javascript:void(0)" onclick="PersonalTradingplatformFormComponent.addBuilderValueToInput(\'{{'.$k.'}}\', \''.$this->getName().'\');">'.$v
                                    .'</a>');
             }
         }

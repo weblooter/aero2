@@ -75,6 +75,6 @@ class BalanceLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataMan
     /** @inheritdoc */
     public static function clearComponentsCache($arFields)
     {
-        \Local\Core\Inner\Cache::deleteCache(['balance'], ['user_id='.$arFields['USER_ID']]);
+        \Local\Core\Inner\Cache::deleteCache(['Model', 'Data', 'BalanceLogTable', 'UserBalance' ], ['userId='.$arFields['USER_ID']]);
     }
 }

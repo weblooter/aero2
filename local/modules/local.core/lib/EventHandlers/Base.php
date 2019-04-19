@@ -79,7 +79,7 @@ class Base
 
         $eventManager->addEventHandler('local.core', 'OnCondCatControlBuildList', [\Local\Core\Inner\Condition\CondCtrlGroup::class, 'GetControlDescr']);
 
-        $eventManager->addEventHandler('local.core', 'OnCondCatControlBuildList', [\Local\Core\Inner\Condition\CondCtrlIBlockFields::class, 'GetControlDescr']);
+        $eventManager->addEventHandler('local.core', 'OnCondCatControlBuildList', [\Local\Core\Inner\Condition\CondCtrlRobofeedV1Fields::class, 'GetControlDescr']);
 
     }
 }

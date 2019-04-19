@@ -125,7 +125,7 @@ div.condition-container span.control-string {
 }
 
 .condition-item-del:before {
-    background: url("images/cond-delete.png") no-repeat left top;
+    background: url("../images/cond-delete.png") no-repeat left top;
     content: '';
     display: inline-block;
     height: 7px;
@@ -138,7 +138,7 @@ div.condition-container span.control-string {
 }
 
 .condition-item-del:hover:before {
-    background: url("images/cond-delete.png") no-repeat left bottom;
+    background: url("../images/cond-delete.png") no-repeat left bottom;
 }
 
 .condition-dots {
@@ -271,7 +271,7 @@ div.condition-delete {
     float: right;
     width: 7px;
     height: 7px;
-    background: transparent url("images/cond-delete.png") no-repeat scroll left top;
+    background: transparent url("../images/cond-delete.png") no-repeat scroll left top;
     cursor: pointer;
     display: none;
     margin: 5px -10px 0 0;
@@ -281,7 +281,7 @@ div.condition-delete {
 }
 
 div.condition-delete:hover {
-    background: transparent url("images/cond-delete.png") no-repeat scroll left bottom;
+    background: transparent url("../images/cond-delete.png") no-repeat scroll left bottom;
 }
 
 div.condition-border div.condition-simple-control div.condition-delete {
@@ -335,7 +335,7 @@ span.list-alert {
     display: inline-block;
     width: 26px;
     height: 17px;
-    background: transparent url("images/cond-alert.png") no-repeat scroll left top;
+    background: transparent url("../images/cond-alert.png") no-repeat scroll left top;
     margin: auto 0 auto 0;
     vertical-align: middle;
     padding: 0;

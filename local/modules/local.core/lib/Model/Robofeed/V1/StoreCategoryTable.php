@@ -59,4 +59,15 @@ class StoreCategoryTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\Data
             ]),
         ];
     }
+
+    public static function OnAfterAdd(\Bitrix\Main\ORM\Event $event)
+    {
+        # Вызывается строго в конце
+        self::_initClearComponentCache($event, []);
+    }
+
+    public static function clearComponentsCache($arFields)
+    {
+        \Local\Core\Inner\Cache::deleteCache(['Model', 'Robofeed', 'V1', 'StoreCategoryTable', 'CategoryConditionList'], ['storeId='.self::$intStoreId]);
+    }
 }

@@ -1,4 +1,4 @@
-class LocalCoreTradingPlatform {
+class PersonalTradingplatformFormComponent {
 
     /* **************** */
     /* AJAX AND REFRESH */

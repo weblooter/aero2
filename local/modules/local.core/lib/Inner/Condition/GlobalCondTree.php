@@ -49,6 +49,20 @@ class GlobalCondTree
 
     protected $arConditions = null;						// conditions array
 
+
+
+    protected $intStoreId = 0;
+
+    public function setStoreId($intStoreId)
+    {
+        $this->intStoreId = $intStoreId;
+    }
+
+    protected function getStoreId()
+    {
+        return $this->intStoreId;
+    }
+
     public function __construct()
     {
         \CJSCore::Init(array("core"));
@@ -135,7 +149,7 @@ class GlobalCondTree
         {
             foreach (GetModuleEvents($this->arEvents['CONTROLS']['MODULE_ID'], $this->arEvents['CONTROLS']['EVENT_ID'], true) as $arEvent)
             {
-                $result[] = ExecuteModuleEventEx($arEvent);
+                $result[] = \ExecuteModuleEventEx($arEvent, [$this->getStoreId()]);
             }
         }
 
@@ -665,8 +679,6 @@ class GlobalCondTree
     public function Show($arConditions)
     {
         $this->arMsg = array();
-
-        dump($this->boolError);
 
         if (!$this->boolError)
         {

@@ -27,7 +27,7 @@ class Base
         $obCache = \Bitrix\Main\Application::getInstance()
             ->getCache();
         if (
-        $obCache->startDataCache(60 * 60 * 24 * 7, 'user_id='.$intUserId, \Local\Core\Inner\Cache::getCachePath(['balance'], ['user_id='.$intUserId]))
+        $obCache->startDataCache(60 * 60 * 24 * 7, 'user_id='.$intUserId, \Local\Core\Inner\Cache::getCachePath(['Model', 'Data', 'BalanceLogTable', 'UserBalance' ], ['userId='.$intUserId]))
         ) {
 
             $ar = \Local\Core\Model\Data\BalanceLogTable::getList([
