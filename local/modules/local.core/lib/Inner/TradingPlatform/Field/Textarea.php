@@ -29,7 +29,7 @@ class Textarea extends AbstractField
                     $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-warning">+</a></div>';
                 }
                 if ($i > 0) {
-                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-danger" onclick="LocalCoreTradingPlatform.removeMultipleRow(this)">-</a></div>';
+                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-danger" onclick="PersonalTradingplatformFormComponent.removeMultipleRow(this)">-</a></div>';
                 }
                 $strInput .= '</div>';
 

@@ -29,7 +29,7 @@ class InputText extends AbstractField
                     $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-warning">+</a></div>';
                 }
                 if ($i > 0) {
-                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-danger" onclick="LocalCoreTradingPlatform.removeMultipleRow(this)">-</a></div>';
+                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-danger" onclick="PersonalTradingplatformFormComponent.removeMultipleRow(this)">-</a></div>';
                 }
                 $strInput .= '</div>';
 
@@ -46,7 +46,7 @@ class InputText extends AbstractField
 
     private function makeInput($value)
     {
-        $strInput = '<input type="text" class="form-control '.( $this->getIsMultiple() ? '' : ' mb-3' ).'" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
+        $strInput = '<input type="text" class="form-control form-control-sm'.( $this->getIsMultiple() ? '' : ' mb-3' ).'" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
 
         $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
         $strInput .= (!empty($this->getPlaceholder())) ? ' placeholder="'.htmlspecialchars($this->getPlaceholder()).'"' : '';

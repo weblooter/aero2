@@ -93,6 +93,14 @@
                     </div>
                 </div>
             </div>
+            <?
+            (new \Local\Core\Inner\TradingPlatform\Field\Condition())
+                ->setTitle('Фильт товаров')
+                ->setStoreId($arParams['STORE_ID'])
+                ->setName('TP_DATA[PRODUCT_FILTER]')
+                ->setValue($arResult['TP_DATA']['PRODUCT_FILTER'])
+                ->printRow();
+            ?>
 
             <?
             $obHandler = $arResult['OB_HANDLER'];
@@ -108,6 +116,15 @@
                 <?=$arResult['ERROR_TEXT'];?>
             </div>
         <? endif; ?>
+
+        <script type="text/javascript">
+            <?
+            $arOptions = (new \Local\Core\Inner\TradingPlatform\Field\Resource())
+                    ->setStoreId($arParams['STORE_ID'])
+                    ->getSourceOptionsToJs();
+            ?>
+            PersonalTradingplatformFormComponent.setBuilderOptions(JSON.parse('<?=$arOptions?>'));
+        </script>
 
     <? endif; ?>
 

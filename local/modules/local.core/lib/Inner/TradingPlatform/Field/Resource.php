@@ -7,10 +7,14 @@ use Bitrix\Seo\LeadAds\Field;
 
 class Resource extends AbstractField
 {
+    use Traits\StoreId;
+
     const TYPE_SOURCE = 'SOURCE';
     const TYPE_SIMPLE = 'SIMPLE';
+    const TYPE_BUILDER = 'BUILDER';
     const TYPE_SELECT = 'SELECT';
     const TYPE_LOGIC = 'LOGIC';
+    const TYPE_SMART_LOGIC = 'SMART_LOGIC';
     const TYPE_IGNORE = 'IGNORE';
 
     /**
@@ -22,9 +26,10 @@ class Resource extends AbstractField
     {
         return [
             self::TYPE_SOURCE => 'Источник данных',
-            self::TYPE_SIMPLE => 'Свое значение',
+            self::TYPE_SIMPLE => 'Простое значение',
+            self::TYPE_BUILDER => 'Сложное значение',
             self::TYPE_SELECT => 'Выбрать из списка',
-            self::TYPE_LOGIC => 'Условия',
+            self::TYPE_LOGIC => 'Простое условие',
             self::TYPE_IGNORE => 'Игнорировать поле',
         ];
     }
@@ -59,32 +64,6 @@ class Resource extends AbstractField
         return $this->arAllowTypeList;
     }
 
-    /** @var integer $intStoreId ID магазина */
-    protected $intStoreId;
-
-    /**
-     * Задать ID магазина
-     *
-     * @param $intStoreId
-     *
-     * @return $this
-     */
-    public function setStoreId($intStoreId)
-    {
-        $this->intStoreId = $intStoreId;
-        return $this;
-    }
-
-    /**
-     * Получить ID магазина
-     *
-     * @return int
-     */
-    protected function getStoreId()
-    {
-        return $this->intStoreId;
-    }
-
 
     /** @inheritDoc */
     protected function execute()
@@ -99,17 +78,19 @@ class Resource extends AbstractField
                 case self::TYPE_SIMPLE:
                     $this->initSimpleBranch();
                     break;
+                case self::TYPE_BUILDER:
+                    $this->initBuilderBranch();
+                    break;
                 case self::TYPE_SELECT:
                     $this->initSelectBranch();
                     break;
                 case self::TYPE_LOGIC:
+                    $this->initLogicBranch();
                     break;
                 case self::TYPE_IGNORE:
                     break;
             }
         }
-        $this->addToRender((new Infoblock())->setValue(print_r($this->getValue(), true))
-            ->getRender());
     }
 
     /**
@@ -131,6 +112,7 @@ class Resource extends AbstractField
                     }
                     break;
                 case self::TYPE_SOURCE:
+                case self::TYPE_BUILDER:
                     if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
                         $arOptions[$v] = $this->getTypesTitles()[$v];
                     }
@@ -151,7 +133,7 @@ class Resource extends AbstractField
             ->setValue($this->getValue()['TYPE'] ?? null)
             ->setEvent([
                 'onchange' => [
-                    'LocalCoreTradingPlatform.refreshRow(\''.$this->getRowHash().'\')'
+                    'PersonalTradingplatformFormComponent.refreshRow(\''.$this->getRowHash().'\')'
                 ]
             ]);
 
@@ -263,7 +245,7 @@ class Resource extends AbstractField
     private function initSourceBranch()
     {
         if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
-            $arOptions = array_merge($this->getProductFieldsForSource(), $this->getParamsForSource());
+            $arOptions = $this->getSourceOptions();
 
             $obSelectField = (new Select())->setName($this->getName().'['.self::TYPE_SOURCE.'_VALUE]')
                 ->setValue($this->getValue()[self::TYPE_SOURCE.'_VALUE'])
@@ -293,8 +275,8 @@ class Resource extends AbstractField
             ->getSchemaMap();
 
         $arBaseOptions = [
-            'BASE_FIELD#PRODUCT_ID' => 'Идентификатор товара, уникален',
-            'BASE_FIELD#PRODUCT_GROUP_ID' => 'Идентификатор группы товара, которые повторяются в рамках робофида',
+            'BASE_FIELD#PRODUCT_ID' => 'Идентификатор товара',
+            'BASE_FIELD#PRODUCT_GROUP_ID' => 'Идентификатор группы товара, которые повторяются',
         ];
         $arPriceOptions = [];
         $arSizeAndDimensionsOptions = [];
@@ -516,9 +498,197 @@ class Resource extends AbstractField
 
         $arParamsOption = [];
         while ($ar = $rsProductProps->fetch()) {
-            $arParamsOption['PARAM#'.$ar['CODE']] = $ar['NAME'].' ['.$ar['CODE'].']';
+            $arParamsOption['PARAM_FIELD#'.$ar['CODE']] = $ar['NAME'].' ['.$ar['CODE'].']';
         }
 
         return ['Параметры товаров' => $arParamsOption];
+    }
+
+    protected static $_arBuilderOptionsRegister;
+
+    public function getSourceOptions()
+    {
+        if( is_null(self::$_arBuilderOptionsRegister) )
+        {
+            self::$_arBuilderOptionsRegister = array_merge($this->getProductFieldsForSource(), $this->getParamsForSource());
+        }
+        return self::$_arBuilderOptionsRegister;
+    }
+
+    public function getSourceOptionsToJs()
+    {
+        $ar = $this->getSourceOptions();
+        $arr = [];
+        foreach ($ar as $k => $v)
+        {
+            foreach ($v as &$v1)
+            {
+                $v1 = addcslashes($v1, '"');
+            }
+            $arr = array_merge($arr, $v);
+        }
+
+        return \Bitrix\Main\Web\Json::encode($arr);
+    }
+
+
+    /* ************** */
+    /* BUILDER BRANCH */
+    /* ************** */
+
+    private function initBuilderBranch()
+    {
+        if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
+
+            $obBuilderField = ( new Subfield\ResourceBuilder() )
+                ->setName($this->getName().'['.self::TYPE_BUILDER.'_VALUE]')
+                ->setValue($this->getValue()[self::TYPE_BUILDER.'_VALUE'])
+                ->setRowHash($this->getRowHash())
+                ->setOptions($this->getSourceOptions());
+
+            $this->addToRender( $obBuilderField->getRender() );
+
+        }
+    }
+
+
+    /* ************ */
+    /* LOGIC BRANCH */
+    /* ************ */
+
+    private function initLogicBranch()
+    {
+
+        if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
+
+            $this->addToRender('<div class="alert alert-info" role="alert">');
+
+            $this->addToRender( $this->getLogicIfRow(0) );
+
+            $this->addToRender('<h6>Иначе:</h6>');
+            $this->addToRender( $this->getLogicResourceField(
+                $this->getName().'['.self::TYPE_LOGIC.'_VALUE][ELSE][VALUE]',
+                $this->getValue()[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE']
+            )->getRender() );
+
+            $this->addToRender('</div>');
+        }
+
+    }
+
+    private function getLogicIfRow($key)
+    {
+        $html = '<h6>Если:</h6>';
+
+        $html .= ( new Subfield\ResourceLogic() )
+            ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][V_1]')
+            ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['V_1'])
+            ->setOptions($this->getSourceOptions())
+            ->setDefaultOption('-- Выберите поле --')
+            ->getRender().' ';
+
+        $html .= ( new Subfield\ResourceLogic() )
+            ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][OP]')
+            ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['OP'] ?? '==')
+            ->setOptions([
+                '==' => 'равно',
+                '!=' => 'не равно',
+                '>"' => 'больше',
+                '>=' => 'больше или равно',
+                '<' => 'меньше',
+                '<=' => 'меньше или равно',
+                '<>' => 'больше или меньше',
+            ])->getRender().' ';
+
+        $html .= '<div class="local-core-dropdown-input-line">'.( new InputText())
+                ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][V_2]')
+                ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['V_2'])
+                ->getRender().'</div>';
+
+        $html .= '<h6>То:</h6>';
+
+        $obResourceField = $this->getLogicResourceField(
+            $this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][VALUE]',
+            $this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['VALUE']
+        );
+
+
+        $html .= $obResourceField->getRender();
+
+        return $html;
+    }
+
+    /**
+     * Формирует поле ресурса в ветке логички как результат
+     *
+     * @param $strName
+     * @param $arValue
+     *
+     * @return Resource
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    private function getLogicResourceField($strName, $arValue)
+    {
+        $arAllowList = $this->getAllowTypeList();
+
+        if( !in_array(self::TYPE_IGNORE, $arAllowList) )
+        {
+            $arAllowList[] = self::TYPE_IGNORE;
+        }
+
+        $obResourceField = (new Resource())
+            ->setName($strName)
+            ->setValue($arValue)
+            ->setRowHash($this->getRowHash());
+
+        foreach ($arAllowList as $k => $v)
+        {
+            switch ($v)
+            {
+                case self::TYPE_SIMPLE:
+                    if( $this->getSimpleField() instanceof AbstractField )
+                    {
+                        $obResourceField->setSimpleField($this->getSimpleField());
+                    }
+                    else
+                    {
+                        unset($arAllowList[$k]);
+                    }
+                    break;
+
+                case self::TYPE_SELECT:
+                    if( $this->getSelectField() instanceof AbstractField )
+                    {
+                        $obResourceField->setSelectField($this->getSelectField());
+                    }
+                    else
+                    {
+                        unset($arAllowList[$k]);
+                    }
+                    break;
+
+                case self::TYPE_LOGIC:
+                    unset($arAllowList[$k]);
+                    break;
+
+                case self::TYPE_SOURCE:
+                case self::TYPE_BUILDER:
+                    if( \Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId()) )
+                    {
+                        $obResourceField->setStoreId($this->getStoreId());
+                    }
+                    else
+                    {
+                        unset($arAllowList[$k]);
+                    }
+                    break;
+            }
+        }
+
+        $obResourceField->setAllowTypeList($arAllowList);
+
+        return $obResourceField;
     }
 }

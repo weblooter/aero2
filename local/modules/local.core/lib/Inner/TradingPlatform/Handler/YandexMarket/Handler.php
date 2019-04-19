@@ -91,12 +91,10 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                 ->setValue($this->getHandlerRules()['shop']['offers']['offer']['name'])
                 ->setAllowTypeList([
                     Field\Resource::TYPE_SOURCE,
-                    Field\Resource::TYPE_SIMPLE,
-                    Field\Resource::TYPE_SELECT,
+//                    Field\Resource::TYPE_BUILDER,
+                    Field\Resource::TYPE_LOGIC,
                 ])
-                ->setValue([
-                    'TYPE' => 'SOURCE'
-                ])
+                ->setValue($this->getHandlerRules()['shop']['offers']['offer']['name'] ?? ['TYPE' => 'LOGIC'])
         ];
 
         return $arFields;

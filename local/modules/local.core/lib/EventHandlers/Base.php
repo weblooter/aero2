@@ -13,6 +13,7 @@ class Base
     {
         self::registerMain();
         self::registerIblock();
+        self::registerLocalCore();
     }
 
     /**
@@ -44,5 +45,41 @@ class Base
                 'getLinkToORM'
             ]);
         }
+    }
+
+    /**
+     * Регистриует все обработчики локального ядра
+     */
+    private static function registerLocalCore()
+    {
+        $eventManager = EventManager::getInstance();
+
+        /* *************** */
+        /* Inner\Condition */
+        /* *************** */
+
+        define('LOCAL_CORE_CONDITION_LOGIC_EQ', 0);						// = (equal)
+        define('LOCAL_CORE_CONDITION_LOGIC_NOT_EQ', 1);					// != (not equal)
+        define('LOCAL_CORE_CONDITION_LOGIC_GR', 2);						// > (great)
+        define('LOCAL_CORE_CONDITION_LOGIC_LS', 3);						// < (less)
+        define('LOCAL_CORE_CONDITION_LOGIC_EGR', 4);						// => (great or equal)
+        define('LOCAL_CORE_CONDITION_LOGIC_ELS', 5);						// =< (less or equal)
+        define('LOCAL_CORE_CONDITION_LOGIC_CONT', 6);					// contain
+        define('LOCAL_CORE_CONDITION_LOGIC_NOT_CONT', 7);				// not contain
+
+        define('LOCAL_CORE_CONDITION_MODE_DEFAULT', 0);					// full mode
+        define('LOCAL_CORE_CONDITION_MODE_PARSE', 1);					// parsing mode
+        define('LOCAL_CORE_CONDITION_MODE_GENERATE', 2);					// generate mode
+        define('LOCAL_CORE_CONDITION_MODE_SQL', 3);						// generate getlist mode
+        define('LOCAL_CORE_CONDITION_MODE_SEARCH', 4);					// info mode
+
+        define('LOCAL_CORE_CONDITION_BUILD_CATALOG', 0);					// local.core conditions
+        define('LOCAL_CORE_CONDITION_BUILD_SALE', 1);					// sale conditions
+        define('LOCAL_CORE_CONDITION_BUILD_SALE_ACTIONS', 2);			// sale actions conditions
+
+        $eventManager->addEventHandler('local.core', 'OnCondCatControlBuildList', [\Local\Core\Inner\Condition\CondCtrlGroup::class, 'GetControlDescr']);
+
+        $eventManager->addEventHandler('local.core', 'OnCondCatControlBuildList', [\Local\Core\Inner\Condition\CondCtrlRobofeedV1Fields::class, 'GetControlDescr']);
+
     }
 }

@@ -100,6 +100,21 @@ abstract class AbstractField
     }
 
     /**
+     * Задает хэш строки (ID) для обновления.<br/>
+     * Генерируется автоматически после "setName()", поэтому задавать не нужно.<br/>
+     * Но если есть необходимость, то делать только после вызова "setName()".
+     *
+     * @param $str
+     *
+     * @return $this
+     */
+    public function setRowHash($str)
+    {
+        $this->_fieldRowHash = $str;
+        return $this;
+    }
+
+    /**
      * Возвращает хэш блока
      *
      * @return mixed
@@ -309,9 +324,9 @@ abstract class AbstractField
     public function getRender()
     {
         $this->execute();
-        if( !is_null($this->getEpilog()) && $this->getEpilog() instanceof AbstractField)
-        {
-            $this->addToRender( $this->getEpilog()->getRender() );
+        if (!is_null($this->getEpilog()) && $this->getEpilog() instanceof AbstractField) {
+            $this->addToRender($this->getEpilog()
+                ->getRender());
         }
         $this->makeReadOnlyValue();
         return $this->_renderHtml;
@@ -358,8 +373,7 @@ abstract class AbstractField
         $strTitle = (($this->getIsRequired()) ? '<b>'.$this->getTitle().'</b>' : $this->getTitle()).':';
         $strDesc = (!is_null($this->getDescription())) ? '<br/><small>'.$this->getDescription().'</small>' : '';
 
-        if( $GLOBALS['USER']->IsAdmin() && !empty( $this->getName() ) )
-        {
+        if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {
             $strDesc .= '<br/><small><mark>'.$this->getName().'</mark></small>';
         }
         $strRowHash = $this->getRowHash();

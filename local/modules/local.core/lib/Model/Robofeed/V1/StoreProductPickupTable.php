@@ -46,13 +46,10 @@ class StoreProductPickupTable extends \Local\Core\Inner\BxModified\Main\ORM\Data
                 ->getCache();
             if (
             $obCache->startDataCache(60 * 60 * 24 * 7, '\Local\Core\Inner\Robofeed\SchemeFields\ReferenceField_class='.$strClass, Cache::getCachePath([
-                'Robofeed',
-                'Scheme',
-                'ReferenceField'
-            ], [
-                'class='.(implode('_', array_slice(explode('\\', $strClass), -2))),
-                'column_name='.$strColumnName
-            ]))
+                'Model',
+                'Reference',
+                array_slice(explode('\\', $strClass), -1),
+            ], ['getOrmValueToValidateRobofeed']))
             ) {
                 /** @var \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager $strClass */
 

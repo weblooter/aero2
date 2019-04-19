@@ -23,7 +23,7 @@
                     foreach (Local\Core\Inner\TradingPlatform\Factory::getFactoryList() as $k => $v) {
                         ?>
                         <a href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add',
-                            ['#COMPANY_ID#' => $arResult['ITEM']['COMPANY_ID'], '#STORE_ID#' => $arResult['ITEM']['ID'], '#HANDLER#' => $k])?>" class="dropdown-item "><?=$v?></a>
+                            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => $k])?>" class="dropdown-item "><?=$v?></a>
                         <?
                     }
                     ?>
