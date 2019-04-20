@@ -6,7 +6,7 @@ use \Bitrix\Main\Localization\Loc, \Bitrix\Main\UserTable, \Bitrix\Main, \Bitrix
 
 Loc::loadLanguageFile(__FILE__);
 
-class CondCtrlRobofeedV1Fields extends CondCtrlComplex
+class CondCtrlRobofeedV1ProductFields extends CondCtrlComplex
 {
     const LOCAL_CORE_CONDITION_LOGIC_EQ = LOCAL_CORE_CONDITION_LOGIC_EQ; // = (equal)
     const LOCAL_CORE_CONDITION_LOGIC_NOT_EQ = LOCAL_CORE_CONDITION_LOGIC_NOT_EQ; // != (not equal)
@@ -16,11 +16,6 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
     const LOCAL_CORE_CONDITION_LOGIC_ELS = LOCAL_CORE_CONDITION_LOGIC_ELS;    // =< (less or equal)
     const LOCAL_CORE_CONDITION_LOGIC_CONT = LOCAL_CORE_CONDITION_LOGIC_CONT; // contain
     const LOCAL_CORE_CONDITION_LOGIC_NOT_CONT = LOCAL_CORE_CONDITION_LOGIC_NOT_CONT; // not contain
-
-    protected static $arCurrency = [];
-    protected static $arCountry = [];
-    protected static $arMeasure = [];
-    protected static $arCategories = [];
 
 
     protected static $intStoreId;
@@ -40,6 +35,12 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
         $description['SORT'] = 200;
         return $description;
     }
+
+
+    protected static $arCurrency = [];
+    protected static $arCountry = [];
+    protected static $arMeasure = [];
+    protected static $arCategories = [];
 
     protected static function _fillReferences()
     {
@@ -137,9 +138,9 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
             ) {
                 $rsCategories = \Local\Core\Model\Robofeed\StoreCategoryFactory::factory(1)
                     ->setStoreId(self::$intStoreId)::getList([
-                    'select' => ['CATEGORY_ID', 'CATEGORY_NAME', 'CATEGORY_PARENT_ID'],
-                    'order' => ['CATEGORY_PARENT_ID' => 'ASC', 'CATEGORY_NAME' => 'ASC']
-                ]);
+                        'select' => ['CATEGORY_ID', 'CATEGORY_NAME', 'CATEGORY_PARENT_ID'],
+                        'order' => ['CATEGORY_PARENT_ID' => 'ASC', 'CATEGORY_NAME' => 'ASC']
+                    ]);
 
                 $arTmpCategory = [];
                 while ($ar = $rsCategories->fetch()) {
@@ -186,30 +187,48 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
      */
     public static function GetControlID()
     {
-        return array(
-            'CondProductId',
-            'CondProductGroupId',
-            //            'CondIBElement',
-            //            'CondIBIBlock',
-            //            'CondIBSection',
-            //            'CondIBCode',
-            //            'CondIBXmlID',
-            //            'CondIBName',
-            //            'CondIBDateActiveFrom',
-            //            'CondIBDateActiveTo',
-            //            'CondIBSort',
-            //            'CondIBPreviewText',
-            //            'CondIBDetailText',
-            //            'CondIBDateCreate',
-            //            'CondIBCreatedBy',
-            //            'CondIBTimestampX',
-            //            'CondIBModifiedBy',
-            //            'CondIBTags',
-            //            'CondCatQuantity',
-            //            'CondCatWeight',
-            //            'CondCatVatID',
-            //            'CondCatVatIncluded',
-        );
+        return [
+            'CondProdProductId',
+            'CondProdProductGroupId',
+            'CondProdArticle',
+            'CondProdFullName',
+            'CondProdSimpleName',
+            'CondProdManufacturer',
+            'CondProdModel',
+            'CondProdUrl',
+            'CondProdManufacturerCode',
+            'CondProdPrice',
+            'CondProdOldPrice',
+            'CondProdCurrencyCode',
+            'CondProdQuantity',
+            'CondProdUnitOfMeasure',
+            'CondProdCategoryId',
+            'CondProdImage',
+            'CondProdCountryOfProductionCode',
+            'CondProdDescription',
+            'CondProdManufacturerWarranty',
+            'CondProdIsSex',
+            'CondProdIsSoftware',
+            'CondProdWeight',
+            'CondProdWeightUnitCode',
+            'CondProdWidth',
+            'CondProdWidthUnitCode',
+            'CondProdHeight',
+            'CondProdHeightUnitCode',
+            'CondProdLength',
+            'CondProdLengthUnitCode',
+            'CondProdVolume',
+            'CondProdVolumeUnitCode',
+            'CondProdWarrantyPeriod',
+            'CondProdWarrantyPeriodCode',
+            'CondProdExpiryPeriod',
+            'CondProdExpiryPeriodCode',
+            'CondProdExpiryDate',
+            'CondProdInStock',
+            'CondProdSalesNotes',
+            'CondProdDeliveryAvailable',
+            'CondProdPickupAvailable',
+        ];
     }
 
     public static function GetControlShow($arParams)
@@ -218,7 +237,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
         $arResult = array(
             'controlgroup' => true,
             'group' => false,
-            'label' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_CONTROLGROUP_LABEL'),
+            'label' => 'Основные поля товара',
             'showIn' => static::GetShowIn($arParams['SHOW_IN_GROUPS']),
             'children' => array()
         );
@@ -254,10 +273,10 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
 
 
         $arControlList = array(
-            'CondProductId' => array(
-                'ID' => 'CondProductId',
+            'CondProdProductId' => array(
+                'ID' => 'CondProdProductId',
                 'FIELD' => 'PRODUCT_ID',
-                'FIELD_TYPE' => 'input',
+                'FIELD_TYPE' => 'text',
                 'FIELD_LENGTH' => 255,
                 'LABEL' => 'Идентификатор товара',
                 'PREFIX' => 'Идентификатор товара',
@@ -276,10 +295,10 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                 )
             ),
 
-            'CondProductGroupId' => array(
-                'ID' => 'CondProductGroupId',
+            'CondProdProductGroupId' => array(
+                'ID' => 'CondProdProductGroupId',
                 'FIELD' => 'PRODUCT_GROUP_ID',
-                'FIELD_TYPE' => 'input',
+                'FIELD_TYPE' => 'text',
                 'FIELD_LENGTH' => 255,
                 'LABEL' => 'Идентификатор группы товара, которые повторяются',
                 'PREFIX' => 'Идентификатор группы товара, которые повторяются',
@@ -296,292 +315,25 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                 'JS_VALUE' => array(
                     'type' => 'input'
                 )
-            ),
-
-            /*
-            'CondIBElement' => array(
-                'ID' => 'CondIBElement',
-                'FIELD' => 'ID',
-                'FIELD_TYPE' => 'int',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_ELEMENT_ID_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_ELEMENT_ID_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ)),
-                'JS_VALUE' => array(
-                    'type' => 'multiDialog',
-                    'popup_url' => 'cat_product_search_dialog.php',
-                    'popup_params' => array(
-                        'lang' => LANGUAGE_ID,
-                        'caller' => 'discount_rules',
-                        'allow_select_parent' => 'Y'
-                    ),
-                    'param_id' => 'n',
-                    'show_value' => 'Y'
-                ),
-                'PHP_VALUE' => array(
-                    'VALIDATE' => 'element'
-                )
-            ),
-            'CondIBIBlock' => array(
-                'ID' => 'CondIBIBlock',
-                'FIELD' => 'IBLOCK_ID',
-                'FIELD_TYPE' => 'int',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_IBLOCK_ID_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_IBLOCK_ID_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ)),
-                'JS_VALUE' => array(
-                    'type' => 'popup',
-                    'popup_url' => 'cat_iblock_search.php',
-                    'popup_params' => array(
-                        'lang' => LANGUAGE_ID,
-                        'discount' => 'Y'
-                    ),
-                    'param_id' => 'n',
-                    'show_value' => 'Y'
-                ),
-                'PHP_VALUE' => array(
-                    'VALIDATE' => 'iblock'
-                )
-            ),
-            'CondIBSection' => array(
-                'ID' => 'CondIBSection',
-                'PARENT' => false,
-                'FIELD' => 'SECTION_ID',
-                'FIELD_TYPE' => 'int',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_SECTION_ID_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_SECTION_ID_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ)),
-                'JS_VALUE' => array(
-                    'type' => 'popup',
-                    'popup_url' => 'iblock_section_search.php',
-                    'popup_params' => array(
-                        'lang' => LANGUAGE_ID,
-                        'discount' => 'Y',
-                        'simplename' => 'Y'
-                    ),
-                    'param_id' => 'n',
-                    'show_value' => 'Y'
-                ),
-                'PHP_VALUE' => array(
-                    'VALIDATE' => 'section'
-                )
-            ),
-            'CondIBCode' => array(
-                'ID' => 'CondIBCode',
-                'FIELD' => 'CODE',
-                'FIELD_TYPE' => 'string',
-                'FIELD_LENGTH' => 255,
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_CODE_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_CODE_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_CONT, LOCAL_CORE_CONDITION_LOGIC_NOT_CONT)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBXmlID' => array(
-                'ID' => 'CondIBXmlID',
-                'FIELD' => 'XML_ID',
-                'FIELD_TYPE' => 'string',
-                'FIELD_LENGTH' => 255,
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_XML_ID_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_XML_ID_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_CONT, LOCAL_CORE_CONDITION_LOGIC_NOT_CONT)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBName' => array(
-                'ID' => 'CondIBName',
-                'FIELD' => 'NAME',
-                'FIELD_TYPE' => 'string',
-                'FIELD_LENGTH' => 255,
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_NAME_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_NAME_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_CONT, LOCAL_CORE_CONDITION_LOGIC_NOT_CONT)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBDateActiveFrom' => array(
-                'ID' => 'CondIBDateActiveFrom',
-                'FIELD' => 'DATE_ACTIVE_FROM',
-                'FIELD_TYPE' => 'datetime',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DATE_ACTIVE_FROM_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DATE_ACTIVE_FROM_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_GR, LOCAL_CORE_CONDITION_LOGIC_LS, LOCAL_CORE_CONDITION_LOGIC_EGR, LOCAL_CORE_CONDITION_LOGIC_ELS)),
-                'JS_VALUE' => array(
-                    'type' => 'datetime',
-                    'format' => 'datetime'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBDateActiveTo' => array(
-                'ID' => 'CondIBDateActiveTo',
-                'FIELD' => 'DATE_ACTIVE_TO',
-                'FIELD_TYPE' => 'datetime',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DATE_ACTIVE_TO_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DATE_ACTIVE_TO_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_GR, LOCAL_CORE_CONDITION_LOGIC_LS, LOCAL_CORE_CONDITION_LOGIC_EGR, LOCAL_CORE_CONDITION_LOGIC_ELS)),
-                'JS_VALUE' => array(
-                    'type' => 'datetime',
-                    'format' => 'datetime'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBSort' => array(
-                'ID' => 'CondIBSort',
-                'FIELD' => 'SORT',
-                'FIELD_TYPE' => 'int',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_SORT_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_SORT_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_GR, LOCAL_CORE_CONDITION_LOGIC_LS, LOCAL_CORE_CONDITION_LOGIC_EGR, LOCAL_CORE_CONDITION_LOGIC_ELS)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBPreviewText' => array(
-                'ID' => 'CondIBPreviewText',
-                'FIELD' => 'PREVIEW_TEXT',
-                'FIELD_TYPE' => 'text',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_PREVIEW_TEXT_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_PREVIEW_TEXT_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_CONT, LOCAL_CORE_CONDITION_LOGIC_NOT_CONT)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBDetailText' => array(
-                'ID' => 'CondIBDetailText',
-                'FIELD' => 'DETAIL_TEXT',
-                'FIELD_TYPE' => 'text',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DETAIL_TEXT_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DETAIL_TEXT_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_CONT, LOCAL_CORE_CONDITION_LOGIC_NOT_CONT)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBDateCreate' => array(
-                'ID' => 'CondIBDateCreate',
-                'FIELD' => 'DATE_CREATE',
-                'FIELD_TYPE' => 'datetime',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DATE_CREATE_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_DATE_CREATE_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_GR, LOCAL_CORE_CONDITION_LOGIC_LS, LOCAL_CORE_CONDITION_LOGIC_EGR, LOCAL_CORE_CONDITION_LOGIC_ELS)),
-                'JS_VALUE' => array(
-                    'type' => 'datetime',
-                    'format' => 'datetime'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBCreatedBy' => array(
-                'ID' => 'CondIBCreatedBy',
-                'FIELD' => 'CREATED_BY',
-                'FIELD_TYPE' => 'int',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_CREATED_BY_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_CREATED_BY_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => array(
-                    'VALIDATE' => 'user'
-                )
-            ),
-            'CondIBTimestampX' => array(
-                'ID' => 'CondIBTimestampX',
-                'FIELD' => 'TIMESTAMP_X',
-                'FIELD_TYPE' => 'datetime',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_TIMESTAMP_X_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_TIMESTAMP_X_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_GR, LOCAL_CORE_CONDITION_LOGIC_LS, LOCAL_CORE_CONDITION_LOGIC_EGR, LOCAL_CORE_CONDITION_LOGIC_ELS)),
-                'JS_VALUE' => array(
-                    'type' => 'datetime',
-                    'format' => 'datetime'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondIBModifiedBy' => array(
-                'ID' => 'CondIBModifiedBy',
-                'FIELD' => 'MODIFIED_BY',
-                'FIELD_TYPE' => 'int',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_MODIFIED_BY_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_MODIFIED_BY_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => array(
-                    'VALIDATE' => 'user'
-                )
-            ),
-            'CondIBTags' => array(
-                'ID' => 'CondIBTags',
-                'FIELD' => 'TAGS',
-                'FIELD_TYPE' => 'string',
-                'FIELD_LENGTH' => 255,
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_TAGS_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_IBLOCK_TAGS_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_CONT, LOCAL_CORE_CONDITION_LOGIC_NOT_CONT)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            'CondCatQuantity' => array(
-                'ID' => 'CondCatQuantity',
-                'PARENT' => false,
-                'MODULE_ENTITY' => 'local.core',
-                'ENTITY' => 'PRODUCT',
-                'FIELD' => 'CATALOG_QUANTITY',
-                'FIELD_TABLE' => 'QUANTITY',
-                'FIELD_TYPE' => 'double',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_CATALOG_QUANTITY_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_CATALOG_QUANTITY_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_GR, LOCAL_CORE_CONDITION_LOGIC_LS, LOCAL_CORE_CONDITION_LOGIC_EGR, LOCAL_CORE_CONDITION_LOGIC_ELS)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                )
-            ),
-            'CondCatWeight' => array(
-                'ID' => 'CondCatWeight',
-                'PARENT' => false,
-                'MODULE_ENTITY' => 'local.core',
-                'ENTITY' => 'PRODUCT',
-                'FIELD' => 'CATALOG_WEIGHT',
-                'FIELD_TABLE' => 'WEIGHT',
-                'FIELD_TYPE' => 'double',
-                'LABEL' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_CATALOG_WEIGHT_LABEL'),
-                'PREFIX' => Loc::getMessage('BT_MOD_CATALOG_COND_CMP_CATALOG_WEIGHT_PREFIX'),
-                'LOGIC' => static::GetLogic(array(LOCAL_CORE_CONDITION_LOGIC_EQ, LOCAL_CORE_CONDITION_LOGIC_NOT_EQ, LOCAL_CORE_CONDITION_LOGIC_GR, LOCAL_CORE_CONDITION_LOGIC_LS, LOCAL_CORE_CONDITION_LOGIC_EGR, LOCAL_CORE_CONDITION_LOGIC_ELS)),
-                'JS_VALUE' => array(
-                    'type' => 'input'
-                ),
-                'PHP_VALUE' => ''
-            ),
-            */
+            )
         );
 
-        $obRobofeedSchema = \Local\Core\Inner\Robofeed\Schema\Factory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion(self::getStoreId()))
+        $obRobofeedSchema = \Local\Core\Inner\Robofeed\Schema\Factory::factory(1)
             ->getSchemaMap();
 
         foreach ($obRobofeedSchema['robofeed']['offers']['offer']['@value'] as $k => $v) {
+
             if ($v instanceof \Local\Core\Inner\Robofeed\SchemaFields\ScalarField) {
                 preg_match_all('/([a-z]+|[A-Z][a-z]+)/', $k, $strColumnNameInTable);
                 $strColumnNameInTable = implode('_', array_map('strtoupper', $strColumnNameInTable[1]));
-                $strControlKey = 'Cond'.mb_strtoupper(substr($k, 0, 1)).substr($k, 1);
+                $strControlKey = 'CondProd'.mb_strtoupper(substr($k, 0, 1)).substr($k, 1);
 
                 switch ($k) {
                     case 'article':
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Артикул',
                             'PREFIX' => 'Артикул',
@@ -601,7 +353,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Полное название товара (к примеру "Смартфон Apple iPhone 8S 64GB")',
                             'PREFIX' => 'Полное название товара (к примеру "Смартфон Apple iPhone 8S 64GB")',
@@ -621,7 +373,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Простое название товара (к примеру "iPhone 8S")',
                             'PREFIX' => 'Простое название товара (к примеру "iPhone 8S")',
@@ -641,7 +393,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Название компании производителя',
                             'PREFIX' => 'Название компании производителя',
@@ -661,7 +413,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Модель',
                             'PREFIX' => 'Модель',
@@ -681,7 +433,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Ссылка на детальную страницу',
                             'PREFIX' => 'Ссылка на детальную страницу',
@@ -701,7 +453,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Код производителя для данного товара',
                             'PREFIX' => 'Код производителя для данного товара',
@@ -721,7 +473,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'int',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Текущая стоимость товара',
                             'PREFIX' => 'Текущая стоимость товара',
@@ -743,7 +495,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'int',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Старая стоимость товара',
                             'PREFIX' => 'Старая стоимость товара',
@@ -765,7 +517,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Валюта',
                             'PREFIX' => 'Валюта',
@@ -784,7 +536,7 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'int',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Количество товара',
                             'PREFIX' => 'Количество товара',
@@ -806,17 +558,13 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Единица измерения кол-ва товара',
                             'PREFIX' => 'Единица измерения кол-ва товара',
                             'LOGIC' => static::GetLogic(array(
                                 self::LOCAL_CORE_CONDITION_LOGIC_EQ,
                                 self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
-                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
-                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
-                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
-                                self::LOCAL_CORE_CONDITION_LOGIC_ELS
                             )),
                             'JS_VALUE' => array(
                                 'type' => 'select',
@@ -829,17 +577,13 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         $arControlList[$strControlKey] = [
                             'ID' => $strControlKey,
                             'FIELD' => $strColumnNameInTable,
-                            'FIELD_TYPE' => 'input',
+                            'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
                             'LABEL' => 'Категория товара',
                             'PREFIX' => 'Категория товара',
                             'LOGIC' => static::GetLogic(array(
                                 self::LOCAL_CORE_CONDITION_LOGIC_EQ,
                                 self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
-                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
-                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
-                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
-                                self::LOCAL_CORE_CONDITION_LOGIC_ELS
                             )),
                             'JS_VALUE' => array(
                                 'type' => 'select',
@@ -849,107 +593,512 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
                         break;
 
                     case 'image':
-                        $arBaseOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Ссылка на изображение';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Ссылка на изображение',
+                            'PREFIX' => 'Ссылка на изображение',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_CONT,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_CONT
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'countryOfProductionCode':
-                        $arBaseOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Страна производства (код)';
-                        $arBaseOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#NAME'] = 'Страна производства (название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Страна производства',
+                            'PREFIX' => 'Страна производства',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arCountry[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'description':
-                        $arBaseOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Описание товара';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Описание товара',
+                            'PREFIX' => 'Описание товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_CONT,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_CONT
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'manufacturerWarranty':
-                        $arWarrantyAndExpiryOptions['BOOL_FIELD#'.$strColumnNameInTable] = 'Признак наличия официальной гарантии производителя';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Официальная гарантия производителя',
+                            'PREFIX' => 'Официальная гарантия производителя',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => [
+                                    'Y' => 'Есть',
+                                    'N' => 'Нет',
+                                ]
+                            )
+                        ];
                         break;
 
                     case 'isSex':
-                        $arBaseOptions['BOOL_FIELD#'.$strColumnNameInTable] = 'Признак отношения товара к удовлетворению сексуальных потребностей';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Товар имеет отношение к удовлетворению сексуальных потребностей',
+                            'PREFIX' => 'Товар имеет отношение к удовлетворению сексуальных потребностей',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => [
+                                    'Y' => 'Да',
+                                    'N' => 'Нет',
+                                ]
+                            )
+                        ];
                         break;
 
                     case 'isSoftware':
-                        $arBaseOptions['BOOL_FIELD#'.$strColumnNameInTable] = 'Признак отношения товара к программному обеспечению';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Товар является программным обеспечением',
+                            'PREFIX' => 'Товар является программным обеспечением',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => [
+                                    'Y' => 'Да',
+                                    'N' => 'Нет',
+                                ]
+                            )
+                        ];
                         break;
 
                     case 'weight':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Вес товара (без ед. измер.)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'int',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Вес товара (без ед. измер.)',
+                            'PREFIX' => 'Вес товара (без ед. измер.)',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'weightUnitCode':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Единица измерения веса товара (код)';
-                        $arSizeAndDimensionsOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#SHORT_NAME'] = 'Единица измерения веса товара (короткое название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Единица измерения веса товара',
+                            'PREFIX' => 'Единица измерения веса товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arMeasure[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'width':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Ширина товара (без ед. измер.)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'int',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Ширина товара (без ед. измер.)',
+                            'PREFIX' => 'Ширина товара (без ед. измер.)',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'widthUnitCode':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Единица измерения ширины товара (код)';
-                        $arSizeAndDimensionsOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#SHORT_NAME'] = 'Единица измерения ширины товара (короткое название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Единица измерения ширины товара',
+                            'PREFIX' => 'Единица измерения ширины товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arMeasure[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'height':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Высота товара (без ед. измер.)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'int',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Высота товара (без ед. измер.)',
+                            'PREFIX' => 'Высота товара (без ед. измер.)',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'heightUnitCode':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Единица измерения высоты товара (код)';
-                        $arSizeAndDimensionsOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#SHORT_NAME'] = 'Единица измерения высоты товара (короткое название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Единица измерения высоты товара',
+                            'PREFIX' => 'Единица измерения высоты товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arMeasure[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'length':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Длина товара (без ед. измер.)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'int',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Длина товара (без ед. измер.)',
+                            'PREFIX' => 'Длина товара (без ед. измер.)',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'lengthUnitCode':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Единица измерения длины товара (код)';
-                        $arSizeAndDimensionsOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#SHORT_NAME'] = 'Единица измерения длины товара (короткое название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Единица измерения длины товара',
+                            'PREFIX' => 'Единица измерения длины товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arMeasure[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'volume':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Объем товара (без ед. измер.)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'int',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Объем товара (без ед. измер.)',
+                            'PREFIX' => 'Объем товара (без ед. измер.)',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'volumeUnitCode':
-                        $arSizeAndDimensionsOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Единица измерения объема товара (код)';
-                        $arSizeAndDimensionsOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#SHORT_NAME'] = 'Единица измерения объема товара (короткое название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Единица измерения объема товара',
+                            'PREFIX' => 'Единица измерения объема товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arMeasure[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'warrantyPeriod':
-                        $arWarrantyAndExpiryOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Срок официальной гарантии товара (без ед. измер.)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'int',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Срок официальной гарантии товара (без ед. измер.)',
+                            'PREFIX' => 'Срок официальной гарантии товара (без ед. измер.)',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'warrantyPeriodCode':
-                        $arWarrantyAndExpiryOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Единица измерения срока официальной гарантии товара (код)';
-                        $arWarrantyAndExpiryOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#SHORT_NAME'] = 'Единица измерения срока официальной гарантии товара (короткое название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Единица измерения срока официальной гарантии товара',
+                            'PREFIX' => 'Единица измерения срока официальной гарантии товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arMeasure[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'expiryPeriod':
-                        $arWarrantyAndExpiryOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Срок годности / срок службы товара от даты производстава (без ед. измер.)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'int',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Срок годности / срок службы товара от даты производстава (без ед. измер.)',
+                            'PREFIX' => 'Срок годности / срок службы товара от даты производстава (без ед. измер.)',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input',
+                            )
+                        ];
                         break;
 
                     case 'expiryPeriodCode':
-                        $arWarrantyAndExpiryOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Единица измерения срока годности / срока службы товара (код)';
-                        $arWarrantyAndExpiryOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#SHORT_NAME'] = 'Единица измерения срока годности / срока службы товара (короткое название)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Единица измерения срока годности / срока службы товара',
+                            'PREFIX' => 'Единица измерения срока годности / срока службы товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => self::$arMeasure[self::$intStoreId]
+                            )
+                        ];
                         break;
 
                     case 'expiryDate':
-                        $arWarrantyAndExpiryOptions['DATE_FIELD#'.$strColumnNameInTable] = 'Дата истечения срока годности товара (формат YYYY-MM-DD HH:MM:SS)';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'datetime',
+                            'LABEL' => 'Дата истечения срока годности товара',
+                            'PREFIX' => 'Дата истечения срока годности товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_EGR,
+                                self::LOCAL_CORE_CONDITION_LOGIC_LS,
+                                self::LOCAL_CORE_CONDITION_LOGIC_ELS,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'datetime',
+                                'format' => 'datetime'
+                            )
+                        ];
                         break;
 
                     case 'inStock':
-                        $arPriceOptions['BOOL_FIELD#'.$strColumnNameInTable] = 'Признак наличия товара';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Товар есть в наличии',
+                            'PREFIX' => 'Товар есть в наличии',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_EQ
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'select',
+                                'values' => [
+                                    'Y' => 'Да',
+                                    'N' => 'Нет',
+                                ]
+                            )
+                        ];
                         break;
 
                     case 'salesNotes':
-                        $arPriceOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Условия продажи товара';
+                        $arControlList[$strControlKey] = [
+                            'ID' => $strControlKey,
+                            'FIELD' => $strColumnNameInTable,
+                            'FIELD_TYPE' => 'text',
+                            'FIELD_LENGTH' => 255,
+                            'LABEL' => 'Условия продажи товара',
+                            'PREFIX' => 'Условия продажи товара',
+                            'LOGIC' => static::GetLogic(array(
+                                self::LOCAL_CORE_CONDITION_LOGIC_CONT,
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_CONT,
+                            )),
+                            'JS_VALUE' => array(
+                                'type' => 'input'
+                            )
+                        ];
                         break;
                 }
             }
         }
+
+
+        $arControlList['CondProdDeliveryAvailable'] = [
+            'ID' => 'CondProdDeliveryAvailable',
+            'FIELD' => 'DELIVERY_AVAILABLE',
+            'FIELD_TYPE' => 'string',
+            'LABEL' => 'Имеется ли служба доставки',
+            'PREFIX' => 'Имеется ли служба доставки',
+            'LOGIC' => static::GetLogic(array(
+                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+            )),
+            'JS_VALUE' => array(
+                'type' => 'select',
+                'values' => [
+                    'Y' => 'Да',
+                    'N' => 'Нет',
+                ]
+            )
+        ];
+
+        $arControlList['CondProdPickupAvailable'] = [
+            'ID' => 'CondProdPickupAvailable',
+            'FIELD' => 'PICKUP_AVAILABLE',
+            'FIELD_TYPE' => 'string',
+            'LABEL' => 'Имеется ли возможность самовывоза',
+            'PREFIX' => 'Имеется ли возможность самовывоза',
+            'LOGIC' => static::GetLogic(array(
+                self::LOCAL_CORE_CONDITION_LOGIC_EQ,
+            )),
+            'JS_VALUE' => array(
+                'type' => 'select',
+                'values' => [
+                    'Y' => 'Да',
+                    'N' => 'Нет',
+                ]
+            )
+        ];
 
 
         foreach ($arControlList as &$control) {
@@ -957,15 +1106,6 @@ class CondCtrlRobofeedV1Fields extends CondCtrlComplex
             //                $control['PARENT'] = true;
             $control['EXIST_HANDLER'] = 'Y';
             $control['MODULE_ID'] = 'local.core';
-            if (!isset($control['MODULE_ENTITY'])) {
-                $control['MODULE_ENTITY'] = 'iblock';
-            }
-            if (!isset($control['ENTITY'])) {
-                $control['ENTITY'] = 'ELEMENT';
-            }
-            if (!isset($control['FIELD_TABLE'])) {
-                $control['FIELD_TABLE'] = false;
-            }
 
             if (empty($control['MULTIPLE'])) {
                 $control['MULTIPLE'] = 'N';

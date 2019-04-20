@@ -11,28 +11,25 @@ global $USER;
     <? $APPLICATION->ShowHead(); ?>
     <title><? $APPLICATION->ShowTitle(); ?></title>
     <?
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery-1.12.1.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'assets/js/popper.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'assets/js/ionicons.js');
+    $obAsset = \Bitrix\Main\Page\Asset::getInstance();
 
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
+//    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-3.3.7-full.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-4-connect.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/ui.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/simple-line-icons.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/montseratt.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/custom.css');
 
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/qs.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery-1.12.1.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/popper.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/ionicons.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/qs.js');
 
-
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/ui.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/simple-line-icons.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/montseratt.css');
+    // Временная необходимость
+    $obAsset->addJs('https://unpkg.com/ionicons@4.5.5/dist/ionicons.js');
     ?>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <script type="text/javascript">

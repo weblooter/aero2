@@ -10,7 +10,7 @@
  * @var string                        $templateFolder
  */
 ?>
-<div class="col-12">
+<div class="col-xs-12">
 
     <? if ($arResult['ITEMS'] > 0): ?>
         <? foreach ($arResult['ITEMS'] as $arItem): ?>

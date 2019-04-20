@@ -137,7 +137,7 @@ $arLocalRoutes = [
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs('tradingplatform', 'detail', ['COMPANY_ID' => $arParams['COMPANY_ID'], 'STORE_ID' => $arParams['STORE_ID'], 'TP_ID' => $arParams['TP_ID']]);
 
-                    $GLOBALS['APPLICATION']->AddChainItem('Редактирование',
+                    $GLOBALS['APPLICATION']->AddChainItem('Редактирование "'.\Local\Core\Inner\TradingPlatform\Base::getName($arParams['TP_ID']).'"',
                         \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'edit', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#TP_ID#' => $arParams['TP_ID']]));
                 }
         ]

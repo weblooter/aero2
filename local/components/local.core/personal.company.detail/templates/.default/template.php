@@ -11,7 +11,7 @@
  */
 ?>
 
-<div class="col-12 mb-3">
+<div class="col-xs-12 mb-3">
     <?
     $strAlertClass = '';
     $strIcon = '';
@@ -84,7 +84,7 @@
 
 </div>
 
-<div class="col-6 mb-3">
+<div class="col-xs-6 mb-3">
     <b>Магазины компании</b>
     <? if (!empty($arResult['COMPANY']['STORES'])): ?>
         <ul class="list-group mb-3">
@@ -106,7 +106,7 @@
         <ion-icon name="add-circle-outline"></ion-icon>
         Добавить магазин</a>
 </div>
-<div class="col-6 mb-3">
+<div class="col-xs-6 mb-3">
 
     <div class="alert alert-warning" role="alert">
         // TODO нотификации, типа новый инвойс или сайт прошел проверку

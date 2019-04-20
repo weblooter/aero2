@@ -45,7 +45,11 @@
         </script>
     <? else: ?>
 
-        <? if ($arResult['STATUS'] == 'ERROR'): ?>
+        <? if ($arResult['STATUS'] == 'UPDATE_SUCCESS'): ?>
+            <div class="alert alert-success" role="alert">
+                Данные успешно обновлены
+            </div>
+        <?elseif ($arResult['STATUS'] == 'ERROR'): ?>
             <div class="alert alert-danger" role="alert">
                 <?=$arResult['ERROR_TEXT'];?>
             </div>
@@ -85,10 +89,10 @@
             ?>
             <div class="form-group">
                 <div class="row">
-                    <div class="col-4 text-right">
+                    <div class="col-xs-4 text-right">
                         <label><b>Название</b>:</label>
                     </div>
-                    <div class="col-8 text-left">
+                    <div class="col-xs-8 text-left">
                         <input type="text" name="TP_DATA[NAME]" class="form-control" value="<?=$arResult['TP_DATA']['NAME']?>" required />
                     </div>
                 </div>
@@ -98,7 +102,7 @@
                 ->setTitle('Фильт товаров')
                 ->setStoreId($arParams['STORE_ID'])
                 ->setName('TP_DATA[PRODUCT_FILTER]')
-                ->setValue($arResult['TP_DATA']['PRODUCT_FILTER'])
+                ->setValue($arResult['TP_DATA']['PRODUCT_FILTER'] ?? [])
                 ->printRow();
             ?>
 
@@ -108,10 +112,16 @@
                 $obHandler->printFormFields();
             }
             ?>
-            <button type="submit" class="btn btn-warning" name="SAVE">Сохранить</button>
+            <div class="form-group">
+                <button type="submit" class="btn btn-warning" name="SAVE" value="Y"><?=( $arParams['TP_ID'] > 0 ) ? 'Обновить' : 'Сохранить'?></button>
+            </div>
         </form>
 
-        <? if ($arResult['STATUS'] == 'ERROR'): ?>
+        <? if ($arResult['STATUS'] == 'UPDATE_SUCCESS'): ?>
+            <div class="alert alert-success" role="alert">
+                Данные успешно обновлены
+            </div>
+        <?elseif ($arResult['STATUS'] == 'ERROR'): ?>
             <div class="alert alert-danger" role="alert">
                 <?=$arResult['ERROR_TEXT'];?>
             </div>

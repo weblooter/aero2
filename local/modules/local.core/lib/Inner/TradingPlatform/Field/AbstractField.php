@@ -381,11 +381,11 @@ abstract class AbstractField
         return <<<DOCHERE
 <div class="form-group" id="$strRowHash">
     <div class="row">
-        <div class="col-4 text-right">
+        <div class="col-xs-4 text-right">
             <label>$strTitle</label>
             $strDesc
         </div>
-        <div class="col-8 text-left">
+        <div class="col-xs-8 text-left">
             $htmlInputRender
         </div>
     </div>

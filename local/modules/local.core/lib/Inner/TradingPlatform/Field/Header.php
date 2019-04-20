@@ -17,15 +17,17 @@ class Header extends AbstractField
     /** @inheritDoc */
     public function getRow($htmlInputRender)
     {
-        return '<div class="row">
-    <div class="col-12">
-        <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th class="text-center">'.$this->getValue().'</th>
-                </tr>
-            </thead>
-        </table>
+        return '<div class="form-group">
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th class="text-center">'.$this->getValue().'</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </div>';
     }

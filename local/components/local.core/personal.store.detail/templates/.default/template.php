@@ -11,20 +11,22 @@
  */
 ?>
 
-<div class="col-12">
-    <nav>
-        <div class="nav nav-tabs" id="store-tabs" role="tablist">
-            <a class="nav-item nav-link active" data-toggle="tab" href="#nav-store" role="tab">Магазин</a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#nav-tradingplatforms" role="tab">Торговые площадки</a>
-        </div>
-    </nav>
-    <div class="tab-content" id="store-tabs-content">
-        <div class="tab-pane fade show active" id="nav-store" role="tabpanel">
+<div class="col-xs-12">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a data-toggle="tab" href="#nav-store" role="tab">Магазин</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#nav-tradingplatforms" role="tab">Торговые площадки</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="nav-store" role="tabpanel">
 
             <br/>
             <div class="row">
 
-                <div class="col-9">
+                <div class="col-xs-9">
                     <div class="pull-right">
                         <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'edit', ['#COMPANY_ID#' => $arResult['ITEM']['COMPANY_ID'], '#STORE_ID#' => $arResult['ITEM']['ID']])?>" title="Редактировать">
                             <ion-icon name="create" role="img" class="hydrated" aria-label="create"></ion-icon>
@@ -138,7 +140,7 @@
                     <? endif; ?>
 
                 </div>
-                <div class="col-3">
+                <div class="col-xs-3">
                     <div class="card">
                         <div class="card-header">
                             <small>Тариф</small>
@@ -170,7 +172,7 @@
                     </div>
                 </div>
                 <? if (!empty($arResult['LOG'])): ?>
-                    <div class="col-12">
+                    <div class="col-xs-12">
                         <?
                         $arErrorsLog = [];
                         $arChartData = [
@@ -237,7 +239,7 @@
             </div>
 
         </div>
-        <div class="tab-pane fade" id="nav-tradingplatforms" role="tabpanel">
+        <div class="tab-pane" id="nav-tradingplatforms" role="tabpanel">
 
             <br/>
             <?

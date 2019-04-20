@@ -53,6 +53,14 @@ class PersonalTradingplatformFormComponent {
 
                     responseHtml.innerHTML = response.data['ROW_HTML'];
                     RowObj.innerHTML = responseHtml.querySelector('[id="' + idRow + '"]').innerHTML;
+
+                    if( responseHtml.querySelectorAll('script').length > 0 )
+                    {
+                        for(var i = 0; i < responseHtml.querySelectorAll('script').length; i++)
+                        {
+                            eval( responseHtml.querySelectorAll('script')[ i ].innerText );
+                        }
+                    }
                 }
             })
             .catch(function (error) {

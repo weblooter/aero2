@@ -37,18 +37,28 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
     private function _checkRequest()
     {
         $arResult = [];
-        if( check_bitrix_sessid() )
+        if( check_bitrix_sessid() && !empty( \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getPost('SAVE') ) )
         {
             $obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 
             $arUpdateFields = [];
 
             $arUpdateFields['NAME'] = $obRequest->getPost('TP_DATA')['NAME'];
+            $arUpdateFields['PRODUCT_FILTER'] = \Local\Core\Inner\Condition\Base::parseCondition($obRequest->getPost('TP_DATA')['PRODUCT_FILTER'], $this->arParams['STORE_ID']);
             $arUpdateFields['HANDLER_RULES'] = $obRequest->getPost('HANDLER_RULES') ;
 
             if( $this->arParams['TP_ID'] > 0 )
             {
-
+                $obRes = \Local\Core\Model\Data\TradingPlatformTable::update($this->arParams['TP_ID'], $arUpdateFields);
+                if( $obRes->isSuccess() )
+                {
+                    $arResult['STATUS'] = 'UPDATE_SUCCESS';
+                }
+                else
+                {
+                    $arResult['STATUS'] = 'ERROR';
+                    $arResult['ERROR_TEXT'] = implode('<br/>', $obRes->getErrorMessages());
+                }
             }
             else
             {
@@ -82,6 +92,7 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
             if( $this->arParams['TP_ID'] < 1 && !empty( \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('handler') ) )
             {
                 $arResult['OB_HANDLER'] = $obTp->getHandler(\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('handler'));
+                $arResult['OB_HANDLER']->fillTradingPlatformData(['STORE_ID' => $this->arParams['STORE_ID']]);
             }
             elseif( $this->arParams['TP_ID'] >= 1 )
             {

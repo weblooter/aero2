@@ -12,22 +12,22 @@
 
 ?>
 <div class="row">
-    <div class="col-6">
+    <div class="col-xs-6">
         <div>
-            <div class="btn-group" role="group">
-                <button id="btnGroupDrop21" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="dropdown">
+                <button type="button" class="btn btn-warning" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Добавить торговую площадку
                 </button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop21">
+                <ul class="dropdown-menu">
                     <?
                     foreach (Local\Core\Inner\TradingPlatform\Factory::getFactoryList() as $k => $v) {
                         ?>
-                        <a href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add',
-                            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => $k])?>" class="dropdown-item "><?=$v?></a>
+                        <li><a href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add',
+                            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => $k])?>" class="dropdown-item "><?=$v?></a></li>
                         <?
                     }
                     ?>
-                </div>
+                </ul>
             </div>
         </div>
         <br />

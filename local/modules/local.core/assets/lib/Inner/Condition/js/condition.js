@@ -1411,7 +1411,8 @@
                     },
                     events: {
                         change: BX.proxy(this.onChange, this),
-                        keypress: BX.proxy(this.onKeypress, this)
+                        keypress: BX.proxy(this.onKeypress, this),
+                        click: BX.proxy(this.ShowCalendarControl, this)
                     }
                 }
             );
@@ -1528,7 +1529,7 @@
                 field: this.input,
                 form: '',
                 bTime: (this.format === 'datetime'),
-                bHideTime: false
+                bHideTime: false,
             });
         }
     };

@@ -67,4 +67,13 @@ class StoreProductParamTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\
                 ->setStoreId(self::$intStoreId)), \Bitrix\Main\ORM\Query\Join::on('this.PRODUCT_ID', 'ref.ID')))
         ];
     }
+
+    /** @inheritDoc */
+    public static function clearComponentsCache($arFields)
+    {
+        /**
+         * Вызова кэша из хэндлеров нет, т.к. кэш скидывается при импорте.
+         * @see \Local\Core\Inner\Robofeed\ImportData::clearCache()
+         */
+    }
 }

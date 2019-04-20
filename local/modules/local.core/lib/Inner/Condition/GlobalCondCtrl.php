@@ -332,6 +332,7 @@ class GlobalCondCtrl
 
     public static function Check($arOneCondition, $arParams, $arControl, $boolShow)
     {
+
         $boolShow = ($boolShow === true);
         $boolError = false;
         $boolFatalError = false;

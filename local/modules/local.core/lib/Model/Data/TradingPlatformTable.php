@@ -68,6 +68,37 @@ class TradingPlatformTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\Da
                 'title' => 'Обработчик',
                 'required' => true
             ]),
+            new Fields\TextField('PRODUCT_FILTER', [
+                'title' => 'Фильт товаров',
+                'save_data_modification' => function ()
+                    {
+                        return [
+                            function ($v)
+                                {
+                                    if (empty($v) || is_null($v)) {
+                                        $v = [];
+                                    }
+                                    return json_encode($v, JSON_UNESCAPED_UNICODE);
+                                }
+                        ];
+                    },
+                'fetch_data_modification' => function ()
+                    {
+                        return [
+                            function ($v)
+                                {
+                                    if (empty($v) || is_null($v)) {
+                                        $v = [];
+                                    }
+                                    else
+                                    {
+                                        $v = json_decode($v, true);
+                                    }
+                                    return $v;
+                                }
+                        ];
+                    }
+            ]),
             new Fields\TextField('HANDLER_RULES', [
                 'title' => 'Правила обработчика',
                 'required' => true,

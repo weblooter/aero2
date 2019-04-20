@@ -20,6 +20,9 @@ class Base
      * @param array  $arValue        Преобразованное значение плавила ( ::parseCondition() )
      *
      * @return string
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
      */
     public static function getConditionBlock($intStoreId, $strFormId, $strConditionId, $strInputName, $arValue = [])
     {
@@ -27,6 +30,7 @@ class Base
 
         $obCond = new \Local\Core\Inner\Condition\CondTree();
         $obCond->setStoreId($intStoreId);
+        $obCond->setRobofeedVersion( \Local\Core\Inner\Store\Base::getLastSuccessImportVersion($intStoreId) );
         $boolCond = $obCond->Init(LOCAL_CORE_CONDITION_MODE_DEFAULT, LOCAL_CORE_CONDITION_BUILD_CATALOG, [
             "FORM_NAME" => $strFormId, // ID формы в которую будет выводится
             "CONT_ID" => $strConditionId,
@@ -39,6 +43,7 @@ class Base
                 $strResult .= $ex->GetString()."<br>";
             }
         } else {
+
             $strResult .= $obCond->Show($arValue);
         }
 
@@ -54,12 +59,18 @@ class Base
      * Преобразованный имеет вид ['CLASS_ID' => ..., 'DATA' => ...]
      *
      * @param $arCondition
+     * @param $intStoreId
      *
      * @return array|string
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
      */
-    public static function parseCondition($arCondition)
+    public static function parseCondition($arCondition, $intStoreId)
     {
         $obCond = new \Local\Core\Inner\Condition\CondTree();
+        $obCond->setStoreId($intStoreId);
+        $obCond->setRobofeedVersion( \Local\Core\Inner\Store\Base::getLastSuccessImportVersion($intStoreId) );
         $obCond->Init(LOCAL_CORE_CONDITION_MODE_GENERATE, LOCAL_CORE_CONDITION_BUILD_CATALOG);
         return $obCond->Parse($arCondition);
     }
@@ -68,12 +79,18 @@ class Base
      * Формирует PHP правило проверки из преобразованного значения условия
      *
      * @param $arParsedCondition
+     * @param $intStoreId
      *
      * @return mixed|string
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
      */
-    public static function generatePhp($arParsedCondition)
+    public static function generatePhp($arParsedCondition, $intStoreId)
     {
         $obCond = new \Local\Core\Inner\Condition\CondTree();
+        $obCond->setStoreId($intStoreId);
+        $obCond->setRobofeedVersion( \Local\Core\Inner\Store\Base::getLastSuccessImportVersion($intStoreId) );
         $obCond->Init(LOCAL_CORE_CONDITION_MODE_GENERATE, LOCAL_CORE_CONDITION_BUILD_CATALOG);
         return $obCond->Generate($arParsedCondition, ['FIELD' => '#VARIABLE_NAME#']);
     }

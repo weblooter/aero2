@@ -118,6 +118,8 @@ class ImportData
 
                     $arLoggerData['IMPORT_RESULT'] = 'SU';
                     $arStoreImportData['LAST_IMPORT_RESULT'] = 'SU';
+
+                    static::clearCache($intStoreId);
                 }
             } catch (FatalException $e) {
                 $arLoggerData['ERROR_TEXT'] = $e->getMessage();
@@ -332,5 +334,34 @@ class ImportData
                 \Local\Core\Inner\JobQueue\Job::addIfNotExist($worker, $dateTime, 1);
             }
         }
+    }
+
+    /**
+     * Скидывает кэш товаров магазина и все что с ним связано. Вешать эти методы на хэндрелы ORM тупо из-за лишней нагрузки.
+     *
+     * @param $intStoreId
+     */
+    protected static function clearCache($intStoreId)
+    {
+        /**
+         * Удаления кэша списка категорий для Condition по магазину
+         *
+         * @see \Local\Core\Inner\Condition\CondCtrlRobofeedV1ProductFields::_fillReferences()
+         */
+        \Local\Core\Inner\Cache::deleteCache(['Model', 'Robofeed', 'V1', 'StoreCategoryTable'], ['CategoryConditionList', 'storeId='.$intStoreId]);
+
+        /**
+         * Удаления кэша списка параметров для Condition по магазину
+         *
+         * @see \Local\Core\Inner\Condition\CondCtrlRobofeedV1ProductParam::_fillProps();
+         */
+        \Local\Core\Inner\Cache::deleteCache(['Model', 'Robofeed', 'V1', 'StoreProductParamTable'], ['ParamsConditionList', 'storeId='.$intStoreId]);
+
+        /**
+         * Удаления кэша списка полей товара для поля "Источник" (Resource) в настройках торговых площадок по магазину
+         *
+         * @see \Local\Core\Inner\TradingPlatform\Field\Resource::getSourceOptions()
+         */
+        \Local\Core\Inner\Cache::deleteCache(['Inner', 'TradingPlatform', 'Field', 'Resource'], ['SourceOptions', 'storeId='.$intStoreId]);
     }
 }

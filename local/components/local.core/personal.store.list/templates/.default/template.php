@@ -10,7 +10,7 @@
  * @var string                      $templateFolder
  */
 ?>
-<div class="col-12">
+<div class="col-xs-12">
 
     <? if (empty($arResult['ITEMS'])): ?>
         <p>К компании не привязан ни один сайт</p>

@@ -51,7 +51,7 @@ class GlobalCondTree
 
 
 
-    protected $intStoreId = 0;
+    protected $intStoreId;
 
     public function setStoreId($intStoreId)
     {
@@ -63,9 +63,24 @@ class GlobalCondTree
         return $this->intStoreId;
     }
 
+
+    protected $intRobofeedVersion;
+    public function setRobofeedVersion($int)
+    {
+        $this->intRobofeedVersion = $int;
+        return $this;
+    }
+
+    protected function getRobofeedVersion()
+    {
+        return $this->intRobofeedVersion;
+    }
+
+
+
     public function __construct()
     {
-        \CJSCore::Init(array("core"));
+        \CJSCore::Init(array("core", 'date'));
         \Bitrix\Main\Page\Asset::getInstance()->addJs(\CLocalCore::getModuleAssetsPath().'/lib/Inner/Condition/js/condition.js');
         \Bitrix\Main\Page\Asset::getInstance()->addCss(\CLocalCore::getModuleAssetsPath().'/lib/Inner/Condition/css/condition.css');
     }
@@ -145,13 +160,29 @@ class GlobalCondTree
 
         $result = array();
 
-        if (isset($this->arEvents['CONTROLS']))
+        /* ************** */
+        /* CUSTOM TRIGGER */
+        /* ************** */
+
+//        if (isset($this->arEvents['CONTROLS']))
+//        {
+//            foreach (GetModuleEvents($this->arEvents['CONTROLS']['MODULE_ID'], $this->arEvents['CONTROLS']['EVENT_ID'], true) as $arEvent)
+//            {
+//                $result[] = \ExecuteModuleEventEx($arEvent, [$this->getStoreId()]);
+//            }
+//        }
+
+        $result[] = \Local\Core\Inner\Condition\CondCtrlGroup::GetControlDescr();
+
+        if( !is_null($this->getStoreId()) && !is_null($this->getRobofeedVersion()) )
         {
-            foreach (GetModuleEvents($this->arEvents['CONTROLS']['MODULE_ID'], $this->arEvents['CONTROLS']['EVENT_ID'], true) as $arEvent)
-            {
-                $result[] = \ExecuteModuleEventEx($arEvent, [$this->getStoreId()]);
-            }
+            $result[] = \Local\Core\Inner\Condition\CondCtrlRobofeedV1ProductFields::GetControlDescr($this->getStoreId());
+            $result[] = \Local\Core\Inner\Condition\CondCtrlRobofeedV1ProductParam::GetControlDescr($this->getStoreId());
         }
+
+        /* **************** */
+        /* / CUSTOM TRIGGER */
+        /* **************** */
 
 
         if (isset($this->arEvents['INTERFACE_CONTROLS']))
@@ -678,6 +709,9 @@ class GlobalCondTree
 
     public function Show($arConditions)
     {
+
+        $strResult = '';
+
         $this->arMsg = array();
 
         if (!$this->boolError)
@@ -738,9 +772,9 @@ class GlobalCondTree
             {
 
             }
-
-            echo $strResult;
         }
+
+        return $strResult;
     }
 
     public function GetDefaultConditions()
@@ -808,6 +842,7 @@ class GlobalCondTree
                         $value
                     )
                 );
+
                 if (false === $arOneCondition)
                 {
                     $this->boolError = true;

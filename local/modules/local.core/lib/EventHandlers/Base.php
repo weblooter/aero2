@@ -77,9 +77,5 @@ class Base
         define('LOCAL_CORE_CONDITION_BUILD_SALE', 1);					// sale conditions
         define('LOCAL_CORE_CONDITION_BUILD_SALE_ACTIONS', 2);			// sale actions conditions
 
-        $eventManager->addEventHandler('local.core', 'OnCondCatControlBuildList', [\Local\Core\Inner\Condition\CondCtrlGroup::class, 'GetControlDescr']);
-
-        $eventManager->addEventHandler('local.core', 'OnCondCatControlBuildList', [\Local\Core\Inner\Condition\CondCtrlRobofeedV1Fields::class, 'GetControlDescr']);
-
     }
 }

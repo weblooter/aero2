@@ -173,7 +173,7 @@ $obCache->startDataCache(
 
 Так же стоит обратить внимание на стилистику написания аргументов в зависимости от выбраного метода получения кэша.
 
-**getCachePath** используется в основном для получения выборки из ORM или других данных, поэтому его путь **должен** быть прописан до класса, а дальше параметры и/или action.
+**getCachePath** используется в основном для получения выборки из ORM или других данных, поэтому его путь **должен** быть прописан до класса **отвечающий за создание результатирующей выборки данных**, а дальше параметры и/или action.
 
 ```php
 // Пример получения пути в Condition при построении списка разделов
@@ -186,6 +186,12 @@ $obCache->startDataCache(
 \Local\Core\Inner\Cache::getCachePath(
     ['Model','Reference','MeasureTable'],
     ['getOptionsToCondition']
+);
+
+// Пример получения пути в \Local\Core\Inner\TradingPlatform\Field\Resource , а именно формирование конечного списка поля "Источник"
+\Local\Core\Inner\Cache::getCachePath(
+    ['Inner', 'TradingPlatform', 'Field', 'Resource'],
+    ['SourceOptions', 'storeId='.$this->getStoreId()]
 );
 ```
 

@@ -29,7 +29,7 @@ class Resource extends AbstractField
             self::TYPE_SIMPLE => 'Простое значение',
             self::TYPE_BUILDER => 'Сложное значение',
             self::TYPE_SELECT => 'Выбрать из списка',
-            self::TYPE_LOGIC => 'Простое условие',
+            self::TYPE_LOGIC => 'Сложное условие',
             self::TYPE_IGNORE => 'Игнорировать поле',
         ];
     }
@@ -488,6 +488,7 @@ class Resource extends AbstractField
 
     private function getParamsForSource()
     {
+
         $rsProductProps = \Local\Core\Model\Robofeed\StoreProductParamFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getStoreId()))
             ->setStoreId($this->getStoreId());
         $rsProductProps = $rsProductProps::getList([
@@ -510,7 +511,35 @@ class Resource extends AbstractField
     {
         if( is_null(self::$_arBuilderOptionsRegister) )
         {
-            self::$_arBuilderOptionsRegister = array_merge($this->getProductFieldsForSource(), $this->getParamsForSource());
+            $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+
+            if(
+                $obCache->startDataCache(
+                    60*60*24*7,
+                    __METHOD__.__LINE__.'#STORE_ID='.$this->getStoreId(),
+                    \Local\Core\Inner\Cache::getCachePath(
+                        ['Inner', 'TradingPlatform', 'Field', 'Resource'],
+                        ['SourceOptions', 'storeId='.$this->getStoreId()]
+                    )
+                )
+            )
+            {
+                self::$_arBuilderOptionsRegister = array_merge($this->getProductFieldsForSource(), $this->getParamsForSource());
+                if( empty( self::$_arBuilderOptionsRegister ) )
+                {
+                    $obCache->abortDataCache();
+                }
+                else
+                {
+                    $obCache->endDataCache(self::$_arBuilderOptionsRegister);
+                }
+            }
+            else
+            {
+                self::$_arBuilderOptionsRegister = $obCache->getVars();
+            }
+
+
         }
         return self::$_arBuilderOptionsRegister;
     }
@@ -561,51 +590,30 @@ class Resource extends AbstractField
 
         if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
 
-            $this->addToRender('<div class="alert alert-info" role="alert">');
 
             $this->addToRender( $this->getLogicIfRow(0) );
 
-            $this->addToRender('<h6>Иначе:</h6>');
+            $this->addToRender('<h4>Иначе:</h4>');
             $this->addToRender( $this->getLogicResourceField(
                 $this->getName().'['.self::TYPE_LOGIC.'_VALUE][ELSE][VALUE]',
                 $this->getValue()[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE']
             )->getRender() );
 
-            $this->addToRender('</div>');
         }
 
     }
 
     private function getLogicIfRow($key)
     {
-        $html = '<h6>Если:</h6>';
+        $html = '<h4>Если:</h4>';
 
-        $html .= ( new Subfield\ResourceLogic() )
-            ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][V_1]')
-            ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['V_1'])
-            ->setOptions($this->getSourceOptions())
-            ->setDefaultOption('-- Выберите поле --')
+        $html .= ( new Condition() )
+            ->setStoreId($this->getStoreId())
+            ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][RULE]')
+            ->setValue( \Local\Core\Inner\Condition\Base::parseCondition($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['RULE'], $this->getStoreId()) )
             ->getRender().' ';
 
-        $html .= ( new Subfield\ResourceLogic() )
-            ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][OP]')
-            ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['OP'] ?? '==')
-            ->setOptions([
-                '==' => 'равно',
-                '!=' => 'не равно',
-                '>"' => 'больше',
-                '>=' => 'больше или равно',
-                '<' => 'меньше',
-                '<=' => 'меньше или равно',
-                '<>' => 'больше или меньше',
-            ])->getRender().' ';
-
-        $html .= '<div class="local-core-dropdown-input-line">'.( new InputText())
-                ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][V_2]')
-                ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['V_2'])
-                ->getRender().'</div>';
-
-        $html .= '<h6>То:</h6>';
+        $html .= '<h4>То:</h4>';
 
         $obResourceField = $this->getLogicResourceField(
             $this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][VALUE]',
