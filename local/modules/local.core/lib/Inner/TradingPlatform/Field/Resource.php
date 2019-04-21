@@ -8,13 +8,13 @@ use Bitrix\Seo\LeadAds\Field;
 class Resource extends AbstractField
 {
     use Traits\StoreId;
+    use Traits\Size;
 
     const TYPE_SOURCE = 'SOURCE';
     const TYPE_SIMPLE = 'SIMPLE';
     const TYPE_BUILDER = 'BUILDER';
     const TYPE_SELECT = 'SELECT';
     const TYPE_LOGIC = 'LOGIC';
-    const TYPE_SMART_LOGIC = 'SMART_LOGIC';
     const TYPE_IGNORE = 'IGNORE';
 
     /**
@@ -25,7 +25,7 @@ class Resource extends AbstractField
     private function getTypesTitles()
     {
         return [
-            self::TYPE_SOURCE => 'Источник данных',
+            self::TYPE_SOURCE => 'Поле Robofeed XML',
             self::TYPE_SIMPLE => 'Простое значение',
             self::TYPE_BUILDER => 'Сложное значение',
             self::TYPE_SELECT => 'Выбрать из списка',
@@ -117,6 +117,11 @@ class Resource extends AbstractField
                         $arOptions[$v] = $this->getTypesTitles()[$v];
                     }
                     break;
+                case self::TYPE_LOGIC:
+                    if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
+                        $arOptions[$v] = $this->getTypesTitles()[$v];
+                    }
+                    break;
                 default:
                     $arOptions[$v] = $this->getTypesTitles()[$v];
                     break;
@@ -184,7 +189,8 @@ class Resource extends AbstractField
     private function initSimpleBranch()
     {
         if ($this->getSimpleField() instanceof AbstractField) {
-            $obSimpleField = $this->getSimpleField()
+
+            $obSimpleField = clone $this->getSimpleField()
                 ->setName($this->getName().'['.self::TYPE_SIMPLE.'_VALUE]')
                 ->setValue($this->getValue()[self::TYPE_SIMPLE.'_VALUE']);
 
@@ -229,7 +235,7 @@ class Resource extends AbstractField
     private function initSelectBranch()
     {
         if ($this->getSelectField() instanceof Select) {
-            $obSelectField = $this->getSelectField()
+            $obSelectField = clone $this->getSelectField()
                 ->setName($this->getName().'['.self::TYPE_SELECT.'_VALUE]')
                 ->setValue($this->getValue()[self::TYPE_SELECT.'_VALUE']);
 
@@ -250,6 +256,7 @@ class Resource extends AbstractField
             $obSelectField = (new Select())->setName($this->getName().'['.self::TYPE_SOURCE.'_VALUE]')
                 ->setValue($this->getValue()[self::TYPE_SOURCE.'_VALUE'])
                 ->setIsMultiple($this->getIsMultiple())
+                ->setSize($this->getSize())
                 ->setIsRequired($this->getIsRequired())
                 ->setOptions($arOptions)
                 ->setDefaultOption('-- Выберите данные --');
@@ -509,33 +516,21 @@ class Resource extends AbstractField
 
     public function getSourceOptions()
     {
-        if( is_null(self::$_arBuilderOptionsRegister) )
-        {
-            $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+        if (is_null(self::$_arBuilderOptionsRegister)) {
+            $obCache = \Bitrix\Main\Application::getInstance()
+                ->getCache();
 
-            if(
-                $obCache->startDataCache(
-                    60*60*24*7,
-                    __METHOD__.__LINE__.'#STORE_ID='.$this->getStoreId(),
-                    \Local\Core\Inner\Cache::getCachePath(
-                        ['Inner', 'TradingPlatform', 'Field', 'Resource'],
-                        ['SourceOptions', 'storeId='.$this->getStoreId()]
-                    )
-                )
-            )
-            {
+            if (
+            $obCache->startDataCache(60 * 60 * 24 * 7, __METHOD__.__LINE__.'#STORE_ID='.$this->getStoreId(),
+                \Local\Core\Inner\Cache::getCachePath(['Inner', 'TradingPlatform', 'Field', 'Resource'], ['SourceOptions', 'storeId='.$this->getStoreId()]))
+            ) {
                 self::$_arBuilderOptionsRegister = array_merge($this->getProductFieldsForSource(), $this->getParamsForSource());
-                if( empty( self::$_arBuilderOptionsRegister ) )
-                {
+                if (empty(self::$_arBuilderOptionsRegister)) {
                     $obCache->abortDataCache();
-                }
-                else
-                {
+                } else {
                     $obCache->endDataCache(self::$_arBuilderOptionsRegister);
                 }
-            }
-            else
-            {
+            } else {
                 self::$_arBuilderOptionsRegister = $obCache->getVars();
             }
 
@@ -548,10 +543,8 @@ class Resource extends AbstractField
     {
         $ar = $this->getSourceOptions();
         $arr = [];
-        foreach ($ar as $k => $v)
-        {
-            foreach ($v as &$v1)
-            {
+        foreach ($ar as $k => $v) {
+            foreach ($v as &$v1) {
                 $v1 = addcslashes($v1, '"');
             }
             $arr = array_merge($arr, $v);
@@ -569,13 +562,12 @@ class Resource extends AbstractField
     {
         if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
 
-            $obBuilderField = ( new Subfield\ResourceBuilder() )
-                ->setName($this->getName().'['.self::TYPE_BUILDER.'_VALUE]')
+            $obBuilderField = (new Subfield\ResourceBuilder())->setName($this->getName().'['.self::TYPE_BUILDER.'_VALUE]')
                 ->setValue($this->getValue()[self::TYPE_BUILDER.'_VALUE'])
                 ->setRowHash($this->getRowHash())
                 ->setOptions($this->getSourceOptions());
 
-            $this->addToRender( $obBuilderField->getRender() );
+            $this->addToRender($obBuilderField->getRender());
 
         }
     }
@@ -591,39 +583,41 @@ class Resource extends AbstractField
         if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
 
 
-            $this->addToRender( $this->getLogicIfRow(0) );
-
-            $this->addToRender('<h4>Иначе:</h4>');
-            $this->addToRender( $this->getLogicResourceField(
-                $this->getName().'['.self::TYPE_LOGIC.'_VALUE][ELSE][VALUE]',
-                $this->getValue()[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE']
-            )->getRender() );
-
+            $this->addLogicIfRow(0);
+            $this->addLogicElseRow();
         }
 
     }
 
-    private function getLogicIfRow($key)
+    private function addLogicIfRow($key)
     {
-        $html = '<h4>Если:</h4>';
+        $this->addToRender('<h4>Если:</h4>');
 
-        $html .= ( new Condition() )
-            ->setStoreId($this->getStoreId())
+        $this->addToRender(
+            (new Condition())->setStoreId($this->getStoreId())
             ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][RULE]')
-            ->setValue( \Local\Core\Inner\Condition\Base::parseCondition($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['RULE'], $this->getStoreId()) )
-            ->getRender().' ';
+            ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['RULE'])
+            ->getRender());
 
-        $html .= '<h4>То:</h4>';
+        $this->addToRender('<h4>То:</h4>');
 
-        $obResourceField = $this->getLogicResourceField(
-            $this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][VALUE]',
-            $this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['VALUE']
+        $this->addToRender(
+            $this->getLogicResourceField(
+                $this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][VALUE]',
+                $this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['VALUE']
+            )->getRender()
         );
+    }
 
-
-        $html .= $obResourceField->getRender();
-
-        return $html;
+    private function addLogicElseRow()
+    {
+        $this->addToRender('<h4>Иначе:</h4>');
+        $this->addToRender(
+            $this->getLogicResourceField(
+            $this->getName().'['.self::TYPE_LOGIC.'_VALUE][ELSE][VALUE]',
+                $this->getValue()[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE']
+            )->getRender()
+        );
     }
 
     /**
@@ -641,38 +635,32 @@ class Resource extends AbstractField
     {
         $arAllowList = $this->getAllowTypeList();
 
-        if( !in_array(self::TYPE_IGNORE, $arAllowList) )
-        {
+        if (!in_array(self::TYPE_IGNORE, $arAllowList) && !$this->getIsRequired()) {
             $arAllowList[] = self::TYPE_IGNORE;
         }
+        if( $this->getIsRequired() && in_array(self::TYPE_IGNORE, $arAllowList) )
+        {
+            unset($arAllowList[ array_search(self::TYPE_IGNORE, $arAllowList) ]);
+        }
 
-        $obResourceField = (new Resource())
-            ->setName($strName)
+        $obResourceField = (new Resource())->setName($strName)
             ->setValue($arValue)
             ->setRowHash($this->getRowHash());
 
-        foreach ($arAllowList as $k => $v)
-        {
-            switch ($v)
-            {
+        foreach ($arAllowList as $k => $v) {
+            switch ($v) {
                 case self::TYPE_SIMPLE:
-                    if( $this->getSimpleField() instanceof AbstractField )
-                    {
-                        $obResourceField->setSimpleField($this->getSimpleField());
-                    }
-                    else
-                    {
+                    if ($this->getSimpleField() instanceof AbstractField) {
+                        $obResourceField->setSimpleField(clone $this->getSimpleField());
+                    } else {
                         unset($arAllowList[$k]);
                     }
                     break;
 
                 case self::TYPE_SELECT:
-                    if( $this->getSelectField() instanceof AbstractField )
-                    {
-                        $obResourceField->setSelectField($this->getSelectField());
-                    }
-                    else
-                    {
+                    if ($this->getSelectField() instanceof AbstractField) {
+                        $obResourceField->setSelectField(clone $this->getSelectField());
+                    } else {
                         unset($arAllowList[$k]);
                     }
                     break;
@@ -680,15 +668,11 @@ class Resource extends AbstractField
                 case self::TYPE_LOGIC:
                     unset($arAllowList[$k]);
                     break;
-
                 case self::TYPE_SOURCE:
                 case self::TYPE_BUILDER:
-                    if( \Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId()) )
-                    {
+                    if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
                         $obResourceField->setStoreId($this->getStoreId());
-                    }
-                    else
-                    {
+                    } else {
                         unset($arAllowList[$k]);
                     }
                     break;

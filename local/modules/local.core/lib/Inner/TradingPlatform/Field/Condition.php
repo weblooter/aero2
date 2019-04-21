@@ -11,7 +11,7 @@ class Condition extends AbstractField
     {
         if (!empty($this->getValue()) && is_array($this->getValue())) {
             if (empty($this->getValue()['CLASS_ID'])) {
-                $this->setValue(\Local\Core\Inner\Condition\Base::parseCondition($this->getValue()));
+                $this->setValue(\Local\Core\Inner\Condition\Base::parseCondition($this->getValue(), $this->getStoreId()));
             }
         } else {
             $this->setValue([]);

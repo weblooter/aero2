@@ -370,7 +370,7 @@ abstract class AbstractField
      */
     public function getRow($htmlInputRender)
     {
-        $strTitle = (($this->getIsRequired()) ? '<b>'.$this->getTitle().'</b>' : $this->getTitle()).':';
+        $strTitle = $this->getTitle().(($this->getIsRequired()) ? ' *' : '').' :';
         $strDesc = (!is_null($this->getDescription())) ? '<br/><small>'.$this->getDescription().'</small>' : '';
 
         if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {

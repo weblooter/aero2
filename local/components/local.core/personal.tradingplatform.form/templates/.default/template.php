@@ -90,7 +90,7 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-xs-4 text-right">
-                        <label><b>Название</b>:</label>
+                        <label>Название * :</label>
                     </div>
                     <div class="col-xs-8 text-left">
                         <input type="text" name="TP_DATA[NAME]" class="form-control" value="<?=$arResult['TP_DATA']['NAME']?>" required />
@@ -106,12 +106,14 @@
                 ->printRow();
             ?>
 
-            <?
-            $obHandler = $arResult['OB_HANDLER'];
-            if ($obHandler instanceof Local\Core\Inner\TradingPlatform\Handler\AbstractHandler) {
-                $obHandler->printFormFields();
-            }
-            ?>
+            <div data-handler-fields>
+                <?
+                $obHandler = $arResult['OB_HANDLER'];
+                if ($obHandler instanceof Local\Core\Inner\TradingPlatform\Handler\AbstractHandler) {
+                    $obHandler->printFormFields();
+                }
+                ?>
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-warning" name="SAVE" value="Y"><?=( $arParams['TP_ID'] > 0 ) ? 'Обновить' : 'Сохранить'?></button>
             </div>

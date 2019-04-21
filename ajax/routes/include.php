@@ -61,6 +61,11 @@ return [
         'methods' => ['POST'],
         'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':refreshRow'
     ],
+    'tradingplatform_form_refresh_form' => [
+        'path' => '/trading-platform-form/refresh-form/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':refreshForm'
+    ],
 
     'system_auth_authorize' => [
         'path' => '/system-auth-authorize/',

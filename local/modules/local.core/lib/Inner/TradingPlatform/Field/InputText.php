@@ -16,6 +16,7 @@ class InputText extends AbstractField
     /** @inheritDoc */
     protected function execute()
     {
+
         if ($this->getIsMultiple()) {
             if (!is_array($this->getValue()) && !is_null($this->getValue())) {
                 $this->setValue([$this->getValue()]);

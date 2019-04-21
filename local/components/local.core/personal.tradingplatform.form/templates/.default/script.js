@@ -46,7 +46,6 @@ class PersonalTradingplatformFormComponent {
 
         axios.post('/ajax/trading-platform-form/refresh-row/', qs.stringify(formdata))
             .then(function (response) {
-                console.log(response.data);
                 if (response.data['ROW_HTML']) {
                     var RowObj = document.querySelector('[id="' + idRow + '"]'),
                         responseHtml = document.createElement('div');
@@ -54,11 +53,9 @@ class PersonalTradingplatformFormComponent {
                     responseHtml.innerHTML = response.data['ROW_HTML'];
                     RowObj.innerHTML = responseHtml.querySelector('[id="' + idRow + '"]').innerHTML;
 
-                    if( responseHtml.querySelectorAll('script').length > 0 )
-                    {
-                        for(var i = 0; i < responseHtml.querySelectorAll('script').length; i++)
-                        {
-                            eval( responseHtml.querySelectorAll('script')[ i ].innerText );
+                    if (responseHtml.querySelectorAll('script').length > 0) {
+                        for (var i = 0; i < responseHtml.querySelectorAll('script').length; i++) {
+                            eval(responseHtml.querySelectorAll('script')[i].innerText);
                         }
                     }
                 }
@@ -72,11 +69,33 @@ class PersonalTradingplatformFormComponent {
      * Обновить всю форму
      */
     static refreshForm() {
+        var formdata = this.getFormData(),
+            classObj = this;
 
+        axios.post('/ajax/trading-platform-form/refresh-form/', qs.stringify(formdata))
+            .then(function (response) {
+                if (response.data['FORM_HTML']) {
+                    var responseHtml = document.createElement('div');
+
+                    responseHtml.innerHTML = response.data['FORM_HTML'];
+                    console.log(responseHtml);
+                    document.querySelector('form[id="'+classObj.getFormId()+'"] [data-handler-fields]').innerHTML = responseHtml.innerHTML;
+
+                    if (responseHtml.querySelectorAll('script').length > 0) {
+                        for (var i = 0; i < responseHtml.querySelectorAll('script').length; i++) {
+                            eval(responseHtml.querySelectorAll('script')[i].innerText);
+                        }
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     /* ************** */
     /* MULTIPLE INPUT */
+
     /* ************** */
 
     /**
@@ -116,7 +135,7 @@ class PersonalTradingplatformFormComponent {
      * @param inputName
      */
     static addBuilderValueToInput(strVal, inputName) {
-        document.querySelector('[name="' + inputName + '"]').value = (document.querySelector('[name="' + inputName + '"]').value + strVal);
+        document.querySelector('[name="' + inputName + '"]').value = (document.querySelector('[name="' + inputName + '"]').value + strVal + ' ');
         document.querySelector('[name="' + inputName + '"]').dispatchEvent(new Event('keyup'));
     }
 
@@ -148,9 +167,8 @@ class PersonalTradingplatformFormComponent {
     /* LOGIC */
     /* ***** */
 
-    static changeLogicFieldValue(val, text, strDropdownHash)
-    {
-        document.querySelector('[data-dropdown-hash-id="'+strDropdownHash+'"] [type="hidden"]').value = val;
-        document.querySelector('[data-dropdown-hash-id="'+strDropdownHash+'"] .local-core-dropdown-title').innerText = text;
+    static changeLogicFieldValue(val, text, strDropdownHash) {
+        document.querySelector('[data-dropdown-hash-id="' + strDropdownHash + '"] [type="hidden"]').value = val;
+        document.querySelector('[data-dropdown-hash-id="' + strDropdownHash + '"] .local-core-dropdown-title').innerText = text;
     }
 }
