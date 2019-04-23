@@ -134,10 +134,7 @@ class StoreProductDeliveryTable extends \Local\Core\Inner\BxModified\Main\ORM\Da
                 'required' => true,
                 'title' => 'Признак региона, на которое распространяется правило',
                 'values' => self::getEnumFieldValues('DELIVERY_REGION')
-            ]),
-
-            (new Fields\Relations\Reference('PRODUCT', get_class(StoreProductFactory::factory(1)
-                ->setStoreId(self::$intStoreId)), \Bitrix\Main\ORM\Query\Join::on('this.PRODUCT_ID', 'ref.ID')))
+            ])
         ];
     }
 }

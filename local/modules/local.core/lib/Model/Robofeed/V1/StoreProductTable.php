@@ -297,14 +297,7 @@ class StoreProductTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataM
             new Fields\StringField('SALES_NOTES', [
                 'title' => 'Условия продажи товара',
                 'required' => false,
-            ]),
-
-            new Fields\Relations\OneToMany('PARAMS', get_class(StoreProductParamFactory::factory(1)
-                ->setStoreId(self::$intStoreId)), 'PRODUCT'),
-            new Fields\Relations\OneToMany('DELIVERIES', get_class(StoreProductDeliveryFactory::factory(1)
-                ->setStoreId(self::$intStoreId)), 'PRODUCT'),
-            new Fields\Relations\OneToMany('PICKUPS', get_class(StoreProductPickupFactory::factory(1)
-                ->setStoreId(self::$intStoreId)), 'PRODUCT'),
+            ])
         ];
     }
 }

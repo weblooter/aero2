@@ -13,8 +13,7 @@ global $USER;
     <?
     $obAsset = \Bitrix\Main\Page\Asset::getInstance();
 
-//    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
-    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-3.3.7-full.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-4-connect.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/ui.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/simple-line-icons.css');

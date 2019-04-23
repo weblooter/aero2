@@ -23,7 +23,7 @@
                     foreach (Local\Core\Inner\TradingPlatform\Factory::getFactoryList() as $k => $v) {
                         ?>
                         <li><a href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add',
-                            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => $k])?>" class="dropdown-item "><?=$v?></a></li>
+                            ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => $k])?>"><?=$v?></a></li>
                         <?
                     }
                     ?>
@@ -35,31 +35,70 @@
         <ul class="list-group">
             <? foreach ($arResult['ITEMS'] as $arItem): ?>
                 <?
+                $obTp = new \Local\Core\Inner\TradingPlatform\TradingPlatform();
+                $obTp->load($arItem['ID']);
+
                 $strClass = '';
                 $strIcon = '';
-                if ($arItem['ACTIVE'] == 'Y') {
-                    $strClass = 'list-group-item-success';
-                    $strIcon = 'battery-charging';
-                } else {
-                    if ($arItem['PAYED_TO'] instanceof \Bitrix\Main\Type\DateTime) {
-                        if ($arItem['PAYED_TO']->getTimestamp() <= time()) {
+                $strStatus = '';
+                $strError = '';
+
+                try
+                {
+                    $obHandler = $obTp->getHandler();
+                    $obCheckRes = $obHandler->isRulesTradingPlatformCorrectFilled();
+
+                    if( !$obCheckRes->isSuccess() )
+                    {
+                        $strClass = 'list-group-item-danger';
+                        $strIcon = 'battery-dead';
+                        $strStatus = 'Ошибка валидации';
+                        $strError = '<br/>'.implode('<br/>', $obCheckRes->getErrorMessages());
+                    }
+                    elseif ($arItem['ACTIVE'] == 'Y') {
+                        $strClass = 'list-group-item-success';
+                        $strIcon = 'battery-charging';
+                        $strStatus = 'Активен. Оплачен до '.$arItem['PAYED_TO']->format('Y.m.d');
+                    }
+                    elseif( $arItem['PAYED_TO'] instanceof \Bitrix\Main\Type\DateTime ) {
+                        if ( $arItem['PAYED_TO']->getTimestamp() <= time() ) {
                             $strClass = 'list-group-item-danger';
                             $strIcon = 'battery-dead';
+                            $strStatus = 'Необходимо пополнить баланс';
+                        } else {
+                            $strClass = 'list-group-item-warning';
+                            $strIcon = 'battery-full';
+                            $strStatus = 'Деактивирован';
                         }
-                    } else {
+                    }
+                    else
+                    {
                         $strClass = 'list-group-item-warning';
                         $strIcon = 'battery-full';
+                        $strStatus = 'Ожидает активации';
                     }
                 }
+                catch (\Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException $e)
+                {
+                    $strClass = 'list-group-item-danger';
+                    $strIcon = 'battery-dead';
+                    $strStatus = 'Не удалось получить обработчик';
+                }
+                catch (\Exception $e)
+                {
+                    $strClass = 'list-group-item-danger';
+                    $strIcon = 'battery-dead';
+                    $strStatus = 'Ошибка';
+                    $strError = ( !empty( $e->getMessage() ) ) ? '<br/>'.$e->getMessage() : '';
+                }
 
-                $strDetailLink = \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'detail',
+                $strEditLink = \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'edit',
                     ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#TP_ID#' => $arItem['ID']])
                 ?>
                 <li class="list-group-item <?=$strClass?>">
                     <ion-icon name="<?=$strIcon?>"></ion-icon>
-                    <a href="<?=$strDetailLink?>"><?=$arItem['NAME']?> [<?=\Local\Core\Inner\TradingPlatform\Factory::getFactoryList()[$arItem['HANDLER']]?>]</a> <?=($arItem['PAYED_TO'] instanceof
-                                                                                                                                                                      \Bitrix\Main\Type\DateTime) ? 'Оплачен до '
-                                                                                                                                                                                                    .$arItem['PAYED_TO']->format('Y-m-d') : 'Готов к оплате и активации'?>
+                    <a href="<?=$strEditLink?>"><?=$arItem['NAME']?> [<?=\Local\Core\Inner\TradingPlatform\Factory::getFactoryList()[$arItem['HANDLER']]?>]</a> <?=$strStatus?>
+                    <?=$strError?>
                 </li>
             <? endforeach; ?>
         </ul>

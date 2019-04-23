@@ -176,7 +176,7 @@ class Resource extends AbstractField
     /**
      * Возвращает заданное поле для сценария SIMPLE
      *
-     * @return InputText | Textarea
+     * @return InputText | Textarea | null
      */
     protected function getSimpleField()
     {
@@ -222,7 +222,7 @@ class Resource extends AbstractField
     /**
      * Возвращает заданное поле для сценария SELECT
      *
-     * @return Select
+     * @return Select|null
      */
     public function getSelectField()
     {
@@ -593,31 +593,22 @@ class Resource extends AbstractField
     {
         $this->addToRender('<h4>Если:</h4>');
 
-        $this->addToRender(
-            (new Condition())->setStoreId($this->getStoreId())
+        $this->addToRender((new Condition())->setStoreId($this->getStoreId())
             ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][RULE]')
             ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['RULE'])
             ->getRender());
 
         $this->addToRender('<h4>То:</h4>');
 
-        $this->addToRender(
-            $this->getLogicResourceField(
-                $this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][VALUE]',
-                $this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['VALUE']
-            )->getRender()
-        );
+        $this->addToRender($this->getLogicResourceField($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][VALUE]', $this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['VALUE'])
+            ->getRender());
     }
 
     private function addLogicElseRow()
     {
         $this->addToRender('<h4>Иначе:</h4>');
-        $this->addToRender(
-            $this->getLogicResourceField(
-            $this->getName().'['.self::TYPE_LOGIC.'_VALUE][ELSE][VALUE]',
-                $this->getValue()[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE']
-            )->getRender()
-        );
+        $this->addToRender($this->getLogicResourceField($this->getName().'['.self::TYPE_LOGIC.'_VALUE][ELSE][VALUE]', $this->getValue()[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE'])
+            ->getRender());
     }
 
     /**
@@ -638,9 +629,8 @@ class Resource extends AbstractField
         if (!in_array(self::TYPE_IGNORE, $arAllowList) && !$this->getIsRequired()) {
             $arAllowList[] = self::TYPE_IGNORE;
         }
-        if( $this->getIsRequired() && in_array(self::TYPE_IGNORE, $arAllowList) )
-        {
-            unset($arAllowList[ array_search(self::TYPE_IGNORE, $arAllowList) ]);
+        if ($this->getIsRequired() && in_array(self::TYPE_IGNORE, $arAllowList)) {
+            unset($arAllowList[array_search(self::TYPE_IGNORE, $arAllowList)]);
         }
 
         $obResourceField = (new Resource())->setName($strName)
@@ -682,5 +672,76 @@ class Resource extends AbstractField
         $obResourceField->setAllowTypeList($arAllowList);
 
         return $obResourceField;
+    }
+
+    /** @inheritDoc */
+    public function isValueFilled($mixData)
+    {
+        $boolRes = false;
+        if (array_key_exists('TYPE', $mixData) && in_array($mixData['TYPE'], $this->getAllowTypeList())) {
+            switch ($mixData['TYPE']) {
+                case self::TYPE_IGNORE:
+                    $boolRes = false;
+                    break;
+
+                case self::TYPE_SIMPLE:
+                    if ($this->getSimpleField() instanceof AbstractField) {
+                        $boolRes = $this->getSimpleField()
+                            ->isValueFilled($mixData[self::TYPE_SIMPLE.'_VALUE']);
+                    }
+                    break;
+
+                case self::TYPE_SELECT:
+                    if ($this->getSelectField() instanceof Select) {
+                        $boolRes = $this->getSelectField()
+                            ->isValueFilled($mixData[self::TYPE_SELECT.'_VALUE']);
+                    }
+                    break;
+
+                case self::TYPE_BUILDER:
+                    $boolRes = (new Subfield\ResourceBuilder())->isValueFilled($mixData[self::TYPE_BUILDER.'_VALUE']);
+                    break;
+
+                case self::TYPE_SOURCE:
+                    if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
+                        $boolRes = (new Select())->setOptions($this->getSourceOptions())
+                            ->isValueFilled($mixData[self::TYPE_SOURCE.'_VALUE']);
+                    }
+                    break;
+
+                case self::TYPE_LOGIC:
+                    if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
+
+                        $obResourceTmpField = (new Resource())->setIsMultiple($this->getIsMultiple())
+                            ->setAllowTypeList($this->getAllowTypeList());
+
+                        if ($this->getSimpleField() instanceof AbstractField) {
+                            $obResourceTmpField->setSimpleField($this->getSimpleField());
+                        }
+
+                        if ($this->getSelectField() instanceof AbstractField) {
+                            $obResourceTmpField->setSelectField($this->getSelectField());
+                        }
+
+                        $boolRes = $obResourceTmpField->isValueFilled($mixData[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE']);
+
+                        if( $boolRes )
+                        {
+                            foreach ($mixData[self::TYPE_LOGIC.'_VALUE']['IF'] as $arIf)
+                            {
+                                if( !$obResourceTmpField->isValueFilled($arIf['VALUE']) ){
+                                    $boolRes = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        unset($obResourceTmpField);
+                    }
+                    break;
+            }
+        }
+
+        return $boolRes;
     }
 }

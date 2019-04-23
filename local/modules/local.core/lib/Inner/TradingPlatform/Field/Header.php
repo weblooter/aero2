@@ -31,4 +31,9 @@ class Header extends AbstractField
     </div>
 </div>';
     }
+
+    /** @inheritDoc */
+    public function isValueFilled($mixData){
+        return true;
+    }
 }

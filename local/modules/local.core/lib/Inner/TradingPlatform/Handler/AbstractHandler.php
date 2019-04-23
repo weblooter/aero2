@@ -48,7 +48,7 @@ abstract class AbstractHandler
     protected function getGeneralFields()
     {
         return [
-            'header_g1' => (new Field\Header())->setValue('Настройки обработки'),
+            '#header_g1' => (new Field\Header())->setValue('Настройки обработки'),
 
             '@handler_settings__CONVERT_CURRENCY_TO' => (new Field\Select())->setTitle('Конвертация цен')
                 ->setName('HANDLER_RULES[@handler_settings][CONVERT_CURRENCY_TO]')
@@ -154,5 +154,88 @@ DOCHERE
     protected function getTradingPlatformStoreId()
     {
         return $this->arTradingPlatformData['STORE_ID'];
+    }
+
+    /**
+     * Метод проверяет корректность правил заполненого ТП.<br/>
+     * Точнее заполнены ли его обязательные поля.
+     *
+     * @return \Bitrix\Main\Result
+     */
+    public function isRulesTradingPlatformCorrectFilled()
+    {
+        $obResult = new \Bitrix\Main\Result();
+
+        try {
+            if (empty($this->getHandlerRules())) {
+                throw new \Exception('Для проверки необходимо загрузить данные по торговоей площадки.');
+            }
+
+            foreach ($this->getFields() as $strPath => $obField) {
+                if (!($obField instanceof \Local\Core\Inner\TradingPlatform\Field\AbstractField)) {
+                    continue;
+                }
+
+                if (!$obField->getIsRequired()) {
+                    continue;
+                }
+
+                $arTpFieldData = $this->getTPFieldDataByFieldName($obField->getName());
+                if( !$obField->isValueFilled( $arTpFieldData ) )
+                {
+                    $obResult->addError(new \Bitrix\Main\Error('Обязательное поле "'.$obField->getTitle().'" должно быть заполнено.'));
+                }
+            }
+        } catch (\Exception $e) {
+            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
+        }
+
+        return $obResult;
+    }
+
+    /**
+     * Извлекает данные поля (не конечнее значение, а данные, которые позже используются для получения конечного значения),
+     * которое хранится у ТП, по пути Field\AbstractField ->getName().<br/><br/>
+     * Возвращаемое значение либо null, что означает что данных по полю не найдено
+     * совсем (поле не задано, вероятно ошибка при сохранении),
+     * либо mixed, что означает, что значение есть, хоть пустое или bool, но есть.
+     *
+     * @param $strFieldName
+     *
+     * @return mixed|null
+     */
+    protected function getTPFieldDataByFieldName($strFieldName)
+    {
+        $mixReturn = null;
+        if( preg_match_all('/\[([^\]]+)\]/', $strFieldName, $matches) > 0 )
+        {
+            foreach ($matches[1] as $strPath)
+            {
+                if( is_null($mixReturn) )
+                {
+                    if( array_key_exists($strPath, $this->getHandlerRules()) )
+                    {
+                        $mixReturn = $this->getHandlerRules()[ $strPath ];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    if( array_key_exists($strPath, $mixReturn) )
+                    {
+                        $mixReturn = $mixReturn[$strPath];
+                    }
+                    else
+                    {
+                        $mixReturn = null;
+                        break;
+                    }
+                }
+            }
+        }
+        return $mixReturn;
     }
 }

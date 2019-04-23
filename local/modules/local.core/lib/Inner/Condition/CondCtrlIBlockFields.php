@@ -102,7 +102,6 @@ class CondCtrlIBlockFields extends CondCtrlComplex
                 'PHP_VALUE' => 'qw'
             ),
 
-            /*
             'CondIBElement' => array(
                 'ID' => 'CondIBElement',
                 'FIELD' => 'ID',
@@ -368,7 +367,6 @@ class CondCtrlIBlockFields extends CondCtrlComplex
                 ),
                 'PHP_VALUE' => ''
             ),
-            */
         );
         if (empty($vatList))
         {

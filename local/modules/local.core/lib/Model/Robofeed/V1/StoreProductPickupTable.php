@@ -125,10 +125,7 @@ class StoreProductPickupTable extends \Local\Core\Inner\BxModified\Main\ORM\Data
             new Fields\IntegerField('ORDER_AFTER', [
                 'required' => false,
                 'title' => 'Временные рамки "сделать заказ после N часов", что бы вариант самовывоза был актуален'
-            ]),
-
-            (new Fields\Relations\Reference('PRODUCT', get_class(StoreProductFactory::factory(1)
-                ->setStoreId(self::$intStoreId)), \Bitrix\Main\ORM\Query\Join::on('this.PRODUCT_ID', 'ref.ID')))
+            ])
         ];
     }
 }

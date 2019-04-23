@@ -33,15 +33,15 @@
         </div>
     <? elseif ($arResult['STATUS'] == 'ADD_SUCCESS'): ?>
         <?
-        $strDetailRoute = \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'detail',
+        $strEditRoute = \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'edit',
             ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#TP_ID#' => $arResult['ADD_ID']]);
         ?>
         <p>
             Торговая площадка успешно создана. Сейчас Вы будете переброшены на детальную страницу.<br />
-            Есть этого не произошло - воспользуйтесь ссылкой <a href="<?=$strDetailRoute?>"><?=$strDetailRoute?></a>.
+            Есть этого не произошло - воспользуйтесь ссылкой <a href="<?=$strEditRoute?>"><?=$strEditRoute?></a>.
         </p>
         <script type="text/javascript">
-            location.href = '<?=$strDetailRoute?>';
+            location.href = '<?=$strEditRoute?>';
         </script>
     <? else: ?>
 
@@ -72,6 +72,25 @@
             ]);
         }
         ?>
+
+        <?
+        if( $arParams['TP_ID'] > 0 )
+        {
+            $obHandler = $arResult['OB_HANDLER'];
+            if ($obHandler instanceof Local\Core\Inner\TradingPlatform\Handler\AbstractHandler) {
+                $obCheckResult = $obHandler->isRulesTradingPlatformCorrectFilled();
+                if( !$obCheckResult->isSuccess() )
+                {
+                    ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?=implode('<br/>', $obCheckResult->getErrorMessages())?>
+                    </div>
+                    <?
+                }
+            }
+        }
+        ?>
+
         <form action="<?=$strFormAction?>" method="post" id="tradingplatformform">
             <?=bitrix_sessid_post();?>
             <input type="hidden" name="TP_DATA[HANDLER]" value="<?=($arResult['TP_DATA']['HANDLER']) ? $arResult['TP_DATA']['HANDLER'] : \Bitrix\Main\Application::getInstance()

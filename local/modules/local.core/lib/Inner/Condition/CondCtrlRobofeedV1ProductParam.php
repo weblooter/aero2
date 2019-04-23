@@ -135,7 +135,15 @@ class CondCtrlRobofeedV1ProductParam extends CondCtrlComplex
         {
             foreach (self::$arProps[self::$intStoreId] as $k => $v)
             {
-                $strId = 'CondParam'.preg_replace('/[^a-zA-Z0-9]/', '', $k);
+                $strId = preg_replace('/[^a-zA-Z0-9_]/', '', $k);
+                $strId = explode('_',  $strId);
+                $strId = array_map(
+                    function($v){
+                        return ( mb_strtoupper(substr($v, 0, 1)).mb_strtolower(substr($v, 1)) );
+                        },
+                    $strId
+                );
+                $strId = 'CondParam'.implode('', $strId);
 
                 self::$arControlsCache[ self::$intStoreId ][$strId] = [
                     'ID' => $strId,
