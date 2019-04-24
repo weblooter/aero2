@@ -78,20 +78,21 @@ class Base
     /**
      * Формирует PHP правило проверки из преобразованного значения условия
      *
-     * @param $arParsedCondition
-     * @param $intStoreId
+     * @param array $arParsedCondition
+     * @param int $intStoreId
+     * @package string $strVariableName Название переменной
      *
      * @return mixed|string
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function generatePhp($arParsedCondition, $intStoreId)
+    public static function generatePhp($arParsedCondition, $intStoreId, $strVariableName = '#VARIABLE_NAME#')
     {
         $obCond = new \Local\Core\Inner\Condition\CondTree();
         $obCond->setStoreId($intStoreId);
         $obCond->setRobofeedVersion( \Local\Core\Inner\Store\Base::getLastSuccessImportVersion($intStoreId) );
         $obCond->Init(LOCAL_CORE_CONDITION_MODE_GENERATE, LOCAL_CORE_CONDITION_BUILD_CATALOG);
-        return $obCond->Generate($arParsedCondition, ['FIELD' => '#VARIABLE_NAME#']);
+        return $obCond->Generate($arParsedCondition, ['FIELD' => $strVariableName]);
     }
 }

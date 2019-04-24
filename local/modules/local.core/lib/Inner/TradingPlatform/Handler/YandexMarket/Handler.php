@@ -822,4 +822,34 @@ HEREDOC
 
         return $arCountries;
     }
+
+
+    /* ****** */
+    /* EXPORT */
+    /* ****** */
+
+    /** @inheritDoc */
+    protected function getExportFileFormat()
+    {
+        return 'xml';
+    }
+
+    /** @inheritDoc */
+    protected function executeMakeExportFile(\Bitrix\Main\Result $obResult)
+    {
+        try
+        {
+            $this->beginFilterProduct($obResult);
+        }
+        catch (\Throwable $e)
+        {
+            $obResult->addError( new \Bitrix\Main\Error( $e->getMessage() ) );
+        }
+    }
+
+    /** @inheritDoc */
+    protected function beginOfferForeachBody(\Bitrix\Main\Result $obResult, $arExportProductData)
+    {
+        dump($arExportProductData);
+    }
 }
