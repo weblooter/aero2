@@ -18,17 +18,7 @@ class Header extends AbstractField
     public function getRow($htmlInputRender)
     {
         return '<div class="form-group">
-    <div class="row">
-        <div class="col-xs-12">
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th class="text-center">'.$this->getValue().'</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
+    <h3 class="bold"><span>'.$this->getValue().'</span></h3>
 </div>';
     }
 

@@ -25,11 +25,10 @@ class Select extends AbstractField
 
     private function makeSelect()
     {
-        $strInput = '<select class="form-control mb-3" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
+        $strInput = '<div class="selectwrapper mb-3"><select name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
         $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
         $strInput .= ($this->getIsMultiple()) ? ' multiple' : '';
         $strInput .= ($this->getIsReadOnly()) ? ' readonly' : '';
-//        $strInput .= ($this->getIsRequired()) ? ' required' : '';
         $strInput .= ($this->getIsMultiple() ? ' size="'.$this->getSize().'"' : '');
         $strInput .= '>';
 
@@ -52,7 +51,7 @@ class Select extends AbstractField
             }
         }
 
-        $strInput .= '</select>';
+        $strInput .= '</select></div>';
         return $strInput;
     }
 

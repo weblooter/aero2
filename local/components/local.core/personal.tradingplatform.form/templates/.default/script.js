@@ -58,6 +58,7 @@ class PersonalTradingplatformFormComponent {
                             eval(responseHtml.querySelectorAll('script')[i].innerText);
                         }
                     }
+                    $('.selectwrapper select').selectpicker();
                 }
             })
             .catch(function (error) {
@@ -86,6 +87,7 @@ class PersonalTradingplatformFormComponent {
                             eval(responseHtml.querySelectorAll('script')[i].innerText);
                         }
                     }
+                    $('.selectwrapper select').selectpicker();
                 }
             })
             .catch(function (error) {

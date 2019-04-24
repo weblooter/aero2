@@ -14,10 +14,10 @@ class ResourceBuilder extends \Local\Core\Inner\TradingPlatform\Field\AbstractFi
         $smallTextHash = sha1($this->getName().time());
 
         $this->addToRender('
-<div class="input-group">
+<div class="inputs-group">
     <textarea class="form-control" name="'.$this->getName().'" onkeyup="PersonalTradingplatformFormComponent.replaceBuilderSmallString(this)" data-small-text-hash="'.$smallTextHash.'">'.$this->getValue().'</textarea>
     <div class="input-group-btn">
-        <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить</button>
+        <button class="btn orange dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить</button>
         <ul class="dropdown-menu dropdown-menu-float-right" style="max-height: 300px; overflow-y: scroll;">');
         foreach ($this->getOptions() as $h => $a) {
             $this->addToRender('<li class="dropdown-header">'.$h.'</li>');

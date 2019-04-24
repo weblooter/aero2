@@ -109,10 +109,10 @@
 
             <div class="form-group">
                 <div class="row">
-                    <div class="col-xs-4 text-right">
-                        <label>Название * :</label>
+                    <div class="col-xs-4">
+                        <label class="required">Название:</label>
                     </div>
-                    <div class="col-xs-8 text-left">
+                    <div class="col-xs-8">
                         <input type="text" name="TP_DATA[NAME]" class="form-control" value="<?=$arResult['TP_DATA']['NAME']?>" required />
                     </div>
                 </div>

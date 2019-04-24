@@ -370,22 +370,22 @@ abstract class AbstractField
      */
     public function getRow($htmlInputRender)
     {
-        $strTitle = $this->getTitle().(($this->getIsRequired()) ? ' *' : '').' :';
-        $strDesc = (!is_null($this->getDescription())) ? '<br/><small>'.$this->getDescription().'</small>' : '';
+        $strInfotext = '<label class="'.( $this->getIsRequired() ? 'required' : '' ).'">'.$this->getTitle().':';
+        $strInfotext .= (!is_null($this->getDescription())) ? '<button class="icon-info robotip__starter" type="button"><div class="robotip__content">'.$this->getDescription().'</div></button>' : '';
+        $strInfotext .= '</label>';
 
         if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {
-            $strDesc .= '<br/><small><mark>'.$this->getName().'</mark></small>';
+            $strInfotext .= '<br/><small><mark>'.$this->getName().'</mark></small>';
         }
         $strRowHash = $this->getRowHash();
 
         return <<<DOCHERE
 <div class="form-group" id="$strRowHash">
     <div class="row">
-        <div class="col-xs-4 text-right">
-            <label>$strTitle</label>
-            $strDesc
+        <div class="col-xs-4">
+            $strInfotext
         </div>
-        <div class="col-xs-8 text-left">
+        <div class="col-xs-8">
             $htmlInputRender
         </div>
     </div>

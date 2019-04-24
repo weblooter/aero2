@@ -31,10 +31,5 @@ $APPLICATION->SetPageProperty(
         ]
     );
     ?>
-
-
-    <?$GLOBALS['APPLICATION']->IncludeFile(SITE_TEMPLATE_PATH.'/include/form_html.php');?>
-
-
 </div>
 <? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>
