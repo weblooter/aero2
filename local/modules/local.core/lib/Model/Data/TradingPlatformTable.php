@@ -155,7 +155,13 @@ class TradingPlatformTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\Da
             }
         }
 
-        $arFields['CODE'] = sha1($arFields['NAME'].'#'.$GLOBALS['USER_ID'].'#'.$arFields['STORE_ID'].'#'.time());
+        $arModifiedFields['CODE'] = sha1($arFields['NAME'].'#'.$arFields['STORE_ID'].'#'.time());
+
+        $arFields = array_merge($arFields, $arModifiedFields);
+
+        $event->setParameter('fields', $arFields);
+
+        $result->modifyFields($arModifiedFields);
 
         return $result;
     }

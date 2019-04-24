@@ -502,10 +502,19 @@
             }
             for (i in arParams.values) {
                 if (arParams.values.hasOwnProperty(i)) {
-                    this.values[this.values.length] = i;
-                    this.labels[this.labels.length] = arParams.values[i];
+                    if( typeof arParams.values[i] == 'object' && arParams.values[i].hasOwnProperty('value') && arParams.values[i].hasOwnProperty('label') )
+                    {
+                        this.values[this.values.length] = arParams.values[i]['value'];
+                        this.labels[this.labels.length] = arParams.values[i]['label'];
+                    }
+                    else
+                    {
+                        this.values[this.values.length] = i;
+                        this.labels[this.labels.length] = arParams.values[i];
+                    }
                 }
             }
+
             if (this.values.length === 0) {
                 return this.boolResult;
             }

@@ -38,9 +38,9 @@ class CFile extends \CFile
     }
 
     /**
-     * Формирует путь сохранения от upload/local.core/
+     * Формирует путь сохранения c учетом пути upload/local.core/<br/>
      *
-     * @param string $strPath          Путь
+     * @param string $strPath          Путь от upload/local.core/
      * @param bool   $boolDocumentRoot Выдать с DOCUMENT_ROOT
      * @param bool   $boolMkdir        Создать директорию
      *

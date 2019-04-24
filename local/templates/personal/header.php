@@ -13,7 +13,6 @@ global $USER;
     <?
     $obAsset = \Bitrix\Main\Page\Asset::getInstance();
 
-//    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-4-connect.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-select.css');
@@ -81,7 +80,6 @@ global $USER;
     <div class="container" style="min-height: 70vh;">
         <div class="row">
             <div class="col-12">
-
                 <h1><? $APPLICATION->ShowTitle(false) ?></h1>
             </div>
 <?}?>

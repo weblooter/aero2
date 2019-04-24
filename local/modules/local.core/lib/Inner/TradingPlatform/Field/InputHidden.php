@@ -44,4 +44,31 @@ class InputHidden extends AbstractField
     {
         return $htmlInputRender;
     }
+
+    /** @inheritDoc */
+    public function isValueFilled($mixData)
+    {
+        $boolRes = false;
+        if( is_array($mixData) )
+        {
+            $mixData = array_diff($mixData, ['']);
+            if( !empty( $mixData ) && sizeof($mixData) > 0 )
+            {
+                $boolRes = true;
+                foreach ($mixData as $strVal)
+                {
+                    if( !(bool)strlen( trim( $strVal ) ) ){
+                        $boolRes = false;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            $boolRes = (bool)strlen( trim( $mixData ) );
+        }
+
+        return $boolRes;
+    }
 }

@@ -143,6 +143,19 @@ $conf = [
             ]
         ],
         'readonly' => true
+    ],
+
+    /**
+     * Торговые компании и выгрузки
+     */
+    'tradingplatform' => [
+        'value' => [
+            'export' => [
+                'export_dir' => '/upload/tradingplatform/export',
+                'batch_size' => 50
+            ]
+        ],
+        'readonly' => true
     ]
 ];
 

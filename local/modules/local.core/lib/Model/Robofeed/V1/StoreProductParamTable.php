@@ -61,10 +61,7 @@ class StoreProductParamTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\
             new Fields\StringField('VALUE', [
                 'required' => true,
                 'title' => 'Значение'
-            ]),
-
-            (new Fields\Relations\Reference('PRODUCT', get_class(StoreProductFactory::factory(1)
-                ->setStoreId(self::$intStoreId)), \Bitrix\Main\ORM\Query\Join::on('this.PRODUCT_ID', 'ref.ID')))
+            ])
         ];
     }
 

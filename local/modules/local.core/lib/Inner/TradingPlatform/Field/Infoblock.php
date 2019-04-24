@@ -50,4 +50,9 @@ class Infoblock extends AbstractField
     {
         return $this->_fieldType;
     }
+
+    /** @inheritDoc */
+    public function isValueFilled($mixData){
+        return true;
+    }
 }

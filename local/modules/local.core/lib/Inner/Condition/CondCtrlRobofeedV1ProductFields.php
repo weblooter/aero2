@@ -173,7 +173,13 @@ class CondCtrlRobofeedV1ProductFields extends CondCtrlComplex
 
                             return $arReturn;
                         };
-                    self::$arCategories[self::$intStoreId] = $funGetChild(null);
+                    $arVals = $funGetChild(null);
+                    $i = 1;
+                    foreach ($arVals as $value => $label)
+                    {
+                        self::$arCategories[self::$intStoreId][$i] = ['value' => $value, 'label' => $label];
+                        $i++;
+                    }
                     $obCache->endDataCache(self::$arCategories[self::$intStoreId]);
                 }
             } else {

@@ -203,7 +203,9 @@ class Bill implements PaymentInterface
     private $obPdfOutputed;
 
     /**
-     * @var string $accountNumber Номер счета. Генерируеся после \Local\Core\Inner\Payment\Bill::makeBillPdf
+     * @var string $accountNumber Номер счета. Генерируеся после \Local\Core\Inner\Payment\Bill::makeBillPdf()
+     *
+     * @see \Local\Core\Inner\Payment\Bill::makeBillPdf()
      */
     private $accountNumber;
 
@@ -232,7 +234,7 @@ class Bill implements PaymentInterface
         if ($intUserId < 1) {
             $intUserId = $GLOBALS['USER']->GetId();
         }
-        $this->accountNumber = date('YmdHi').'_'.$intUserId;
+        $this->accountNumber = 'RF_'.date('YmdHi').'_'.$intUserId;
         $html = static::makeBillHtml($arProductList, $strPurchaser, $this->accountNumber);
 
         $this->obPdf = new \Dompdf\Dompdf();
@@ -427,7 +429,7 @@ class Bill implements PaymentInterface
         </tbody>
     </table>
 
-    <h1>Счет на оплату №'.$strAccountNumber.' от '.\FormatDate('d F Y').' г.</h1>
+    <h1>Счет на оплату № '.$strAccountNumber.' от '.\FormatDate('d F Y').' г.</h1>
 
     <table class="contract">
         <tbody>
@@ -491,6 +493,8 @@ class Bill implements PaymentInterface
         <p>Всего наименований '.sizeof($arProductList).', на сумму '.self::format_price($total).' руб.</p>
         <p><strong>'.self::str_price($total).'</strong></p>
     </div>
+    
+    <p>В комментарии к платежу не забудьте указать номер счета.</p>
     
     <div class="sign">
         <img class="sign-1" src="'.$arConfig['sing_1_link'].'">

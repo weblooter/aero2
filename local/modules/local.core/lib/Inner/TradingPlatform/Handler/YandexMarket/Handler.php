@@ -2,6 +2,7 @@
 
 namespace Local\Core\Inner\TradingPlatform\Handler\YandexMarket;
 
+use Local\Core\Inner\Fields;
 use Local\Core\Inner\Route;
 use \Local\Core\Inner\TradingPlatform\Field;
 use Symfony\Component\DependencyInjection\Tests\Compiler\F;
@@ -29,7 +30,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     private function getShopBaseFields()
     {
         return [
-            'header_y1' => (new Field\Header())->setValue('Настройки магазина'),
+            '#header_y1' => (new Field\Header())->setValue('Настройки магазина'),
 
             'shop__name' => (new Field\InputText())->setTitle('Короткое название магазина')
                 ->setDescription('Не более 20 символов.')
@@ -77,7 +78,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     {
         $arDeliveryFields = [];
 
-        $arDeliveryFields['header_y2'] = (new Field\Header())->setValue('Условия доставки');
+        $arDeliveryFields['#header_y2'] = (new Field\Header())->setValue('Условия доставки');
 
         $arDeliveryFields['shop__offers__offer__@delivery_data_source'] = (new Field\Select())->setTitle('Источник данных для доставки курьером')
             ->setName('HANDLER_RULES[shop][offers][offer][@delivery_data_source]')
@@ -112,8 +113,9 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
 
             if ($this->getHandlerRules()['shop']['offers']['offer']['delivery'] == 'Y' || empty($this->getHandlerRules()['shop']['offers']['offer']['delivery'])) {
                 $arDeliveryFields['shop__offers__offer__delivery-options__option__@attr__cost'] = (new Field\Resource())->setTitle('Стоимость доставки')
-                    ->setDescription('В качестве значения используйте только целые числа. Для бесплатной доставки укажите значение 0')
+                    ->setDescription('В качестве значения используйте только целые числа. Для бесплатной доставки укажите значение 0.')
                     ->setName('HANDLER_RULES[shop][offers][offer][delivery-options][option][@attr][cost]')
+                    ->setIsRequired()
                     ->setStoreId($this->getTradingPlatformStoreId())
                     ->setAllowTypeList([
                         Field\Resource::TYPE_SIMPLE,
@@ -124,19 +126,25 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                                ['TYPE' => Field\Resource::TYPE_SIMPLE, Field\Resource::TYPE_SIMPLE.'_VALUE' => 0]);
 
                 $arDeliveryFields['shop__offers__offer__delivery-options__option__@attr__days'] = (new Field\Resource())->setTitle('Срок доставки в рабочих днях')
-                    ->setDescription('Можно указать как конкретное количество дней, так и период «от — до». Например, срок доставки от 2 до 4 дней опишите так: 2-4. <i>При указании периода «от — до» интервал срока доставки должен составлять не более трех дней.</i>')
+                    ->setDescription('Можно указать как конкретное количество дней, так и период «от — до». Например, срок доставки от 2 до 4 дней опишите так: 2-4. <i>При указании периода «от — до» интервал срока доставки должен составлять <b>не более двух</b> дней.</i>')
                     ->setName('HANDLER_RULES[shop][offers][offer][delivery-options][option][@attr][days]')
                     ->setStoreId($this->getTradingPlatformStoreId())
                     ->setAllowTypeList([
                         Field\Resource::TYPE_SIMPLE,
                         Field\Resource::TYPE_LOGIC,
+                        Field\Resource::TYPE_IGNORE,
                     ])
                     ->setSimpleField((new Field\InputText()))
                     ->setValue($this->getHandlerRules()['shop']['offers']['offer']['delivery-options']['option']['@attr']['days'] ??
-                               ['TYPE' => Field\Resource::TYPE_SIMPLE, Field\Resource::TYPE_SIMPLE.'_VALUE' => '1-3']);
+                               ['TYPE' => Field\Resource::TYPE_SIMPLE, Field\Resource::TYPE_SIMPLE.'_VALUE' => '1-3'])
+                    ->setEpilog((new Field\Infoblock())->setValue('<b>Неопределенный срок доставки (товары «на заказ»).</b><br/>
+Если точный срок доставки неизвестен, используйте в атрибуте days значение 32 или больше (либо выберите значение <b>"Игнорировать поле"</b>). Для таких товаров на Маркете будет показана надпись «на заказ».
+<br/>
+Внимание. Магазин должен доставить товары «на заказ» в срок до двух месяцев. Точный срок необходимо согласовать с покупателем.'));
 
                 $arDeliveryFields['shop__offers__offer__delivery-options__option__@attr__order-before'] = (new Field\Resource())->setTitle('Время, до которого нужно сделать заказ, чтобы получить его в этот срок')
-                    ->setDescription('В качестве значения используйте только целое число от 0 до 24')
+                    ->setDescription('В качестве значения используйте только целое число от 0 до 24.<br/>
+Если значение не указано или проигнорировано, ЯндекМаркет использует значение по умолчанию — 13.')
                     ->setName('HANDLER_RULES[shop][offers][offer][delivery-options][option][@attr][order-before]')
                     ->setStoreId($this->getTradingPlatformStoreId())
                     ->setAllowTypeList([
@@ -156,7 +164,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     {
         $arDeliveryFields = [];
 
-        $arDeliveryFields['header_y3'] = (new Field\Header())->setValue('Условия самовывоза');
+        $arDeliveryFields['#header_y3'] = (new Field\Header())->setValue('Условия самовывоза');
 
         $arDeliveryFields['shop__offers__offer__@pickup_data_source'] = (new Field\Select())->setTitle('Источник данных для самовывоза')
             ->setName('HANDLER_RULES[shop][offers][offer][@pickup_data_source]')
@@ -192,6 +200,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     ->setDescription('В качестве значения используйте только целые числа. Для бесплатной доставки укажите значение 0')
                     ->setName('HANDLER_RULES[shop][offers][offer][pickup-options][option][@attr][cost]')
                     ->setStoreId($this->getTradingPlatformStoreId())
+                    ->setIsRequired()
                     ->setAllowTypeList([
                         Field\Resource::TYPE_SIMPLE,
                         Field\Resource::TYPE_LOGIC,
@@ -207,10 +216,13 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     ->setAllowTypeList([
                         Field\Resource::TYPE_SIMPLE,
                         Field\Resource::TYPE_LOGIC,
+                        Field\Resource::TYPE_IGNORE,
                     ])
                     ->setSimpleField((new Field\InputText()))
                     ->setValue($this->getHandlerRules()['shop']['offers']['offer']['pickup-options']['option']['@attr']['days'] ??
-                               ['TYPE' => Field\Resource::TYPE_SIMPLE, Field\Resource::TYPE_SIMPLE.'_VALUE' => '1-3']);
+                               ['TYPE' => Field\Resource::TYPE_SIMPLE, Field\Resource::TYPE_SIMPLE.'_VALUE' => '1-3'])
+                    ->setEpilog((new Field\Infoblock())->setValue('<b>Неопределенный срок (товары «на заказ»).</b><br/>
+Если точный срок поставки товара в пункт выдачи неизвестен, используйте значение 32 или больше (либо выберите значение <b>"Игнорировать поле"</b>). Для таких товаров на Маркете будет показана надпись «на заказ».'));
 
                 $arDeliveryFields['shop__offers__offer__pickup-options__option__@attr__order-before'] = (new Field\Resource())->setTitle('Время, до которого нужно сделать заказ, чтобы получить товар в пункте выдачи в указанный срок')
                     ->setDescription('В качестве значения используйте только целое число от 0 до 24')
@@ -232,7 +244,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     private function getOfferFields()
     {
         $arFields = [
-            'header_y4' => (new Field\Header())->setValue('Торговые предложения')
+            '#header_y4' => (new Field\Header())->setValue('Торговые предложения')
         ];
 
         $arFields['shop__offers__offer__@offer_data_source'] = (new Field\Select())->setTitle('Заполнение данных')
@@ -249,9 +261,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                 ]
             ]);
 
-        // TODO Убрать после написания
-//                if( $this->getHandlerRules()['shop']['offers']['offer']['@offer_data_source'] == 'CUSTOM' ){
-        if (true) {
+        if ($this->getHandlerRules()['shop']['offers']['offer']['@offer_data_source'] == 'CUSTOM') {
 
             $arFields['shop__offers__offer__@attr__id'] = (new Field\Resource())->setTitle('Идентификатор предложения')
                 ->setStoreId($this->getTradingPlatformStoreId())
@@ -372,9 +382,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     Field\Resource::TYPE_LOGIC,
                     Field\Resource::TYPE_IGNORE,
                 ])
-                ->setSimpleField(
-                    (new Field\InputText())
-                )
+                ->setSimpleField((new Field\InputText()))
                 ->setValue($this->getHandlerRules()['shop']['offers']['offer']['vendor'] ?? [
                         'TYPE' => Field\Resource::TYPE_SOURCE,
                         Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#MANUFACTURER'
@@ -434,8 +442,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     Field\Resource::TYPE_LOGIC,
                     Field\Resource::TYPE_IGNORE,
                 ])
-                ->setValue($this->getHandlerRules()['shop']['offers']['offer']['oldprice'] ??
-                    [
+                ->setValue($this->getHandlerRules()['shop']['offers']['offer']['oldprice'] ?? [
                         'TYPE' => Field\Resource::TYPE_LOGIC,
                         Field\Resource::TYPE_LOGIC.'_VALUE' => [
                             'IF' => [
@@ -528,13 +535,10 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     Field\Resource::TYPE_LOGIC,
                     Field\Resource::TYPE_IGNORE,
                 ])
-                ->setSelectField(
-                    (new Field\Select())
-                        ->setOptions([
-                            'Y' => 'Товар имеет официальную гарантию производителя',
-                            'N' => 'Товар не имеет официальной гарантии производителя',
-                        ])
-                )
+                ->setSelectField((new Field\Select())->setOptions([
+                    'Y' => 'Товар имеет официальную гарантию производителя',
+                    'N' => 'Товар не имеет официальной гарантии производителя',
+                ]))
                 ->setValue($this->getHandlerRules()['shop']['offers']['offer']['manufacturer_warranty'] ?? [
                         'TYPE' => Field\Resource::TYPE_SOURCE,
                         Field\Resource::TYPE_SOURCE.'_VALUE' => 'BOOL_FIELD#MANUFACTURER_WARRANTY'
@@ -552,23 +556,17 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     Field\Resource::TYPE_LOGIC,
                     Field\Resource::TYPE_IGNORE,
                 ])
-                ->setSelectField(
-                    (new Field\Select())
-                        ->setOptions($this->_getCountryListToSelect())
-                        ->setDefaultOption('-- Выберите страну --')
-                )
+                ->setSelectField((new Field\Select())->setOptions($this->_getCountryListToSelect())
+                    ->setDefaultOption('-- Выберите страну --'))
                 ->setValue($this->getHandlerRules()['shop']['offers']['offer']['country_of_origin'] ?? [
                         'TYPE' => Field\Resource::TYPE_SOURCE,
                         Field\Resource::TYPE_SOURCE.'_VALUE' => 'REFERENCE_FIELD#COUNTRY_OF_PRODUCTION_CODE#NAME'
                     ])
-                ->setEpilog(
-                    (new Field\Infoblock())
-                        ->setValue(<<<DOCHERE
+                ->setEpilog((new Field\Infoblock())->setValue(<<<DOCHERE
 Должен быть передан код страны из нашего справочника. В противном случае поле будет проигнорированно.<br/>
 Справочник - <a href="https://robofeed.ru$strReferencesLink#country" target="_blank">https://robofeed.ru$strReferencesLink#country</a>
 DOCHERE
-)
-                );
+                ));
 
             $arFields['shop__offers__offer__adult'] = (new Field\Resource())->setTitle('Товар имеет отношение к удовлетворению сексуальных потребностей, либо иным образом эксплуатирует интерес к сексу')
                 ->setStoreId($this->getTradingPlatformStoreId())
@@ -580,13 +578,10 @@ DOCHERE
                     Field\Resource::TYPE_LOGIC,
                     Field\Resource::TYPE_IGNORE,
                 ])
-                ->setSelectField(
-                    (new Field\Select())
-                        ->setOptions([
-                            'Y' => 'Да',
-                            'N' => 'Нет',
-                        ])
-                )
+                ->setSelectField((new Field\Select())->setOptions([
+                    'Y' => 'Да',
+                    'N' => 'Нет',
+                ]))
                 ->setValue($this->getHandlerRules()['shop']['offers']['offer']['adult'] ?? [
                         'TYPE' => Field\Resource::TYPE_SOURCE,
                         Field\Resource::TYPE_SOURCE.'_VALUE' => 'BOOL_FIELD#IS_SEX'
@@ -603,9 +598,7 @@ DOCHERE
                     Field\Resource::TYPE_LOGIC,
                     Field\Resource::TYPE_IGNORE,
                 ])
-                ->setSimpleField(
-                    (new Field\InputText())
-                )
+                ->setSimpleField((new Field\InputText()))
                 ->setValue($this->getHandlerRules()['shop']['offers']['offer']['weight'] ?? [
                         'TYPE' => Field\Resource::TYPE_SOURCE,
                         Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#WEIGHT'
@@ -623,11 +616,8 @@ DOCHERE
                     Field\Resource::TYPE_LOGIC,
                     Field\Resource::TYPE_IGNORE,
                 ])
-                ->setSimpleField(
-                    (new Field\InputText())
-                )
-                ->setValue($this->getHandlerRules()['shop']['offers']['offer']['dimensions'] ??
-                    [
+                ->setSimpleField((new Field\InputText()))
+                ->setValue($this->getHandlerRules()['shop']['offers']['offer']['dimensions'] ?? [
                         'TYPE' => Field\Resource::TYPE_LOGIC,
                         Field\Resource::TYPE_LOGIC.'_VALUE' => [
                             'IF' => [
@@ -685,22 +675,19 @@ DOCHERE
                         ]
 
                     ])
-            ->setEpilog(
-                ( new Field\Infoblock() )
-                ->setValue(<<<DOCHERE
+                ->setEpilog((new Field\Infoblock())->setValue(<<<DOCHERE
 Если Вы передаете нам габариты во всех товарах, то мы рекомендуем установить тип данных <b>"Сложное значение"</b> и выставить ему значение:<br/>
 <b>{{BASE_FIELD#LENGTH}}/{{BASE_FIELD#WIDTH}}/{{BASE_FIELD#HEIGHT}}</b><br/>
 Имея это значение мы автоматически приведет габариты в сантиметры, исходя из указанных Вами единиц измерений.<br/>
 <br/>
 В противном случае Вы можете указать тип <b>"Простое значение"</b> или <b>"Сложное условие"</b> и указать усредненные габариты товаров.
 DOCHERE
-                )
-            );
+                ));
 
         }
 
 
-        $arFields['header_y5'] = (new Field\Header())->setValue('Дополнительные поля товара');
+        $arFields['#header_y5'] = (new Field\Header())->setValue('Дополнительные поля товара');
 
         $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('URL-ссылка на картинку товара')
             ->setDescription(<<<HEREDOC
@@ -743,13 +730,10 @@ HEREDOC
                 Field\Resource::TYPE_LOGIC,
                 Field\Resource::TYPE_IGNORE,
             ])
-            ->setSelectField(
-                (new Field\Select())
-                    ->setOptions([
-                        'Y' => 'Товар можно купить без предварительного заказа',
-                        'N' => 'Товар нельзя купить без предварительного заказа'
-                    ])
-            )
+            ->setSelectField((new Field\Select())->setOptions([
+                'Y' => 'Товар можно купить без предварительного заказа',
+                'N' => 'Товар нельзя купить без предварительного заказа'
+            ]))
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['store'] ?? [
                     'TYPE' => Field\Resource::TYPE_IGNORE
                 ]);
@@ -778,13 +762,10 @@ HEREDOC
                 Field\Resource::TYPE_LOGIC,
                 Field\Resource::TYPE_IGNORE,
             ])
-            ->setSelectField(
-                (new Field\Select())
-                    ->setOptions([
-                        'Y' => 'Да',
-                        'N' => 'Нет',
-                    ])
-            )
+            ->setSelectField((new Field\Select())->setOptions([
+                'Y' => 'Да',
+                'N' => 'Нет',
+            ]))
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['downloadable'] ?? [
                     'TYPE' => Field\Resource::TYPE_SOURCE,
                     Field\Resource::TYPE_SOURCE.'_VALUE' => 'BOOL_FIELD#IS_SOFTWARE'
@@ -801,16 +782,13 @@ HEREDOC
                 Field\Resource::TYPE_LOGIC,
                 Field\Resource::TYPE_IGNORE,
             ])
-            ->setSelectField(
-                (new Field\Select())
-                    ->setOptions([
-                        '0' => 'От 0 лет',
-                        '6' => 'От 6 лет',
-                        '12' => 'От 12 лет',
-                        '16' => 'От 16 лет',
-                        '18' => 'От 18 лет',
-                    ])
-            )
+            ->setSelectField((new Field\Select())->setOptions([
+                '0' => 'От 0 лет',
+                '6' => 'От 6 лет',
+                '12' => 'От 12 лет',
+                '16' => 'От 16 лет',
+                '18' => 'От 18 лет',
+            ]))
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['age']['@attr']['year'] ?? [
                     'TYPE' => Field\Resource::TYPE_IGNORE
                 ]);
@@ -821,37 +799,57 @@ HEREDOC
     private function _getCountryListToSelect()
     {
         $arCountries = [];
-        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
-        if(
-            $obCache->startDataCache(
-                60*60*24*7,
-                __METHOD__.__LINE__,
-                \Local\Core\Inner\Cache::getCachePath(['Model', 'Reference', 'CountryTable'], ['GetCountryListToYandexMarketHandler'])
-            )
-        )
-        {
+        $obCache = \Bitrix\Main\Application::getInstance()
+            ->getCache();
+        if (
+        $obCache->startDataCache(60 * 60 * 24 * 7, __METHOD__.__LINE__, \Local\Core\Inner\Cache::getCachePath(['Model', 'Reference', 'CountryTable'], ['GetCountryListToYandexMarketHandler']))
+        ) {
             $rs = \Local\Core\Model\Reference\CountryTable::getList([
                 'order' => ['NAME' => 'ASC'],
                 'select' => ['NAME', 'CODE']
             ]);
-            if( $rs->getSelectedRowsCount() < 1 )
-            {
+            if ($rs->getSelectedRowsCount() < 1) {
                 $obCache->abortDataCache();
-            }
-            else
-            {
-                while ($ar = $rs->fetch())
-                {
-                    $arCountries[ $ar['CODE'] ] = $ar['NAME'].' ['.$ar['CODE'].']';
+            } else {
+                while ($ar = $rs->fetch()) {
+                    $arCountries[$ar['CODE']] = $ar['NAME'].' ['.$ar['CODE'].']';
                 }
                 $obCache->endDataCache($arCountries);
             }
-        }
-        else
-        {
+        } else {
             $arCountries = $obCache->getVars();
         }
 
         return $arCountries;
+    }
+
+
+    /* ****** */
+    /* EXPORT */
+    /* ****** */
+
+    /** @inheritDoc */
+    protected function getExportFileFormat()
+    {
+        return 'xml';
+    }
+
+    /** @inheritDoc */
+    protected function executeMakeExportFile(\Bitrix\Main\Result $obResult)
+    {
+        try
+        {
+            $this->beginFilterProduct($obResult);
+        }
+        catch (\Throwable $e)
+        {
+            $obResult->addError( new \Bitrix\Main\Error( $e->getMessage() ) );
+        }
+    }
+
+    /** @inheritDoc */
+    protected function beginOfferForeachBody(\Bitrix\Main\Result $obResult, $arExportProductData)
+    {
+        dump($arExportProductData);
     }
 }

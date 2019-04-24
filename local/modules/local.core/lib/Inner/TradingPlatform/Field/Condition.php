@@ -33,4 +33,9 @@ class Condition extends AbstractField
     {
         return $this->_fieldFormName;
     }
+
+    /** @inheritDoc */
+    public function isValueFilled($mixData){
+        return true;
+    }
 }

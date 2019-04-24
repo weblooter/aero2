@@ -61,4 +61,31 @@ class Select extends AbstractField
         return '<option '.(in_array($v, $this->getValue()) ? 'selected' : '').' value="'.htmlspecialchars($v).'">'.$t.'</option>';
     }
 
+    /** @inheritDoc */
+    public function isValueFilled($mixData)
+    {
+        $arOptionValues = array_keys($this->getOptions());
+
+        $boolRes = false;
+        if( is_array($mixData) )
+        {
+            $mixData = array_diff($mixData, ['']);
+            $boolRes = true;
+            foreach ($mixData as $val)
+            {
+                if( !in_array($val, $arOptionValues) )
+                {
+                    $boolRes = false;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            $boolRes = in_array($mixData, $arOptionValues);
+        }
+        unset($arOptionValues);
+
+        return $boolRes;
+    }
 }
