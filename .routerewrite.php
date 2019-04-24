@@ -103,6 +103,15 @@ $arLocalRoutes = [
                 }
         ]
     ],
+    'settings' => [
+        'list' => [
+            'URL' => '/personal/settings/',
+            'BREADCRUMBS' => function ($arParams = [])
+            {
+                $GLOBALS['APPLICATION']->AddChainItem("Настройки", \Local\Core\Inner\Route::getRouteTo('settings', 'list'));
+            }
+        ],
+    ],
     'tradingplatform' => [
         'list' => [
             'URL' => '/personal/company/#COMPANY_ID#/store/#STORE_ID#/',

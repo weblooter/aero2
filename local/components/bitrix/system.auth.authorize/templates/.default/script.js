@@ -61,7 +61,7 @@ class SystemAuthAuthorizeComponent {
                             if(response.data.RESULT == 'success'){
                                 setTimeout(function(){
                                     window.location.reload();
-                                }, 3000);
+                                }, 1500);
                             } else {
                                 obj.doException(response.data.RESULT);
                                 that.querySelector('input[type="submit"]').classList.remove('blocked');
@@ -119,6 +119,12 @@ class SystemAuthAuthorizeComponent {
                 errors = errors + 1;
             }
             if(errors == 0){
+                e.target.querySelector('input[type="submit"]').classList.add('blocked');
+                document.body.classList.remove('loading');
+                setTimeout(function () {
+                    document.body.classList.add('loading');
+                }, 1);
+
                 //Ajax
                 var form_data = {
                     login: login,
@@ -133,7 +139,7 @@ class SystemAuthAuthorizeComponent {
                             if(response.data.RESULT == 'success'){
                                 setTimeout(function(){
                                     window.location.reload();
-                                }, 3000);
+                                }, 1500);
                             } else {
                                 obj.doException(response.data.RESULT);
                                 that.querySelector('input[type="submit"]').classList.remove('blocked');
@@ -147,6 +153,8 @@ class SystemAuthAuthorizeComponent {
                     .catch(function (error) {
                         console.log(error);
                     });
+            } else {
+                e.target.querySelector('input[type="submit"]').classList.remove('blocked');
             }
         }
     }

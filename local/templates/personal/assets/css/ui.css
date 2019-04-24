@@ -1,3 +1,7 @@
+body, html {
+    font-family: Montserrat;
+}
+
 :root{
     --blue: #039be5;
     --blue-hover: #038ef4;
@@ -8,6 +12,8 @@
     --gray: #f8f9fa;
     --gray-hover: #dfe5ee;
     --darkgray: #222222;
+    --red: #ff4949;
+    --green: #66ab29;
 }
 
 [class^="icon-"]:before, [class*=" icon-"]:before,
@@ -204,6 +210,20 @@ input[type="password"] {
     font-weight: 600;
     color: #565656;
     margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    line-height: 38px;
+    height: 104px;
+    background: var(--gray);
+    border: none;
+    padding: 0 15px;
+    font-weight: 600;
+    color: #565656;
+    margin-bottom: 20px;
+    resize: vertical;
+    min-height: 38px;
 }
 
 input[type="checkbox"].checkbox,

@@ -1,0 +1,3 @@
+$(function(){
+    $('.selectwrapper select').selectpicker();
+})

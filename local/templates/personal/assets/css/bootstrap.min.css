@@ -3140,6 +3140,7 @@ output {
 }
 
 .form-control {
+    /*
     display: block;
     width: 100%;
     height: 34px;
@@ -3157,14 +3158,9 @@ output {
     transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s
+    */
 }
 
-.form-control:focus {
-    border-color: #66afe9;
-    outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
-}
 
 .form-control::-moz-placeholder {
     color: #999;
@@ -4198,11 +4194,11 @@ tbody.collapse.in {
 .caret:before {
     content: '';
     position: absolute;
-    border-top: 4px dashed #efefef;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
-    top: -8px;
-    left: -4px;
+    border-top: 6px dashed #efefef;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    top: -9px;
+    left: -6px;
 }
 
 .open .caret:before {
@@ -4256,6 +4252,7 @@ tbody.collapse.in {
 .dropdown-menu > li > a {
     display: block;
     padding: 7px 15px;
+    padding-left: 40px;
     clear: both;
     font-weight: 600;
     line-height: 1.42857143;
@@ -4314,11 +4311,11 @@ tbody.collapse.in {
 
 .dropdown-header {
     display: block;
-    padding: 3px 20px;
-    font-size: 12px;
+    padding: 2px 15px;
     line-height: 1.42857143;
     color: #777;
-    white-space: nowrap
+    white-space: nowrap;
+    font-weight: 600;
 }
 
 .dropdown-backdrop {
@@ -4335,7 +4332,6 @@ tbody.collapse.in {
     left: auto
 }
 
-.dropup .caret,
 .navbar-fixed-bottom .dropdown .caret {
     content: "";
     border-top: 0;
@@ -4583,7 +4579,6 @@ tbody.collapse.in {
     z-index: 2;
     float: left;
     width: 100%;
-    margin-bottom: 0
 }
 
 .input-group .form-control:focus {
@@ -6022,9 +6017,14 @@ a.thumbnail:hover {
 }
 
 .alert-success {
-    color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6
+    padding: 20px;
+    line-height: 19px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-top: 3px solid var(--green);
+    border-bottom: 3px solid var(--green);
+    background: var(--gray);
+    font-size: 13px;
 }
 
 .alert-success hr {
@@ -6032,7 +6032,7 @@ a.thumbnail:hover {
 }
 
 .alert-success .alert-link {
-    color: #2b542c
+    color: var(--green)
 }
 
 .alert-info {
@@ -6050,9 +6050,14 @@ a.thumbnail:hover {
 }
 
 .alert-warning {
-    color: #8a6d3b;
-    background-color: #fcf8e3;
-    border-color: #faebcc
+    padding: 20px;
+    line-height: 19px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-top: 3px solid var(--yellow);
+    border-bottom: 3px solid var(--yellow);
+    background: var(--gray);
+    font-size: 13px;
 }
 
 .alert-warning hr {
@@ -6060,13 +6065,18 @@ a.thumbnail:hover {
 }
 
 .alert-warning .alert-link {
-    color: #66512c
+    color: var(--yellow)
 }
 
 .alert-danger {
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1
+    padding: 20px;
+    line-height: 19px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-top: 3px solid var(--red);
+    border-bottom: 3px solid var(--red);
+    background: var(--gray);
+    font-size: 13px;
 }
 
 .alert-danger hr {
@@ -6074,7 +6084,7 @@ a.thumbnail:hover {
 }
 
 .alert-danger .alert-link {
-    color: #843534
+    color: var(--red)
 }
 
 @-webkit-keyframes progress-bar-stripes {

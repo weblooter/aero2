@@ -10,7 +10,7 @@
  * @var string                        $templateFolder
  */
 ?>
-<section class="tarifsblock" data-start="<?=$arResult["START_ELEM"]["ITERATOR"]?>" data-values='<?=$arResult["VALUES"]?>'>
+<section id="tarifs" class="tarifsblock" data-start="<?=$arResult["START_ELEM"]["ITERATOR"]?>" data-values='<?=$arResult["VALUES"]?>'>
     <div class="container">
         <h2 class="bold">Расчет стоимости</h2>
         <div class="calculator">

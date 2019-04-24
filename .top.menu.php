@@ -9,7 +9,7 @@ $aMenuLinks = Array(
     ),
     Array(
         "Тарифы",
-        "/tarifs/",
+        "/#tarifs",
         Array(),
         Array(),
         ""

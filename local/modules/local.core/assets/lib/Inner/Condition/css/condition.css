@@ -1,13 +1,11 @@
 div.condition-border {
-    padding: 10px 8px 5px 70px;
+    padding: 10px 8px 5px 65px;
 
     box-shadow: 0 1px 0 #eeeeee;
     -webkit-box-shadow: 0 1px 0 #eeeeee;
-    border: 1px solid #caced7;
-    border-radius: 4px;
-    background-color: #fdfefe;
+    background-color: var(--gray);
 
-    font-weight: bold;
+    font-weight: 600;
     font-size: 13px;
     line-height: 16px;
     position: relative;
@@ -19,17 +17,17 @@ div.condition-border a:visited,
 div.condition-container a,
 div.condition-container a:link,
 div.condition-container a:visited {
-    color: #113c7d;
+    color: #222222;
     text-decoration: none;
     cursor: pointer;
-    border-bottom: 1px dashed #113c7d;
+    border-bottom: 1px dashed var(--orange);
     padding: 1px 0 1px 0;
     line-height: 20px;
 }
 
 div.condition-border a:hover,
 div.condition-container a:hover {
-    color: #113c7d;
+    color: #222222;
     text-decoration: none;
     cursor: pointer;
     border-bottom: 1px solid transparent;
@@ -37,43 +35,30 @@ div.condition-container a:hover {
 
 div.condition-border a:active,
 div.condition-container a:active {
-    color: #113c7d;
+    color: #222222;
     text-decoration: none;
     cursor: pointer;
     border-bottom: 1px solid transparent;
 }
 
 div.condition-container {
-    padding: 10px 18px 5px 70px;
-
+    padding: 10px 18px 5px 65px;
     box-shadow: 0 1px 0 #eceded;
     -webkit-box-shadow: 0 1px 0 #eceded;
-    border: 1px solid #c9cdd6;
-    border-radius: 4px;
-    background-color: #edf5f6;
-
+    background-color: white;
+    border-left: 2px solid var(--yellow);
     margin-top: 10px;
     position: relative;
 }
 
 div.condition-container div.condition-container {
-    box-shadow: 0 1px 0 #dde5e6;
-    -webkit-box-shadow: 0 1px 0 #dde5e6;
-    border: 1px solid #bcc6d0;
-    border-radius: 4px;
-    background-color: #ddeaec;
-
+    background-color: #f8f9fa;
     margin-top: 10px;
     position: relative;
 }
 
 div.condition-container div.condition-container div.condition-container {
-    box-shadow: 0 1px 0 #eeeeee;
-    -webkit-box-shadow: 0 1px 0 #eeeeee;
-    border: 1px solid #caced7;
-    border-radius: 4px;
     background-color: #fdfefe;
-
     margin-top: 10px;
     position: relative;
 }
@@ -153,52 +138,27 @@ div.condition-container span.control-string {
 
 div.condition-border div.condition-simple-control {
     padding: 5px 8px 5px 12px;
-
-    box-shadow: inset 0 1px 0 #eceded;
-    -webkit-box-shadow: inset 0 1px 0 #eceded;
-    border: 1px solid #d8d8d8;
-    border-radius: 4px;
-    background-color: #f7f9fa;
-    background-image: -webkit-linear-gradient(top, #fafbfc, #f8f9fa);
-    background-image: -moz-linear-gradient(top, #fafbfc, #f8f9fa);
-    background-image: -o-linear-gradient(top, #fafbfc, #f8f9fa);
-    background-image: linear-gradient(top, #fafbfc, #f8f9fa);
-
-    font-weight: bold;
-
+    border-radius: 0;
+    background-color: #ffffff;
+    background-image: none;
+    font-weight: 600;
     margin-top: 10px;
     position: relative;
+    border-left: 2px solid var(--yellow);
 }
 
 div.condition-container div.condition-simple-control {
     padding: 5px 8px 5px 12px;
+    border: none;
+    border-radius: 0;
+    border-left: 2px solid var(--yellow);
+    background-color: #f8f9fa;
+    background-image: none;
 
-    box-shadow: inset 0 1px 0 #dde5e6;
-    -webkit-box-shadow: inset 0 1px 0 #dde5e6;
-    border: 1px solid #bec4c5;
-    border-radius: 4px;
-    background-color: #f7f9fa;
-    background-image: -webkit-linear-gradient(top, #fafbfc, #f8f9fa);
-    background-image: -moz-linear-gradient(top, #fafbfc, #f8f9fa);
-    background-image: -o-linear-gradient(top, #fafbfc, #f8f9fa);
-    background-image: linear-gradient(top, #fafbfc, #f8f9fa);
-
-    font-weight: bold;
+    font-weight: 600;
 
     margin-top: 10px;
     position: relative;
-}
-
-div.condition-container div.condition-container div.condition-simple-control {
-    box-shadow: inset 0 1px 0 #cedadc;
-    -webkit-box-shadow: inset 0 1px 0 #cedadc;
-    border: 1px solid #b1bcbd;
-}
-
-div.condition-container div.condition-container div.condition-simple-control {
-    box-shadow: inset 0 1px 0 #eceded;
-    -webkit-box-shadow: inset 0 1px 0 #eceded;
-    border: 1px solid #d8d8d8;
 }
 
 div.condition-simple-control a,
@@ -225,32 +185,30 @@ div.condition-simple-control a:active,
 
 div.condition-simple-control span.control-prefix {
     display: inline-block;
-    padding: 4px 8px 4px 8px;
-    box-shadow: inset 0 1px 0 #f3f6e4;
-    -webkit-box-shadow: inset 0 1px 0 #f3f6e4;
-    border: 1px solid #b4bd98;
-    border-radius: 2px;
-    background-color: #dfe8bc;
-    background-image: -webkit-linear-gradient(top, #e6ecc9, #d6e1a9);
-    background-image: -moz-linear-gradient(top, #e6ecc9, #d6e1a9);
-    background-image: -o-linear-gradient(top, #e6ecc9, #d6e1a9);
-    background-image: linear-gradient(top, #e6ecc9, #d6e1a9);
+    padding: 4px 8px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border: none;
+    border-radius: 0px;
+    background-color: #ffb300;
+    background-image: none;
+    color: white;
 }
 
 div.condition-add {
     text-align: left;
-    color: #113c7d;
+    color: #222222;
     padding: 5px 5px 5px 0;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 div.condition-add a,
 div.condition-add a:link,
 div.condition-add a:visited {
-    color: #113c7d;
+    color: #222222;
     text-decoration: none;
     cursor: pointer;
-    border-bottom: 1px dashed #113c7d;
+    border-bottom: 1px dashed #222222;
 }
 
 div.condition-add a:hover {
@@ -302,21 +260,23 @@ div.condition-logic {
     height: 30px;
     border-radius: 4px;
     color: #fff !important;
-    font-weight: bold !important;
+    font-weight: 600 !important;
     border: 0 none transparent;
     line-height: 30px !important;
     white-space: nowrap !important;
-    padding: 0 10px 0 5px;
+    padding: 0px;
     cursor: pointer;
     text-align: center !important;
+    font-size: 11px;
 }
 
 div.condition-logic-and {
-    background-color: #9cbd6d;
+    background-color: var(--yellow);
 }
 
 div.condition-logic-or {
-    background-color: #88abc2;
+    background-color: #c7c7c7;
+    color: #ffffff !important;
 }
 
 div.condition-wrapper {
@@ -344,4 +304,40 @@ span.list-alert {
 
 span.condition-space {
     margin-right: 10px;
+}
+
+.condition-wrapper input[type="text"],
+.condition-wrapper input[type="number"],
+.condition-wrapper input[type="password"] {
+    border: none;
+    border-bottom: 2px solid var(--orange);
+    height: 22px;
+    margin-bottom: 0px;
+    width: auto;
+}
+
+.condition-wrapper select {
+    border: none;
+    border-bottom: 2px solid var(--orange);
+    height: 22px;
+    background: transparent;
+}
+
+.bx-calendar .bx-calendar-form-input {
+    background: #fff;
+    border: 1px solid #d1d1d1;
+    box-shadow: inset 1px 1px 0 #f7f7f7;
+    display: inline-block;
+    height: 21px;
+    margin-top: 6px;
+    font-size: 15px;
+    text-align: center;
+    padding: 0;
+    vertical-align: top;
+    width: 28px;
+}
+
+.bx-calendar *,
+.popup-window * {
+    font-family: Montserrat;
 }

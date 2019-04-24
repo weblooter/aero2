@@ -21,6 +21,8 @@
         <? endforeach; ?>
     </ul>
 
+
+
 <? else: ?>
 
     <? if ($arResult['STATUS'] == 'TP_NOT_FOUNT'): ?>
@@ -87,6 +89,7 @@
             (new \Local\Core\Inner\TradingPlatform\Field\Header())->setValue('Базовые настройки')
                 ->printRow();
             ?>
+
             <div class="form-group">
                 <div class="row">
                     <div class="col-xs-4 text-right">
