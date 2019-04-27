@@ -21,27 +21,24 @@ class GlobFileLoaderTest extends TestCase
 {
     public function testSupports()
     {
-        $loader = new GlobFileLoader( new ContainerBuilder(), new FileLocator() );
+        $loader = new GlobFileLoader(new ContainerBuilder(), new FileLocator());
 
-        $this->assertTrue( $loader->supports( 'any-path', 'glob' ),
-            '->supports() returns true if the resource has the glob type' );
-        $this->assertFalse( $loader->supports( 'any-path' ),
-            '->supports() returns false if the resource is not of glob type' );
+        $this->assertTrue($loader->supports('any-path', 'glob'), '->supports() returns true if the resource has the glob type');
+        $this->assertFalse($loader->supports('any-path'), '->supports() returns false if the resource is not of glob type');
     }
 
     public function testLoadAddsTheGlobResourceToTheContainer()
     {
-        $loader = new GlobFileLoaderWithoutImport( $container = new ContainerBuilder(), new FileLocator() );
-        $loader->load( __DIR__.'/../Fixtures/config/*' );
+        $loader = new GlobFileLoaderWithoutImport($container = new ContainerBuilder(), new FileLocator());
+        $loader->load(__DIR__.'/../Fixtures/config/*');
 
-        $this->assertEquals( new GlobResource( __DIR__.'/../Fixtures/config', '/*', false ),
-            $container->getResources()[ 1 ] );
+        $this->assertEquals(new GlobResource(__DIR__.'/../Fixtures/config', '/*', false), $container->getResources()[1]);
     }
 }
 
 class GlobFileLoaderWithoutImport extends GlobFileLoader
 {
-    public function import( $resource, $type = null, $ignoreErrors = false, $sourceResource = null )
+    public function import($resource, $type = null, $ignoreErrors = false, $sourceResource = null)
     {
     }
 }

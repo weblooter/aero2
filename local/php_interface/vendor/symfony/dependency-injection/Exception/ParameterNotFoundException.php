@@ -27,15 +27,14 @@ class ParameterNotFoundException extends InvalidArgumentException implements Not
     private $nonNestedAlternative;
 
     /**
-     * @param string      $key The requested parameter key
-     * @param string      $sourceId The service id that references the non-existent parameter
-     * @param string      $sourceKey The parameter key that references the non-existent parameter
-     * @param \Exception  $previous The previous exception
-     * @param string[]    $alternatives Some parameter name alternatives
-     * @param string|null $nonNestedAlternative The alternative parameter name when the user expected dot notation for
-     *     nested parameters
+     * @param string      $key                  The requested parameter key
+     * @param string      $sourceId             The service id that references the non-existent parameter
+     * @param string      $sourceKey            The parameter key that references the non-existent parameter
+     * @param \Exception  $previous             The previous exception
+     * @param string[]    $alternatives         Some parameter name alternatives
+     * @param string|null $nonNestedAlternative The alternative parameter name when the user expected dot notation for nested parameters
      */
-    public function __construct( string $key, string $sourceId = null, string $sourceKey = null, \Exception $previous = null, array $alternatives = [], string $nonNestedAlternative = null )
+    public function __construct(string $key, string $sourceId = null, string $sourceKey = null, \Exception $previous = null, array $alternatives = [], string $nonNestedAlternative = null)
     {
         $this->key = $key;
         $this->sourceId = $sourceId;
@@ -43,42 +42,29 @@ class ParameterNotFoundException extends InvalidArgumentException implements Not
         $this->alternatives = $alternatives;
         $this->nonNestedAlternative = $nonNestedAlternative;
 
-        parent::__construct( '', 0, $previous );
+        parent::__construct('', 0, $previous);
 
         $this->updateRepr();
     }
 
     public function updateRepr()
     {
-        if ( null !== $this->sourceId )
-        {
-            $this->message = sprintf( 'The service "%s" has a dependency on a non-existent parameter "%s".',
-                $this->sourceId, $this->key );
-        }
-        elseif ( null !== $this->sourceKey )
-        {
-            $this->message = sprintf( 'The parameter "%s" has a dependency on a non-existent parameter "%s".',
-                $this->sourceKey, $this->key );
-        }
-        else
-        {
-            $this->message = sprintf( 'You have requested a non-existent parameter "%s".', $this->key );
+        if (null !== $this->sourceId) {
+            $this->message = sprintf('The service "%s" has a dependency on a non-existent parameter "%s".', $this->sourceId, $this->key);
+        } elseif (null !== $this->sourceKey) {
+            $this->message = sprintf('The parameter "%s" has a dependency on a non-existent parameter "%s".', $this->sourceKey, $this->key);
+        } else {
+            $this->message = sprintf('You have requested a non-existent parameter "%s".', $this->key);
         }
 
-        if ( $this->alternatives )
-        {
-            if ( 1 == \count( $this->alternatives ) )
-            {
+        if ($this->alternatives) {
+            if (1 == \count($this->alternatives)) {
                 $this->message .= ' Did you mean this: "';
-            }
-            else
-            {
+            } else {
                 $this->message .= ' Did you mean one of these: "';
             }
-            $this->message .= implode( '", "', $this->alternatives ).'"?';
-        }
-        elseif ( null !== $this->nonNestedAlternative )
-        {
+            $this->message .= implode('", "', $this->alternatives).'"?';
+        } elseif (null !== $this->nonNestedAlternative) {
             $this->message .= ' You cannot access nested array items, do you want to inject "'.$this->nonNestedAlternative.'" instead?';
         }
     }
@@ -98,14 +84,14 @@ class ParameterNotFoundException extends InvalidArgumentException implements Not
         return $this->sourceKey;
     }
 
-    public function setSourceId( $sourceId )
+    public function setSourceId($sourceId)
     {
         $this->sourceId = $sourceId;
 
         $this->updateRepr();
     }
 
-    public function setSourceKey( $sourceKey )
+    public function setSourceKey($sourceKey)
     {
         $this->sourceKey = $sourceKey;
 

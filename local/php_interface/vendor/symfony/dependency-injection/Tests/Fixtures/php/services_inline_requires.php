@@ -27,9 +27,8 @@ class ProjectServiceContainer extends Container
     public function __construct()
     {
         $dir = __DIR__;
-        for ( $i = 1; $i <= 5; ++$i )
-        {
-            $this->targetDirs[ $i ] = $dir = \dirname( $dir );
+        for ($i = 1; $i <= 5; ++$i) {
+            $this->targetDirs[$i] = $dir = \dirname($dir);
         }
         $this->parameters = $this->getDefaultParameters();
 
@@ -42,11 +41,11 @@ class ProjectServiceContainer extends Container
 
         $this->aliases = [];
 
-        $this->privates[ 'service_container' ] = function () {
-            include_once $this->targetDirs[ 1 ].'/includes/HotPath/I1.php';
-            include_once $this->targetDirs[ 1 ].'/includes/HotPath/P1.php';
-            include_once $this->targetDirs[ 1 ].'/includes/HotPath/T1.php';
-            include_once $this->targetDirs[ 1 ].'/includes/HotPath/C1.php';
+        $this->privates['service_container'] = function () {
+            include_once $this->targetDirs[1].'/includes/HotPath/I1.php';
+            include_once $this->targetDirs[1].'/includes/HotPath/P1.php';
+            include_once $this->targetDirs[1].'/includes/HotPath/T1.php';
+            include_once $this->targetDirs[1].'/includes/HotPath/C1.php';
         };
     }
 
@@ -58,7 +57,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()
@@ -82,7 +81,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getParentNotExistsService()
     {
-        return $this->services[ 'Symfony\Component\DependencyInjection\Tests\Fixtures\ParentNotExists' ] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\ParentNotExists();
+        return $this->services['Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\ParentNotExists'] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\ParentNotExists();
     }
 
     /**
@@ -92,7 +91,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getC1Service()
     {
-        return $this->services[ 'Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C1' ] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C1();
+        return $this->services['Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\includes\\HotPath\\C1'] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C1();
     }
 
     /**
@@ -102,52 +101,46 @@ class ProjectServiceContainer extends Container
      */
     protected function getC2Service()
     {
-        include_once $this->targetDirs[ 1 ].'/includes/HotPath/C2.php';
-        include_once $this->targetDirs[ 1 ].'/includes/HotPath/C3.php';
+        include_once $this->targetDirs[1].'/includes/HotPath/C2.php';
+        include_once $this->targetDirs[1].'/includes/HotPath/C3.php';
 
-        return $this->services[ 'Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C2' ] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C2( new \Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C3() );
+        return $this->services['Symfony\\Component\\DependencyInjection\\Tests\\Fixtures\\includes\\HotPath\\C2'] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C2(new \Symfony\Component\DependencyInjection\Tests\Fixtures\includes\HotPath\C3());
     }
 
-    public function getParameter( $name )
+    public function getParameter($name)
     {
-        $name = (string)$name;
+        $name = (string) $name;
 
-        if ( !( isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
-                $this->parameters ) ) )
-        {
-            throw new InvalidArgumentException( sprintf( 'The parameter "%s" must be defined.', $name ) );
+        if (!(isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters))) {
+            throw new InvalidArgumentException(sprintf('The parameter "%s" must be defined.', $name));
         }
-        if ( isset( $this->loadedDynamicParameters[ $name ] ) )
-        {
-            return $this->loadedDynamicParameters[ $name ] ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
+        if (isset($this->loadedDynamicParameters[$name])) {
+            return $this->loadedDynamicParameters[$name] ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
         }
 
-        return $this->parameters[ $name ];
+        return $this->parameters[$name];
     }
 
-    public function hasParameter( $name )
+    public function hasParameter($name)
     {
-        $name = (string)$name;
+        $name = (string) $name;
 
-        return isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
-                $this->parameters );
+        return isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters);
     }
 
-    public function setParameter( $name, $value )
+    public function setParameter($name, $value)
     {
-        throw new LogicException( 'Impossible to call set() on a frozen ParameterBag.' );
+        throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }
 
     public function getParameterBag()
     {
-        if ( null === $this->parameterBag )
-        {
+        if (null === $this->parameterBag) {
             $parameters = $this->parameters;
-            foreach ( $this->loadedDynamicParameters as $name => $loaded )
-            {
-                $parameters[ $name ] = $loaded ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
+            foreach ($this->loadedDynamicParameters as $name => $loaded) {
+                $parameters[$name] = $loaded ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
             }
-            $this->parameterBag = new FrozenParameterBag( $parameters );
+            $this->parameterBag = new FrozenParameterBag($parameters);
         }
 
         return $this->parameterBag;
@@ -165,9 +158,9 @@ class ProjectServiceContainer extends Container
      *
      * @throws InvalidArgumentException When the dynamic parameter does not exist
      */
-    private function getDynamicParameter( $name )
+    private function getDynamicParameter($name)
     {
-        throw new InvalidArgumentException( sprintf( 'The dynamic parameter "%s" must be defined.', $name ) );
+        throw new InvalidArgumentException(sprintf('The dynamic parameter "%s" must be defined.', $name));
     }
 
     /**

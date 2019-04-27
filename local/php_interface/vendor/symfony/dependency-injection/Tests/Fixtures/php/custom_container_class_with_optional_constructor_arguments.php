@@ -44,7 +44,7 @@ class ProjectServiceContainer extends \Symfony\Component\DependencyInjection\Tes
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()

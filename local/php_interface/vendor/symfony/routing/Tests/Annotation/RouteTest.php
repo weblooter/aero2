@@ -21,7 +21,7 @@ class RouteTest extends TestCase
      */
     public function testInvalidRouteParameter()
     {
-        $route = new Route( ['foo' => 'bar'] );
+        $route = new Route(['foo' => 'bar']);
     }
 
     /**
@@ -29,16 +29,16 @@ class RouteTest extends TestCase
      */
     public function testTryingToSetLocalesDirectly()
     {
-        $route = new Route( ['locales' => ['nl' => 'bar']] );
+        $route = new Route(['locales' => ['nl' => 'bar']]);
     }
 
     /**
      * @dataProvider getValidParameters
      */
-    public function testRouteParameters( $parameter, $value, $getter )
+    public function testRouteParameters($parameter, $value, $getter)
     {
-        $route = new Route( [$parameter => $value] );
-        $this->assertEquals( $route->$getter(), $value );
+        $route = new Route([$parameter => $value]);
+        $this->assertEquals($route->$getter(), $value);
     }
 
     public function getValidParameters()

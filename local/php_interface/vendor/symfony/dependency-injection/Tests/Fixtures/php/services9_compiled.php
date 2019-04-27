@@ -72,7 +72,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()
@@ -104,9 +104,9 @@ class ProjectServiceContainer extends Container
      */
     protected function getBARService()
     {
-        $this->services[ 'BAR' ] = $instance = new \stdClass();
+        $this->services['BAR'] = $instance = new \stdClass();
 
-        $instance->bar = ( $this->services[ 'bar' ] ?? $this->getBar3Service() );
+        $instance->bar = ($this->services['bar'] ?? $this->getBar3Service());
 
         return $instance;
     }
@@ -118,7 +118,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getBAR2Service()
     {
-        return $this->services[ 'BAR2' ] = new \stdClass();
+        return $this->services['BAR2'] = new \stdClass();
     }
 
     /**
@@ -128,11 +128,11 @@ class ProjectServiceContainer extends Container
      */
     protected function getBar3Service()
     {
-        $a = ( $this->services[ 'foo.baz' ] ?? $this->getFoo_BazService() );
+        $a = ($this->services['foo.baz'] ?? $this->getFoo_BazService());
 
-        $this->services[ 'bar' ] = $instance = new \Bar\FooClass( 'foo', $a, $this->getParameter( 'foo_bar' ) );
+        $this->services['bar'] = $instance = new \Bar\FooClass('foo', $a, $this->getParameter('foo_bar'));
 
-        $a->configure( $instance );
+        $a->configure($instance);
 
         return $instance;
     }
@@ -144,7 +144,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getBar22Service()
     {
-        return $this->services[ 'bar2' ] = new \stdClass();
+        return $this->services['bar2'] = new \stdClass();
     }
 
     /**
@@ -154,9 +154,9 @@ class ProjectServiceContainer extends Container
      */
     protected function getBazService()
     {
-        $this->services[ 'baz' ] = $instance = new \Baz();
+        $this->services['baz'] = $instance = new \Baz();
 
-        $instance->setFoo( ( $this->services[ 'foo_with_inline' ] ?? $this->getFooWithInlineService() ) );
+        $instance->setFoo(($this->services['foo_with_inline'] ?? $this->getFooWithInlineService()));
 
         return $instance;
     }
@@ -168,12 +168,12 @@ class ProjectServiceContainer extends Container
      */
     protected function getConfiguredServiceService()
     {
-        $this->services[ 'configured_service' ] = $instance = new \stdClass();
+        $this->services['configured_service'] = $instance = new \stdClass();
 
         $a = new \ConfClass();
-        $a->setFoo( ( $this->services[ 'baz' ] ?? $this->getBazService() ) );
+        $a->setFoo(($this->services['baz'] ?? $this->getBazService()));
 
-        $a->configureStdClass( $instance );
+        $a->configureStdClass($instance);
 
         return $instance;
     }
@@ -185,9 +185,9 @@ class ProjectServiceContainer extends Container
      */
     protected function getConfiguredServiceSimpleService()
     {
-        $this->services[ 'configured_service_simple' ] = $instance = new \stdClass();
+        $this->services['configured_service_simple'] = $instance = new \stdClass();
 
-        ( new \ConfClass( 'bar' ) )->configureStdClass( $instance );
+        (new \ConfClass('bar'))->configureStdClass($instance);
 
         return $instance;
     }
@@ -199,7 +199,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getDecoratorServiceService()
     {
-        return $this->services[ 'decorator_service' ] = new \stdClass();
+        return $this->services['decorator_service'] = new \stdClass();
     }
 
     /**
@@ -209,7 +209,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getDecoratorServiceWithNameService()
     {
-        return $this->services[ 'decorator_service_with_name' ] = new \stdClass();
+        return $this->services['decorator_service_with_name'] = new \stdClass();
     }
 
     /**
@@ -221,10 +221,9 @@ class ProjectServiceContainer extends Container
      */
     protected function getDeprecatedServiceService()
     {
-        @trigger_error( 'The "deprecated_service" service is deprecated. You should stop using it, as it will soon be removed.',
-            E_USER_DEPRECATED );
+        @trigger_error('The "deprecated_service" service is deprecated. You should stop using it, as it will soon be removed.', E_USER_DEPRECATED);
 
-        return $this->services[ 'deprecated_service' ] = new \stdClass();
+        return $this->services['deprecated_service'] = new \stdClass();
     }
 
     /**
@@ -234,7 +233,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getFactoryServiceService()
     {
-        return $this->services[ 'factory_service' ] = ( $this->services[ 'foo.baz' ] ?? $this->getFoo_BazService() )->getInstance();
+        return $this->services['factory_service'] = ($this->services['foo.baz'] ?? $this->getFoo_BazService())->getInstance();
     }
 
     /**
@@ -244,7 +243,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getFactoryServiceSimpleService()
     {
-        return $this->services[ 'factory_service_simple' ] = ( $this->privates[ 'factory_simple' ] ?? $this->getFactorySimpleService() )->getInstance();
+        return $this->services['factory_service_simple'] = ($this->privates['factory_simple'] ?? $this->getFactorySimpleService())->getInstance();
     }
 
     /**
@@ -254,17 +253,16 @@ class ProjectServiceContainer extends Container
      */
     protected function getFooService()
     {
-        $a = ( $this->services[ 'foo.baz' ] ?? $this->getFoo_BazService() );
+        $a = ($this->services['foo.baz'] ?? $this->getFoo_BazService());
 
-        $this->services[ 'foo' ] = $instance = \Bar\FooClass::getInstance( 'foo', $a,
-            ['bar' => 'foo is bar', 'foobar' => 'bar'], true, $this );
+        $this->services['foo'] = $instance = \Bar\FooClass::getInstance('foo', $a, ['bar' => 'foo is bar', 'foobar' => 'bar'], true, $this);
 
         $instance->foo = 'bar';
         $instance->moo = $a;
         $instance->qux = ['bar' => 'foo is bar', 'foobar' => 'bar'];
-        $instance->setBar( ( $this->services[ 'bar' ] ?? $this->getBar3Service() ) );
+        $instance->setBar(($this->services['bar'] ?? $this->getBar3Service()));
         $instance->initialize();
-        sc_configure( $instance );
+        sc_configure($instance);
 
         return $instance;
     }
@@ -276,9 +274,9 @@ class ProjectServiceContainer extends Container
      */
     protected function getFoo_BazService()
     {
-        $this->services[ 'foo.baz' ] = $instance = \BazClass::getInstance();
+        $this->services['foo.baz'] = $instance = \BazClass::getInstance();
 
-        \BazClass::configureStatic1( $instance );
+        \BazClass::configureStatic1($instance);
 
         return $instance;
     }
@@ -290,7 +288,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getFooBarService()
     {
-        return new \Bar\FooClass( ( $this->services[ 'deprecated_service' ] ?? $this->getDeprecatedServiceService() ) );
+        return new \Bar\FooClass(($this->services['deprecated_service'] ?? $this->getDeprecatedServiceService()));
     }
 
     /**
@@ -300,13 +298,13 @@ class ProjectServiceContainer extends Container
      */
     protected function getFooWithInlineService()
     {
-        $this->services[ 'foo_with_inline' ] = $instance = new \Foo();
+        $this->services['foo_with_inline'] = $instance = new \Foo();
 
         $a = new \Bar();
         $a->pub = 'pub';
-        $a->setBaz( ( $this->services[ 'baz' ] ?? $this->getBazService() ) );
+        $a->setBaz(($this->services['baz'] ?? $this->getBazService()));
 
-        $instance->setBar( $a );
+        $instance->setBar($a);
 
         return $instance;
     }
@@ -318,12 +316,12 @@ class ProjectServiceContainer extends Container
      */
     protected function getLazyContextService()
     {
-        return $this->services[ 'lazy_context' ] = new \LazyContext( new RewindableGenerator( function () {
-            yield 'k1' => ( $this->services[ 'foo.baz' ] ?? $this->getFoo_BazService() );
+        return $this->services['lazy_context'] = new \LazyContext(new RewindableGenerator(function () {
+            yield 'k1' => ($this->services['foo.baz'] ?? $this->getFoo_BazService());
             yield 'k2' => $this;
-        }, 2 ), new RewindableGenerator( function () {
+        }, 2), new RewindableGenerator(function () {
             return new \EmptyIterator();
-        }, 0 ) );
+        }, 0));
     }
 
     /**
@@ -333,11 +331,11 @@ class ProjectServiceContainer extends Container
      */
     protected function getLazyContextIgnoreInvalidRefService()
     {
-        return $this->services[ 'lazy_context_ignore_invalid_ref' ] = new \LazyContext( new RewindableGenerator( function () {
-            yield 0 => ( $this->services[ 'foo.baz' ] ?? $this->getFoo_BazService() );
-        }, 1 ), new RewindableGenerator( function () {
+        return $this->services['lazy_context_ignore_invalid_ref'] = new \LazyContext(new RewindableGenerator(function () {
+            yield 0 => ($this->services['foo.baz'] ?? $this->getFoo_BazService());
+        }, 1), new RewindableGenerator(function () {
             return new \EmptyIterator();
-        }, 0 ) );
+        }, 0));
     }
 
     /**
@@ -349,11 +347,11 @@ class ProjectServiceContainer extends Container
     {
         include_once '%path%foo.php';
 
-        $this->services[ 'method_call1' ] = $instance = new \Bar\FooClass();
+        $this->services['method_call1'] = $instance = new \Bar\FooClass();
 
-        $instance->setBar( ( $this->services[ 'foo' ] ?? $this->getFooService() ) );
-        $instance->setBar( null );
-        $instance->setBar( ( ( $this->services[ 'foo' ] ?? $this->getFooService() )->foo().( ( $this->hasParameter( "foo" ) ) ? ( $this->getParameter( "foo" ) ) : ( "default" ) ) ) );
+        $instance->setBar(($this->services['foo'] ?? $this->getFooService()));
+        $instance->setBar(NULL);
+        $instance->setBar((($this->services['foo'] ?? $this->getFooService())->foo() . (($this->hasParameter("foo")) ? ($this->getParameter("foo")) : ("default"))));
 
         return $instance;
     }
@@ -368,7 +366,7 @@ class ProjectServiceContainer extends Container
         $a = new \FactoryClass();
         $a->foo = 'bar';
 
-        $this->services[ 'new_factory_service' ] = $instance = $a->getInstance();
+        $this->services['new_factory_service'] = $instance = $a->getInstance();
 
         $instance->foo = 'bar';
 
@@ -382,7 +380,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getRuntimeErrorService()
     {
-        return $this->services[ 'runtime_error' ] = new \stdClass( ( $this->privates[ 'errored_definition' ] ?? $this->getErroredDefinitionService() ) );
+        return $this->services['runtime_error'] = new \stdClass(($this->privates['errored_definition'] ?? $this->getErroredDefinitionService()));
     }
 
     /**
@@ -392,7 +390,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getServiceFromStaticMethodService()
     {
-        return $this->services[ 'service_from_static_method' ] = \Bar\FooClass::getInstance();
+        return $this->services['service_from_static_method'] = \Bar\FooClass::getInstance();
     }
 
     /**
@@ -402,10 +400,10 @@ class ProjectServiceContainer extends Container
      */
     protected function getTaggedIteratorService()
     {
-        return $this->services[ 'tagged_iterator' ] = new \Bar( new RewindableGenerator( function () {
-            yield 0 => ( $this->services[ 'foo' ] ?? $this->getFooService() );
-            yield 1 => ( $this->privates[ 'tagged_iterator_foo' ] ?? ( $this->privates[ 'tagged_iterator_foo' ] = new \Bar() ) );
-        }, 2 ) );
+        return $this->services['tagged_iterator'] = new \Bar(new RewindableGenerator(function () {
+            yield 0 => ($this->services['foo'] ?? $this->getFooService());
+            yield 1 => ($this->privates['tagged_iterator_foo'] ?? ($this->privates['tagged_iterator_foo'] = new \Bar()));
+        }, 2));
     }
 
     /**
@@ -415,7 +413,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getErroredDefinitionService()
     {
-        throw new RuntimeException( 'Service "errored_definition" is broken.' );
+        throw new RuntimeException('Service "errored_definition" is broken.');
     }
 
     /**
@@ -427,52 +425,45 @@ class ProjectServiceContainer extends Container
      */
     protected function getFactorySimpleService()
     {
-        @trigger_error( 'The "factory_simple" service is deprecated. You should stop using it, as it will soon be removed.',
-            E_USER_DEPRECATED );
+        @trigger_error('The "factory_simple" service is deprecated. You should stop using it, as it will soon be removed.', E_USER_DEPRECATED);
 
-        return $this->privates[ 'factory_simple' ] = new \SimpleFactoryClass( 'foo' );
+        return $this->privates['factory_simple'] = new \SimpleFactoryClass('foo');
     }
 
-    public function getParameter( $name )
+    public function getParameter($name)
     {
-        $name = (string)$name;
+        $name = (string) $name;
 
-        if ( !( isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
-                $this->parameters ) ) )
-        {
-            throw new InvalidArgumentException( sprintf( 'The parameter "%s" must be defined.', $name ) );
+        if (!(isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters))) {
+            throw new InvalidArgumentException(sprintf('The parameter "%s" must be defined.', $name));
         }
-        if ( isset( $this->loadedDynamicParameters[ $name ] ) )
-        {
-            return $this->loadedDynamicParameters[ $name ] ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
+        if (isset($this->loadedDynamicParameters[$name])) {
+            return $this->loadedDynamicParameters[$name] ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
         }
 
-        return $this->parameters[ $name ];
+        return $this->parameters[$name];
     }
 
-    public function hasParameter( $name )
+    public function hasParameter($name)
     {
-        $name = (string)$name;
+        $name = (string) $name;
 
-        return isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
-                $this->parameters );
+        return isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters);
     }
 
-    public function setParameter( $name, $value )
+    public function setParameter($name, $value)
     {
-        throw new LogicException( 'Impossible to call set() on a frozen ParameterBag.' );
+        throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }
 
     public function getParameterBag()
     {
-        if ( null === $this->parameterBag )
-        {
+        if (null === $this->parameterBag) {
             $parameters = $this->parameters;
-            foreach ( $this->loadedDynamicParameters as $name => $loaded )
-            {
-                $parameters[ $name ] = $loaded ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
+            foreach ($this->loadedDynamicParameters as $name => $loaded) {
+                $parameters[$name] = $loaded ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
             }
-            $this->parameterBag = new FrozenParameterBag( $parameters );
+            $this->parameterBag = new FrozenParameterBag($parameters);
         }
 
         return $this->parameterBag;
@@ -490,9 +481,9 @@ class ProjectServiceContainer extends Container
      *
      * @throws InvalidArgumentException When the dynamic parameter does not exist
      */
-    private function getDynamicParameter( $name )
+    private function getDynamicParameter($name)
     {
-        throw new InvalidArgumentException( sprintf( 'The dynamic parameter "%s" must be defined.', $name ) );
+        throw new InvalidArgumentException(sprintf('The dynamic parameter "%s" must be defined.', $name));
     }
 
     /**

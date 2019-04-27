@@ -30,11 +30,10 @@ class HelperSet implements \IteratorAggregate
     /**
      * @param Helper[] $helpers An array of helper
      */
-    public function __construct( array $helpers = [] )
+    public function __construct(array $helpers = [])
     {
-        foreach ( $helpers as $alias => $helper )
-        {
-            $this->set( $helper, \is_int( $alias ) ? null : $alias );
+        foreach ($helpers as $alias => $helper) {
+            $this->set($helper, \is_int($alias) ? null : $alias);
         }
     }
 
@@ -42,17 +41,16 @@ class HelperSet implements \IteratorAggregate
      * Sets a helper.
      *
      * @param HelperInterface $helper The helper instance
-     * @param string          $alias An alias
+     * @param string          $alias  An alias
      */
-    public function set( HelperInterface $helper, $alias = null )
+    public function set(HelperInterface $helper, $alias = null)
     {
-        $this->helpers[ $helper->getName() ] = $helper;
-        if ( null !== $alias )
-        {
-            $this->helpers[ $alias ] = $helper;
+        $this->helpers[$helper->getName()] = $helper;
+        if (null !== $alias) {
+            $this->helpers[$alias] = $helper;
         }
 
-        $helper->setHelperSet( $this );
+        $helper->setHelperSet($this);
     }
 
     /**
@@ -62,9 +60,9 @@ class HelperSet implements \IteratorAggregate
      *
      * @return bool true if the helper is defined, false otherwise
      */
-    public function has( $name )
+    public function has($name)
     {
-        return isset( $this->helpers[ $name ] );
+        return isset($this->helpers[$name]);
     }
 
     /**
@@ -76,17 +74,16 @@ class HelperSet implements \IteratorAggregate
      *
      * @throws InvalidArgumentException if the helper is not defined
      */
-    public function get( $name )
+    public function get($name)
     {
-        if ( !$this->has( $name ) )
-        {
-            throw new InvalidArgumentException( sprintf( 'The helper "%s" is not defined.', $name ) );
+        if (!$this->has($name)) {
+            throw new InvalidArgumentException(sprintf('The helper "%s" is not defined.', $name));
         }
 
-        return $this->helpers[ $name ];
+        return $this->helpers[$name];
     }
 
-    public function setCommand( Command $command = null )
+    public function setCommand(Command $command = null)
     {
         $this->command = $command;
     }
@@ -106,6 +103,6 @@ class HelperSet implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator( $this->helpers );
+        return new \ArrayIterator($this->helpers);
     }
 }

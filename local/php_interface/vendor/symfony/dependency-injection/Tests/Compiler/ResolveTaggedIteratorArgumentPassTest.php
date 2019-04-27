@@ -25,16 +25,16 @@ class ResolveTaggedIteratorArgumentPassTest extends TestCase
     public function testProcess()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a', 'stdClass' )->addTag( 'foo' );
-        $container->register( 'b', 'stdClass' )->addTag( 'foo', ['priority' => 20] );
-        $container->register( 'c', 'stdClass' )->addTag( 'foo', ['priority' => 10] );
-        $container->register( 'd', 'stdClass' )->setProperty( 'foos', new TaggedIteratorArgument( 'foo' ) );
+        $container->register('a', 'stdClass')->addTag('foo');
+        $container->register('b', 'stdClass')->addTag('foo', ['priority' => 20]);
+        $container->register('c', 'stdClass')->addTag('foo', ['priority' => 10]);
+        $container->register('d', 'stdClass')->setProperty('foos', new TaggedIteratorArgument('foo'));
 
-        ( new ResolveTaggedIteratorArgumentPass() )->process( $container );
+        (new ResolveTaggedIteratorArgumentPass())->process($container);
 
-        $properties = $container->getDefinition( 'd' )->getProperties();
-        $expected = new TaggedIteratorArgument( 'foo' );
-        $expected->setValues( [new Reference( 'b' ), new Reference( 'c' ), new Reference( 'a' )] );
-        $this->assertEquals( $expected, $properties[ 'foos' ] );
+        $properties = $container->getDefinition('d')->getProperties();
+        $expected = new TaggedIteratorArgument('foo');
+        $expected->setValues([new Reference('b'), new Reference('c'), new Reference('a')]);
+        $this->assertEquals($expected, $properties['foos']);
     }
 }

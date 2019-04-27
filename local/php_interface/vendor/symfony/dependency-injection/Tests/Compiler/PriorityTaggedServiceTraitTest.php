@@ -44,49 +44,46 @@ class PriorityTaggedServiceTraitTest extends TestCase
 
         $container = new ContainerBuilder();
 
-        foreach ( $services as $id => $tags )
-        {
-            $definition = $container->register( $id );
+        foreach ($services as $id => $tags) {
+            $definition = $container->register($id);
 
-            foreach ( $tags as $name => $attributes )
-            {
-                $definition->addTag( $name, $attributes );
+            foreach ($tags as $name => $attributes) {
+                $definition->addTag($name, $attributes);
             }
         }
 
         $expected = [
-            new Reference( 'my_service2' ),
-            new Reference( 'my_service17' ),
-            new Reference( 'my_service1' ),
-            new Reference( 'my_service18' ),
-            new Reference( 'my_service8' ),
-            new Reference( 'my_service15' ),
-            new Reference( 'my_service4' ),
-            new Reference( 'my_service19' ),
-            new Reference( 'my_service5' ),
-            new Reference( 'my_service16' ),
-            new Reference( 'my_service9' ),
-            new Reference( 'my_service7' ),
-            new Reference( 'my_service6' ),
-            new Reference( 'my_service3' ),
-            new Reference( 'my_service10' ),
-            new Reference( 'my_service14' ),
-            new Reference( 'my_service11' ),
-            new Reference( 'my_service12' ),
-            new Reference( 'my_service13' ),
+            new Reference('my_service2'),
+            new Reference('my_service17'),
+            new Reference('my_service1'),
+            new Reference('my_service18'),
+            new Reference('my_service8'),
+            new Reference('my_service15'),
+            new Reference('my_service4'),
+            new Reference('my_service19'),
+            new Reference('my_service5'),
+            new Reference('my_service16'),
+            new Reference('my_service9'),
+            new Reference('my_service7'),
+            new Reference('my_service6'),
+            new Reference('my_service3'),
+            new Reference('my_service10'),
+            new Reference('my_service14'),
+            new Reference('my_service11'),
+            new Reference('my_service12'),
+            new Reference('my_service13'),
         ];
 
         $priorityTaggedServiceTraitImplementation = new PriorityTaggedServiceTraitImplementation();
 
-        $this->assertEquals( $expected,
-            $priorityTaggedServiceTraitImplementation->test( 'my_custom_tag', $container ) );
+        $this->assertEquals($expected, $priorityTaggedServiceTraitImplementation->test('my_custom_tag', $container));
     }
 
     public function testWithEmptyArray()
     {
         $container = new ContainerBuilder();
         $priorityTaggedServiceTraitImplementation = new PriorityTaggedServiceTraitImplementation();
-        $this->assertEquals( [], $priorityTaggedServiceTraitImplementation->test( 'my_custom_tag', $container ) );
+        $this->assertEquals([], $priorityTaggedServiceTraitImplementation->test('my_custom_tag', $container));
     }
 }
 
@@ -94,8 +91,8 @@ class PriorityTaggedServiceTraitImplementation
 {
     use PriorityTaggedServiceTrait;
 
-    public function test( $tagName, ContainerBuilder $container )
+    public function test($tagName, ContainerBuilder $container)
     {
-        return $this->findAndSortTaggedServices( $tagName, $container );
+        return $this->findAndSortTaggedServices($tagName, $container);
     }
 }

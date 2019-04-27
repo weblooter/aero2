@@ -22,15 +22,15 @@ class RoutingResolverPassTest extends TestCase
     public function testProcess()
     {
         $container = new ContainerBuilder();
-        $container->register( 'routing.resolver', LoaderResolver::class );
-        $container->register( 'loader1' )->addTag( 'routing.loader' );
-        $container->register( 'loader2' )->addTag( 'routing.loader' );
+        $container->register('routing.resolver', LoaderResolver::class);
+        $container->register('loader1')->addTag('routing.loader');
+        $container->register('loader2')->addTag('routing.loader');
 
-        ( new RoutingResolverPass() )->process( $container );
+        (new RoutingResolverPass())->process($container);
 
         $this->assertEquals(
-            [['addLoader', [new Reference( 'loader1' )]], ['addLoader', [new Reference( 'loader2' )]]],
-            $container->getDefinition( 'routing.resolver' )->getMethodCalls()
+            [['addLoader', [new Reference('loader1')]], ['addLoader', [new Reference('loader2')]]],
+            $container->getDefinition('routing.resolver')->getMethodCalls()
         );
     }
 }

@@ -424,4 +424,22 @@ DOCHERE;
      * @return bool
      */
     abstract public function isValueFilled($mixData);
+
+    /**
+     * Извлекает истинное значение из поля.<br/>
+     * Для извлечения поле должно быть заполнено.<br/>
+     * <br/>
+     * $mixAdditionalData используется в качетстве источника дополнительний информации, к примеру для поля Resource.<br/>
+     * Данные по товару должны быть подготовлены как при \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginFilterProduct().<br/>
+     * Метод предназначен для работы в \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginOfferForeachBody()
+     *
+     * @see \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginOfferForeachBody()
+     * @see \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginFilterProduct()
+     *
+     * @param mixed $mixData Значение в формате поля
+     * @param mixed $mixAdditionalData Дополнительные данные
+     *
+     * @return mixed
+     */
+    abstract public function extractValue($mixData, $mixAdditionalData = null);
 }

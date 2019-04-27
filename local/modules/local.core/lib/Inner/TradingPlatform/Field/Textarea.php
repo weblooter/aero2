@@ -84,4 +84,25 @@ class Textarea extends AbstractField
 
         return $boolRes;
     }
+
+    /** @inheritDoc */
+    public function extractValue($mixData, $mixAdditionalData = null)
+    {
+        $mixExtract = null;
+        if( is_array($mixData) )
+        {
+            foreach ($mixData as &$str)
+            {
+                $str = (string)(trim($str));
+            }
+            unset($str);
+            $mixExtract = array_diff($mixData, ['']);
+        }
+        elseif( is_scalar($mixData) )
+        {
+            $mixExtract = (string)(trim($mixData));
+        }
+
+        return $mixExtract;
+    }
 }

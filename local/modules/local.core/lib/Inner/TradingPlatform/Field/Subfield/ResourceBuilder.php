@@ -94,4 +94,10 @@ class ResourceBuilder extends \Local\Core\Inner\TradingPlatform\Field\AbstractFi
 
         return $boolRes;
     }
+
+    /** @inheritDoc */
+    public function extractValue($mixData, $mixAdditionalData = null)
+    {
+        return null;
+    }
 }

@@ -18,7 +18,7 @@ class TableRows implements \IteratorAggregate
 {
     private $generator;
 
-    public function __construct( callable $generator )
+    public function __construct(callable $generator)
     {
         $this->generator = $generator;
     }

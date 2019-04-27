@@ -363,5 +363,12 @@ class ImportData
          * @see \Local\Core\Inner\TradingPlatform\Field\Resource::getSourceOptions()
          */
         \Local\Core\Inner\Cache::deleteCache(['Inner', 'TradingPlatform', 'Field', 'Resource'], ['SourceOptions', 'storeId='.$intStoreId]);
+
+        /**
+         * Удаление кэша CUSTOM_FIELD для списка категорий в поле "Источник" (Resource) в настройках торговых площадок по магазину при получении значения
+         *
+         * @see \Local\Core\Inner\TradingPlatform\Field\Resource::extractSourceValue()
+         */
+        \Local\Core\Inner\Cache::deleteCache(['Inner', 'TradingPlatform', 'Field', 'Resource'], ['CustomFieldCategoryList', 'storeId='.$intStoreId]);
     }
 }

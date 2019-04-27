@@ -24,21 +24,21 @@ class RouterTest extends TestCase
 
     protected function setUp()
     {
-        $this->loader = $this->getMockBuilder( 'Symfony\Component\Config\Loader\LoaderInterface' )->getMock();
-        $this->router = new Router( $this->loader, 'routing.yml' );
+        $this->loader = $this->getMockBuilder('Symfony\Component\Config\Loader\LoaderInterface')->getMock();
+        $this->router = new Router($this->loader, 'routing.yml');
     }
 
     public function testSetOptionsWithSupportedOptions()
     {
-        $this->router->setOptions( [
+        $this->router->setOptions([
             'cache_dir' => './cache',
             'debug' => true,
             'resource_type' => 'ResourceType',
-        ] );
+        ]);
 
-        $this->assertSame( './cache', $this->router->getOption( 'cache_dir' ) );
-        $this->assertTrue( $this->router->getOption( 'debug' ) );
-        $this->assertSame( 'ResourceType', $this->router->getOption( 'resource_type' ) );
+        $this->assertSame('./cache', $this->router->getOption('cache_dir'));
+        $this->assertTrue($this->router->getOption('debug'));
+        $this->assertSame('ResourceType', $this->router->getOption('resource_type'));
     }
 
     /**
@@ -47,19 +47,19 @@ class RouterTest extends TestCase
      */
     public function testSetOptionsWithUnsupportedOptions()
     {
-        $this->router->setOptions( [
+        $this->router->setOptions([
             'cache_dir' => './cache',
             'option_foo' => true,
             'option_bar' => 'baz',
             'resource_type' => 'ResourceType',
-        ] );
+        ]);
     }
 
     public function testSetOptionWithSupportedOption()
     {
-        $this->router->setOption( 'cache_dir', './cache' );
+        $this->router->setOption('cache_dir', './cache');
 
-        $this->assertSame( './cache', $this->router->getOption( 'cache_dir' ) );
+        $this->assertSame('./cache', $this->router->getOption('cache_dir'));
     }
 
     /**
@@ -68,7 +68,7 @@ class RouterTest extends TestCase
      */
     public function testSetOptionWithUnsupportedOption()
     {
-        $this->router->setOption( 'option_foo', true );
+        $this->router->setOption('option_foo', true);
     }
 
     /**
@@ -77,34 +77,34 @@ class RouterTest extends TestCase
      */
     public function testGetOptionWithUnsupportedOption()
     {
-        $this->router->getOption( 'option_foo', true );
+        $this->router->getOption('option_foo', true);
     }
 
     public function testThatRouteCollectionIsLoaded()
     {
-        $this->router->setOption( 'resource_type', 'ResourceType' );
+        $this->router->setOption('resource_type', 'ResourceType');
 
         $routeCollection = new RouteCollection();
 
-        $this->loader->expects( $this->once() )
-            ->method( 'load' )->with( 'routing.yml', 'ResourceType' )
-            ->will( $this->returnValue( $routeCollection ) );
+        $this->loader->expects($this->once())
+            ->method('load')->with('routing.yml', 'ResourceType')
+            ->will($this->returnValue($routeCollection));
 
-        $this->assertSame( $routeCollection, $this->router->getRouteCollection() );
+        $this->assertSame($routeCollection, $this->router->getRouteCollection());
     }
 
     /**
      * @dataProvider provideMatcherOptionsPreventingCaching
      */
-    public function testMatcherIsCreatedIfCacheIsNotConfigured( $option )
+    public function testMatcherIsCreatedIfCacheIsNotConfigured($option)
     {
-        $this->router->setOption( $option, null );
+        $this->router->setOption($option, null);
 
-        $this->loader->expects( $this->once() )
-            ->method( 'load' )->with( 'routing.yml', null )
-            ->will( $this->returnValue( new RouteCollection() ) );
+        $this->loader->expects($this->once())
+            ->method('load')->with('routing.yml', null)
+            ->will($this->returnValue(new RouteCollection()));
 
-        $this->assertInstanceOf( 'Symfony\\Component\\Routing\\Matcher\\UrlMatcher', $this->router->getMatcher() );
+        $this->assertInstanceOf('Symfony\\Component\\Routing\\Matcher\\UrlMatcher', $this->router->getMatcher());
     }
 
     public function provideMatcherOptionsPreventingCaching()
@@ -118,16 +118,15 @@ class RouterTest extends TestCase
     /**
      * @dataProvider provideGeneratorOptionsPreventingCaching
      */
-    public function testGeneratorIsCreatedIfCacheIsNotConfigured( $option )
+    public function testGeneratorIsCreatedIfCacheIsNotConfigured($option)
     {
-        $this->router->setOption( $option, null );
+        $this->router->setOption($option, null);
 
-        $this->loader->expects( $this->once() )
-            ->method( 'load' )->with( 'routing.yml', null )
-            ->will( $this->returnValue( new RouteCollection() ) );
+        $this->loader->expects($this->once())
+            ->method('load')->with('routing.yml', null)
+            ->will($this->returnValue(new RouteCollection()));
 
-        $this->assertInstanceOf( 'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
-            $this->router->getGenerator() );
+        $this->assertInstanceOf('Symfony\\Component\\Routing\\Generator\\UrlGenerator', $this->router->getGenerator());
     }
 
     public function provideGeneratorOptionsPreventingCaching()
@@ -140,25 +139,25 @@ class RouterTest extends TestCase
 
     public function testMatchRequestWithUrlMatcherInterface()
     {
-        $matcher = $this->getMockBuilder( 'Symfony\Component\Routing\Matcher\UrlMatcherInterface' )->getMock();
-        $matcher->expects( $this->once() )->method( 'match' );
+        $matcher = $this->getMockBuilder('Symfony\Component\Routing\Matcher\UrlMatcherInterface')->getMock();
+        $matcher->expects($this->once())->method('match');
 
-        $p = new \ReflectionProperty( $this->router, 'matcher' );
-        $p->setAccessible( true );
-        $p->setValue( $this->router, $matcher );
+        $p = new \ReflectionProperty($this->router, 'matcher');
+        $p->setAccessible(true);
+        $p->setValue($this->router, $matcher);
 
-        $this->router->matchRequest( Request::create( '/' ) );
+        $this->router->matchRequest(Request::create('/'));
     }
 
     public function testMatchRequestWithRequestMatcherInterface()
     {
-        $matcher = $this->getMockBuilder( 'Symfony\Component\Routing\Matcher\RequestMatcherInterface' )->getMock();
-        $matcher->expects( $this->once() )->method( 'matchRequest' );
+        $matcher = $this->getMockBuilder('Symfony\Component\Routing\Matcher\RequestMatcherInterface')->getMock();
+        $matcher->expects($this->once())->method('matchRequest');
 
-        $p = new \ReflectionProperty( $this->router, 'matcher' );
-        $p->setAccessible( true );
-        $p->setValue( $this->router, $matcher );
+        $p = new \ReflectionProperty($this->router, 'matcher');
+        $p->setAccessible(true);
+        $p->setValue($this->router, $matcher);
 
-        $this->router->matchRequest( Request::create( '/' ) );
+        $this->router->matchRequest(Request::create('/'));
     }
 }

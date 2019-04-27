@@ -20,10 +20,10 @@ class ExtensionTest extends TestCase
     /**
      * @dataProvider getResolvedEnabledFixtures
      */
-    public function testIsConfigEnabledReturnsTheResolvedValue( $enabled )
+    public function testIsConfigEnabledReturnsTheResolvedValue($enabled)
     {
         $extension = new EnableableExtension();
-        $this->assertSame( $enabled, $extension->isConfigEnabled( new ContainerBuilder(), ['enabled' => $enabled] ) );
+        $this->assertSame($enabled, $extension->isConfigEnabled(new ContainerBuilder(), ['enabled' => $enabled]));
     }
 
     public function getResolvedEnabledFixtures()
@@ -42,18 +42,18 @@ class ExtensionTest extends TestCase
     {
         $extension = new EnableableExtension();
 
-        $extension->isConfigEnabled( new ContainerBuilder(), [] );
+        $extension->isConfigEnabled(new ContainerBuilder(), []);
     }
 }
 
 class EnableableExtension extends Extension
 {
-    public function load( array $configs, ContainerBuilder $container )
+    public function load(array $configs, ContainerBuilder $container)
     {
     }
 
-    public function isConfigEnabled( ContainerBuilder $container, array $config )
+    public function isConfigEnabled(ContainerBuilder $container, array $config)
     {
-        return parent::isConfigEnabled( $container, $config );
+        return parent::isConfigEnabled($container, $config);
     }
 }

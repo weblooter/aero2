@@ -29,7 +29,7 @@ class InlineServiceConfigurator extends AbstractConfigurator
     use Traits\ParentTrait;
     use Traits\TagTrait;
 
-    public function __construct( Definition $definition )
+    public function __construct(Definition $definition)
     {
         $this->definition = $definition;
     }

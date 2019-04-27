@@ -14,19 +14,19 @@ class EnvVarProcessorTest extends TestCase
     /**
      * @dataProvider validStrings
      */
-    public function testGetEnvString( $value, $processed )
+    public function testGetEnvString($value, $processed)
     {
         $container = new ContainerBuilder();
-        $container->setParameter( 'env(foo)', $value );
+        $container->setParameter('env(foo)', $value);
         $container->compile();
 
-        $processor = new EnvVarProcessor( $container );
+        $processor = new EnvVarProcessor($container);
 
-        $result = $processor->getEnv( 'string', 'foo', function () {
-            $this->fail( 'Should not be called' );
-        } );
+        $result = $processor->getEnv('string', 'foo', function () {
+            $this->fail('Should not be called');
+        });
 
-        $this->assertSame( $processed, $result );
+        $this->assertSame($processed, $result);
     }
 
     public function validStrings()
@@ -46,17 +46,17 @@ class EnvVarProcessorTest extends TestCase
     /**
      * @dataProvider validBools
      */
-    public function testGetEnvBool( $value, $processed )
+    public function testGetEnvBool($value, $processed)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $result = $processor->getEnv( 'bool', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $result = $processor->getEnv('bool', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
 
-        $this->assertSame( $processed, $result );
+        $this->assertSame($processed, $result);
     }
 
     public function validBools()
@@ -75,17 +75,17 @@ class EnvVarProcessorTest extends TestCase
     /**
      * @dataProvider validInts
      */
-    public function testGetEnvInt( $value, $processed )
+    public function testGetEnvInt($value, $processed)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $result = $processor->getEnv( 'int', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $result = $processor->getEnv('int', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
 
-        $this->assertSame( $processed, $result );
+        $this->assertSame($processed, $result);
     }
 
     public function validInts()
@@ -102,15 +102,15 @@ class EnvVarProcessorTest extends TestCase
      * @expectedExceptionMessage Non-numeric env var
      * @dataProvider invalidInts
      */
-    public function testGetEnvIntInvalid( $value )
+    public function testGetEnvIntInvalid($value)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $processor->getEnv( 'int', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $processor->getEnv('int', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
     }
 
     public function invalidInts()
@@ -125,17 +125,17 @@ class EnvVarProcessorTest extends TestCase
     /**
      * @dataProvider validFloats
      */
-    public function testGetEnvFloat( $value, $processed )
+    public function testGetEnvFloat($value, $processed)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $result = $processor->getEnv( 'float', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $result = $processor->getEnv('float', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
 
-        $this->assertSame( $processed, $result );
+        $this->assertSame($processed, $result);
     }
 
     public function validFloats()
@@ -152,15 +152,15 @@ class EnvVarProcessorTest extends TestCase
      * @expectedExceptionMessage Non-numeric env var
      * @dataProvider invalidFloats
      */
-    public function testGetEnvFloatInvalid( $value )
+    public function testGetEnvFloatInvalid($value)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $processor->getEnv( 'float', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $processor->getEnv('float', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
     }
 
     public function invalidFloats()
@@ -175,17 +175,17 @@ class EnvVarProcessorTest extends TestCase
     /**
      * @dataProvider validConsts
      */
-    public function testGetEnvConst( $value, $processed )
+    public function testGetEnvConst($value, $processed)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $result = $processor->getEnv( 'const', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $result = $processor->getEnv('const', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
 
-        $this->assertSame( $processed, $result );
+        $this->assertSame($processed, $result);
     }
 
     public function validConsts()
@@ -201,15 +201,15 @@ class EnvVarProcessorTest extends TestCase
      * @expectedExceptionMessage undefined constant
      * @dataProvider invalidConsts
      */
-    public function testGetEnvConstInvalid( $value )
+    public function testGetEnvConstInvalid($value)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $processor->getEnv( 'const', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $processor->getEnv('const', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
     }
 
     public function invalidConsts()
@@ -222,31 +222,31 @@ class EnvVarProcessorTest extends TestCase
 
     public function testGetEnvBase64()
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $result = $processor->getEnv( 'base64', 'foo', function ( $name ) {
-            $this->assertSame( 'foo', $name );
+        $result = $processor->getEnv('base64', 'foo', function ($name) {
+            $this->assertSame('foo', $name);
 
-            return base64_encode( 'hello' );
-        } );
+            return base64_encode('hello');
+        });
 
-        $this->assertSame( 'hello', $result );
+        $this->assertSame('hello', $result);
     }
 
     /**
      * @dataProvider validJson
      */
-    public function testGetEnvJson( $value, $processed )
+    public function testGetEnvJson($value, $processed)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $result = $processor->getEnv( 'json', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $result = $processor->getEnv('json', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
             return $value;
-        } );
+        });
 
-        $this->assertSame( $processed, $result );
+        $this->assertSame($processed, $result);
     }
 
     public function validJson()
@@ -264,13 +264,13 @@ class EnvVarProcessorTest extends TestCase
      */
     public function testGetEnvInvalidJson()
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $processor->getEnv( 'json', 'foo', function ( $name ) {
-            $this->assertSame( 'foo', $name );
+        $processor->getEnv('json', 'foo', function ($name) {
+            $this->assertSame('foo', $name);
 
             return 'invalid_json';
-        } );
+        });
     }
 
     /**
@@ -278,15 +278,15 @@ class EnvVarProcessorTest extends TestCase
      * @expectedExceptionMessage Invalid JSON env var
      * @dataProvider otherJsonValues
      */
-    public function testGetEnvJsonOther( $value )
+    public function testGetEnvJsonOther($value)
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $processor->getEnv( 'json', 'foo', function ( $name ) use ( $value ) {
-            $this->assertSame( 'foo', $name );
+        $processor->getEnv('json', 'foo', function ($name) use ($value) {
+            $this->assertSame('foo', $name);
 
-            return json_encode( $value );
-        } );
+            return json_encode($value);
+        });
     }
 
     public function otherJsonValues()
@@ -306,12 +306,12 @@ class EnvVarProcessorTest extends TestCase
      */
     public function testGetEnvUnknown()
     {
-        $processor = new EnvVarProcessor( new Container() );
+        $processor = new EnvVarProcessor(new Container());
 
-        $processor->getEnv( 'unknown', 'foo', function ( $name ) {
-            $this->assertSame( 'foo', $name );
+        $processor->getEnv('unknown', 'foo', function ($name) {
+            $this->assertSame('foo', $name);
 
             return 'foo';
-        } );
+        });
     }
 }

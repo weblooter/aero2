@@ -22,7 +22,7 @@ final class BoundArgument implements ArgumentInterface
     private $identifier;
     private $used;
 
-    public function __construct( $value )
+    public function __construct($value)
     {
         $this->value = $value;
         $this->identifier = ++self::$sequence;
@@ -39,8 +39,8 @@ final class BoundArgument implements ArgumentInterface
     /**
      * {@inheritdoc}
      */
-    public function setValues( array $values )
+    public function setValues(array $values)
     {
-        list( $this->value, $this->identifier, $this->used ) = $values;
+        list($this->value, $this->identifier, $this->used) = $values;
     }
 }

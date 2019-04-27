@@ -29,8 +29,7 @@ namespace Symfony\Component\DependencyInjection;
 interface ServiceSubscriberInterface
 {
     /**
-     * Returns an array of service types required by such instances, optionally keyed by the service names used
-     * internally.
+     * Returns an array of service types required by such instances, optionally keyed by the service names used internally.
      *
      * For mandatory dependencies:
      *

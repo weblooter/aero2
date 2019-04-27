@@ -43,7 +43,7 @@ class Symfony_DI_PhpDumper_Test_Deep_Graph extends Container
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()
@@ -66,9 +66,9 @@ class Symfony_DI_PhpDumper_Test_Deep_Graph extends Container
      */
     protected function getBarService()
     {
-        $this->services[ 'bar' ] = $instance = new \stdClass();
+        $this->services['bar'] = $instance = new \stdClass();
 
-        $instance->p5 = new \stdClass( ( $this->services[ 'foo' ] ?? $this->getFooService() ) );
+        $instance->p5 = new \stdClass(($this->services['foo'] ?? $this->getFooService()));
 
         return $instance;
     }
@@ -80,11 +80,10 @@ class Symfony_DI_PhpDumper_Test_Deep_Graph extends Container
      */
     protected function getFooService()
     {
-        $a = ( $this->services[ 'bar' ] ?? $this->getBarService() );
+        $a = ($this->services['bar'] ?? $this->getBarService());
 
-        if ( isset( $this->services[ 'foo' ] ) )
-        {
-            return $this->services[ 'foo' ];
+        if (isset($this->services['foo'])) {
+            return $this->services['foo'];
         }
         $b = new \stdClass();
 
@@ -93,7 +92,6 @@ class Symfony_DI_PhpDumper_Test_Deep_Graph extends Container
 
         $b->p2 = $c;
 
-        return $this->services[ 'foo' ] = new \Symfony\Component\DependencyInjection\Tests\Dumper\FooForDeepGraph( $a,
-            $b );
+        return $this->services['foo'] = new \Symfony\Component\DependencyInjection\Tests\Dumper\FooForDeepGraph($a, $b);
     }
 }

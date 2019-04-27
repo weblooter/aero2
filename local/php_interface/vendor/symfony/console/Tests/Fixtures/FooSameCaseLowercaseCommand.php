@@ -6,6 +6,6 @@ class FooSameCaseLowercaseCommand extends Command
 {
     protected function configure()
     {
-        $this->setName( 'foo:bar' )->setDescription( 'foo:bar command' );
+        $this->setName('foo:bar')->setDescription('foo:bar command');
     }
 }

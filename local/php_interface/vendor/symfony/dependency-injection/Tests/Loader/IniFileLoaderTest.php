@@ -24,41 +24,37 @@ class IniFileLoaderTest extends TestCase
     protected function setUp()
     {
         $this->container = new ContainerBuilder();
-        $this->loader = new IniFileLoader( $this->container,
-            new FileLocator( realpath( __DIR__.'/../Fixtures/' ).'/ini' ) );
+        $this->loader = new IniFileLoader($this->container, new FileLocator(realpath(__DIR__.'/../Fixtures/').'/ini'));
     }
 
     public function testIniFileCanBeLoaded()
     {
-        $this->loader->load( 'parameters.ini' );
-        $this->assertEquals( ['foo' => 'bar', 'bar' => '%foo%'], $this->container->getParameterBag()->all(),
-            '->load() takes a single file name as its first argument' );
+        $this->loader->load('parameters.ini');
+        $this->assertEquals(['foo' => 'bar', 'bar' => '%foo%'], $this->container->getParameterBag()->all(), '->load() takes a single file name as its first argument');
     }
 
     /**
      * @dataProvider getTypeConversions
      */
-    public function testTypeConversions( $key, $value, $supported )
+    public function testTypeConversions($key, $value, $supported)
     {
-        $this->loader->load( 'types.ini' );
+        $this->loader->load('types.ini');
         $parameters = $this->container->getParameterBag()->all();
-        $this->assertSame( $value, $parameters[ $key ], '->load() converts values to PHP types' );
+        $this->assertSame($value, $parameters[$key], '->load() converts values to PHP types');
     }
 
     /**
      * @dataProvider getTypeConversions
      * This test illustrates where our conversions differs from INI_SCANNER_TYPED introduced in PHP 5.6.1
      */
-    public function testTypeConversionsWithNativePhp( $key, $value, $supported )
+    public function testTypeConversionsWithNativePhp($key, $value, $supported)
     {
-        if ( !$supported )
-        {
-            $this->markTestSkipped( sprintf( 'Converting the value "%s" to "%s" is not supported by the IniFileLoader.',
-                $key, $value ) );
+        if (!$supported) {
+            $this->markTestSkipped(sprintf('Converting the value "%s" to "%s" is not supported by the IniFileLoader.', $key, $value));
         }
 
-        $expected = parse_ini_file( __DIR__.'/../Fixtures/ini/types.ini', true, INI_SCANNER_TYPED );
-        $this->assertSame( $value, $expected[ 'parameters' ][ $key ], '->load() converts values to PHP types' );
+        $expected = parse_ini_file(__DIR__.'/../Fixtures/ini/types.ini', true, INI_SCANNER_TYPED);
+        $this->assertSame($value, $expected['parameters'][$key], '->load() converts values to PHP types');
     }
 
     public function getTypeConversions()
@@ -83,7 +79,7 @@ class IniFileLoaderTest extends TestCase
             ['-12', -12, true],
             ['1', 1, true],
             ['0', 0, true],
-            ['0b0110', bindec( '0b0110' ), false], // not supported by INI_SCANNER_TYPED
+            ['0b0110', bindec('0b0110'), false], // not supported by INI_SCANNER_TYPED
             ['11112222333344445555', '1111,2222,3333,4444,5555', true],
             ['0777', 0777, false], // not supported by INI_SCANNER_TYPED
             ['255', 0xFF, false], // not supported by INI_SCANNER_TYPED
@@ -100,7 +96,7 @@ class IniFileLoaderTest extends TestCase
      */
     public function testExceptionIsRaisedWhenIniFileDoesNotExist()
     {
-        $this->loader->load( 'foo.ini' );
+        $this->loader->load('foo.ini');
     }
 
     /**
@@ -109,7 +105,7 @@ class IniFileLoaderTest extends TestCase
      */
     public function testExceptionIsRaisedWhenIniFileCannotBeParsed()
     {
-        @$this->loader->load( 'nonvalid.ini' );
+        @$this->loader->load('nonvalid.ini');
     }
 
     /**
@@ -118,17 +114,15 @@ class IniFileLoaderTest extends TestCase
      */
     public function testExceptionIsRaisedWhenIniFileIsAlmostValid()
     {
-        @$this->loader->load( 'almostvalid.ini' );
+        @$this->loader->load('almostvalid.ini');
     }
 
     public function testSupports()
     {
-        $loader = new IniFileLoader( new ContainerBuilder(), new FileLocator() );
+        $loader = new IniFileLoader(new ContainerBuilder(), new FileLocator());
 
-        $this->assertTrue( $loader->supports( 'foo.ini' ), '->supports() returns true if the resource is loadable' );
-        $this->assertFalse( $loader->supports( 'foo.foo' ),
-            '->supports() returns false if the resource is not loadable' );
-        $this->assertTrue( $loader->supports( 'with_wrong_ext.yml', 'ini' ),
-            '->supports() returns true if the resource with forced type is loadable' );
+        $this->assertTrue($loader->supports('foo.ini'), '->supports() returns true if the resource is loadable');
+        $this->assertFalse($loader->supports('foo.foo'), '->supports() returns false if the resource is not loadable');
+        $this->assertTrue($loader->supports('with_wrong_ext.yml', 'ini'), '->supports() returns true if the resource with forced type is loadable');
     }
 }

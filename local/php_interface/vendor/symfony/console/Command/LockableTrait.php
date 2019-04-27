@@ -33,30 +33,24 @@ trait LockableTrait
      *
      * @return bool
      */
-    private function lock( $name = null, $blocking = false )
+    private function lock($name = null, $blocking = false)
     {
-        if ( !class_exists( SemaphoreStore::class ) )
-        {
-            throw new RuntimeException( 'To enable the locking feature you must install the symfony/lock component.' );
+        if (!class_exists(SemaphoreStore::class)) {
+            throw new RuntimeException('To enable the locking feature you must install the symfony/lock component.');
         }
 
-        if ( null !== $this->lock )
-        {
-            throw new LogicException( 'A lock is already in place.' );
+        if (null !== $this->lock) {
+            throw new LogicException('A lock is already in place.');
         }
 
-        if ( SemaphoreStore::isSupported() )
-        {
+        if (SemaphoreStore::isSupported()) {
             $store = new SemaphoreStore();
-        }
-        else
-        {
+        } else {
             $store = new FlockStore();
         }
 
-        $this->lock = ( new Factory( $store ) )->createLock( $name ? : $this->getName() );
-        if ( !$this->lock->acquire( $blocking ) )
-        {
+        $this->lock = (new Factory($store))->createLock($name ?: $this->getName());
+        if (!$this->lock->acquire($blocking)) {
             $this->lock = null;
 
             return false;
@@ -70,8 +64,7 @@ trait LockableTrait
      */
     private function release()
     {
-        if ( $this->lock )
-        {
+        if ($this->lock) {
             $this->lock->release();
             $this->lock = null;
         }

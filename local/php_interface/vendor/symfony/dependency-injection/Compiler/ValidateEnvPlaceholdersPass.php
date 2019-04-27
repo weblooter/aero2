@@ -31,84 +31,66 @@ class ValidateEnvPlaceholdersPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process( ContainerBuilder $container )
+    public function process(ContainerBuilder $container)
     {
-        if ( !class_exists( BaseNode::class ) || !$extensions = $container->getExtensions() )
-        {
+        if (!class_exists(BaseNode::class) || !$extensions = $container->getExtensions()) {
             return;
         }
 
         $resolvingBag = $container->getParameterBag();
-        if ( !$resolvingBag instanceof EnvPlaceholderParameterBag )
-        {
+        if (!$resolvingBag instanceof EnvPlaceholderParameterBag) {
             return;
         }
 
-        $defaultBag = new ParameterBag( $resolvingBag->all() );
+        $defaultBag = new ParameterBag($resolvingBag->all());
         $envTypes = $resolvingBag->getProvidedTypes();
-        try
-        {
-            foreach ( $resolvingBag->getEnvPlaceholders() + $resolvingBag->getUnusedEnvPlaceholders() as $env => $placeholders )
-            {
+        try {
+            foreach ($resolvingBag->getEnvPlaceholders() + $resolvingBag->getUnusedEnvPlaceholders() as $env => $placeholders) {
                 $values = [];
-                if ( false === $i = strpos( $env, ':' ) )
-                {
-                    $default = $defaultBag->has( "env($env)" ) ? $defaultBag->get( "env($env)" ) : self::$typeFixtures[ 'string' ];
-                    $defaultType = null !== $default ? self::getType( $default ) : 'string';
-                    $values[ $defaultType ] = $default;
-                }
-                else
-                {
-                    $prefix = substr( $env, 0, $i );
-                    foreach ( $envTypes[ $prefix ] ?? ['string'] as $type )
-                    {
-                        $values[ $type ] = self::$typeFixtures[ $type ] ?? null;
+                if (false === $i = strpos($env, ':')) {
+                    $default = $defaultBag->has("env($env)") ? $defaultBag->get("env($env)") : self::$typeFixtures['string'];
+                    $defaultType = null !== $default ? self::getType($default) : 'string';
+                    $values[$defaultType] = $default;
+                } else {
+                    $prefix = substr($env, 0, $i);
+                    foreach ($envTypes[$prefix] ?? ['string'] as $type) {
+                        $values[$type] = self::$typeFixtures[$type] ?? null;
                     }
                 }
-                foreach ( $placeholders as $placeholder )
-                {
-                    BaseNode::setPlaceholder( $placeholder, $values );
+                foreach ($placeholders as $placeholder) {
+                    BaseNode::setPlaceholder($placeholder, $values);
                 }
             }
 
             $processor = new Processor();
 
-            foreach ( $extensions as $name => $extension )
-            {
-                if ( !$extension instanceof ConfigurationExtensionInterface || !$config = array_filter( $container->getExtensionConfig( $name ) ) )
-                {
+            foreach ($extensions as $name => $extension) {
+                if (!$extension instanceof ConfigurationExtensionInterface || !$config = array_filter($container->getExtensionConfig($name))) {
                     // this extension has no semantic configuration or was not called
                     continue;
                 }
 
-                $config = $resolvingBag->resolveValue( $config );
+                $config = $resolvingBag->resolveValue($config);
 
-                if ( null === $configuration = $extension->getConfiguration( $config, $container ) )
-                {
+                if (null === $configuration = $extension->getConfiguration($config, $container)) {
                     continue;
                 }
 
-                try
-                {
-                    $processor->processConfiguration( $configuration, $config );
-                }
-                catch ( TreeWithoutRootNodeException $e )
-                {
+                try {
+                    $processor->processConfiguration($configuration, $config);
+                } catch (TreeWithoutRootNodeException $e) {
                 }
             }
-        }
-        finally
-        {
+        } finally {
             BaseNode::resetPlaceholders();
         }
 
         $resolvingBag->clearUnusedEnvPlaceholders();
     }
 
-    private static function getType( $value ): string
+    private static function getType($value): string
     {
-        switch ( $type = \gettype( $value ) )
-        {
+        switch ($type = \gettype($value)) {
             case 'boolean':
                 return 'bool';
             case 'double':

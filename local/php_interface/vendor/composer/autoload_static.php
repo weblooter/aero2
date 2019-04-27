@@ -25,6 +25,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
             'Symfony\\Component\\DependencyInjection\\' => 38,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Asset\\' => 24,
+            'Spatie\\ArrayToXml\\' => 18,
         ),
         'P' => 
         array (
@@ -77,6 +78,10 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Symfony\\Component\\Asset\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/asset',
+        ),
+        'Spatie\\ArrayToXml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/array-to-xml/src',
         ),
         'Psr\\Log\\' => 
         array (
@@ -314,6 +319,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\Condition\\GlobalCondCtrlGroup' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Condition/GlobalCondCtrlGroup.php',
         'Local\\Core\\Inner\\Condition\\GlobalCondTree' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Condition/GlobalCondTree.php',
         'Local\\Core\\Inner\\ContainerDI' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/ContainerDI.php',
+        'Local\\Core\\Inner\\Currency' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Currency.php',
         'Local\\Core\\Inner\\Debug' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Debug.php',
         'Local\\Core\\Inner\\Entity' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Entity.php',
         'Local\\Core\\Inner\\EntityCollection' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/EntityCollection.php',
@@ -338,6 +344,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\JobQueue\\Worker\\RobofeedConvert' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/RobofeedConvert.php',
         'Local\\Core\\Inner\\JobQueue\\Worker\\StoreRobofeedImport' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/JobQueue/Worker/StoreRobofeedImport.php',
         'Local\\Core\\Inner\\Mail' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Mail.php',
+        'Local\\Core\\Inner\\Measure' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Measure.php',
         'Local\\Core\\Inner\\Payment\\Bill' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Payment/Bill.php',
         'Local\\Core\\Inner\\Payment\\Factory' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Payment/Factory.php',
         'Local\\Core\\Inner\\Payment\\PaymentInterface' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Payment/PaymentInterface.php',
@@ -411,6 +418,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Model\\Data\\BalanceLogTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/BalanceLogTable.php',
         'Local\\Core\\Model\\Data\\BaseOrmTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/BaseOrmTable.php',
         'Local\\Core\\Model\\Data\\CompanyTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/CompanyTable.php',
+        'Local\\Core\\Model\\Data\\CurrencyRateTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/CurrencyRateTable.php',
         'Local\\Core\\Model\\Data\\JobQueueTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/JobQueueTable.php',
         'Local\\Core\\Model\\Data\\StoreTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/StoreTable.php',
         'Local\\Core\\Model\\Data\\StoreTariffChangeLogTable' => __DIR__ . '/../..' . '/../modules/local.core/lib/Model/Data/StoreTariffChangeLogTable.php',
@@ -587,6 +595,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Sabberworm\\CSS\\Value\\Value' => __DIR__ . '/../..' . '/externalLibs/dompdf/lib/php-css-parser/lib/Sabberworm/CSS/Value/Value.php',
         'Sabberworm\\CSS\\Value\\ValueList' => __DIR__ . '/../..' . '/externalLibs/dompdf/lib/php-css-parser/lib/Sabberworm/CSS/Value/ValueList.php',
         'SimpleXMLReader' => __DIR__ . '/../..' . '/externalLibs/SimpleXMLReader.php',
+        'Spatie\\ArrayToXml\\ArrayToXml' => __DIR__ . '/..' . '/spatie/array-to-xml/src/ArrayToXml.php',
         'Svg\\DefaultStyle' => __DIR__ . '/../..' . '/externalLibs/dompdf/lib/php-svg-lib/src/Svg/DefaultStyle.php',
         'Svg\\Document' => __DIR__ . '/../..' . '/externalLibs/dompdf/lib/php-svg-lib/src/Svg/Document.php',
         'Svg\\Gradient\\Stop' => __DIR__ . '/../..' . '/externalLibs/dompdf/lib/php-svg-lib/src/Svg/Gradient/Stop.php',

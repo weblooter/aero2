@@ -10,54 +10,48 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
-    public function __construct( RequestContext $context )
+    public function __construct(RequestContext $context)
     {
         $this->context = $context;
     }
 
-    public function match( $pathinfo )
+    public function match($pathinfo)
     {
         $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode( $pathinfo ) ? : '/';
-        $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/';
+        $pathinfo = rawurldecode($pathinfo) ?: '/';
+        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
-        $host = strtolower( $context->getHost() );
+        $host = strtolower($context->getHost());
 
-        if ( 'HEAD' === $requestMethod )
-        {
+        if ('HEAD' === $requestMethod) {
             $canonicalMethod = 'GET';
         }
 
-        switch ( $trimmedPathinfo )
-        {
+        switch ($trimmedPathinfo) {
             case '/':
                 // a
-                if ( preg_match( '#^(?P<d>[^\\.]++)\\.e\\.c\\.b\\.a$#sDi', $host, $hostMatches ) )
-                {
-                    return $this->mergeDefaults( ['_route' => 'a'] + $hostMatches, [] );
+                if (preg_match('#^(?P<d>[^\\.]++)\\.e\\.c\\.b\\.a$#sDi', $host, $hostMatches)) {
+                    return $this->mergeDefaults(['_route' => 'a'] + $hostMatches, []);
                 }
                 not_a:
                 // c
-                if ( preg_match( '#^(?P<e>[^\\.]++)\\.e\\.c\\.b\\.a$#sDi', $host, $hostMatches ) )
-                {
-                    return $this->mergeDefaults( ['_route' => 'c'] + $hostMatches, [] );
+                if (preg_match('#^(?P<e>[^\\.]++)\\.e\\.c\\.b\\.a$#sDi', $host, $hostMatches)) {
+                    return $this->mergeDefaults(['_route' => 'c'] + $hostMatches, []);
                 }
                 not_c:
                 // b
-                if ( 'd.c.b.a' === $host )
-                {
+                if ('d.c.b.a' === $host) {
                     return ['_route' => 'b'];
                 }
                 not_b:
                 break;
         }
 
-        if ( '/' === $pathinfo && !$allow && !$allowSchemes )
-        {
+        if ('/' === $pathinfo && !$allow && !$allowSchemes) {
             throw new Symfony\Component\Routing\Exception\NoConfigurationException();
         }
 
-        throw $allow ? new MethodNotAllowedException( array_keys( $allow ) ) : new ResourceNotFoundException();
+        throw $allow ? new MethodNotAllowedException(array_keys($allow)) : new ResourceNotFoundException();
     }
 }

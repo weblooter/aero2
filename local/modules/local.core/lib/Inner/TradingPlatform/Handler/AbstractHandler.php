@@ -55,6 +55,7 @@ abstract class AbstractHandler
                 ->setIsRequired()
                 ->setOptions([
                     'NOT_CONVERT' => 'Оставлять цены в переданных валютах',
+                    'RUB' => 'Конвертировать в "Российский рубль"',
                     'BYN' => 'Конвертировать в "Белорусский рубль"',
                     'UAH' => 'Конвертировать в "Гривна"',
                     'KZT' => 'Конвертировать в "Тенге"',
@@ -250,6 +251,11 @@ DOCHERE
                 throw new \Exception('У магазина не было еще ни одного успешного импорта.');
             }
 
+            if( file_exists( $this->getExportFilePath(true) ) )
+            {
+                unlink($this->getExportFilePath(true));
+            }
+
             $this->executeMakeExportFile($obResult);
         } catch (\Local\Core\Inner\TradingPlatform\Exceptions\StoreIdNotDefined $e) {
             $obResult->addError(new \Bitrix\Main\Error('Магазин не задан.'));
@@ -296,6 +302,8 @@ DOCHERE
         $arProductsIdList = $this->exportGetProductIdList();
         $arProductsIdList = array_chunk($arProductsIdList, \Bitrix\Main\Config\Configuration::getValue('tradingplatform')['export']['batch_size'] ?? 50);
 
+        $arHandlerSettings = $this->getHandlerRules()['@handler_settings'];
+
         foreach ($arProductsIdList as $arBatch) {
             $rsProducts = \Local\Core\Model\Robofeed\StoreProductFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
                 ->setStoreId($this->getTradingPlatformStoreId())::getList([
@@ -330,13 +338,65 @@ DOCHERE
                         'PRODUCT_ID' => $arBatch
                     ]
                 ]);
+            while ($ar = $rsDelivery->fetch())
+            {
+                $intProdId = $ar['PRODUCT_ID'];
+                unset($ar['PRODUCT_ID'], $ar['ROBOFEED_VERSION'], $ar['DATE_CREATE'], $ar['ID']);
+                $arDelivery[ $intProdId ][] = $ar;
+            }
+
+            $arPickup = [];
+            $rsPickup = \Local\Core\Model\Robofeed\StoreProductPickupFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
+                ->setStoreId($this->getTradingPlatformStoreId())::getList([
+                    'filter' => [
+                        'PRODUCT_ID' => $arBatch
+                    ]
+                ]);
+            while ($ar = $rsPickup->fetch())
+            {
+                $intProdId = $ar['PRODUCT_ID'];
+                unset($ar['PRODUCT_ID'], $ar['ROBOFEED_VERSION'], $ar['DATE_CREATE'], $ar['ID']);
+                $arPickup[ $intProdId ][] = $ar;
+            }
 
             global $arExportProductData;
             foreach ($arProducts as $arExportProductData) {
-                $arExportProductData = array_merge($arExportProductData, $arParamsByProdId[$arExportProductData['ID']]);
+                $arExportProductData = array_merge(
+                    $arExportProductData,
+                    $arParamsByProdId[$arExportProductData['ID']],
+                    ['DELIVERY_OPTIONS' => $arDelivery],
+                    ['PICKUP_OPTIONS' => $arPickup],
+                    ['@HANDLER_SETTINGS' => $arHandlerSettings]
+                );
                 if ($arExportProductData['EXPIRY_DATE'] instanceof \Bitrix\Main\Type\DateTime) {
                     $arExportProductData['EXPIRY_DATE'] = $arExportProductData['EXPIRY_DATE']->getTimestamp();
                 }
+
+                if( empty( $arExportProductData['WEIGHT'] ) )
+                {
+                    $arExportProductData['WEIGHT'] = $arHandlerSettings['DEFAULT_WEIGHT'];
+                    $arExportProductData['WEIGHT_UNIT_CODE'] = 'GRM';
+                }
+
+                if( empty( $arExportProductData['WIDTH'] ) )
+                {
+                    $arExportProductData['WIDTH'] = $arHandlerSettings['DEFAULT_WIDTH'];
+                    $arExportProductData['WIDTH_UNIT_CODE'] = 'MMT';
+                }
+
+                if( empty( $arExportProductData['HEIGHT'] ) )
+                {
+                    $arExportProductData['HEIGHT'] = $arHandlerSettings['DEFAULT_HEIGHT'];
+                    $arExportProductData['HEIGHT_UNIT_CODE'] = 'MMT';
+                }
+
+                if( empty( $arExportProductData['LENGTH'] ) )
+                {
+                    $arExportProductData['LENGTH'] = $arHandlerSettings['DEFAULT_LENGTH'];
+                    $arExportProductData['LENGTH_UNIT_CODE'] = 'MMT';
+                }
+
+                $arExportProductData['IMAGE'] = array_diff(explode("\r\n", $arExportProductData['IMAGE']), [''], [null]);
 
                 if (eval('return '.$strPhpProductCondition.';')) {
                     $this->beginOfferForeachBody($obResult, $arExportProductData);

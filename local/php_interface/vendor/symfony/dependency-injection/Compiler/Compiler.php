@@ -54,26 +54,25 @@ class Compiler
     /**
      * Adds a pass to the PassConfig.
      *
-     * @param CompilerPassInterface $pass A compiler pass
-     * @param string                $type The type of the pass
+     * @param CompilerPassInterface $pass     A compiler pass
+     * @param string                $type     The type of the pass
      * @param int                   $priority Used to sort the passes
      */
-    public function addPass( CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION, int $priority = 0 )
+    public function addPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION, int $priority = 0)
     {
-        $this->passConfig->addPass( $pass, $type, $priority );
+        $this->passConfig->addPass($pass, $type, $priority);
     }
 
     /**
      * @final
      */
-    public function log( CompilerPassInterface $pass, string $message )
+    public function log(CompilerPassInterface $pass, string $message)
     {
-        if ( false !== strpos( $message, "\n" ) )
-        {
-            $message = str_replace( "\n", "\n".\get_class( $pass ).': ', trim( $message ) );
+        if (false !== strpos($message, "\n")) {
+            $message = str_replace("\n", "\n".\get_class($pass).': ', trim($message));
         }
 
-        $this->log[] = \get_class( $pass ).': '.$message;
+        $this->log[] = \get_class($pass).': '.$message;
     }
 
     /**
@@ -89,41 +88,32 @@ class Compiler
     /**
      * Run the Compiler and process all Passes.
      */
-    public function compile( ContainerBuilder $container )
+    public function compile(ContainerBuilder $container)
     {
-        try
-        {
-            foreach ( $this->passConfig->getPasses() as $pass )
-            {
-                $pass->process( $container );
+        try {
+            foreach ($this->passConfig->getPasses() as $pass) {
+                $pass->process($container);
             }
-        }
-        catch ( \Exception $e )
-        {
+        } catch (\Exception $e) {
             $usedEnvs = [];
             $prev = $e;
 
-            do
-            {
+            do {
                 $msg = $prev->getMessage();
 
-                if ( $msg !== $resolvedMsg = $container->resolveEnvPlaceholders( $msg, null, $usedEnvs ) )
-                {
-                    $r = new \ReflectionProperty( $prev, 'message' );
-                    $r->setAccessible( true );
-                    $r->setValue( $prev, $resolvedMsg );
+                if ($msg !== $resolvedMsg = $container->resolveEnvPlaceholders($msg, null, $usedEnvs)) {
+                    $r = new \ReflectionProperty($prev, 'message');
+                    $r->setAccessible(true);
+                    $r->setValue($prev, $resolvedMsg);
                 }
-            } while ( $prev = $prev->getPrevious() );
+            } while ($prev = $prev->getPrevious());
 
-            if ( $usedEnvs )
-            {
-                $e = new EnvParameterException( $usedEnvs, $e );
+            if ($usedEnvs) {
+                $e = new EnvParameterException($usedEnvs, $e);
             }
 
             throw $e;
-        }
-        finally
-        {
+        } finally {
             $this->getServiceReferenceGraph()->clear();
         }
     }

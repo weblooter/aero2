@@ -40,7 +40,7 @@ class StaticPrefixCollection
      */
     private $items = [];
 
-    public function __construct( string $prefix = '/' )
+    public function __construct(string $prefix = '/')
     {
         $this->prefix = $prefix;
     }
@@ -63,40 +63,34 @@ class StaticPrefixCollection
      *
      * @param array|self $route
      */
-    public function addRoute( string $prefix, $route )
+    public function addRoute(string $prefix, $route)
     {
-        list( $prefix, $staticPrefix ) = $this->getCommonPrefix( $prefix, $prefix );
+        list($prefix, $staticPrefix) = $this->getCommonPrefix($prefix, $prefix);
 
-        for ( $i = \count( $this->items ) - 1; 0 <= $i; --$i )
-        {
-            $item = $this->items[ $i ];
+        for ($i = \count($this->items) - 1; 0 <= $i; --$i) {
+            $item = $this->items[$i];
 
-            list( $commonPrefix, $commonStaticPrefix ) = $this->getCommonPrefix( $prefix, $this->prefixes[ $i ] );
+            list($commonPrefix, $commonStaticPrefix) = $this->getCommonPrefix($prefix, $this->prefixes[$i]);
 
-            if ( $this->prefix === $commonPrefix )
-            {
+            if ($this->prefix === $commonPrefix) {
                 // the new route and a previous one have no common prefix, let's see if they are exclusive to each others
 
-                if ( $this->prefix !== $staticPrefix && $this->prefix !== $this->staticPrefixes[ $i ] )
-                {
+                if ($this->prefix !== $staticPrefix && $this->prefix !== $this->staticPrefixes[$i]) {
                     // the new route and the previous one have exclusive static prefixes
                     continue;
                 }
 
-                if ( $this->prefix === $staticPrefix && $this->prefix === $this->staticPrefixes[ $i ] )
-                {
+                if ($this->prefix === $staticPrefix && $this->prefix === $this->staticPrefixes[$i]) {
                     // the new route and the previous one have no static prefix
                     break;
                 }
 
-                if ( $this->prefixes[ $i ] !== $this->staticPrefixes[ $i ] && $this->prefix === $this->staticPrefixes[ $i ] )
-                {
+                if ($this->prefixes[$i] !== $this->staticPrefixes[$i] && $this->prefix === $this->staticPrefixes[$i]) {
                     // the previous route is non-static and has no static prefix
                     break;
                 }
 
-                if ( $prefix !== $staticPrefix && $this->prefix === $staticPrefix )
-                {
+                if ($prefix !== $staticPrefix && $this->prefix === $staticPrefix) {
                     // the new route is non-static and has no static prefix
                     break;
                 }
@@ -104,24 +98,19 @@ class StaticPrefixCollection
                 continue;
             }
 
-            if ( $item instanceof self && $this->prefixes[ $i ] === $commonPrefix )
-            {
+            if ($item instanceof self && $this->prefixes[$i] === $commonPrefix) {
                 // the new route is a child of a previous one, let's nest it
-                $item->addRoute( $prefix, $route );
-            }
-            else
-            {
+                $item->addRoute($prefix, $route);
+            } else {
                 // the new route and a previous one have a common prefix, let's merge them
-                $child = new self( $commonPrefix );
-                list( $child->prefixes[ 0 ], $child->staticPrefixes[ 0 ] ) = $child->getCommonPrefix( $this->prefixes[ $i ],
-                    $this->prefixes[ $i ] );
-                list( $child->prefixes[ 1 ], $child->staticPrefixes[ 1 ] ) = $child->getCommonPrefix( $prefix,
-                    $prefix );
-                $child->items = [$this->items[ $i ], $route];
+                $child = new self($commonPrefix);
+                list($child->prefixes[0], $child->staticPrefixes[0]) = $child->getCommonPrefix($this->prefixes[$i], $this->prefixes[$i]);
+                list($child->prefixes[1], $child->staticPrefixes[1]) = $child->getCommonPrefix($prefix, $prefix);
+                $child->items = [$this->items[$i], $route];
 
-                $this->staticPrefixes[ $i ] = $commonStaticPrefix;
-                $this->prefixes[ $i ] = $commonPrefix;
-                $this->items[ $i ] = $child;
+                $this->staticPrefixes[$i] = $commonStaticPrefix;
+                $this->prefixes[$i] = $commonPrefix;
+                $this->items[$i] = $child;
             }
 
             return;
@@ -137,17 +126,13 @@ class StaticPrefixCollection
     /**
      * Linearizes back a set of nested routes into a collection.
      */
-    public function populateCollection( RouteCollection $routes ): RouteCollection
+    public function populateCollection(RouteCollection $routes): RouteCollection
     {
-        foreach ( $this->items as $route )
-        {
-            if ( $route instanceof self )
-            {
-                $route->populateCollection( $routes );
-            }
-            else
-            {
-                $routes->add( ...$route );
+        foreach ($this->items as $route) {
+            if ($route instanceof self) {
+                $route->populateCollection($routes);
+            } else {
+                $routes->add(...$route);
             }
         }
 
@@ -159,76 +144,59 @@ class StaticPrefixCollection
      *
      * The static prefix stops at last at the first opening bracket.
      */
-    private function getCommonPrefix( string $prefix, string $anotherPrefix ): array
+    private function getCommonPrefix(string $prefix, string $anotherPrefix): array
     {
-        $baseLength = \strlen( $this->prefix );
-        $end = min( \strlen( $prefix ), \strlen( $anotherPrefix ) );
+        $baseLength = \strlen($this->prefix);
+        $end = min(\strlen($prefix), \strlen($anotherPrefix));
         $staticLength = null;
-        set_error_handler( [__CLASS__, 'handleError'] );
+        set_error_handler([__CLASS__, 'handleError']);
 
-        for ( $i = $baseLength; $i < $end && $prefix[ $i ] === $anotherPrefix[ $i ]; ++$i )
-        {
-            if ( '(' === $prefix[ $i ] )
-            {
+        for ($i = $baseLength; $i < $end && $prefix[$i] === $anotherPrefix[$i]; ++$i) {
+            if ('(' === $prefix[$i]) {
                 $staticLength = $staticLength ?? $i;
-                for ( $j = 1 + $i, $n = 1; $j < $end && 0 < $n; ++$j )
-                {
-                    if ( $prefix[ $j ] !== $anotherPrefix[ $j ] )
-                    {
+                for ($j = 1 + $i, $n = 1; $j < $end && 0 < $n; ++$j) {
+                    if ($prefix[$j] !== $anotherPrefix[$j]) {
                         break 2;
                     }
-                    if ( '(' === $prefix[ $j ] )
-                    {
+                    if ('(' === $prefix[$j]) {
                         ++$n;
-                    }
-                    elseif ( ')' === $prefix[ $j ] )
-                    {
+                    } elseif (')' === $prefix[$j]) {
                         --$n;
-                    }
-                    elseif ( '\\' === $prefix[ $j ] && ( ++$j === $end || $prefix[ $j ] !== $anotherPrefix[ $j ] ) )
-                    {
+                    } elseif ('\\' === $prefix[$j] && (++$j === $end || $prefix[$j] !== $anotherPrefix[$j])) {
                         --$j;
                         break;
                     }
                 }
-                if ( 0 < $n )
-                {
+                if (0 < $n) {
                     break;
                 }
-                if ( ( '?' === ( $prefix[ $j ] ?? '' ) || '?' === ( $anotherPrefix[ $j ] ?? '' ) ) && ( $prefix[ $j ] ?? '' ) !== ( $anotherPrefix[ $j ] ?? '' ) )
-                {
+                if (('?' === ($prefix[$j] ?? '') || '?' === ($anotherPrefix[$j] ?? '')) && ($prefix[$j] ?? '') !== ($anotherPrefix[$j] ?? '')) {
                     break;
                 }
-                $subPattern = substr( $prefix, $i, $j - $i );
-                if ( $prefix !== $anotherPrefix && !preg_match( '/^\(\[[^\]]++\]\+\+\)$/',
-                        $subPattern ) && !preg_match( '{(?<!'.$subPattern.')}', '' ) )
-                {
+                $subPattern = substr($prefix, $i, $j - $i);
+                if ($prefix !== $anotherPrefix && !preg_match('/^\(\[[^\]]++\]\+\+\)$/', $subPattern) && !preg_match('{(?<!'.$subPattern.')}', '')) {
                     // sub-patterns of variable length are not considered as common prefixes because their greediness would break in-order matching
                     break;
                 }
                 $i = $j - 1;
-            }
-            elseif ( '\\' === $prefix[ $i ] && ( ++$i === $end || $prefix[ $i ] !== $anotherPrefix[ $i ] ) )
-            {
+            } elseif ('\\' === $prefix[$i] && (++$i === $end || $prefix[$i] !== $anotherPrefix[$i])) {
                 --$i;
                 break;
             }
         }
         restore_error_handler();
-        if ( $i < $end && 0b10 === ( \ord( $prefix[ $i ] ) >> 6 ) && preg_match( '//u', $prefix.' '.$anotherPrefix ) )
-        {
-            do
-            {
+        if ($i < $end && 0b10 === (\ord($prefix[$i]) >> 6) && preg_match('//u', $prefix.' '.$anotherPrefix)) {
+            do {
                 // Prevent cutting in the middle of an UTF-8 characters
                 --$i;
-            } while ( 0b10 === ( \ord( $prefix[ $i ] ) >> 6 ) );
+            } while (0b10 === (\ord($prefix[$i]) >> 6));
         }
 
-        return [substr( $prefix, 0, $i ), substr( $prefix, 0, $staticLength ?? $i )];
+        return [substr($prefix, 0, $i), substr($prefix, 0, $staticLength ?? $i)];
     }
 
-    public static function handleError( $type, $msg )
+    public static function handleError($type, $msg)
     {
-        return 0 === strpos( $msg, 'preg_match(): Compilation failed: lookbehind assertion is not fixed length' );
+        return 0 === strpos($msg, 'preg_match(): Compilation failed: lookbehind assertion is not fixed length');
     }
 }

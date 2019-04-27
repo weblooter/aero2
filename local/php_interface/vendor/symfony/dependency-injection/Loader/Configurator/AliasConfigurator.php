@@ -22,7 +22,7 @@ class AliasConfigurator extends AbstractServiceConfigurator
 
     use Traits\PublicTrait;
 
-    public function __construct( ServicesConfigurator $parent, Alias $alias )
+    public function __construct(ServicesConfigurator $parent, Alias $alias)
     {
         $this->parent = $parent;
         $this->definition = $alias;

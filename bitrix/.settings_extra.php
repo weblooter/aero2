@@ -156,7 +156,18 @@ $conf = [
             ]
         ],
         'readonly' => true
-    ]
+    ],
+
+    /**
+     * Курсы валют
+     * www.currencyconverterapi.com
+     */
+    'currencyconverterapi' => [
+        'value' => [
+            'apikey' => '3bd89a05fe5c6539f84c'
+        ],
+        'readonly' => true
+    ],
 ];
 
 return $conf;

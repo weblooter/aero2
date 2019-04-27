@@ -21,7 +21,7 @@ class StreamOutputTest extends TestCase
 
     protected function setUp()
     {
-        $this->stream = fopen( 'php://memory', 'a', false );
+        $this->stream = fopen('php://memory', 'a', false);
     }
 
     protected function tearDown()
@@ -31,10 +31,9 @@ class StreamOutputTest extends TestCase
 
     public function testConstructor()
     {
-        $output = new StreamOutput( $this->stream, Output::VERBOSITY_QUIET, true );
-        $this->assertEquals( Output::VERBOSITY_QUIET, $output->getVerbosity(),
-            '__construct() takes the verbosity as its first argument' );
-        $this->assertTrue( $output->isDecorated(), '__construct() takes the decorated flag as its second argument' );
+        $output = new StreamOutput($this->stream, Output::VERBOSITY_QUIET, true);
+        $this->assertEquals(Output::VERBOSITY_QUIET, $output->getVerbosity(), '__construct() takes the verbosity as its first argument');
+        $this->assertTrue($output->isDecorated(), '__construct() takes the decorated flag as its second argument');
     }
 
     /**
@@ -43,21 +42,20 @@ class StreamOutputTest extends TestCase
      */
     public function testStreamIsRequired()
     {
-        new StreamOutput( 'foo' );
+        new StreamOutput('foo');
     }
 
     public function testGetStream()
     {
-        $output = new StreamOutput( $this->stream );
-        $this->assertEquals( $this->stream, $output->getStream(), '->getStream() returns the current stream' );
+        $output = new StreamOutput($this->stream);
+        $this->assertEquals($this->stream, $output->getStream(), '->getStream() returns the current stream');
     }
 
     public function testDoWrite()
     {
-        $output = new StreamOutput( $this->stream );
-        $output->writeln( 'foo' );
-        rewind( $output->getStream() );
-        $this->assertEquals( 'foo'.PHP_EOL, stream_get_contents( $output->getStream() ),
-            '->doWrite() writes to the stream' );
+        $output = new StreamOutput($this->stream);
+        $output->writeln('foo');
+        rewind($output->getStream());
+        $this->assertEquals('foo'.PHP_EOL, stream_get_contents($output->getStream()), '->doWrite() writes to the stream');
     }
 }

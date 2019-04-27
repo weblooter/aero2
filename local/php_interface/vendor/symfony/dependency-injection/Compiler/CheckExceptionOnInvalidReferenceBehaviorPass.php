@@ -22,15 +22,13 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class CheckExceptionOnInvalidReferenceBehaviorPass extends AbstractRecursivePass
 {
-    protected function processValue( $value, $isRoot = false )
+    protected function processValue($value, $isRoot = false)
     {
-        if ( !$value instanceof Reference )
-        {
-            return parent::processValue( $value, $isRoot );
+        if (!$value instanceof Reference) {
+            return parent::processValue($value, $isRoot);
         }
-        if ( ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE >= $value->getInvalidBehavior() && !$this->container->has( $id = (string)$value ) )
-        {
-            throw new ServiceNotFoundException( $id, $this->currentId );
+        if (ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE >= $value->getInvalidBehavior() && !$this->container->has($id = (string) $value)) {
+            throw new ServiceNotFoundException($id, $this->currentId);
         }
 
         return $value;

@@ -33,15 +33,14 @@ trait TesterTrait
      *
      * @return string The display
      */
-    public function getDisplay( $normalize = false )
+    public function getDisplay($normalize = false)
     {
-        rewind( $this->output->getStream() );
+        rewind($this->output->getStream());
 
-        $display = stream_get_contents( $this->output->getStream() );
+        $display = stream_get_contents($this->output->getStream());
 
-        if ( $normalize )
-        {
-            $display = str_replace( PHP_EOL, "\n", $display );
+        if ($normalize) {
+            $display = str_replace(PHP_EOL, "\n", $display);
         }
 
         return $display;
@@ -85,23 +84,22 @@ trait TesterTrait
      *
      * @return self
      */
-    public function setInputs( array $inputs )
+    public function setInputs(array $inputs)
     {
         $this->inputs = $inputs;
 
         return $this;
     }
 
-    private static function createStream( array $inputs )
+    private static function createStream(array $inputs)
     {
-        $stream = fopen( 'php://memory', 'r+', false );
+        $stream = fopen('php://memory', 'r+', false);
 
-        foreach ( $inputs as $input )
-        {
-            fwrite( $stream, $input.PHP_EOL );
+        foreach ($inputs as $input) {
+            fwrite($stream, $input.PHP_EOL);
         }
 
-        rewind( $stream );
+        rewind($stream);
 
         return $stream;
     }

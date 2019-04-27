@@ -1,3 +1,3 @@
 <?php
 
-$container->setParameter( 'foo', 'foo' );
+$container->setParameter('foo', 'foo');

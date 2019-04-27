@@ -30,9 +30,9 @@ class ServiceReferenceGraph
      */
     private $nodes = [];
 
-    public function hasNode( string $id ): bool
+    public function hasNode(string $id): bool
     {
-        return isset( $this->nodes[ $id ] );
+        return isset($this->nodes[$id]);
     }
 
     /**
@@ -40,14 +40,13 @@ class ServiceReferenceGraph
      *
      * @throws InvalidArgumentException if no node matches the supplied identifier
      */
-    public function getNode( string $id ): ServiceReferenceGraphNode
+    public function getNode(string $id): ServiceReferenceGraphNode
     {
-        if ( !isset( $this->nodes[ $id ] ) )
-        {
-            throw new InvalidArgumentException( sprintf( 'There is no node with id "%s".', $id ) );
+        if (!isset($this->nodes[$id])) {
+            throw new InvalidArgumentException(sprintf('There is no node with id "%s".', $id));
         }
 
-        return $this->nodes[ $id ];
+        return $this->nodes[$id];
     }
 
     /**
@@ -65,8 +64,7 @@ class ServiceReferenceGraph
      */
     public function clear()
     {
-        foreach ( $this->nodes as $node )
-        {
+        foreach ($this->nodes as $node) {
             $node->clear();
         }
         $this->nodes = [];
@@ -75,28 +73,26 @@ class ServiceReferenceGraph
     /**
      * Connects 2 nodes together in the Graph.
      */
-    public function connect( ?string $sourceId, $sourceValue, ?string $destId, $destValue = null, $reference = null, bool $lazy = false, bool $weak = false, bool $byConstructor = false )
+    public function connect(?string $sourceId, $sourceValue, ?string $destId, $destValue = null, $reference = null, bool $lazy = false, bool $weak = false, bool $byConstructor = false)
     {
-        if ( null === $sourceId || null === $destId )
-        {
+        if (null === $sourceId || null === $destId) {
             return;
         }
 
-        $sourceNode = $this->createNode( $sourceId, $sourceValue );
-        $destNode = $this->createNode( $destId, $destValue );
-        $edge = new ServiceReferenceGraphEdge( $sourceNode, $destNode, $reference, $lazy, $weak, $byConstructor );
+        $sourceNode = $this->createNode($sourceId, $sourceValue);
+        $destNode = $this->createNode($destId, $destValue);
+        $edge = new ServiceReferenceGraphEdge($sourceNode, $destNode, $reference, $lazy, $weak, $byConstructor);
 
-        $sourceNode->addOutEdge( $edge );
-        $destNode->addInEdge( $edge );
+        $sourceNode->addOutEdge($edge);
+        $destNode->addInEdge($edge);
     }
 
-    private function createNode( string $id, $value ): ServiceReferenceGraphNode
+    private function createNode(string $id, $value): ServiceReferenceGraphNode
     {
-        if ( isset( $this->nodes[ $id ] ) && $this->nodes[ $id ]->getValue() === $value )
-        {
-            return $this->nodes[ $id ];
+        if (isset($this->nodes[$id]) && $this->nodes[$id]->getValue() === $value) {
+            return $this->nodes[$id];
         }
 
-        return $this->nodes[ $id ] = new ServiceReferenceGraphNode( $id, $value );
+        return $this->nodes[$id] = new ServiceReferenceGraphNode($id, $value);
     }
 }

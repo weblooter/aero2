@@ -26,4 +26,10 @@ class Header extends AbstractField
     public function isValueFilled($mixData){
         return true;
     }
+
+    /** @inheritDoc */
+    public function extractValue($mixData, $mixAdditionalData = null)
+    {
+        return null;
+    }
 }

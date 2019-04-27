@@ -18,9 +18,10 @@ class DescriptorCommand3 extends Command
     protected function configure()
     {
         $this
-            ->setName( 'descriptor:command3' )
-            ->setDescription( 'command 3 description' )
-            ->setHelp( 'command 3 help' )
-            ->setHidden( true );
+            ->setName('descriptor:command3')
+            ->setDescription('command 3 description')
+            ->setHelp('command 3 help')
+            ->setHidden(true)
+        ;
     }
 }
