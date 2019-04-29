@@ -5,7 +5,6 @@ namespace Local\Core\Inner\TradingPlatform\Handler\YandexMarket;
 use \Local\Core\Inner\Fields;
 use \Local\Core\Inner\Route;
 use \Local\Core\Inner\TradingPlatform\Field;
-use mysql_xdevapi\Exception;
 
 class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
 {
@@ -313,7 +312,8 @@ HEREDOC
                 'N' => 'Товар нельзя купить без предварительного заказа'
             ]))
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['store'] ?? [
-                    'TYPE' => Field\Resource::TYPE_IGNORE
+                    'TYPE' => Field\Resource::TYPE_SELECT,
+                    Field\Resource::TYPE_SELECT.'_VALUE' => 'Y'
                 ]);
 
         $arFields['shop__offers__offer__barcode'] = (new Field\Resource())->setTitle('Штрихкод товара от производителя')
@@ -390,7 +390,7 @@ HEREDOC
             ->setIsMultiple()
             ->setOptions(['#ALL' => 'Передавать все характеристики'] + self::$arParamsListCache[$this->getTradingPlatformStoreId()])
             ->setDefaultOption('-- Выберите параметры --')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['param']);
+            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['param'] ?? ['#ALL']);
 
         return $arFields;
     }
@@ -548,7 +548,7 @@ HEREDOC
             ])
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['url'] ?? [
                     'TYPE' => Field\Resource::TYPE_SOURCE,
-                    Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#URL'
+                    Field\Resource::TYPE_SOURCE.'_VALUE' => 'CUSTOM_FIELD#DETAIL_URL_WITH_UTM'
                 ]);
 
         $arFields['shop__offers__offer__price'] = (new Field\Resource())->setTitle('Актуальная цена товара')
@@ -866,12 +866,12 @@ DOCHERE
     }
 
 
-    /* ****** */
-    /* EXPORT */
-    /* ****** */
+    /** *****
+     * EXPORT
+     ****** */
 
     /** @inheritDoc */
-    protected function getExportFileFormat()
+    public function getExportFileFormat()
     {
         return 'xml';
     }
@@ -880,19 +880,112 @@ DOCHERE
     protected function executeMakeExportFile(\Bitrix\Main\Result $obResult)
     {
         try {
+            $this->addToTmpExportFile('<?xml version="1.0" encoding="UTF-8"?><yml_catalog date="'.date('Y-m-d H:i').'"><shop>');
+
+            $this->fillShopHeader($obResult);
+            $this->fillCurrencies($obResult);
+
+            if (!$obResult->isSuccess()) {
+                throw new \Exception();
+            }
+
+            $this->fillCategories($obResult);
+
+            if (!$obResult->isSuccess()) {
+                throw new \Exception();
+            }
+
+            $this->addToTmpExportFile('<offers>');
             $this->beginFilterProduct($obResult);
+            $this->addToTmpExportFile('</offers>');
+
+            $this->addToTmpExportFile('</shop></yml_catalog>');
+
         } catch (\Throwable $e) {
-            $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
+            if (!empty($e->getMessage())) {
+                $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
+            }
+        }
+    }
+
+    protected function fillShopHeader(\Bitrix\Main\Result $obResult)
+    {
+        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__name']))) {
+            $this->addToTmpExportFile('<name>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__name'])).'</name>');
+        }
+        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__company']))) {
+            $this->addToTmpExportFile('<company>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__company'])).'</company>');
+        }
+        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__url']))) {
+            $this->addToTmpExportFile('<url>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__url'])).'</url>');
+        }
+        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__platform']))) {
+            $this->addToTmpExportFile('<platform>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__platform'])).'</platform>');
+        }
+        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__version']))) {
+            $this->addToTmpExportFile('<version>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__version'])).'</version>');
+        }
+        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__agency']))) {
+            $this->addToTmpExportFile('<agency>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__agency'])).'</agency>');
+        }
+        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__email']))) {
+            $this->addToTmpExportFile('<email>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__email'])).'</email>');
+        }
+    }
+
+    protected function fillCurrencies(\Bitrix\Main\Result $obResult)
+    {
+        $this->addToTmpExportFile('<currencies>');
+        if ($this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']) == 'NOT_CONVERT') {
+            $rsCurrencies = \Local\Core\Model\Robofeed\StoreProductFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
+                ->setStoreId($this->getTradingPlatformStoreId())::getList([
+                    'select' => ['CURRENCY_CODE'],
+                    'group' => ['CURRENCY_CODE']
+                ]);
+            if ($rsCurrencies->getSelectedRowsCount() < 1) {
+                $obResult->addError(new \Bitrix\Main\Error('Не обнаружен ни один код валюты среди товаров.'));
+            } else {
+                while ($ar = $rsCurrencies->fetch()) {
+                    switch ($ar['CURRENCY_CODE']) {
+                        case 'RUB':
+                            $this->addToTmpExportFile('<currency id="RUR"/>');
+                            break;
+                        default:
+                            $this->addToTmpExportFile('<currency id="'.htmlspecialchars($ar['CURRENCY_CODE']).'"/>');
+                            break;
+                    }
+                }
+            }
+        } else {
+            $this->addToTmpExportFile('<currency id="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO'])).'" rate="1"/>');
+        }
+        $this->addToTmpExportFile('</currencies>');
+    }
+
+    protected function fillCategories(\Bitrix\Main\Result $obResult)
+    {
+        $rsSections = \Local\Core\Model\Robofeed\StoreCategoryFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
+            ->setStoreId($this->getTradingPlatformStoreId())::getList([]);
+        if ($rsSections->getSelectedRowsCount() < 1) {
+            $obResult->addError(new \Bitrix\Main\Error('Не обнаружена ни одна категория товаров.'));
+        } else {
+            $this->addToTmpExportFile('<categories>');
+            while ($ar = $rsSections->fetch()) {
+                $str = '<category id="'.htmlspecialchars(trim($ar['CATEGORY_ID'])).'"';
+                $str .= (!empty(trim($ar['CATEGORY_PARENT_ID']))) ? ' parentId="'.htmlspecialchars(trim($ar['CATEGORY_PARENT_ID'])).'"' : '';
+                $str .= '>'.htmlspecialchars(trim($ar['CATEGORY_NAME'])).'</category>';
+                $this->addToTmpExportFile($str);
+            }
+            $this->addToTmpExportFile('</categories>');
         }
     }
 
     /** @inheritDoc */
     protected function beginOfferForeachBody(\Bitrix\Main\Result $obResult, $arExportProductData)
     {
-        $funGetFilledValue = function (\Local\Core\Inner\TradingPlatform\Field\AbstractField $obField) use ($arExportProductData)
-            {
-                return $obField->extractValue($this->getTPFieldDataByFieldName($obField->getName()), $arExportProductData);
-            };
+        $arLog = $obResult->getData();
+        $arLog['PRODUCTS_TOTAL']++;
+
         $funGetDefaultValue = function (\Local\Core\Inner\TradingPlatform\Field\AbstractField $obField) use ($arExportProductData)
             {
                 return $obField->extractValue($obField->getValue(), $arExportProductData);
@@ -901,61 +994,64 @@ DOCHERE
         $arOfferXml = [];
 
 
-        /* ***** */
-        /* OFFER */
-        /* ***** */
-        $obDataSourceField = $this->getFields()['shop__offers__offer__@offer_data_source'];
-        switch ($obDataSourceField->extractValue($this->getTPFieldDataByFieldName($obDataSourceField->getName()))) {
+        /** ****
+         * OFFER
+         * *** */
+        switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@offer_data_source'])) {
             case 'CUSTOM':
 
-                $arOfferXml['_attributes']['id'] = $funGetFilledValue($this->getFields()['shop__offers__offer__@attr__id']);
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__@attr__group_id']))) {
-                    $arOfferXml['_attributes']['group_id'] = $funGetFilledValue($this->getFields()['shop__offers__offer__@attr__group_id']);
+                $arOfferXml['_attributes']['id'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__id'], $arExportProductData);
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__group_id'], $arExportProductData))) {
+                    $arOfferXml['_attributes']['group_id'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__group_id'], $arExportProductData);
                 }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__@attr__bid']))) {
-                    $arOfferXml['_attributes']['bid'] = $funGetFilledValue($this->getFields()['shop__offers__offer__@attr__bid']);
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__bid'], $arExportProductData))) {
+                    $arOfferXml['_attributes']['bid'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__bid'], $arExportProductData);
                 }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__@attr__available']))) {
-                    $arOfferXml['_attributes']['available'] = ($funGetFilledValue($this->getFields()['shop__offers__offer__@attr__available']) == 'Y') ? 'true' : 'false';
-                }
-
-                $arOfferXml['name'] = $funGetFilledValue($this->getFields()['shop__offers__offer__name']);
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__vendor']))) {
-                    $arOfferXml['vendor'] = $funGetFilledValue($this->getFields()['shop__offers__offer__vendor']);
-                }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__vendorCode']))) {
-                    $arOfferXml['vendorCode'] = $funGetFilledValue($this->getFields()['shop__offers__offer__vendorCode']);
-                }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__url']))) {
-                    $arOfferXml['url'] = $funGetFilledValue($this->getFields()['shop__offers__offer__url']);
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__available'], $arExportProductData))) {
+                    $arOfferXml['_attributes']['available'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__available'], $arExportProductData)
+                                                               == 'Y') ? 'true' : 'false';
                 }
 
-                $this->fillPriceAndCurrency($funGetFilledValue($this->getFields()['shop__offers__offer__price']), $funGetFilledValue($this->getFields()['shop__offers__offer__currencyId']),
-                    $funGetFilledValue($this->getFields()['shop__offers__offer__oldprice']), $arOfferXml, $arExportProductData);
+                $arOfferXml['name'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__name'], $arExportProductData);
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendor'], $arExportProductData))) {
+                    $arOfferXml['vendor'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendor'], $arExportProductData);
+                }
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendorCode'], $arExportProductData))) {
+                    $arOfferXml['vendorCode'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendorCode'], $arExportProductData);
+                }
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__url'], $arExportProductData))) {
+                    $arOfferXml['url'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__url'], $arExportProductData);
+                }
 
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__description']))) {
-                    $arOfferXml['description']['_cdata'] = $funGetFilledValue($this->getFields()['shop__offers__offer__description']);
-                }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__sales_notes']))) {
-                    $arOfferXml['sales_notes'] = $funGetFilledValue($this->getFields()['shop__offers__offer__sales_notes']);
-                }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__min-quantity']))) {
-                    $arOfferXml['min-quantity'] = $funGetFilledValue($this->getFields()['shop__offers__offer__min-quantity']);
-                }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__manufacturer_warranty']))) {
-                    $arOfferXml['manufacturer_warranty'] = ($funGetFilledValue($this->getFields()['shop__offers__offer__manufacturer_warranty']) == 'Y') ? 'true' : 'false';
-                }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__country_of_origin']))) {
+                $this->fillPriceAndCurrency($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__price'], $arExportProductData),
+                    $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__currencyId'], $arExportProductData),
+                    $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__oldprice'], $arExportProductData), $arOfferXml, $arExportProductData);
 
-                    $arOfferXml['country_of_origin'] = $this->extraYandexCountry($funGetFilledValue($this->getFields()['shop__offers__offer__country_of_origin']));
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__description'], $arExportProductData))) {
+                    $arOfferXml['description']['_cdata'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__description'], $arExportProductData);
                 }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__adult']))) {
-                    $arOfferXml['adult'] = ($funGetFilledValue($this->getFields()['shop__offers__offer__adult']) == 'Y') ? 'true' : 'false';
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__sales_notes'], $arExportProductData))) {
+                    $arOfferXml['sales_notes'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__sales_notes'], $arExportProductData);
                 }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__weight'])) && !empty($arExportProductData['WEIGHT_UNIT_CODE'])) {
-                    $arOfferXml['weight'] = \Local\Core\Inner\Measure::convert($funGetFilledValue($this->getFields()['shop__offers__offer__weight']), $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM');
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__min-quantity'], $arExportProductData))) {
+                    $arOfferXml['min-quantity'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__min-quantity'], $arExportProductData);
                 }
-                if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__dimensions']))) {
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__manufacturer_warranty'], $arExportProductData))) {
+                    $arOfferXml['manufacturer_warranty'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__manufacturer_warranty'], $arExportProductData)
+                                                            == 'Y') ? 'true' : 'false';
+                }
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__country_of_origin'], $arExportProductData))) {
+
+                    $arOfferXml['country_of_origin'] = $this->extraYandexCountry($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__country_of_origin'], $arExportProductData));
+                }
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__adult'], $arExportProductData))) {
+                    $arOfferXml['adult'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__adult'], $arExportProductData) == 'Y') ? 'true' : 'false';
+                }
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__weight'], $arExportProductData)) && !empty($arExportProductData['WEIGHT_UNIT_CODE'])) {
+                    $arOfferXml['weight'] = \Local\Core\Inner\Measure::convert($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__weight'], $arExportProductData),
+                        $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM');
+                }
+                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__dimensions'], $arExportProductData))) {
 
                     try {
                         if (!($this->getFields()['shop__offers__offer__dimensions'] instanceof Field\Resource)) {
@@ -966,14 +1062,12 @@ DOCHERE
 
                         if ($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName())['TYPE'] == Field\Resource::TYPE_LOGIC) {
 
-                            $arSuccessLogicValue = $this->getFields()['shop__offers__offer__dimensions']->extractLogicValidValue($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName()), $arExportProductData);
-                            if( $arSuccessLogicValue['TYPE']  == Field\Resource::TYPE_BUILDER )
-                            {
+                            $arSuccessLogicValue = $this->getFields()['shop__offers__offer__dimensions']->extractLogicValidValue($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName()),
+                                $arExportProductData);
+                            if ($arSuccessLogicValue['TYPE'] == Field\Resource::TYPE_BUILDER) {
                                 $arSearchBuilderValue = $arSuccessLogicValue;
                                 unset($arSuccessLogicValue);
-                            }
-                            else
-                            {
+                            } else {
                                 throw new \Exception();
                             }
 
@@ -981,8 +1075,7 @@ DOCHERE
                             $arSearchBuilderValue = $this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName());
                         }
 
-                        if( is_null($arSearchBuilderValue) )
-                        {
+                        if (is_null($arSearchBuilderValue)) {
                             throw new \Exception();
                         }
 
@@ -993,12 +1086,11 @@ DOCHERE
                             throw new \Exception();
                         }
 
-                        if(
+                        if (
                             !in_array('{{BASE_FIELD#LENGTH}}', $arBuilderParts)
                             || !in_array('{{BASE_FIELD#WIDTH}}', $arBuilderParts)
                             || !in_array('{{BASE_FIELD#HEIGHT}}', $arBuilderParts)
-                        )
-                        {
+                        ) {
                             throw new \Exception();
                         }
 
@@ -1006,25 +1098,25 @@ DOCHERE
                         $widK = array_search('{{BASE_FIELD#WIDTH}}', $arBuilderParts);
                         $heiK = array_search('{{BASE_FIELD#HEIGHT}}', $arBuilderParts);
 
-                        $arOfferXml['dimensions'] = $funGetFilledValue($this->getFields()['shop__offers__offer__dimensions']);
+                        $arOfferXml['dimensions'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__dimensions'], $arExportProductData);
                         $ar = explode('/', $arOfferXml['dimensions']);
                         $ar = array_map('trim', $ar);
 
-                        $intLength = $ar[ $lenK ];
-                        $intWidth = $ar[ $widK ];
-                        $intHeight = $ar[ $heiK ];
+                        $intLength = $ar[$lenK];
+                        $intWidth = $ar[$widK];
+                        $intHeight = $ar[$heiK];
 
                         if ($intLength > 0 && $intWidth > 0 && $intHeight > 0) {
-                            $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT').'/'.\Local\Core\Inner\Measure::convert($intWidth, $arExportProductData['WIDTH_UNIT_CODE'], 'CMT').'/'.\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT');
-                        }
-                        else
-                        {
+                            $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT').'/'
+                                                        .\Local\Core\Inner\Measure::convert($intWidth, $arExportProductData['WIDTH_UNIT_CODE'], 'CMT').'/'
+                                                        .\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT');
+                        } else {
                             $arOfferXml['dimensions'] = null;
                         }
 
 
                     } catch (\Exception $e) {
-                        $arOfferXml['dimensions'] = $funGetFilledValue($this->getFields()['shop__offers__offer__dimensions']);
+                        $arOfferXml['dimensions'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__dimensions'], $arExportProductData);
                     }
                 }
                 break;
@@ -1099,57 +1191,54 @@ DOCHERE
 
         if (!is_null($arOfferXml)) {
 
-            /* **************** */
-            /* OFFER ADDITIONAL */
-            /* **************** */
+            /** ***************
+             * OFFER ADDITIONAL
+             * ************** */
             $arOfferXml['categoryId'] = $arExportProductData['CATEGORY_ID'];
 
-            if (!empty($funGetFilledValue($this->getFields()['shop__offers__offer__picture']))) {
-                $arOfferXml['picture'] = $funGetFilledValue($this->getFields()['shop__offers__offer__picture']);
+            if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__picture'], $arExportProductData))) {
+                $arOfferXml['picture'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__picture'], $arExportProductData);
             }
 
-            if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__store']))) {
-                $arOfferXml['store'] = ($funGetFilledValue($this->getFields()['shop__offers__offer__store']) == 'Y') ? 'true' : 'false';
+            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__store'], $arExportProductData))) {
+                $arOfferXml['store'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__store'], $arExportProductData) == 'Y') ? 'true' : 'false';
             }
 
-            if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__barcode']))) {
-                $arOfferXml['barcode'] = $funGetFilledValue($this->getFields()['shop__offers__offer__barcode']);
+            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__barcode'], $arExportProductData))) {
+                $arOfferXml['barcode'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__barcode'], $arExportProductData);
             }
 
-            if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__downloadable']))) {
-                $arOfferXml['downloadable'] = ($funGetFilledValue($this->getFields()['shop__offers__offer__downloadable']) == 'Y') ? 'true' : 'false';
+            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__downloadable'], $arExportProductData))) {
+                $arOfferXml['downloadable'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__downloadable'], $arExportProductData) == 'Y') ? 'true' : 'false';
             }
 
-            if (!is_null($funGetFilledValue($this->getFields()['shop__offers__offer__age__@attr__year']))) {
+            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__age__@attr__year'], $arExportProductData))) {
                 $arOfferXml['age'] = [
                     '_attributes' => [
                         'unit' => 'year'
                     ],
-                    '_value' => $funGetFilledValue($this->getFields()['shop__offers__offer__age__@attr__year'])
+                    '_value' => $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__age__@attr__year'], $arExportProductData)
                 ];
             }
 
-            /* ******** */
-            /* DELIVERY */
-            /* ******** */
+            /** *******
+             * DELIVERY
+             ******** */
 
-            switch ( $funGetFilledValue($this->getFields()['shop__offers__offer__@delivery_data_source']) )
-            {
+            switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@delivery_data_source'], $arExportProductData)) {
                 case 'CUSTOM':
 
-                    $arOfferXml['delivery'] = ( $funGetFilledValue($this->getFields()['shop__offers__offer__delivery']) == 'Y' ) ? 'true' : 'false';
+                    $arOfferXml['delivery'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery'], $arExportProductData) == 'Y') ? 'true' : 'false';
 
-                    if( $arOfferXml['delivery'] == 'true' )
-                    {
+                    if ($arOfferXml['delivery'] == 'true') {
                         $arOption = [];
-                        $arOption['cost'] = $funGetFilledValue($this->getFields()['shop__offers__offer__delivery-options__option__@attr__cost']);
-                        if( !is_null($funGetFilledValue($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'])) )
-                        {
-                            $arOption['days'] = $funGetFilledValue($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days']);
+                        $arOption['cost'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__cost'], $arExportProductData);
+                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData))) {
+                            $arOption['days'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData);
                         }
-                        if( !is_null($funGetFilledValue($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'])) )
-                        {
-                            $arOption['order-before'] = $funGetFilledValue($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before']);
+                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'], $arExportProductData))) {
+                            $arOption['order-before'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'],
+                                $arExportProductData);
                         }
 
                         $arOfferXml['delivery-options']['option'] = [
@@ -1161,29 +1250,22 @@ DOCHERE
 
                 case 'ROBOFEED':
 
-                    $arOfferXml['delivery'] = ( $arExportProductData['DELIVERY_AVAILABLE'] == 'Y' ) ? 'true' : 'false';
-                    if( $arExportProductData['DELIVERY_AVAILABLE'] == 'Y' && !empty( $arExportProductData['DELIVERY_OPTIONS'] ) )
-                    {
-                        foreach ($arExportProductData['DELIVERY_OPTIONS'] as $arOptionData)
-                        {
+                    $arOfferXml['delivery'] = ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y') ? 'true' : 'false';
+                    if ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y' && !empty($arExportProductData['DELIVERY_OPTIONS'])) {
+                        foreach ($arExportProductData['DELIVERY_OPTIONS'] as $arOptionData) {
                             $arOption = [];
-                            $arOption['cost'] = ( !empty($arOptionData['PRICE_TO']) && $arOptionData['PRICE_TO'] > $arOptionData['PRICE_FROM'] ) ? $arOptionData['PRICE_TO'] : $arOptionData['PRICE_FROM'];
+                            $arOption['cost'] = (!empty($arOptionData['PRICE_TO'])
+                                                 && $arOptionData['PRICE_TO'] > $arOptionData['PRICE_FROM']) ? $arOptionData['PRICE_TO'] : $arOptionData['PRICE_FROM'];
 
-                            if( !empty( $arOptionData['DAYS_FROM'] ) && !empty( $arOptionData['DAYS_TO'] ) && ( $arOptionData['DAYS_TO'] - $arOptionData['DAYS_FROM'] ) <= 2 )
-                            {
+                            if (!empty($arOptionData['DAYS_FROM']) && !empty($arOptionData['DAYS_TO']) && ($arOptionData['DAYS_TO'] - $arOptionData['DAYS_FROM']) <= 2) {
                                 $arOption['days'] = $arOptionData['DAYS_FROM'].'-'.$arOptionData['DAYS_TO'];
-                            }
-                            elseif( !empty( $arOptionData['DAYS_TO'] ) )
-                            {
+                            } elseif (!empty($arOptionData['DAYS_TO'])) {
                                 $arOption['days'] = $arOptionData['DAYS_TO'];
-                            }
-                            elseif( !empty( $arOptionData['DAYS_FROM'] ) )
-                            {
+                            } elseif (!empty($arOptionData['DAYS_FROM'])) {
                                 $arOption['days'] = $arOptionData['DAYS_FROM'];
                             }
 
-                            if( $arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23 )
-                            {
+                            if ($arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23) {
                                 $arOption['order-before'] = $arOptionData['ORDER_BEFORE'];
                             }
 
@@ -1197,27 +1279,23 @@ DOCHERE
                     break;
             }
 
-            /* ****** */
-            /* PICKUP */
-            /* ****** */
+            /** *****
+             * PICKUP
+             ****** */
 
-            switch ( $funGetFilledValue($this->getFields()['shop__offers__offer__@pickup_data_source']) )
-            {
+            switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@pickup_data_source'], $arExportProductData)) {
                 case 'CUSTOM':
 
-                    $arOfferXml['pickup'] = ( $funGetFilledValue($this->getFields()['shop__offers__offer__pickup']) == 'Y' ) ? 'true' : 'false';
+                    $arOfferXml['pickup'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup'], $arExportProductData) == 'Y') ? 'true' : 'false';
 
-                    if( $arOfferXml['pickup'] == 'true' )
-                    {
+                    if ($arOfferXml['pickup'] == 'true') {
                         $arOption = [];
-                        $arOption['cost'] = $funGetFilledValue($this->getFields()['shop__offers__offer__pickup-options__option__@attr__cost']);
-                        if( !is_null($funGetFilledValue($this->getFields()['shop__offers__offer__pickup-options__option__@attr__days'])) )
-                        {
-                            $arOption['days'] = $funGetFilledValue($this->getFields()['shop__offers__offer__pickup-options__option__@attr__days']);
+                        $arOption['cost'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__cost'], $arExportProductData);
+                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__days'], $arExportProductData))) {
+                            $arOption['days'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__days'], $arExportProductData);
                         }
-                        if( !is_null($funGetFilledValue($this->getFields()['shop__offers__offer__pickup-options__option__@attr__order-before'])) )
-                        {
-                            $arOption['order-before'] = $funGetFilledValue($this->getFields()['shop__offers__offer__pickup-options__option__@attr__order-before']);
+                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__order-before'], $arExportProductData))) {
+                            $arOption['order-before'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__order-before'], $arExportProductData);
                         }
 
                         $arOfferXml['pickup-options']['option'] = [
@@ -1229,29 +1307,21 @@ DOCHERE
 
                 case 'ROBOFEED':
 
-                    $arOfferXml['pickup'] = ( $arExportProductData['PICKUP_AVAILABLE'] == 'Y' ) ? 'true' : 'false';
-                    if( $arExportProductData['PICKUP_AVAILABLE'] == 'Y' && !empty( $arExportProductData['PICKUP_OPTIONS'] ) )
-                    {
-                        foreach ($arExportProductData['PICKUP_OPTIONS'] as $arOptionData)
-                        {
+                    $arOfferXml['pickup'] = ($arExportProductData['PICKUP_AVAILABLE'] == 'Y') ? 'true' : 'false';
+                    if ($arExportProductData['PICKUP_AVAILABLE'] == 'Y' && !empty($arExportProductData['PICKUP_OPTIONS'])) {
+                        foreach ($arExportProductData['PICKUP_OPTIONS'] as $arOptionData) {
                             $arOption = [];
                             $arOption['cost'] = $arOptionData['PRICE'];
 
-                            if( !empty( $arOptionData['SUPPLY_FROM'] ) && !empty( $arOptionData['SUPPLY_TO'] ) )
-                            {
+                            if (!empty($arOptionData['SUPPLY_FROM']) && !empty($arOptionData['SUPPLY_TO'])) {
                                 $arOption['days'] = $arOptionData['SUPPLY_FROM'].'-'.$arOptionData['SUPPLY_TO'];
-                            }
-                            elseif( !empty( $arOptionData['SUPPLY_TO'] ) )
-                            {
+                            } elseif (!empty($arOptionData['SUPPLY_TO'])) {
                                 $arOption['days'] = $arOptionData['SUPPLY_TO'];
-                            }
-                            elseif( !empty( $arOptionData['SUPPLY_FROM'] ) )
-                            {
+                            } elseif (!empty($arOptionData['SUPPLY_FROM'])) {
                                 $arOption['days'] = $arOptionData['SUPPLY_FROM'];
                             }
 
-                            if( $arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23 )
-                            {
+                            if ($arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23) {
                                 $arOption['order-before'] = $arOptionData['ORDER_BEFORE'];
                             }
 
@@ -1265,14 +1335,14 @@ DOCHERE
                     break;
             }
 
-            /* *** */
-            /* END */
-            /* *** */
+            /** **
+             * END
+             *** */
             $arOfferXml = array_diff($arOfferXml, [''], [null]);
 
-            /* ***** */
-            /* PARAM */
-            /* ***** */
+            /** ****
+             * PARAM
+             ***** */
             $arSelectedParams = $this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__param']->getName());
             if (is_array($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__param']->getName()))) {
                 if (in_array('#ALL', $arSelectedParams)) {
@@ -1299,10 +1369,13 @@ DOCHERE
             }
 
             if (!empty($arOfferXml)) {
-                dump($this->convertArrayToString($arOfferXml, 'offer'));
+                $this->addToTmpExportFile($this->convertArrayToString($arOfferXml, 'offer'));
+
+                $arLog['PRODUCTS_EXPORTED']++;
             }
         }
 
+        $obResult->setData($arLog);
     }
 
     /**

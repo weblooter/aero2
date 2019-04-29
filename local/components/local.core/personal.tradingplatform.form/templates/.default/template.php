@@ -11,7 +11,7 @@
  */
 
 ?>
-<? if (empty($arResult['OB_HANDLER'])): ?>
+<? if (empty($arResult['OB_HANDLER']) && empty($arResult['STATUS'])): ?>
 
     <h3>Выберите обработчик</h3>
     <ul>
@@ -20,7 +20,12 @@
                     ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => $k])?>"><?=$v?></a></li>
         <? endforeach; ?>
     </ul>
-
+<? elseif (empty($arResult['OB_HANDLER']) && !empty($arResult['STATUS'])): ?>
+    <?if ($arResult['STATUS'] == 'ERROR'): ?>
+        <div class="alert alert-danger" role="alert">
+            <?=$arResult['ERROR_TEXT'];?>
+        </div>
+    <? endif; ?>
 <? else: ?>
 
     <? if ($arResult['STATUS'] == 'TP_NOT_FOUNT'): ?>
@@ -161,3 +166,4 @@
     <? endif; ?>
 
 <? endif; ?>
+<a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']])?>" class="btn black">Вернуться в магазин</a>

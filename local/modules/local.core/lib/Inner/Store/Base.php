@@ -342,4 +342,19 @@ class Base
         $intVersionId = $ar['LAST_SUCCESS_IMPORT_VERSION'];
         return $intVersionId;
     }
+
+    /**
+     * Получить ID пользователя врадельца магазина
+     *
+     * @param $intStoreId
+     *
+     * @return mixed
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getOwnUserId($intStoreId)
+    {
+        return self::__getStoreRegister($intStoreId)['COMPANY_USER_OWN_ID'];
+    }
 }

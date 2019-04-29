@@ -89,6 +89,11 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
         $obTp = ( new Local\Core\Inner\TradingPlatform\TradingPlatform() );
         try
         {
+            if( !\Local\Core\Inner\Store\Base::hasSuccessImport( $this->arParams['STORE_ID'] ) )
+            {
+                throw new \Exception('У магазина не было еще ни одного успешного импорта. Заполнение данных торговых площадок возможно только после того, как данные по Вашим товарам будут импортированны в нашу систему.');
+            }
+
             if( $this->arParams['TP_ID'] < 1 && !empty( \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('handler') ) )
             {
                 $arResult['OB_HANDLER'] = $obTp->getHandler(\Bitrix\Main\Application::getInstance()->getContext()->getRequest()->get('handler'));

@@ -371,7 +371,7 @@ abstract class AbstractField
     public function getRow($htmlInputRender)
     {
         $strInfotext = '<label class="'.( $this->getIsRequired() ? 'required' : '' ).'">'.$this->getTitle().':';
-        $strInfotext .= (!is_null($this->getDescription())) ? '<button class="icon-info robotip__starter" type="button"><div class="robotip__content">'.$this->getDescription().'</div></button>' : '';
+        $strInfotext .= (!is_null($this->getDescription())) ? '<button class="icon-info robotip__starter" type="button" tabindex="-1"><div class="robotip__content">'.$this->getDescription().'</div></button>' : '';
         $strInfotext .= '</label>';
 
         if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {

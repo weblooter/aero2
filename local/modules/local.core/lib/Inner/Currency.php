@@ -73,7 +73,7 @@ class Currency
         ) )
         {
             $obHttp = new \Bitrix\Main\Web\HttpClient();
-            $obHttp->get('https://free.currconv.com/api/v7/convert?q='.$fromCode.'_'.$toCode.'&compact=ultra&apiKey='.\Bitrix\Main\Config\Configuration::getValue('currencyconverterapi')['apikey']);
+            $obHttp->get('https://free.currconv.com/api/v7/convert?q='.$fromCode.'_'.$toCode.'&compact=ultra&apiKey='.\Bitrix\Main\Config\Configuration::getInstance()->get('currencyconverterapi')['apikey']);
             if( $obHttp->getStatus() == 200 )
             {
                 $intRate = json_decode($obHttp->getResult(), true)[$fromCode.'_'.$toCode];

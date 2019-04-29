@@ -5,6 +5,12 @@ namespace Local\Core\EventHandlers\Main;
 
 class OnBeforeEventSend
 {
+    /**
+     * Замена логических выраженией в шаблрне письма
+     *
+     * @param $arFields
+     * @param $arTemplate
+     */
     public static function executeCondition($arFields, &$arTemplate)
     {
         $arTemplate['MESSAGE'] = str_replace("\n", '__@rn@__', $arTemplate['MESSAGE']);

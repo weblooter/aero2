@@ -40,12 +40,16 @@ class Store
             switch (\Local\Core\Inner\Store\Base::checkUserAccess($args['store_id'])) {
                 case \Local\Core\Inner\Store\Base::ACCESS_STORE_IS_MINE:
 
-                    $obRes = \Local\Core\Inner\Store\Base::changeStoreTariff($args['store_id'], $args['tariff_code']);
-                    if ($obRes->isSuccess()) {
-                        $arResult['result'] = 'SUCCESS';
-                    } else {
+                    try {
+                        $obRes = \Local\Core\Inner\Store\Base::changeStoreTariff($args['store_id'], $args['tariff_code']);
+                        if ($obRes->isSuccess()) {
+                            $arResult['result'] = 'SUCCESS';
+                        } else {
+                            throw new \Exception(implode('<br/>', $obRes->getErrorMessages()));
+                        }
+                    } catch (\Exception $e) {
                         $arResult['result'] = 'error';
-                        $arResult['error_text'] = implode('<br/>', $obRes->getErrorMessages());
+                        $arResult['error_text'] = $e->getMessage();
                     }
 
                     break;

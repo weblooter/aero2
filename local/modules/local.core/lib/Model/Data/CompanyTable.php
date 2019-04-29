@@ -316,4 +316,26 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
         \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.detail'], ['company_id='.$arFields['ID']]);
 
     }
+
+    /**
+     * Удаление магазинов компании после удаления компании
+     *
+     * @param Event $event
+     *
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function onAfterDelete(Event $event)
+    {
+        $intId = $event->getParameter('primary');
+        $rs = \Local\Core\Model\Data\StoreTable::getList([
+            'filter' => ['COMPANY_ID' => $intId],
+            'select' => ['ID']
+        ]);
+        while ($ar = $rs->fetch())
+        {
+            \Local\Core\Model\Data\StoreTable::delete($ar['ID']);
+        }
+    }
 }

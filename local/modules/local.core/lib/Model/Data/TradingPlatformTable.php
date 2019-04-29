@@ -212,4 +212,29 @@ class TradingPlatformTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\Da
         # Вызывается строго в конце
         self::_initClearComponentCache($event, []);
     }
+
+    /**
+     * Удаление всех логов ТП после удаления самого ТП
+     *
+     * @param Event $event
+     *
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function onAfterDelete(Event $event)
+    {
+        $intId = $event->getParameter('primary');
+        if( $intId > 0 )
+        {
+            $rsTpLogs = \Local\Core\Model\Data\TradingPlatformExportLogTable::getList([
+                'filter' => ['TP_ID' => $intId],
+                'select' => ['ID']
+            ]);
+            while ($ar = $rsTpLogs->fetch())
+            {
+                \Local\Core\Model\Data\TradingPlatformExportLogTable::delete($ar['ID']);
+            }
+        }
+    }
 }

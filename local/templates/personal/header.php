@@ -52,7 +52,7 @@ global $USER;
             <a href="/" class="logo">ROBOFEED</a>
             <div class="rightblock">
                 <div class="companies">
-                    <a href="<?=\Local\Core\Inner\Route::getRouteTo('company','list');?>" class="companieslist" title="Список компаний"><i class="icon-list"></i><span>Черешнев Е.С.</span></a>
+                    <a href="<?=\Local\Core\Inner\Route::getRouteTo('company','list');?>" class="companieslist" title="Список компаний"><i class="icon-list"></i><span><?//TODO Заполнять данные по компании?>Черешнев Е.С.</span></a>
                 </div>
                 <div class="balance">
                     <a href="<?=\Local\Core\Inner\Route::getRouteTo('balance','list');?>" title="Биллинг"><i class="icon-wallet"></i><?=number_format(\Local\Core\Inner\Balance\Base::getUserBalance($GLOBALS['USER']->GetId()), 0, '.', ' ')?> Р</a>

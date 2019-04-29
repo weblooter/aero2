@@ -977,7 +977,7 @@ class Resource extends AbstractField
                                 \Local\Core\Inner\Cache::getCachePath(['Inner', 'TradingPlatform', 'Field', 'Resource'], ['CustomFieldCategoryList', 'storeId='.$this->getStoreId()])
                             ) )
                             {
-                                $rsCategories = \Local\Core\Model\Robofeed\StoreCategoryFactory::factory(1)->setStoreId( $this->getStoreId() )::getList([
+                                $rsCategories = \Local\Core\Model\Robofeed\StoreCategoryFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getStoreId()))->setStoreId( $this->getStoreId() )::getList([
                                     'select' => ['CATEGORY_ID', 'CATEGORY_PARENT_ID', 'CATEGORY_NAME']
                                 ]);
                                 if( $rsCategories->getSelectedRowsCount() < 1 )
