@@ -13,13 +13,30 @@ use Bitrix\Main\UserTable;
  */
 class MonthlyPayment
 {
-    public static function execute()
+    /**
+     * Инициализация процедуры ежемесячной оплаты
+     *
+     * @param array $arFilter
+     *
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function execute($arFilter = [])
     {
+        $arrFilter = [
+            'ACTIVE' => 'Y',
+            '<=PAYED_TO' => new \Bitrix\Main\Type\DateTime()
+        ];
+
+        if( !empty( $arFilter ) )
+        {
+            $arrFilter = array_merge($arrFilter, $arFilter);
+        }
+
         $rsTp = \Local\Core\Model\Data\TradingPlatformTable::getList([
-            'filter' => [
-                'ACTIVE' => 'Y',
-                '<=PAYED_TO' => new \Bitrix\Main\Type\DateTime()
-            ],
+            'filter' => $arrFilter,
             'select' => ['ID', 'STORE_ID', 'NAME']
         ]);
         while ($arTp = $rsTp->fetch()) {

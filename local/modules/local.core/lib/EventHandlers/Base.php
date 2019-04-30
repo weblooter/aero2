@@ -77,7 +77,7 @@ class Base
         define('LOCAL_CORE_CONDITION_MODE_PARSE', 1);					// parsing mode
         define('LOCAL_CORE_CONDITION_MODE_GENERATE', 2);					// generate mode
         define('LOCAL_CORE_CONDITION_MODE_SQL', 3);						// generate getlist mode
-        define('LOCAL_CORE_CONDITION_MODE_SEARCH', 4);					// info mode
+        define('LOCAL_CORE_CONDITION_MODE_SEARCH', 4);					// in fo mode
 
         define('LOCAL_CORE_CONDITION_BUILD_CATALOG', 0);					// local.core conditions
         define('LOCAL_CORE_CONDITION_BUILD_SALE', 1);					// sale conditions

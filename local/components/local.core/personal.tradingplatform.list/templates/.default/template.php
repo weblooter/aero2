@@ -140,8 +140,8 @@
                                 ?>
                                 <div class="alert alert-danger">
                                     <b>Ссылка на файл экспорта:</b> https://robofeed.ru<?=\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($arItem['ID']);?><br/>
-                                    Дата попытки формирования файла: <?=( ($arLastLog['DATE_CREATE'] instanceof \Bitrix\Main\Type\DateTime) ? $arLastLog['DATE_CREATE']->format('Y.m.d H:i:s') : '-' )?><br/>
-                                    <b>Текст ошибки:</b><br/>
+                                    <b>Дата последней попытки формирования файла:</b> <?=( ($arLastLog['DATE_CREATE'] instanceof \Bitrix\Main\Type\DateTime) ? $arLastLog['DATE_CREATE']->format('Y.m.d H:i:s') : '-' )?><br/>
+                                    <b>Текст ошибки последней попытки:</b><br/>
                                     <?=$arLastLog['ERROR_TEXT']?>
                                 </div>
                                 <?

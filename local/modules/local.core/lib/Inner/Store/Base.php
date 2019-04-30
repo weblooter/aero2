@@ -4,6 +4,7 @@ namespace Local\Core\Inner\Store;
 
 use Local\Core\Model\Data\StoreTable;
 use Local\Core\Model\Robofeed\ImportLogTable;
+use function Sodium\add;
 
 /**
  * Класс для работы с магазинами
@@ -76,6 +77,16 @@ class Base
     {
         self::__fillStoreRegister($intStoreId);
         return self::$__register[$intStoreId];
+    }
+
+    /**
+     * Очищает регистр
+     *
+     * @param $intStoreId
+     */
+    public static function clearRegister($intStoreId)
+    {
+        unset(self::$__register[$intStoreId]);
     }
 
 
@@ -182,6 +193,12 @@ class Base
         $obResult = new \Bitrix\Main\Result();
 
         try {
+            $oldTariffPrice = \Local\Core\Inner\Tariff\Base::getPrice(\Local\Core\Inner\Store\Base::getTariffCode($intStoreId));
+
+            /* *********************** */
+            /* Меняет тариф у магазина */
+            /* *********************** */
+
             $arTariff = \Local\Core\Model\Data\TariffTable::getList([
                 'filter' => [
                     'CODE' => $strTariffCode,
@@ -196,45 +213,106 @@ class Base
                 ->fetch();
 
             if (empty($arTariff)) {
-                throw new \Exception('Ну удалось найти тариф');
+                throw new \Exception('Ну удалось найти тариф.');
             }
 
             if (\Local\Core\Inner\Store\Base::getTariffCode($intStoreId) == $strTariffCode) {
-                throw new \Exception('Не возможно изменить тариф на тот же');
+                throw new \Exception('Невозможно изменить тариф на тот же.');
             }
 
-            // TODO Сделать рассчет суммы списания и проверку баланса
-
-
-            // TODO сделать списание денег за оплату тарифа
-
-            StoreTable::update($intStoreId, [
+            $obUpdateRes = StoreTable::update($intStoreId, [
                 'TARIFF_CODE' => $strTariffCode
             ]);
 
-            if ($boolSendEmail) {
-                $rs = \Local\Core\Model\Data\StoreTable::getList([
-                    'filter' => ['ID' => $intStoreId],
-                    'select' => ['ID', 'COMPANY_ID', 'COMPANY']
-                ])
-                    ->fetchObject();
-                $arUser = \Bitrix\Main\UserTable::getByPrimary($rs['COMPANY']->get('USER_OWN_ID'), ['select' => ['EMAIL']])
-                    ->fetch();
+            if( $obUpdateRes->isSuccess() )
+            {
+                \Local\Core\Inner\Store\Base::clearRegister($intStoreId);
 
-                $arMailFields = [
-                    'EMAIL' => $arUser['EMAIL'],
-                    'STORE_NAME' => \Local\Core\Inner\Store\Base::getStoreName($intStoreId),
-                    'NEW_TARIFF_NAME' => $arTariff['NAME'],
-                    'NEW_TARIFF_PRODUCT_LIMIT' => number_format($arTariff['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' '),
-                ];
+                if ($boolSendEmail) {
+                    $arUser = \Bitrix\Main\UserTable::getByPrimary(\Local\Core\Inner\Store\Base::getOwnUserId($intStoreId), ['select' => ['EMAIL']])
+                        ->fetch();
 
-                if (!is_null($arTariff['DATE_ACTIVE_TO'])) {
-                    $arMailFields['DATE_ACTIVE_TO'] = $arTariff['DATE_ACTIVE_TO']->format('Y-m-d H:i');
-                    $arMailFields['NEXT_TARIFF_NAME'] = (!empty($arTariff['SWITCH_AFTER_ACTIVE_TO']) ? \Local\Core\Inner\Tariff\Base::getTariffByCode($arTariff['SWITCH_AFTER_ACTIVE_TO']) : \Local\Core\Inner\Tariff\Base::getDefaultTariff())['NAME'];
+                    $arMailFields = [
+                        'EMAIL' => $arUser['EMAIL'],
+                        'STORE_NAME' => \Local\Core\Inner\Store\Base::getStoreName($intStoreId),
+                        'NEW_TARIFF_NAME' => $arTariff['NAME'],
+                        'NEW_TARIFF_PRODUCT_LIMIT' => number_format($arTariff['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' '),
+                    ];
+
+                    if (!is_null($arTariff['DATE_ACTIVE_TO'])) {
+                        $arMailFields['DATE_ACTIVE_TO'] = $arTariff['DATE_ACTIVE_TO']->format('Y-m-d H:i');
+                        $arMailFields['NEXT_TARIFF_NAME'] = (!empty($arTariff['SWITCH_AFTER_ACTIVE_TO']) ? \Local\Core\Inner\Tariff\Base::getTariffByCode($arTariff['SWITCH_AFTER_ACTIVE_TO']) : \Local\Core\Inner\Tariff\Base::getDefaultTariff())['NAME'];
+                    }
+
+                    \Local\Core\Inner\TriggerMail\Store::tariffChanged($arMailFields);
                 }
 
-                \Local\Core\Inner\TriggerMail\Store::tariffChanged($arMailFields);
+                /* ******************************** */
+                /* Делаем возврат за оставшиеся дни */
+                /* ******************************** */
+
+                $newTariffPrice = $arTariff['PRICE_PER_TRADING_PLATFORM'];
+
+                if( $oldTariffPrice < $newTariffPrice )
+                {
+                    # Если новый тариф дороже
+
+                    $rsTpList = \Local\Core\Model\Data\TradingPlatformTable::getList([
+                        'filter' => [
+                            'STORE_ID' => $intStoreId,
+                            '>PAYED_TO' => new \Bitrix\Main\Type\DateTime()
+                        ],
+                        'select' => ['ID', 'PAYED_TO', 'PAYED_FROM', 'NAME']
+                    ]);
+                    while ($ar = $rsTpList->fetch())
+                    {
+                        if( $ar['PAYED_TO'] instanceof \Bitrix\Main\Type\DateTime)
+                        {
+                            # ТП была ранее хоть раз активирована
+
+                            $intBetweenDays = ( $ar['PAYED_TO']->getTimestamp() - $ar['PAYED_FROM']->getTimestamp() )/60/60/24;
+                            $intLeftDaysPayed = floor(( $ar['PAYED_TO']->getTimestamp() - strtotime('now') )/60/60/24);
+
+                            $intNeedMoneyBack = floor($oldTariffPrice / $intBetweenDays * $intLeftDaysPayed);
+                            if( $intNeedMoneyBack > 0 )
+                            {
+                                \Local\Core\Inner\Balance\Base::payToAccount($intNeedMoneyBack, \Local\Core\Inner\Store\Base::getOwnUserId($intStoreId), 'Возврат оставшегося оплаченного периода торговой площадки "'.$ar['NAME'].'" магазина "'.\Local\Core\Inner\Store\Base::getStoreName($intStoreId).'" по причине смены тарифного плана магазина.');
+                            }
+                            \Local\Core\Model\Data\TradingPlatformTable::update($ar['ID'], ['PAYED_TO' => new \Bitrix\Main\Type\DateTime(date('Y-m-d 00:00:01'), 'Y-m-d H:i:s')]);
+                        }
+                    }
+
+                    \Local\Core\Inner\TradingPlatform\MonthlyPayment::execute(['STORE_ID' => $intStoreId]);
+                }
+
+                /* ********************************** */
+                /* Создадим воркер импорта и экпортов */
+                /* ********************************** */
+
+                $worker = new \Local\Core\Inner\JobQueue\Worker\StoreRobofeedImport(['STORE_ID' => $intStoreId]);
+                $dateTime = new \Bitrix\Main\Type\DateTime();
+                \Local\Core\Inner\JobQueue\Job::addIfNotExist($worker, $dateTime, 1);
+
+                $rsTpList = \Local\Core\Model\Data\TradingPlatformTable::getList([
+                    'filter' => [
+                        'STORE_ID' => $intStoreId,
+                        'ACTIVE' => 'Y'
+                    ],
+                    'select' => ['ID']
+                ]);
+
+                while ($ar = $rsTpList->fetch())
+                {
+                    $worker = new \Local\Core\Inner\JobQueue\Worker\TradingPlatformExport(['TP_ID' => $ar['ID']]);
+                    $dateTime = (new \Bitrix\Main\Type\DateTime())->add('+1 hour');
+                    \Local\Core\Inner\JobQueue\Job::addIfNotExist($worker, $dateTime, 1);
+                }
             }
+            else
+            {
+                throw new \Exception(implode(', ', $obUpdateRes->getErrorMessages()));
+            }
+
         } catch (\Exception $e) {
             $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
         }

@@ -5,7 +5,7 @@ namespace Local\Core\Inner\Balance;
 use Bitrix\Main\UserTable;
 
 /**
- * Базовый класс по работе с балансом
+ * Базовый класс по работе с балансом, списанием и пополнением
  *
  * @package Local\Core\Inner\Balance
  */
@@ -165,7 +165,7 @@ class Base
 
             if( \Local\Core\Inner\Tariff\Base::getActiveStatus($strTariffCode) != 'Y' )
             {
-                throw new \Exception('Текущий тариф магазина деактивирован, оплатить его нельзя.');
+                throw new \Exception('Текущий тариф деактивирован, оплатить его нельзя. Смените тариф.');
             }
 
             $intTariffPrice = \Local\Core\Inner\Tariff\Base::getPrice($strTariffCode);
@@ -181,7 +181,7 @@ class Base
                 throw new \Exception('Оплатить торговую площадку невозможно, на счете недостаточно средств. Пополните баланс и активируйте торговую площадку вручную.');
             }
 
-            $obPayRes = self::payFromAccount($intTariffPrice, $intUserId, 'Оплата торговой площадки №'.$intTradingPlatformId.' "'.\Local\Core\Inner\TradingPlatform\Base::getName($intTradingPlatformId).'"');
+            $obPayRes = self::payFromAccount($intTariffPrice, $intUserId, 'Оплата торговой площадки "'.\Local\Core\Inner\TradingPlatform\Base::getName($intTradingPlatformId).'" магазина "'.\Local\Core\Inner\Store\Base::getStoreName( \Local\Core\Inner\TradingPlatform\Base::getStoreIdByTpId($intTradingPlatformId) ).'".');
             if( !$obPayRes->isSuccess() )
             {
                 $obResult->addErrors( $obPayRes->getErrors() );
