@@ -12,11 +12,12 @@ class FoobarCommand extends Command
     protected function configure()
     {
         $this
-            ->setName( 'foobar:foo' )
-            ->setDescription( 'The foobar:foo command' );
+            ->setName('foobar:foo')
+            ->setDescription('The foobar:foo command')
+        ;
     }
 
-    protected function execute( InputInterface $input, OutputInterface $output )
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;

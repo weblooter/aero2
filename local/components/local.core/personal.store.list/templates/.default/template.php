@@ -40,15 +40,6 @@
                     Дата создания: <?=date('Y-m-d H:i:s', $arItem['DATE_CREATE']->getTimestamp())?><br />
                     Источник
                     данных: <?=($arItem['RESOURCE_TYPE'] == 'LINK') ? 'Ссылка на файл' : 'Загружен файл'?>
-
-                    <?
-                    // TODO Сделать вывод последней проверки
-                    ?>
-                    <div class="alert alert-warning" role="alert">
-                        //TODO<br />
-                        Статус последней проверки: Ожидает проверки<br />
-                        Дата последней проверки: -
-                    </div>
                 </div>
             </div>
             <hr />

@@ -6,11 +6,11 @@ use Symfony\Component\DependencyInjection\Tests\Compiler\Foo;
 
 class FooVariadic
 {
-    public function __construct( Foo $foo )
+    public function __construct(Foo $foo)
     {
     }
 
-    public function bar( ...$arguments )
+    public function bar(...$arguments)
     {
     }
 }

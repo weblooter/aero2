@@ -22,7 +22,7 @@ abstract class GeneratorDumper implements GeneratorDumperInterface
 {
     private $routes;
 
-    public function __construct( RouteCollection $routes )
+    public function __construct(RouteCollection $routes)
     {
         $this->routes = $routes;
     }

@@ -10,43 +10,39 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
-    public function __construct( RequestContext $context )
+    public function __construct(RequestContext $context)
     {
         $this->context = $context;
     }
 
-    public function match( $pathinfo )
+    public function match($pathinfo)
     {
         $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode( $pathinfo ) ? : '/';
-        $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/';
+        $pathinfo = rawurldecode($pathinfo) ?: '/';
+        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
-        if ( 'HEAD' === $requestMethod )
-        {
+        if ('HEAD' === $requestMethod) {
             $canonicalMethod = 'GET';
         }
 
         $matchedPathinfo = $pathinfo;
         $regexList = [
             0 => '{^(?'
-                 .'|/(a)(*:11)'
-                 .')/?$}sD',
+                    .'|/(a)(*:11)'
+                .')/?$}sD',
             11 => '{^(?'
-                  .'|/(.)(*:22)'
-                  .')/?$}sDu',
+                    .'|/(.)(*:22)'
+                .')/?$}sDu',
             22 => '{^(?'
-                  .'|/(.)(*:33)'
-                  .')/?$}sD',
+                    .'|/(.)(*:33)'
+                .')/?$}sD',
         ];
 
-        foreach ( $regexList as $offset => $regex )
-        {
-            while ( preg_match( $regex, $matchedPathinfo, $matches ) )
-            {
-                switch ( $m = (int)$matches[ 'MARK' ] )
-                {
+        foreach ($regexList as $offset => $regex) {
+            while (preg_match($regex, $matchedPathinfo, $matches)) {
+                switch ($m = (int) $matches['MARK']) {
                     default:
                         $routes = [
                             11 => [['_route' => 'a'], ['a'], null, null, false, true],
@@ -54,38 +50,30 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
                             33 => [['_route' => 'c'], ['a'], null, null, false, true],
                         ];
 
-                        list( $ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar ) = $routes[ $m ];
+                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
 
                         $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
-                        if ( '/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ( $trimmedPathinfo === $pathinfo ) )
-                        {
+                        if ('/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
                             break;
                         }
-                        if ( $hasTrailingSlash && $hasTrailingVar && preg_match( $regex,
-                                rtrim( $matchedPathinfo, '/' ) ? : '/', $n ) && $m === (int)$n[ 'MARK' ] )
-                        {
+                        if ($hasTrailingSlash && $hasTrailingVar && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
                             $matches = $n;
                         }
 
-                        foreach ( $vars as $i => $v )
-                        {
-                            if ( isset( $matches[ 1 + $i ] ) )
-                            {
-                                $ret[ $v ] = $matches[ 1 + $i ];
+                        foreach ($vars as $i => $v) {
+                            if (isset($matches[1 + $i])) {
+                                $ret[$v] = $matches[1 + $i];
                             }
                         }
 
-                        $hasRequiredScheme = !$requiredSchemes || isset( $requiredSchemes[ $context->getScheme() ] );
-                        if ( $requiredMethods && !isset( $requiredMethods[ $canonicalMethod ] ) && !isset( $requiredMethods[ $requestMethod ] ) )
-                        {
-                            if ( $hasRequiredScheme )
-                            {
+                        $hasRequiredScheme = !$requiredSchemes || isset($requiredSchemes[$context->getScheme()]);
+                        if ($requiredMethods && !isset($requiredMethods[$canonicalMethod]) && !isset($requiredMethods[$requestMethod])) {
+                            if ($hasRequiredScheme) {
                                 $allow += $requiredMethods;
                             }
                             break;
                         }
-                        if ( !$hasRequiredScheme )
-                        {
+                        if (!$hasRequiredScheme) {
                             $allowSchemes += $requiredSchemes;
                             break;
                         }
@@ -93,19 +81,17 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
                         return $ret;
                 }
 
-                if ( 33 === $m )
-                {
+                if (33 === $m) {
                     break;
                 }
-                $regex = substr_replace( $regex, 'F', $m - $offset, 1 + strlen( $m ) );
-                $offset += strlen( $m );
+                $regex = substr_replace($regex, 'F', $m - $offset, 1 + strlen($m));
+                $offset += strlen($m);
             }
         }
-        if ( '/' === $pathinfo && !$allow && !$allowSchemes )
-        {
+        if ('/' === $pathinfo && !$allow && !$allowSchemes) {
             throw new Symfony\Component\Routing\Exception\NoConfigurationException();
         }
 
-        throw $allow ? new MethodNotAllowedException( array_keys( $allow ) ) : new ResourceNotFoundException();
+        throw $allow ? new MethodNotAllowedException(array_keys($allow)) : new ResourceNotFoundException();
     }
 }

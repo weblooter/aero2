@@ -20,88 +20,69 @@ class ServiceLocatorTest extends TestCase
 {
     public function testHas()
     {
-        $locator = new ServiceLocator( [
-            'foo' => function () {
-                return 'bar';
-            },
-            'bar' => function () {
-                return 'baz';
-            },
-            function () {
-                return 'dummy';
-            },
-        ] );
+        $locator = new ServiceLocator([
+            'foo' => function () { return 'bar'; },
+            'bar' => function () { return 'baz'; },
+            function () { return 'dummy'; },
+        ]);
 
-        $this->assertTrue( $locator->has( 'foo' ) );
-        $this->assertTrue( $locator->has( 'bar' ) );
-        $this->assertFalse( $locator->has( 'dummy' ) );
+        $this->assertTrue($locator->has('foo'));
+        $this->assertTrue($locator->has('bar'));
+        $this->assertFalse($locator->has('dummy'));
     }
 
     public function testGet()
     {
-        $locator = new ServiceLocator( [
-            'foo' => function () {
-                return 'bar';
-            },
-            'bar' => function () {
-                return 'baz';
-            },
-        ] );
+        $locator = new ServiceLocator([
+            'foo' => function () { return 'bar'; },
+            'bar' => function () { return 'baz'; },
+        ]);
 
-        $this->assertSame( 'bar', $locator->get( 'foo' ) );
-        $this->assertSame( 'baz', $locator->get( 'bar' ) );
+        $this->assertSame('bar', $locator->get('foo'));
+        $this->assertSame('baz', $locator->get('bar'));
     }
 
     public function testGetDoesNotMemoize()
     {
         $i = 0;
-        $locator = new ServiceLocator( [
-            'foo' => function () use ( &$i ) {
+        $locator = new ServiceLocator([
+            'foo' => function () use (&$i) {
                 ++$i;
 
                 return 'bar';
             },
-        ] );
+        ]);
 
-        $this->assertSame( 'bar', $locator->get( 'foo' ) );
-        $this->assertSame( 'bar', $locator->get( 'foo' ) );
-        $this->assertSame( 2, $i );
+        $this->assertSame('bar', $locator->get('foo'));
+        $this->assertSame('bar', $locator->get('foo'));
+        $this->assertSame(2, $i);
     }
 
     /**
      * @expectedException        \Psr\Container\NotFoundExceptionInterface
-     * @expectedExceptionMessage Service "dummy" not found: the container inside
-     *     "Symfony\Component\DependencyInjection\Tests\ServiceLocatorTest" is a smaller service locator that only
-     *     knows about the "foo" and "bar" services.
+     * @expectedExceptionMessage Service "dummy" not found: the container inside "Symfony\Component\DependencyInjection\Tests\ServiceLocatorTest" is a smaller service locator that only knows about the "foo" and "bar" services.
      */
     public function testGetThrowsOnUndefinedService()
     {
-        $locator = new ServiceLocator( [
-            'foo' => function () {
-                return 'bar';
-            },
-            'bar' => function () {
-                return 'baz';
-            },
-        ] );
+        $locator = new ServiceLocator([
+            'foo' => function () { return 'bar'; },
+            'bar' => function () { return 'baz'; },
+        ]);
 
-        $locator->get( 'dummy' );
+        $locator->get('dummy');
     }
 
     /**
      * @expectedException        \Psr\Container\NotFoundExceptionInterface
-     * @expectedExceptionMessage The service "foo" has a dependency on a non-existent service "bar". This locator only
-     *     knows about the "foo" service.
+     * @expectedExceptionMessage The service "foo" has a dependency on a non-existent service "bar". This locator only knows about the "foo" service.
      */
     public function testThrowsOnUndefinedInternalService()
     {
-        $locator = new ServiceLocator( [
-            'foo' => function () use ( &$locator ) {
-                return $locator->get( 'bar' );
-            },
-        ] );
+        $locator = new ServiceLocator([
+            'foo' => function () use (&$locator) { return $locator->get('bar'); },
+        ]);
 
-        $locator->get( 'foo' );
+        $locator->get('foo');
     }
 
     /**
@@ -110,71 +91,54 @@ class ServiceLocatorTest extends TestCase
      */
     public function testThrowsOnCircularReference()
     {
-        $locator = new ServiceLocator( [
-            'foo' => function () use ( &$locator ) {
-                return $locator->get( 'bar' );
-            },
-            'bar' => function () use ( &$locator ) {
-                return $locator->get( 'baz' );
-            },
-            'baz' => function () use ( &$locator ) {
-                return $locator->get( 'bar' );
-            },
-        ] );
+        $locator = new ServiceLocator([
+            'foo' => function () use (&$locator) { return $locator->get('bar'); },
+            'bar' => function () use (&$locator) { return $locator->get('baz'); },
+            'baz' => function () use (&$locator) { return $locator->get('bar'); },
+        ]);
 
-        $locator->get( 'foo' );
+        $locator->get('foo');
     }
 
     /**
      * @expectedException        \Psr\Container\NotFoundExceptionInterface
-     * @expectedExceptionMessage Service "foo" not found: even though it exists in the app's container, the container
-     *     inside "caller" is a smaller service locator that only knows about the "bar" service. Unless you need extra
-     *     laziness, try using dependency injection instead. Otherwise, you need to declare it using
-     *     "SomeServiceSubscriber::getSubscribedServices()".
+     * @expectedExceptionMessage Service "foo" not found: even though it exists in the app's container, the container inside "caller" is a smaller service locator that only knows about the "bar" service. Unless you need extra laziness, try using dependency injection instead. Otherwise, you need to declare it using "SomeServiceSubscriber::getSubscribedServices()".
      */
     public function testThrowsInServiceSubscriber()
     {
         $container = new Container();
-        $container->set( 'foo', new \stdClass() );
+        $container->set('foo', new \stdClass());
         $subscriber = new SomeServiceSubscriber();
-        $subscriber->container = new ServiceLocator( [
-            'bar' => function () {
-            }
-        ] );
-        $subscriber->container = $subscriber->container->withContext( 'caller', $container );
+        $subscriber->container = new ServiceLocator(['bar' => function () {}]);
+        $subscriber->container = $subscriber->container->withContext('caller', $container);
 
         $subscriber->getFoo();
     }
 
     /**
      * @expectedException        \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     * @expectedExceptionMessage Service "foo" not found: even though it exists in the app's container, the container
-     *     inside "foo" is a smaller service locator that is empty... Try using dependency injection instead.
+     * @expectedExceptionMessage Service "foo" not found: even though it exists in the app's container, the container inside "foo" is a smaller service locator that is empty... Try using dependency injection instead.
      */
     public function testGetThrowsServiceNotFoundException()
     {
         $container = new Container();
-        $container->set( 'foo', new \stdClass() );
+        $container->set('foo', new \stdClass());
 
-        $locator = new ServiceLocator( [] );
-        $locator = $locator->withContext( 'foo', $container );
-        $locator->get( 'foo' );
+        $locator = new ServiceLocator([]);
+        $locator = $locator->withContext('foo', $container);
+        $locator->get('foo');
     }
 
     public function testInvoke()
     {
-        $locator = new ServiceLocator( [
-            'foo' => function () {
-                return 'bar';
-            },
-            'bar' => function () {
-                return 'baz';
-            },
-        ] );
+        $locator = new ServiceLocator([
+            'foo' => function () { return 'bar'; },
+            'bar' => function () { return 'baz'; },
+        ]);
 
-        $this->assertSame( 'bar', $locator( 'foo' ) );
-        $this->assertSame( 'baz', $locator( 'bar' ) );
-        $this->assertNull( $locator( 'dummy' ), '->__invoke() should return null on invalid service' );
+        $this->assertSame('bar', $locator('foo'));
+        $this->assertSame('baz', $locator('bar'));
+        $this->assertNull($locator('dummy'), '->__invoke() should return null on invalid service');
     }
 }
 
@@ -184,7 +148,7 @@ class SomeServiceSubscriber implements ServiceSubscriberinterface
 
     public function getFoo()
     {
-        return $this->container->get( 'foo' );
+        return $this->container->get('foo');
     }
 
     public static function getSubscribedServices()

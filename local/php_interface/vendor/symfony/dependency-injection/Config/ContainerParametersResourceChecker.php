@@ -23,7 +23,7 @@ class ContainerParametersResourceChecker implements ResourceCheckerInterface
     /** @var ContainerInterface */
     private $container;
 
-    public function __construct( ContainerInterface $container )
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -31,7 +31,7 @@ class ContainerParametersResourceChecker implements ResourceCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function supports( ResourceInterface $metadata )
+    public function supports(ResourceInterface $metadata)
     {
         return $metadata instanceof ContainerParametersResource;
     }
@@ -39,12 +39,10 @@ class ContainerParametersResourceChecker implements ResourceCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function isFresh( ResourceInterface $resource, $timestamp )
+    public function isFresh(ResourceInterface $resource, $timestamp)
     {
-        foreach ( $resource->getParameters() as $key => $value )
-        {
-            if ( !$this->container->hasParameter( $key ) || $this->container->getParameter( $key ) !== $value )
-            {
+        foreach ($resource->getParameters() as $key => $value) {
+            if (!$this->container->hasParameter($key) || $this->container->getParameter($key) !== $value) {
                 return false;
             }
         }

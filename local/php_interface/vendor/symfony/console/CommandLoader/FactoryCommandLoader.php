@@ -25,7 +25,7 @@ class FactoryCommandLoader implements CommandLoaderInterface
     /**
      * @param callable[] $factories Indexed by command names
      */
-    public function __construct( array $factories )
+    public function __construct(array $factories)
     {
         $this->factories = $factories;
     }
@@ -33,22 +33,21 @@ class FactoryCommandLoader implements CommandLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function has( $name )
+    public function has($name)
     {
-        return isset( $this->factories[ $name ] );
+        return isset($this->factories[$name]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get( $name )
+    public function get($name)
     {
-        if ( !isset( $this->factories[ $name ] ) )
-        {
-            throw new CommandNotFoundException( sprintf( 'Command "%s" does not exist.', $name ) );
+        if (!isset($this->factories[$name])) {
+            throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
         }
 
-        $factory = $this->factories[ $name ];
+        $factory = $this->factories[$name];
 
         return $factory();
     }
@@ -58,6 +57,6 @@ class FactoryCommandLoader implements CommandLoaderInterface
      */
     public function getNames()
     {
-        return array_keys( $this->factories );
+        return array_keys($this->factories);
     }
 }

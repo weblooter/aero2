@@ -38,4 +38,33 @@ class Condition extends AbstractField
     public function isValueFilled($mixData){
         return true;
     }
+
+    static $extractDataPhpCache = [];
+
+    /** @inheritDoc */
+    public function extractValue($mixData, $mixAdditionalData = null)
+    {
+        $boolRes = false;
+        $phpRule = null;
+        $strHash = md5(serialize($mixData).'#'.$this->getStoreId());
+
+        if( is_null( self::$extractDataPhpCache[ $strHash ] ) )
+        {
+            $arTmp = [];
+            if (!empty($mixData) && is_array($mixData)) {
+                if (empty($mixData['CLASS_ID'])) {
+                    $arTmp = \Local\Core\Inner\Condition\Base::parseCondition($mixData, $this->getStoreId());
+                }
+                else{
+                    $arTmp = $mixData;
+                }
+            } else {
+                $arTmp = [];
+            }
+
+            self::$extractDataPhpCache[ $strHash ] = \Local\Core\Inner\Condition\Base::generatePhp($arTmp, $this->getStoreId(), '$mixAdditionalData');
+        }
+
+        return eval('return '.self::$extractDataPhpCache[ $strHash ].';');
+    }
 }

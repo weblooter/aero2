@@ -23,58 +23,43 @@ class AutowireRequiredMethodsPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    protected function processValue( $value, $isRoot = false )
+    protected function processValue($value, $isRoot = false)
     {
-        $value = parent::processValue( $value, $isRoot );
+        $value = parent::processValue($value, $isRoot);
 
-        if ( !$value instanceof Definition || !$value->isAutowired() || $value->isAbstract() || !$value->getClass() )
-        {
+        if (!$value instanceof Definition || !$value->isAutowired() || $value->isAbstract() || !$value->getClass()) {
             return $value;
         }
-        if ( !$reflectionClass = $this->container->getReflectionClass( $value->getClass(), false ) )
-        {
+        if (!$reflectionClass = $this->container->getReflectionClass($value->getClass(), false)) {
             return $value;
         }
 
         $alreadyCalledMethods = [];
 
-        foreach ( $value->getMethodCalls() as list( $method ) )
-        {
-            $alreadyCalledMethods[ strtolower( $method ) ] = true;
+        foreach ($value->getMethodCalls() as list($method)) {
+            $alreadyCalledMethods[strtolower($method)] = true;
         }
 
-        foreach ( $reflectionClass->getMethods() as $reflectionMethod )
-        {
+        foreach ($reflectionClass->getMethods() as $reflectionMethod) {
             $r = $reflectionMethod;
 
-            if ( $r->isConstructor() || isset( $alreadyCalledMethods[ strtolower( $r->name ) ] ) )
-            {
+            if ($r->isConstructor() || isset($alreadyCalledMethods[strtolower($r->name)])) {
                 continue;
             }
 
-            while ( true )
-            {
-                if ( false !== $doc = $r->getDocComment() )
-                {
-                    if ( false !== stripos( $doc,
-                            '@required' ) && preg_match( '#(?:^/\*\*|\n\s*+\*)\s*+@required(?:\s|\*/$)#i', $doc ) )
-                    {
-                        $value->addMethodCall( $reflectionMethod->name );
+            while (true) {
+                if (false !== $doc = $r->getDocComment()) {
+                    if (false !== stripos($doc, '@required') && preg_match('#(?:^/\*\*|\n\s*+\*)\s*+@required(?:\s|\*/$)#i', $doc)) {
+                        $value->addMethodCall($reflectionMethod->name);
                         break;
                     }
-                    if ( false === stripos( $doc,
-                            '@inheritdoc' ) || !preg_match( '#(?:^/\*\*|\n\s*+\*)\s*+(?:\{@inheritdoc\}|@inheritdoc)(?:\s|\*/$)#i',
-                            $doc ) )
-                    {
+                    if (false === stripos($doc, '@inheritdoc') || !preg_match('#(?:^/\*\*|\n\s*+\*)\s*+(?:\{@inheritdoc\}|@inheritdoc)(?:\s|\*/$)#i', $doc)) {
                         break;
                     }
                 }
-                try
-                {
+                try {
                     $r = $r->getPrototype();
-                }
-                catch ( \ReflectionException $e )
-                {
+                } catch (\ReflectionException $e) {
                     break; // method has no prototype
                 }
             }

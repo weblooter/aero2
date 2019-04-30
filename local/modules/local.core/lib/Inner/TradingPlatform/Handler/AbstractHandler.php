@@ -30,6 +30,8 @@ abstract class AbstractHandler
         }
     }
 
+    protected $arFieldsCache;
+
     /**
      * Получить набор полей обработчика, как общие, так и индивидуальные
      *
@@ -37,7 +39,11 @@ abstract class AbstractHandler
      */
     public function getFields()
     {
-        return array_merge($this->getGeneralFields(), $this->getHandlerFields());
+        if( is_null($this->arFieldsCache) )
+        {
+            $this->arFieldsCache = array_merge($this->getGeneralFields(), $this->getHandlerFields());
+        }
+        return $this->arFieldsCache;
     }
 
     /**
@@ -55,6 +61,7 @@ abstract class AbstractHandler
                 ->setIsRequired()
                 ->setOptions([
                     'NOT_CONVERT' => 'Оставлять цены в переданных валютах',
+                    'RUB' => 'Конвертировать в "Российский рубль"',
                     'BYN' => 'Конвертировать в "Белорусский рубль"',
                     'UAH' => 'Конвертировать в "Гривна"',
                     'KZT' => 'Конвертировать в "Тенге"',
@@ -240,8 +247,11 @@ DOCHERE
     {
         $obResult = new \Bitrix\Main\Result();
 
-        dump($this->arTradingPlatformData);
         try {
+            if ($this->arTradingPlatformData['ACTIVE'] == 'N') {
+                throw new \Exception('Торговая площадка деактивирована.');
+            }
+
             if (empty($this->getTradingPlatformStoreId())) {
                 throw new \Local\Core\Inner\TradingPlatform\Exceptions\StoreIdNotDefined();
             }
@@ -250,7 +260,21 @@ DOCHERE
                 throw new \Exception('У магазина не было еще ни одного успешного импорта.');
             }
 
+            if (is_null(\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID']))) {
+                throw new \Exception('Не удалось сформировать путь сохранения экспортного файла.');
+            }
+
+            if (file_exists($this->getExportFilePath(true))) {
+                unlink($this->getExportFilePath(true));
+            }
+
             $this->executeMakeExportFile($obResult);
+
+            if ($obResult->isSuccess()) {
+                copy($this->getExportFilePath(true), $this->getExportFilePath(false));
+                unlink($this->getExportFilePath(true));
+            }
+
         } catch (\Local\Core\Inner\TradingPlatform\Exceptions\StoreIdNotDefined $e) {
             $obResult->addError(new \Bitrix\Main\Error('Магазин не задан.'));
         } catch (\Exception $e) {
@@ -258,8 +282,11 @@ DOCHERE
         } catch (\Throwable $e) {
             $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
         }
-
-        dump($obResult->getErrorMessages());
+        finally {
+            if (!$obResult->isSuccess()) {
+                unlink($this->getExportFilePath(true));
+            }
+        }
 
         return $obResult;
     }
@@ -294,27 +321,29 @@ DOCHERE
         $strPhpProductCondition = \Local\Core\Inner\Condition\Base::generatePhp($this->arTradingPlatformData['PRODUCT_FILTER'], $this->getTradingPlatformStoreId(), '$arExportProductData');
 
         $arProductsIdList = $this->exportGetProductIdList();
-        $arProductsIdList = array_chunk($arProductsIdList, \Bitrix\Main\Config\Configuration::getValue('tradingplatform')['export']['batch_size'] ?? 50);
+        $arProductsIdList = array_chunk($arProductsIdList, \Bitrix\Main\Config\Configuration::getInstance()->get('tradingplatform')['export']['batch_size'] ?? 50);
+
+        $arHandlerSettings = $this->getHandlerRules()['@handler_settings'];
 
         foreach ($arProductsIdList as $arBatch) {
             $rsProducts = \Local\Core\Model\Robofeed\StoreProductFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
                 ->setStoreId($this->getTradingPlatformStoreId())::getList([
-                'filter' => ['ID' => $arBatch]
-            ]);
+                    'filter' => ['ID' => $arBatch]
+                ]);
             $arProducts = $rsProducts->fetchAll();
 
             $rsParams = \Local\Core\Model\Robofeed\StoreProductParamFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
                 ->setStoreId($this->getTradingPlatformStoreId())::getList([
-                'filter' => [
-                    'PRODUCT_ID' => $arBatch
-                ],
-                'select' => [
-                    'CODE',
-                    'NAME',
-                    'VALUE',
-                    'PRODUCT_ID'
-                ]
-            ]);
+                    'filter' => [
+                        'PRODUCT_ID' => $arBatch
+                    ],
+                    'select' => [
+                        'CODE',
+                        'NAME',
+                        'VALUE',
+                        'PRODUCT_ID'
+                    ]
+                ]);
             $arParamsByProdId = [];
             while ($ar = $rsParams->fetch()) {
                 $intProdId = $ar['PRODUCT_ID'];
@@ -330,13 +359,59 @@ DOCHERE
                         'PRODUCT_ID' => $arBatch
                     ]
                 ]);
+            while ($ar = $rsDelivery->fetch()) {
+                $intProdId = $ar['PRODUCT_ID'];
+                unset($ar['PRODUCT_ID'], $ar['ROBOFEED_VERSION'], $ar['DATE_CREATE'], $ar['ID']);
+                $arDelivery[$intProdId][] = $ar;
+            }
+
+            $arPickup = [];
+            $rsPickup = \Local\Core\Model\Robofeed\StoreProductPickupFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
+                ->setStoreId($this->getTradingPlatformStoreId())::getList([
+                    'filter' => [
+                        'PRODUCT_ID' => $arBatch
+                    ]
+                ]);
+            while ($ar = $rsPickup->fetch()) {
+                $intProdId = $ar['PRODUCT_ID'];
+                unset($ar['PRODUCT_ID'], $ar['ROBOFEED_VERSION'], $ar['DATE_CREATE'], $ar['ID']);
+                $arPickup[$intProdId][] = $ar;
+            }
 
             global $arExportProductData;
             foreach ($arProducts as $arExportProductData) {
-                $arExportProductData = array_merge($arExportProductData, $arParamsByProdId[$arExportProductData['ID']]);
+                $arExportProductData = array_merge(
+                    $arExportProductData,
+                    $arParamsByProdId[$arExportProductData['ID']],
+                    ['DELIVERY_OPTIONS' => $arDelivery],
+                    ['PICKUP_OPTIONS' => $arPickup],
+                    ['@HANDLER_SETTINGS' => $arHandlerSettings]
+                );
                 if ($arExportProductData['EXPIRY_DATE'] instanceof \Bitrix\Main\Type\DateTime) {
                     $arExportProductData['EXPIRY_DATE'] = $arExportProductData['EXPIRY_DATE']->getTimestamp();
                 }
+
+                if (empty($arExportProductData['WEIGHT'])) {
+                    $arExportProductData['WEIGHT'] = $arHandlerSettings['DEFAULT_WEIGHT'];
+                    $arExportProductData['WEIGHT_UNIT_CODE'] = 'GRM';
+                }
+
+                if (empty($arExportProductData['WIDTH'])) {
+                    $arExportProductData['WIDTH'] = $arHandlerSettings['DEFAULT_WIDTH'];
+                    $arExportProductData['WIDTH_UNIT_CODE'] = 'MMT';
+                }
+
+                if (empty($arExportProductData['HEIGHT'])) {
+                    $arExportProductData['HEIGHT'] = $arHandlerSettings['DEFAULT_HEIGHT'];
+                    $arExportProductData['HEIGHT_UNIT_CODE'] = 'MMT';
+                }
+
+                if (empty($arExportProductData['LENGTH'])) {
+                    $arExportProductData['LENGTH'] = $arHandlerSettings['DEFAULT_LENGTH'];
+                    $arExportProductData['LENGTH_UNIT_CODE'] = 'MMT';
+                }
+
+                $arExportProductData['IMAGE'] = array_diff(explode("\r\n", $arExportProductData['IMAGE']), [''], [null]);
 
                 if (eval('return '.$strPhpProductCondition.';')) {
                     $this->beginOfferForeachBody($obResult, $arExportProductData);
@@ -376,27 +451,27 @@ DOCHERE
      */
     protected function getExportFilePath($boolIsTmp = true)
     {
-        $strPath = '';
+        $strPath = null;
+        if (!is_null(\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID']))) {
+            if ($boolIsTmp) {
+                if (is_null($this->arExportFilePath['TMP'])) {
+                    if (!file_exists(dirname(\Bitrix\Main\Application::getDocumentRoot().\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID'])))) {
+                        mkdir(dirname(\Bitrix\Main\Application::getDocumentRoot().\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID'])), 0777, true);
+                    }
 
-        if (is_null($this->arExportFilePath['DIR'])) {
-            $this->arExportFilePath['DIR'] = \Bitrix\Main\Application::getDocumentRoot().(\Bitrix\Main\Config\Configuration::getValue('tradingplatform')['export']['export_dir'] ??
-                                                                                          '/upload/tradingplatform/export');
+                    $this->arExportFilePath['TMP'] = \Bitrix\Main\Application::getDocumentRoot().\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID']).'_TMP';
+                }
+                $strPath = $this->arExportFilePath['TMP'];
+            } else {
+                if (is_null($this->arExportFilePath['FINAL'])) {
+                    if (!file_exists(dirname(\Bitrix\Main\Application::getDocumentRoot().\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID'])))) {
+                        mkdir(dirname(\Bitrix\Main\Application::getDocumentRoot().\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID'])), 0777, true);
+                    }
 
-            if (!file_exists($this->arExportFilePath['DIR'])) {
-                mkdir($this->arExportFilePath['DIR'], 0777, true);
+                    $this->arExportFilePath['FINAL'] = \Bitrix\Main\Application::getDocumentRoot().\Local\Core\Inner\TradingPlatform\Base::getExportFileLink($this->arTradingPlatformData['ID']);
+                }
+                $strPath = $this->arExportFilePath['FINAL'];
             }
-        }
-
-        if ($boolIsTmp) {
-            if (is_null($this->arExportFilePath['TMP'])) {
-                $this->arExportFilePath['TMP'] = $this->arTradingPlatformData['CODE'].'_TMP.'.$this->getExportFileFormat();
-            }
-            $strPath = $this->arExportFilePath['DIR'].'/'.$this->arExportFilePath['TMP'];
-        } else {
-            if (is_null($this->arExportFilePath['FINAL'])) {
-                $this->arExportFilePath['FINAL'] = $this->arTradingPlatformData['CODE'].'.'.$this->getExportFileFormat();
-            }
-            $strPath = $this->arExportFilePath['DIR'].'/'.$this->arExportFilePath['FINAL'];
         }
         return $strPath;
     }
@@ -406,7 +481,7 @@ DOCHERE
      *
      * @return string
      */
-    abstract protected function getExportFileFormat();
+    abstract public function getExportFileFormat();
 
     /**
      * Добавляет запись во временный файл
@@ -418,5 +493,24 @@ DOCHERE
         $f = fopen($this->getExportFilePath(true), 'a');
         fwrite($f, $str);
         fclose($f);
+    }
+
+    /**
+     * Извлекает значение из объекта Field\AbstractField.
+     * Для того что бы извлечение прошло успешно необходимо иметь значение в $this->>getFields()['#field__path#']
+     *  и $this->getHandlerRules()['field']['path']
+     * Пример использования:
+     * <pre>
+     * $strName = $this->getFields()['shop__name'];
+     * </pre>
+     *
+     * @param Field\AbstractField $obField
+     * @param array               $arAdditionalData
+     *
+     * @return mixed
+     */
+    protected function extractFilledValueFromRule(\Local\Core\Inner\TradingPlatform\Field\AbstractField $obField, $arAdditionalData = [])
+    {
+        return $obField->extractValue($this->getTPFieldDataByFieldName($obField->getName()), $arAdditionalData);
     }
 }

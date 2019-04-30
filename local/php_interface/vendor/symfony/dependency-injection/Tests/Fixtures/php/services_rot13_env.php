@@ -45,7 +45,7 @@ class Symfony_DI_PhpDumper_Test_Rot13Parameters extends Container
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()
@@ -68,7 +68,7 @@ class Symfony_DI_PhpDumper_Test_Rot13Parameters extends Container
      */
     protected function getRot13EnvVarProcessorService()
     {
-        return $this->services[ 'Symfony\Component\DependencyInjection\Tests\Dumper\Rot13EnvVarProcessor' ] = new \Symfony\Component\DependencyInjection\Tests\Dumper\Rot13EnvVarProcessor();
+        return $this->services['Symfony\\Component\\DependencyInjection\\Tests\\Dumper\\Rot13EnvVarProcessor'] = new \Symfony\Component\DependencyInjection\Tests\Dumper\Rot13EnvVarProcessor();
     }
 
     /**
@@ -78,53 +78,45 @@ class Symfony_DI_PhpDumper_Test_Rot13Parameters extends Container
      */
     protected function getContainer_EnvVarProcessorsLocatorService()
     {
-        return $this->services[ 'container.env_var_processors_locator' ] = new \Symfony\Component\DependencyInjection\ServiceLocator( [
-            'rot13' => function () {
-                return ( $this->services[ 'Symfony\Component\DependencyInjection\Tests\Dumper\Rot13EnvVarProcessor' ] ?? ( $this->services[ 'Symfony\Component\DependencyInjection\Tests\Dumper\Rot13EnvVarProcessor' ] = new \Symfony\Component\DependencyInjection\Tests\Dumper\Rot13EnvVarProcessor() ) );
-            }
-        ] );
+        return $this->services['container.env_var_processors_locator'] = new \Symfony\Component\DependencyInjection\ServiceLocator(['rot13' => function () {
+            return ($this->services['Symfony\\Component\\DependencyInjection\\Tests\\Dumper\\Rot13EnvVarProcessor'] ?? ($this->services['Symfony\\Component\\DependencyInjection\\Tests\\Dumper\\Rot13EnvVarProcessor'] = new \Symfony\Component\DependencyInjection\Tests\Dumper\Rot13EnvVarProcessor()));
+        }]);
     }
 
-    public function getParameter( $name )
+    public function getParameter($name)
     {
-        $name = (string)$name;
+        $name = (string) $name;
 
-        if ( !( isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
-                $this->parameters ) ) )
-        {
-            throw new InvalidArgumentException( sprintf( 'The parameter "%s" must be defined.', $name ) );
+        if (!(isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters))) {
+            throw new InvalidArgumentException(sprintf('The parameter "%s" must be defined.', $name));
         }
-        if ( isset( $this->loadedDynamicParameters[ $name ] ) )
-        {
-            return $this->loadedDynamicParameters[ $name ] ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
+        if (isset($this->loadedDynamicParameters[$name])) {
+            return $this->loadedDynamicParameters[$name] ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
         }
 
-        return $this->parameters[ $name ];
+        return $this->parameters[$name];
     }
 
-    public function hasParameter( $name )
+    public function hasParameter($name)
     {
-        $name = (string)$name;
+        $name = (string) $name;
 
-        return isset( $this->parameters[ $name ] ) || isset( $this->loadedDynamicParameters[ $name ] ) || array_key_exists( $name,
-                $this->parameters );
+        return isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || array_key_exists($name, $this->parameters);
     }
 
-    public function setParameter( $name, $value )
+    public function setParameter($name, $value)
     {
-        throw new LogicException( 'Impossible to call set() on a frozen ParameterBag.' );
+        throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }
 
     public function getParameterBag()
     {
-        if ( null === $this->parameterBag )
-        {
+        if (null === $this->parameterBag) {
             $parameters = $this->parameters;
-            foreach ( $this->loadedDynamicParameters as $name => $loaded )
-            {
-                $parameters[ $name ] = $loaded ? $this->dynamicParameters[ $name ] : $this->getDynamicParameter( $name );
+            foreach ($this->loadedDynamicParameters as $name => $loaded) {
+                $parameters[$name] = $loaded ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
             }
-            $this->parameterBag = new FrozenParameterBag( $parameters );
+            $this->parameterBag = new FrozenParameterBag($parameters);
         }
 
         return $this->parameterBag;
@@ -144,19 +136,15 @@ class Symfony_DI_PhpDumper_Test_Rot13Parameters extends Container
      *
      * @throws InvalidArgumentException When the dynamic parameter does not exist
      */
-    private function getDynamicParameter( $name )
+    private function getDynamicParameter($name)
     {
-        switch ( $name )
-        {
-            case 'hello':
-                $value = $this->getEnv( 'rot13:foo' );
-                break;
-            default:
-                throw new InvalidArgumentException( sprintf( 'The dynamic parameter "%s" must be defined.', $name ) );
+        switch ($name) {
+            case 'hello': $value = $this->getEnv('rot13:foo'); break;
+            default: throw new InvalidArgumentException(sprintf('The dynamic parameter "%s" must be defined.', $name));
         }
-        $this->loadedDynamicParameters[ $name ] = true;
+        $this->loadedDynamicParameters[$name] = true;
 
-        return $this->dynamicParameters[ $name ] = $value;
+        return $this->dynamicParameters[$name] = $value;
     }
 
     /**

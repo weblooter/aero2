@@ -28,7 +28,7 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass implements Repe
     /**
      * {@inheritdoc}
      */
-    public function setRepeatedPass( RepeatedPass $repeatedPass )
+    public function setRepeatedPass(RepeatedPass $repeatedPass)
     {
         // no-op for BC
     }
@@ -36,59 +36,48 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass implements Repe
     /**
      * {@inheritdoc}
      */
-    protected function processValue( $value, $isRoot = false )
+    protected function processValue($value, $isRoot = false)
     {
-        if ( $value instanceof ArgumentInterface )
-        {
+        if ($value instanceof ArgumentInterface) {
             // Reference found in ArgumentInterface::getValues() are not inlineable
             return $value;
         }
 
-        if ( $value instanceof Definition && $this->cloningIds )
-        {
-            if ( $value->isShared() )
-            {
+        if ($value instanceof Definition && $this->cloningIds) {
+            if ($value->isShared()) {
                 return $value;
             }
             $value = clone $value;
         }
 
-        if ( !$value instanceof Reference || !$this->container->hasDefinition( $id = (string)$value ) )
-        {
-            return parent::processValue( $value, $isRoot );
+        if (!$value instanceof Reference || !$this->container->hasDefinition($id = (string) $value)) {
+            return parent::processValue($value, $isRoot);
         }
 
-        $definition = $this->container->getDefinition( $id );
+        $definition = $this->container->getDefinition($id);
 
-        if ( !$this->isInlineableDefinition( $id, $definition,
-            $this->container->getCompiler()->getServiceReferenceGraph() ) )
-        {
+        if (!$this->isInlineableDefinition($id, $definition, $this->container->getCompiler()->getServiceReferenceGraph())) {
             return $value;
         }
 
-        $this->container->log( $this, sprintf( 'Inlined service "%s" to "%s".', $id, $this->currentId ) );
+        $this->container->log($this, sprintf('Inlined service "%s" to "%s".', $id, $this->currentId));
 
-        if ( $definition->isShared() )
-        {
+        if ($definition->isShared()) {
             return $definition;
         }
 
-        if ( isset( $this->cloningIds[ $id ] ) )
-        {
-            $ids = array_keys( $this->cloningIds );
+        if (isset($this->cloningIds[$id])) {
+            $ids = array_keys($this->cloningIds);
             $ids[] = $id;
 
-            throw new ServiceCircularReferenceException( $id, \array_slice( $ids, array_search( $id, $ids ) ) );
+            throw new ServiceCircularReferenceException($id, \array_slice($ids, array_search($id, $ids)));
         }
 
-        $this->cloningIds[ $id ] = true;
-        try
-        {
-            return $this->processValue( $definition );
-        }
-        finally
-        {
-            unset( $this->cloningIds[ $id ] );
+        $this->cloningIds[$id] = true;
+        try {
+            return $this->processValue($definition);
+        } finally {
+            unset($this->cloningIds[$id]);
         }
     }
 
@@ -97,24 +86,19 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass implements Repe
      *
      * @return bool If the definition is inlineable
      */
-    private function isInlineableDefinition( $id, Definition $definition, ServiceReferenceGraph $graph )
+    private function isInlineableDefinition($id, Definition $definition, ServiceReferenceGraph $graph)
     {
-        if ( $definition->getErrors() || $definition->isDeprecated() || $definition->isLazy() || $definition->isSynthetic() )
-        {
+        if ($definition->getErrors() || $definition->isDeprecated() || $definition->isLazy() || $definition->isSynthetic()) {
             return false;
         }
 
-        if ( !$definition->isShared() )
-        {
-            if ( !$graph->hasNode( $id ) )
-            {
+        if (!$definition->isShared()) {
+            if (!$graph->hasNode($id)) {
                 return true;
             }
 
-            foreach ( $graph->getNode( $id )->getInEdges() as $edge )
-            {
-                if ( $edge->isWeak() || $edge->isLazy() )
-                {
+            foreach ($graph->getNode($id)->getInEdges() as $edge) {
+                if ($edge->isWeak() || $edge->isLazy()) {
                     return false;
                 }
             }
@@ -122,53 +106,44 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass implements Repe
             return true;
         }
 
-        if ( $definition->isPublic() )
-        {
+        if ($definition->isPublic()) {
             return false;
         }
 
-        if ( !$graph->hasNode( $id ) )
-        {
+        if (!$graph->hasNode($id)) {
             return true;
         }
 
-        if ( $this->currentId == $id )
-        {
+        if ($this->currentId == $id) {
             return false;
         }
 
         $ids = [];
         $isReferencedByConstructor = false;
-        foreach ( $graph->getNode( $id )->getInEdges() as $edge )
-        {
+        foreach ($graph->getNode($id)->getInEdges() as $edge) {
             $isReferencedByConstructor = $isReferencedByConstructor || $edge->isReferencedByConstructor();
-            if ( $edge->isWeak() || $edge->isLazy() )
-            {
+            if ($edge->isWeak() || $edge->isLazy()) {
                 return false;
             }
             $ids[] = $edge->getSourceNode()->getId();
         }
 
-        if ( !$ids )
-        {
+        if (!$ids) {
             return true;
         }
 
-        if ( \count( array_unique( $ids ) ) > 1 )
-        {
+        if (\count(array_unique($ids)) > 1) {
             return false;
         }
 
-        if ( \count( $ids ) > 1 && \is_array( $factory = $definition->getFactory() ) && ( $factory[ 0 ] instanceof Reference || $factory[ 0 ] instanceof Definition ) )
-        {
+        if (\count($ids) > 1 && \is_array($factory = $definition->getFactory()) && ($factory[0] instanceof Reference || $factory[0] instanceof Definition)) {
             return false;
         }
 
-        if ( $isReferencedByConstructor && $this->container->getDefinition( $ids[ 0 ] )->isLazy() && ( $definition->getProperties() || $definition->getMethodCalls() || $definition->getConfigurator() ) )
-        {
+        if ($isReferencedByConstructor && $this->container->getDefinition($ids[0])->isLazy() && ($definition->getProperties() || $definition->getMethodCalls() || $definition->getConfigurator())) {
             return false;
         }
 
-        return $this->container->getDefinition( $ids[ 0 ] )->isShared();
+        return $this->container->getDefinition($ids[0])->isShared();
     }
 }

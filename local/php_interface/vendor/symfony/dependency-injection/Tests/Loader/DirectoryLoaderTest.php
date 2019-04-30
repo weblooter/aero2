@@ -29,35 +29,33 @@ class DirectoryLoaderTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = realpath( __DIR__.'/../Fixtures/' );
+        self::$fixturesPath = realpath(__DIR__.'/../Fixtures/');
     }
 
     protected function setUp()
     {
-        $locator = new FileLocator( self::$fixturesPath );
+        $locator = new FileLocator(self::$fixturesPath);
         $this->container = new ContainerBuilder();
-        $this->loader = new DirectoryLoader( $this->container, $locator );
-        $resolver = new LoaderResolver( [
-            new PhpFileLoader( $this->container, $locator ),
-            new IniFileLoader( $this->container, $locator ),
-            new YamlFileLoader( $this->container, $locator ),
+        $this->loader = new DirectoryLoader($this->container, $locator);
+        $resolver = new LoaderResolver([
+            new PhpFileLoader($this->container, $locator),
+            new IniFileLoader($this->container, $locator),
+            new YamlFileLoader($this->container, $locator),
             $this->loader,
-        ] );
-        $this->loader->setResolver( $resolver );
+        ]);
+        $this->loader->setResolver($resolver);
     }
 
     public function testDirectoryCanBeLoadedRecursively()
     {
-        $this->loader->load( 'directory/' );
-        $this->assertEquals( ['ini' => 'ini', 'yaml' => 'yaml', 'php' => 'php'],
-            $this->container->getParameterBag()->all(), '->load() takes a single directory' );
+        $this->loader->load('directory/');
+        $this->assertEquals(['ini' => 'ini', 'yaml' => 'yaml', 'php' => 'php'], $this->container->getParameterBag()->all(), '->load() takes a single directory');
     }
 
     public function testImports()
     {
-        $this->loader->resolve( 'directory/import/import.yml' )->load( 'directory/import/import.yml' );
-        $this->assertEquals( ['ini' => 'ini', 'yaml' => 'yaml'], $this->container->getParameterBag()->all(),
-            '->load() takes a single file that imports a directory' );
+        $this->loader->resolve('directory/import/import.yml')->load('directory/import/import.yml');
+        $this->assertEquals(['ini' => 'ini', 'yaml' => 'yaml'], $this->container->getParameterBag()->all(), '->load() takes a single file that imports a directory');
     }
 
     /**
@@ -66,19 +64,17 @@ class DirectoryLoaderTest extends TestCase
      */
     public function testExceptionIsRaisedWhenDirectoryDoesNotExist()
     {
-        $this->loader->load( 'foo/' );
+        $this->loader->load('foo/');
     }
 
     public function testSupports()
     {
-        $loader = new DirectoryLoader( new ContainerBuilder(), new FileLocator() );
+        $loader = new DirectoryLoader(new ContainerBuilder(), new FileLocator());
 
-        $this->assertTrue( $loader->supports( 'directory/' ), '->supports("directory/") returns true' );
-        $this->assertTrue( $loader->supports( 'directory/', 'directory' ),
-            '->supports("directory/", "directory") returns true' );
-        $this->assertFalse( $loader->supports( 'directory' ), '->supports("directory") returns false' );
-        $this->assertTrue( $loader->supports( 'directory', 'directory' ),
-            '->supports("directory", "directory") returns true' );
-        $this->assertFalse( $loader->supports( 'directory', 'foo' ), '->supports("directory", "foo") returns false' );
+        $this->assertTrue($loader->supports('directory/'), '->supports("directory/") returns true');
+        $this->assertTrue($loader->supports('directory/', 'directory'), '->supports("directory/", "directory") returns true');
+        $this->assertFalse($loader->supports('directory'), '->supports("directory") returns false');
+        $this->assertTrue($loader->supports('directory', 'directory'), '->supports("directory", "directory") returns true');
+        $this->assertFalse($loader->supports('directory', 'foo'), '->supports("directory", "foo") returns false');
     }
 }

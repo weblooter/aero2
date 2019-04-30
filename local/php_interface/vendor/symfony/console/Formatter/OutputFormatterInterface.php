@@ -23,7 +23,7 @@ interface OutputFormatterInterface
      *
      * @param bool $decorated Whether to decorate the messages or not
      */
-    public function setDecorated( $decorated );
+    public function setDecorated($decorated);
 
     /**
      * Gets the decorated flag.
@@ -35,10 +35,10 @@ interface OutputFormatterInterface
     /**
      * Sets a new style.
      *
-     * @param string                        $name The style name
+     * @param string                        $name  The style name
      * @param OutputFormatterStyleInterface $style The style instance
      */
-    public function setStyle( $name, OutputFormatterStyleInterface $style );
+    public function setStyle($name, OutputFormatterStyleInterface $style);
 
     /**
      * Checks if output formatter has style with specified name.
@@ -47,7 +47,7 @@ interface OutputFormatterInterface
      *
      * @return bool
      */
-    public function hasStyle( $name );
+    public function hasStyle($name);
 
     /**
      * Gets style options from style with specified name.
@@ -58,7 +58,7 @@ interface OutputFormatterInterface
      *
      * @throws \InvalidArgumentException When style isn't defined
      */
-    public function getStyle( $name );
+    public function getStyle($name);
 
     /**
      * Formats a message according to the given styles.
@@ -67,5 +67,5 @@ interface OutputFormatterInterface
      *
      * @return string The styled message
      */
-    public function format( $message );
+    public function format($message);
 }

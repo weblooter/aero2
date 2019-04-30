@@ -28,24 +28,24 @@ class ContainerBagTest extends TestCase
 
     protected function setUp()
     {
-        $this->parameterBag = new ParameterBag( ['foo' => 'value'] );
-        $this->containerBag = new ContainerBag( new Container( $this->parameterBag ) );
+        $this->parameterBag = new ParameterBag(['foo' => 'value']);
+        $this->containerBag = new ContainerBag(new Container($this->parameterBag));
     }
 
     public function testGetAllParameters()
     {
-        $this->assertSame( ['foo' => 'value'], $this->containerBag->all() );
+        $this->assertSame(['foo' => 'value'], $this->containerBag->all());
     }
 
     public function testHasAParameter()
     {
-        $this->assertTrue( $this->containerBag->has( 'foo' ) );
-        $this->assertFalse( $this->containerBag->has( 'bar' ) );
+        $this->assertTrue($this->containerBag->has('foo'));
+        $this->assertFalse($this->containerBag->has('bar'));
     }
 
     public function testGetParameter()
     {
-        $this->assertSame( 'value', $this->containerBag->get( 'foo' ) );
+        $this->assertSame('value', $this->containerBag->get('foo'));
     }
 
     /**
@@ -53,13 +53,13 @@ class ContainerBagTest extends TestCase
      */
     public function testGetParameterNotFound()
     {
-        $this->containerBag->get( 'bar' );
+        $this->containerBag->get('bar');
     }
 
     public function testInstanceOf()
     {
-        $this->assertInstanceOf( FrozenParameterBag::class, $this->containerBag );
-        $this->assertInstanceOf( ContainerBagInterface::class, $this->containerBag );
-        $this->assertInstanceOf( ContainerInterface::class, $this->containerBag );
+        $this->assertInstanceOf(FrozenParameterBag::class, $this->containerBag);
+        $this->assertInstanceOf(ContainerBagInterface::class, $this->containerBag);
+        $this->assertInstanceOf(ContainerInterface::class, $this->containerBag);
     }
 }

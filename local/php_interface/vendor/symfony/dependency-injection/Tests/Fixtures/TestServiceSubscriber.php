@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 
 class TestServiceSubscriber implements ServiceSubscriberInterface
 {
-    public function __construct( $container )
+    public function __construct($container)
     {
     }
 

@@ -20,16 +20,16 @@ class RouteCompilerTest extends TestCase
     /**
      * @dataProvider provideCompileData
      */
-    public function testCompile( $name, $arguments, $prefix, $regex, $variables, $tokens )
+    public function testCompile($name, $arguments, $prefix, $regex, $variables, $tokens)
     {
-        $r = new \ReflectionClass( 'Symfony\\Component\\Routing\\Route' );
-        $route = $r->newInstanceArgs( $arguments );
+        $r = new \ReflectionClass('Symfony\\Component\\Routing\\Route');
+        $route = $r->newInstanceArgs($arguments);
 
         $compiled = $route->compile();
-        $this->assertEquals( $prefix, $compiled->getStaticPrefix(), $name.' (static prefix)' );
-        $this->assertEquals( $regex, $compiled->getRegex(), $name.' (regex)' );
-        $this->assertEquals( $variables, $compiled->getVariables(), $name.' (variables)' );
-        $this->assertEquals( $tokens, $compiled->getTokens(), $name.' (tokens)' );
+        $this->assertEquals($prefix, $compiled->getStaticPrefix(), $name.' (static prefix)');
+        $this->assertEquals($regex, $compiled->getRegex(), $name.' (regex)');
+        $this->assertEquals($variables, $compiled->getVariables(), $name.' (variables)');
+        $this->assertEquals($tokens, $compiled->getTokens(), $name.' (tokens)');
     }
 
     public function provideCompileData()
@@ -38,10 +38,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Static route',
                 ['/foo'],
-                '/foo',
-                '#^/foo$#sD',
-                [],
-                [
+                '/foo', '#^/foo$#sD', [], [
                     ['text', '/foo'],
                 ],
             ],
@@ -49,10 +46,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with a variable',
                 ['/foo/{bar}'],
-                '/foo',
-                '#^/foo/(?P<bar>[^/]++)$#sD',
-                ['bar'],
-                [
+                '/foo', '#^/foo/(?P<bar>[^/]++)$#sD', ['bar'], [
                     ['variable', '/', '[^/]++', 'bar'],
                     ['text', '/foo'],
                 ],
@@ -61,10 +55,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with a variable that has a default value',
                 ['/foo/{bar}', ['bar' => 'bar']],
-                '/foo',
-                '#^/foo(?:/(?P<bar>[^/]++))?$#sD',
-                ['bar'],
-                [
+                '/foo', '#^/foo(?:/(?P<bar>[^/]++))?$#sD', ['bar'], [
                     ['variable', '/', '[^/]++', 'bar'],
                     ['text', '/foo'],
                 ],
@@ -73,10 +64,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with several variables',
                 ['/foo/{bar}/{foobar}'],
-                '/foo',
-                '#^/foo/(?P<bar>[^/]++)/(?P<foobar>[^/]++)$#sD',
-                ['bar', 'foobar'],
-                [
+                '/foo', '#^/foo/(?P<bar>[^/]++)/(?P<foobar>[^/]++)$#sD', ['bar', 'foobar'], [
                     ['variable', '/', '[^/]++', 'foobar'],
                     ['variable', '/', '[^/]++', 'bar'],
                     ['text', '/foo'],
@@ -86,10 +74,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with several variables that have default values',
                 ['/foo/{bar}/{foobar}', ['bar' => 'bar', 'foobar' => '']],
-                '/foo',
-                '#^/foo(?:/(?P<bar>[^/]++)(?:/(?P<foobar>[^/]++))?)?$#sD',
-                ['bar', 'foobar'],
-                [
+                '/foo', '#^/foo(?:/(?P<bar>[^/]++)(?:/(?P<foobar>[^/]++))?)?$#sD', ['bar', 'foobar'], [
                     ['variable', '/', '[^/]++', 'foobar'],
                     ['variable', '/', '[^/]++', 'bar'],
                     ['text', '/foo'],
@@ -99,10 +84,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with several variables but some of them have no default values',
                 ['/foo/{bar}/{foobar}', ['bar' => 'bar']],
-                '/foo',
-                '#^/foo/(?P<bar>[^/]++)/(?P<foobar>[^/]++)$#sD',
-                ['bar', 'foobar'],
-                [
+                '/foo', '#^/foo/(?P<bar>[^/]++)/(?P<foobar>[^/]++)$#sD', ['bar', 'foobar'], [
                     ['variable', '/', '[^/]++', 'foobar'],
                     ['variable', '/', '[^/]++', 'bar'],
                     ['text', '/foo'],
@@ -112,10 +94,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with an optional variable as the first segment',
                 ['/{bar}', ['bar' => 'bar']],
-                '',
-                '#^/(?P<bar>[^/]++)?$#sD',
-                ['bar'],
-                [
+                '', '#^/(?P<bar>[^/]++)?$#sD', ['bar'], [
                     ['variable', '/', '[^/]++', 'bar'],
                 ],
             ],
@@ -123,10 +102,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with a requirement of 0',
                 ['/{bar}', ['bar' => null], ['bar' => '0']],
-                '',
-                '#^/(?P<bar>0)?$#sD',
-                ['bar'],
-                [
+                '', '#^/(?P<bar>0)?$#sD', ['bar'], [
                     ['variable', '/', '0', 'bar'],
                 ],
             ],
@@ -134,10 +110,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with an optional variable as the first segment with requirements',
                 ['/{bar}', ['bar' => 'bar'], ['bar' => '(foo|bar)']],
-                '',
-                '#^/(?P<bar>(?:foo|bar))?$#sD',
-                ['bar'],
-                [
+                '', '#^/(?P<bar>(?:foo|bar))?$#sD', ['bar'], [
                     ['variable', '/', '(?:foo|bar)', 'bar'],
                 ],
             ],
@@ -145,10 +118,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with only optional variables',
                 ['/{foo}/{bar}', ['foo' => 'foo', 'bar' => 'bar']],
-                '',
-                '#^/(?P<foo>[^/]++)?(?:/(?P<bar>[^/]++))?$#sD',
-                ['foo', 'bar'],
-                [
+                '', '#^/(?P<foo>[^/]++)?(?:/(?P<bar>[^/]++))?$#sD', ['foo', 'bar'], [
                     ['variable', '/', '[^/]++', 'bar'],
                     ['variable', '/', '[^/]++', 'foo'],
                 ],
@@ -157,10 +127,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with a variable in last position',
                 ['/foo-{bar}'],
-                '/foo-',
-                '#^/foo\-(?P<bar>[^/]++)$#sD',
-                ['bar'],
-                [
+                '/foo-', '#^/foo\-(?P<bar>[^/]++)$#sD', ['bar'], [
                     ['variable', '-', '[^/]++', 'bar'],
                     ['text', '/foo'],
                 ],
@@ -169,10 +136,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with nested placeholders',
                 ['/{static{var}static}'],
-                '/{static',
-                '#^/\{static(?P<var>[^/]+)static\}$#sD',
-                ['var'],
-                [
+                '/{static', '#^/\{static(?P<var>[^/]+)static\}$#sD', ['var'], [
                     ['text', 'static}'],
                     ['variable', '', '[^/]+', 'var'],
                     ['text', '/{static'],
@@ -182,10 +146,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route without separator between variables',
                 ['/{w}{x}{y}{z}.{_format}', ['z' => 'default-z', '_format' => 'html'], ['y' => '(y|Y)']],
-                '',
-                '#^/(?P<w>[^/\.]+)(?P<x>[^/\.]+)(?P<y>(?:y|Y))(?:(?P<z>[^/\.]++)(?:\.(?P<_format>[^/]++))?)?$#sD',
-                ['w', 'x', 'y', 'z', '_format'],
-                [
+                '', '#^/(?P<w>[^/\.]+)(?P<x>[^/\.]+)(?P<y>(?:y|Y))(?:(?P<z>[^/\.]++)(?:\.(?P<_format>[^/]++))?)?$#sD', ['w', 'x', 'y', 'z', '_format'], [
                     ['variable', '.', '[^/]++', '_format'],
                     ['variable', '', '[^/\.]++', 'z'],
                     ['variable', '', '(?:y|Y)', 'y'],
@@ -197,10 +158,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with a format',
                 ['/foo/{bar}.{_format}'],
-                '/foo',
-                '#^/foo/(?P<bar>[^/\.]++)\.(?P<_format>[^/]++)$#sD',
-                ['bar', '_format'],
-                [
+                '/foo', '#^/foo/(?P<bar>[^/\.]++)\.(?P<_format>[^/]++)$#sD', ['bar', '_format'], [
                     ['variable', '.', '[^/]++', '_format'],
                     ['variable', '/', '[^/\.]++', 'bar'],
                     ['text', '/foo'],
@@ -210,10 +168,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Static non UTF-8 route',
                 ["/fo\xE9"],
-                "/fo\xE9",
-                "#^/fo\xE9$#sD",
-                [],
-                [
+                "/fo\xE9", "#^/fo\xE9$#sD", [], [
                     ['text', "/fo\xE9"],
                 ],
             ],
@@ -221,10 +176,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with an explicit UTF-8 requirement',
                 ['/{bar}', ['bar' => null], ['bar' => '.'], ['utf8' => true]],
-                '',
-                '#^/(?P<bar>.)?$#sDu',
-                ['bar'],
-                [
+                '', '#^/(?P<bar>.)?$#sDu', ['bar'], [
                     ['variable', '/', '.', 'bar', true],
                 ],
             ],
@@ -235,16 +187,16 @@ class RouteCompilerTest extends TestCase
      * @dataProvider provideCompileImplicitUtf8Data
      * @expectedException \LogicException
      */
-    public function testCompileImplicitUtf8Data( $name, $arguments, $prefix, $regex, $variables, $tokens, $deprecationType )
+    public function testCompileImplicitUtf8Data($name, $arguments, $prefix, $regex, $variables, $tokens, $deprecationType)
     {
-        $r = new \ReflectionClass( 'Symfony\\Component\\Routing\\Route' );
-        $route = $r->newInstanceArgs( $arguments );
+        $r = new \ReflectionClass('Symfony\\Component\\Routing\\Route');
+        $route = $r->newInstanceArgs($arguments);
 
         $compiled = $route->compile();
-        $this->assertEquals( $prefix, $compiled->getStaticPrefix(), $name.' (static prefix)' );
-        $this->assertEquals( $regex, $compiled->getRegex(), $name.' (regex)' );
-        $this->assertEquals( $variables, $compiled->getVariables(), $name.' (variables)' );
-        $this->assertEquals( $tokens, $compiled->getTokens(), $name.' (tokens)' );
+        $this->assertEquals($prefix, $compiled->getStaticPrefix(), $name.' (static prefix)');
+        $this->assertEquals($regex, $compiled->getRegex(), $name.' (regex)');
+        $this->assertEquals($variables, $compiled->getVariables(), $name.' (variables)');
+        $this->assertEquals($tokens, $compiled->getTokens(), $name.' (tokens)');
     }
 
     public function provideCompileImplicitUtf8Data()
@@ -253,10 +205,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Static UTF-8 route',
                 ['/foé'],
-                '/foé',
-                '#^/foé$#sDu',
-                [],
-                [
+                '/foé', '#^/foé$#sDu', [], [
                     ['text', '/foé'],
                 ],
                 'patterns',
@@ -265,10 +214,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with an implicit UTF-8 requirement',
                 ['/{bar}', ['bar' => null], ['bar' => 'é']],
-                '',
-                '#^/(?P<bar>é)?$#sDu',
-                ['bar'],
-                [
+                '', '#^/(?P<bar>é)?$#sDu', ['bar'], [
                     ['variable', '/', 'é', 'bar', true],
                 ],
                 'requirements',
@@ -277,10 +223,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with a UTF-8 class requirement',
                 ['/{bar}', ['bar' => null], ['bar' => '\pM']],
-                '',
-                '#^/(?P<bar>\pM)?$#sDu',
-                ['bar'],
-                [
+                '', '#^/(?P<bar>\pM)?$#sDu', ['bar'], [
                     ['variable', '/', '\pM', 'bar', true],
                 ],
                 'requirements',
@@ -289,10 +232,7 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with a UTF-8 separator',
                 ['/foo/{bar}§{_format}', [], [], ['compiler_class' => Utf8RouteCompiler::class]],
-                '/foo',
-                '#^/foo/(?P<bar>[^/§]++)§(?P<_format>[^/]++)$#sDu',
-                ['bar', '_format'],
-                [
+                '/foo', '#^/foo/(?P<bar>[^/§]++)§(?P<_format>[^/]++)$#sDu', ['bar', '_format'], [
                     ['variable', '§', '[^/]++', '_format', true],
                     ['variable', '/', '[^/§]++', 'bar', true],
                     ['text', '/foo'],
@@ -307,7 +247,7 @@ class RouteCompilerTest extends TestCase
      */
     public function testRouteWithSameVariableTwice()
     {
-        $route = new Route( '/{name}/{name}' );
+        $route = new Route('/{name}/{name}');
 
         $compiled = $route->compile();
     }
@@ -317,7 +257,7 @@ class RouteCompilerTest extends TestCase
      */
     public function testRouteCharsetMismatch()
     {
-        $route = new Route( "/\xE9/{bar}", [], ['bar' => '.'], ['utf8' => true] );
+        $route = new Route("/\xE9/{bar}", [], ['bar' => '.'], ['utf8' => true]);
 
         $compiled = $route->compile();
     }
@@ -327,7 +267,7 @@ class RouteCompilerTest extends TestCase
      */
     public function testRequirementCharsetMismatch()
     {
-        $route = new Route( '/foo/{bar}', [], ['bar' => "\xE9"], ['utf8' => true] );
+        $route = new Route('/foo/{bar}', [], ['bar' => "\xE9"], ['utf8' => true]);
 
         $compiled = $route->compile();
     }
@@ -337,7 +277,7 @@ class RouteCompilerTest extends TestCase
      */
     public function testRouteWithFragmentAsPathParameter()
     {
-        $route = new Route( '/{_fragment}' );
+        $route = new Route('/{_fragment}');
 
         $compiled = $route->compile();
     }
@@ -346,39 +286,38 @@ class RouteCompilerTest extends TestCase
      * @dataProvider getVariableNamesStartingWithADigit
      * @expectedException \DomainException
      */
-    public function testRouteWithVariableNameStartingWithADigit( $name )
+    public function testRouteWithVariableNameStartingWithADigit($name)
     {
-        $route = new Route( '/{'.$name.'}' );
+        $route = new Route('/{'.$name.'}');
         $route->compile();
     }
 
     public function getVariableNamesStartingWithADigit()
     {
         return [
-            ['09'],
-            ['123'],
-            ['1e2'],
+           ['09'],
+           ['123'],
+           ['1e2'],
         ];
     }
 
     /**
      * @dataProvider provideCompileWithHostData
      */
-    public function testCompileWithHost( $name, $arguments, $prefix, $regex, $variables, $pathVariables, $tokens, $hostRegex, $hostVariables, $hostTokens )
+    public function testCompileWithHost($name, $arguments, $prefix, $regex, $variables, $pathVariables, $tokens, $hostRegex, $hostVariables, $hostTokens)
     {
-        $r = new \ReflectionClass( 'Symfony\\Component\\Routing\\Route' );
-        $route = $r->newInstanceArgs( $arguments );
+        $r = new \ReflectionClass('Symfony\\Component\\Routing\\Route');
+        $route = $r->newInstanceArgs($arguments);
 
         $compiled = $route->compile();
-        $this->assertEquals( $prefix, $compiled->getStaticPrefix(), $name.' (static prefix)' );
-        $this->assertEquals( $regex, str_replace( ["\n", ' '], '', $compiled->getRegex() ), $name.' (regex)' );
-        $this->assertEquals( $variables, $compiled->getVariables(), $name.' (variables)' );
-        $this->assertEquals( $pathVariables, $compiled->getPathVariables(), $name.' (path variables)' );
-        $this->assertEquals( $tokens, $compiled->getTokens(), $name.' (tokens)' );
-        $this->assertEquals( $hostRegex, str_replace( ["\n", ' '], '', $compiled->getHostRegex() ),
-            $name.' (host regex)' );
-        $this->assertEquals( $hostVariables, $compiled->getHostVariables(), $name.' (host variables)' );
-        $this->assertEquals( $hostTokens, $compiled->getHostTokens(), $name.' (host tokens)' );
+        $this->assertEquals($prefix, $compiled->getStaticPrefix(), $name.' (static prefix)');
+        $this->assertEquals($regex, str_replace(["\n", ' '], '', $compiled->getRegex()), $name.' (regex)');
+        $this->assertEquals($variables, $compiled->getVariables(), $name.' (variables)');
+        $this->assertEquals($pathVariables, $compiled->getPathVariables(), $name.' (path variables)');
+        $this->assertEquals($tokens, $compiled->getTokens(), $name.' (tokens)');
+        $this->assertEquals($hostRegex, str_replace(["\n", ' '], '', $compiled->getHostRegex()), $name.' (host regex)');
+        $this->assertEquals($hostVariables, $compiled->getHostVariables(), $name.' (host variables)');
+        $this->assertEquals($hostTokens, $compiled->getHostTokens(), $name.' (host tokens)');
     }
 
     public function provideCompileWithHostData()
@@ -387,33 +326,21 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with host pattern',
                 ['/hello', [], [], [], 'www.example.com'],
-                '/hello',
-                '#^/hello$#sD',
-                [],
-                [],
-                [
+                '/hello', '#^/hello$#sD', [], [], [
                     ['text', '/hello'],
                 ],
-                '#^www\.example\.com$#sDi',
-                [],
-                [
+                '#^www\.example\.com$#sDi', [], [
                     ['text', 'www.example.com'],
                 ],
             ],
             [
                 'Route with host pattern and some variables',
                 ['/hello/{name}', [], [], [], 'www.example.{tld}'],
-                '/hello',
-                '#^/hello/(?P<name>[^/]++)$#sD',
-                ['tld', 'name'],
-                ['name'],
-                [
+                '/hello', '#^/hello/(?P<name>[^/]++)$#sD', ['tld', 'name'], ['name'], [
                     ['variable', '/', '[^/]++', 'name'],
                     ['text', '/hello'],
                 ],
-                '#^www\.example\.(?P<tld>[^\.]++)$#sDi',
-                ['tld'],
-                [
+                '#^www\.example\.(?P<tld>[^\.]++)$#sDi', ['tld'], [
                     ['variable', '.', '[^\.]++', 'tld'],
                     ['text', 'www.example'],
                 ],
@@ -421,16 +348,10 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with variable at beginning of host',
                 ['/hello', [], [], [], '{locale}.example.{tld}'],
-                '/hello',
-                '#^/hello$#sD',
-                ['locale', 'tld'],
-                [],
-                [
+                '/hello', '#^/hello$#sD', ['locale', 'tld'], [], [
                     ['text', '/hello'],
                 ],
-                '#^(?P<locale>[^\.]++)\.example\.(?P<tld>[^\.]++)$#sDi',
-                ['locale', 'tld'],
-                [
+                '#^(?P<locale>[^\.]++)\.example\.(?P<tld>[^\.]++)$#sDi', ['locale', 'tld'], [
                     ['variable', '.', '[^\.]++', 'tld'],
                     ['text', '.example'],
                     ['variable', '', '[^\.]++', 'locale'],
@@ -439,16 +360,10 @@ class RouteCompilerTest extends TestCase
             [
                 'Route with host variables that has a default value',
                 ['/hello', ['locale' => 'a', 'tld' => 'b'], [], [], '{locale}.example.{tld}'],
-                '/hello',
-                '#^/hello$#sD',
-                ['locale', 'tld'],
-                [],
-                [
+                '/hello', '#^/hello$#sD', ['locale', 'tld'], [], [
                     ['text', '/hello'],
                 ],
-                '#^(?P<locale>[^\.]++)\.example\.(?P<tld>[^\.]++)$#sDi',
-                ['locale', 'tld'],
-                [
+                '#^(?P<locale>[^\.]++)\.example\.(?P<tld>[^\.]++)$#sDi', ['locale', 'tld'], [
                     ['variable', '.', '[^\.]++', 'tld'],
                     ['text', '.example'],
                     ['variable', '', '[^\.]++', 'locale'],
@@ -462,18 +377,18 @@ class RouteCompilerTest extends TestCase
      */
     public function testRouteWithTooLongVariableName()
     {
-        $route = new Route( sprintf( '/{%s}', str_repeat( 'a', RouteCompiler::VARIABLE_MAXIMUM_LENGTH + 1 ) ) );
+        $route = new Route(sprintf('/{%s}', str_repeat('a', RouteCompiler::VARIABLE_MAXIMUM_LENGTH + 1)));
         $route->compile();
     }
 
     /**
      * @dataProvider provideRemoveCapturingGroup
      */
-    public function testRemoveCapturingGroup( $regex, $requirement )
+    public function testRemoveCapturingGroup($regex, $requirement)
     {
-        $route = new Route( '/{foo}', [], ['foo' => $requirement] );
+        $route = new Route('/{foo}', [], ['foo' => $requirement]);
 
-        $this->assertSame( $regex, $route->compile()->getRegex() );
+        $this->assertSame($regex, $route->compile()->getRegex());
     }
 
     public function provideRemoveCapturingGroup()

@@ -44,7 +44,7 @@ class Symfony_DI_PhpDumper_Test_Uninitialized_Reference extends Container
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()
@@ -69,38 +69,31 @@ class Symfony_DI_PhpDumper_Test_Uninitialized_Reference extends Container
      */
     protected function getBarService()
     {
-        $this->services[ 'bar' ] = $instance = new \stdClass();
+        $this->services['bar'] = $instance = new \stdClass();
 
-        $instance->foo1 = ( $this->services[ 'foo1' ] ?? null );
+        $instance->foo1 = ($this->services['foo1'] ?? null);
         $instance->foo2 = null;
-        $instance->foo3 = ( $this->privates[ 'foo3' ] ?? null );
-        $instance->closures = [
-            0 => function () {
-                return ( $this->services[ 'foo1' ] ?? null );
-            },
-            1 => function () {
-                return null;
-            },
-            2 => function () {
-                return ( $this->privates[ 'foo3' ] ?? null );
+        $instance->foo3 = ($this->privates['foo3'] ?? null);
+        $instance->closures = [0 => function () {
+            return ($this->services['foo1'] ?? null);
+        }, 1 => function () {
+            return null;
+        }, 2 => function () {
+            return ($this->privates['foo3'] ?? null);
+        }];
+        $instance->iter = new RewindableGenerator(function () {
+            if (isset($this->services['foo1'])) {
+                yield 'foo1' => ($this->services['foo1'] ?? null);
             }
-        ];
-        $instance->iter = new RewindableGenerator( function () {
-            if ( isset( $this->services[ 'foo1' ] ) )
-            {
-                yield 'foo1' => ( $this->services[ 'foo1' ] ?? null );
-            }
-            if ( false )
-            {
+            if (false) {
                 yield 'foo2' => null;
             }
-            if ( isset( $this->privates[ 'foo3' ] ) )
-            {
-                yield 'foo3' => ( $this->privates[ 'foo3' ] ?? null );
+            if (isset($this->privates['foo3'])) {
+                yield 'foo3' => ($this->privates['foo3'] ?? null);
             }
         }, function () {
-            return 0 + (int)( isset( $this->services[ 'foo1' ] ) ) + (int)( false ) + (int)( isset( $this->privates[ 'foo3' ] ) );
-        } );
+            return 0 + (int) (isset($this->services['foo1'])) + (int) (false) + (int) (isset($this->privates['foo3']));
+        });
 
         return $instance;
     }
@@ -112,9 +105,9 @@ class Symfony_DI_PhpDumper_Test_Uninitialized_Reference extends Container
      */
     protected function getBazService()
     {
-        $this->services[ 'baz' ] = $instance = new \stdClass();
+        $this->services['baz'] = $instance = new \stdClass();
 
-        $instance->foo3 = ( $this->privates[ 'foo3' ] ?? ( $this->privates[ 'foo3' ] = new \stdClass() ) );
+        $instance->foo3 = ($this->privates['foo3'] ?? ($this->privates['foo3'] = new \stdClass()));
 
         return $instance;
     }
@@ -126,6 +119,6 @@ class Symfony_DI_PhpDumper_Test_Uninitialized_Reference extends Container
      */
     protected function getFoo1Service()
     {
-        return $this->services[ 'foo1' ] = new \stdClass();
+        return $this->services['foo1'] = new \stdClass();
     }
 }

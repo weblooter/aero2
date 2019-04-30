@@ -371,7 +371,7 @@ abstract class AbstractField
     public function getRow($htmlInputRender)
     {
         $strInfotext = '<label class="'.( $this->getIsRequired() ? 'required' : '' ).'">'.$this->getTitle().':';
-        $strInfotext .= (!is_null($this->getDescription())) ? '<button class="icon-info robotip__starter" type="button"><div class="robotip__content">'.$this->getDescription().'</div></button>' : '';
+        $strInfotext .= (!is_null($this->getDescription())) ? '<button class="icon-info robotip__starter" type="button" tabindex="-1"><div class="robotip__content">'.$this->getDescription().'</div></button>' : '';
         $strInfotext .= '</label>';
 
         if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {
@@ -424,4 +424,22 @@ DOCHERE;
      * @return bool
      */
     abstract public function isValueFilled($mixData);
+
+    /**
+     * Извлекает истинное значение из поля.<br/>
+     * Для извлечения поле должно быть заполнено.<br/>
+     * <br/>
+     * $mixAdditionalData используется в качетстве источника дополнительний информации, к примеру для поля Resource.<br/>
+     * Данные по товару должны быть подготовлены как при \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginFilterProduct().<br/>
+     * Метод предназначен для работы в \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginOfferForeachBody()
+     *
+     * @see \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginOfferForeachBody()
+     * @see \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler::beginFilterProduct()
+     *
+     * @param mixed $mixData Значение в формате поля
+     * @param mixed $mixAdditionalData Дополнительные данные
+     *
+     * @return mixed
+     */
+    abstract public function extractValue($mixData, $mixAdditionalData = null);
 }

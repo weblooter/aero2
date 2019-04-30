@@ -10,52 +10,39 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\RedirectableUrlMatcher
 {
-    public function __construct( RequestContext $context )
+    public function __construct(RequestContext $context)
     {
         $this->context = $context;
     }
 
-    public function match( $pathinfo )
+    public function match($pathinfo)
     {
         $allow = $allowSchemes = [];
-        if ( $ret = $this->doMatch( $pathinfo, $allow, $allowSchemes ) )
-        {
+        if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
             return $ret;
         }
-        if ( $allow )
-        {
-            throw new MethodNotAllowedException( array_keys( $allow ) );
+        if ($allow) {
+            throw new MethodNotAllowedException(array_keys($allow));
         }
-        if ( !in_array( $this->context->getMethod(), ['HEAD', 'GET'], true ) )
-        {
+        if (!in_array($this->context->getMethod(), ['HEAD', 'GET'], true)) {
             // no-op
-        }
-        elseif ( $allowSchemes )
-        {
+        } elseif ($allowSchemes) {
             redirect_scheme:
             $scheme = $this->context->getScheme();
-            $this->context->setScheme( key( $allowSchemes ) );
-            try
-            {
-                if ( $ret = $this->doMatch( $pathinfo ) )
-                {
-                    return $this->redirect( $pathinfo, $ret[ '_route' ], $this->context->getScheme() ) + $ret;
+            $this->context->setScheme(key($allowSchemes));
+            try {
+                if ($ret = $this->doMatch($pathinfo)) {
+                    return $this->redirect($pathinfo, $ret['_route'], $this->context->getScheme()) + $ret;
                 }
+            } finally {
+                $this->context->setScheme($scheme);
             }
-            finally
-            {
-                $this->context->setScheme( $scheme );
-            }
-        }
-        elseif ( '/' !== $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/' )
-        {
+        } elseif ('/' !== $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/') {
             $pathinfo = $trimmedPathinfo === $pathinfo ? $pathinfo.'/' : $trimmedPathinfo;
-            if ( $ret = $this->doMatch( $pathinfo, $allow, $allowSchemes ) )
-            {
-                return $this->redirect( $pathinfo, $ret[ '_route' ] ) + $ret;
+            if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
+                return $this->redirect($pathinfo, $ret['_route']) + $ret;
             }
-            if ( $allowSchemes )
-            {
+            if ($allowSchemes) {
                 goto redirect_scheme;
             }
         }
@@ -63,59 +50,55 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
         throw new ResourceNotFoundException();
     }
 
-    private function doMatch( string $pathinfo, array &$allow = [], array &$allowSchemes = [] ): array
+    private function doMatch(string $pathinfo, array &$allow = [], array &$allowSchemes = []): array
     {
         $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode( $pathinfo ) ? : '/';
-        $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/';
+        $pathinfo = rawurldecode($pathinfo) ?: '/';
+        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
-        if ( 'HEAD' === $requestMethod )
-        {
+        if ('HEAD' === $requestMethod) {
             $canonicalMethod = 'GET';
         }
 
         $matchedPathinfo = $pathinfo;
         $regexList = [
             0 => '{^(?'
-                 .'|/(en|fr)/(?'
-                 .'|admin/post(?'
-                 .'|(*:32)'
-                 .'|/(?'
-                 .'|new(*:46)'
-                 .'|(\\d+)(*:58)'
-                 .'|(\\d+)/edit(*:75)'
-                 .'|(\\d+)/delete(*:94)'
-                 .')'
-                 .')'
-                 .'|blog(?'
-                 .'|(*:110)'
-                 .'|/(?'
-                 .'|rss\\.xml(*:130)'
-                 .'|p(?'
-                 .'|age/([^/]++)(*:154)'
-                 .'|osts/([^/]++)(*:175)'
-                 .')'
-                 .'|comments/(\\d+)/new(*:202)'
-                 .'|search(*:216)'
-                 .')'
-                 .')'
-                 .'|log(?'
-                 .'|in(*:234)'
-                 .'|out(*:245)'
-                 .')'
-                 .')'
-                 .'|/(en|fr)?(*:264)'
-                 .')/?$}sD',
+                    .'|/(en|fr)/(?'
+                        .'|admin/post(?'
+                            .'|(*:32)'
+                            .'|/(?'
+                                .'|new(*:46)'
+                                .'|(\\d+)(*:58)'
+                                .'|(\\d+)/edit(*:75)'
+                                .'|(\\d+)/delete(*:94)'
+                            .')'
+                        .')'
+                        .'|blog(?'
+                            .'|(*:110)'
+                            .'|/(?'
+                                .'|rss\\.xml(*:130)'
+                                .'|p(?'
+                                    .'|age/([^/]++)(*:154)'
+                                    .'|osts/([^/]++)(*:175)'
+                                .')'
+                                .'|comments/(\\d+)/new(*:202)'
+                                .'|search(*:216)'
+                            .')'
+                        .')'
+                        .'|log(?'
+                            .'|in(*:234)'
+                            .'|out(*:245)'
+                        .')'
+                    .')'
+                    .'|/(en|fr)?(*:264)'
+                .')/?$}sD',
         ];
 
-        foreach ( $regexList as $offset => $regex )
-        {
-            while ( preg_match( $regex, $matchedPathinfo, $matches ) )
-            {
-                switch ( $m = (int)$matches[ 'MARK' ] )
-                {
+        foreach ($regexList as $offset => $regex) {
+            while (preg_match($regex, $matchedPathinfo, $matches)) {
+                switch ($m = (int) $matches['MARK']) {
                     default:
                         $routes = [
                             32 => [['_route' => 'a', '_locale' => 'en'], ['_locale'], null, null, true, false],
@@ -134,42 +117,33 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
                             264 => [['_route' => 'n', '_locale' => 'en'], ['_locale'], null, null, false, true],
                         ];
 
-                        list( $ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar ) = $routes[ $m ];
+                        list($ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar) = $routes[$m];
 
                         $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
-                        if ( '/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ( $trimmedPathinfo === $pathinfo ) )
-                        {
-                            if ( 'GET' === $canonicalMethod && ( !$requiredMethods || isset( $requiredMethods[ 'GET' ] ) ) )
-                            {
+                        if ('/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
+                            if ('GET' === $canonicalMethod && (!$requiredMethods || isset($requiredMethods['GET']))) {
                                 return $allow = $allowSchemes = [];
                             }
                             break;
                         }
-                        if ( $hasTrailingSlash && $hasTrailingVar && preg_match( $regex,
-                                rtrim( $matchedPathinfo, '/' ) ? : '/', $n ) && $m === (int)$n[ 'MARK' ] )
-                        {
+                        if ($hasTrailingSlash && $hasTrailingVar && preg_match($regex, rtrim($matchedPathinfo, '/') ?: '/', $n) && $m === (int) $n['MARK']) {
                             $matches = $n;
                         }
 
-                        foreach ( $vars as $i => $v )
-                        {
-                            if ( isset( $matches[ 1 + $i ] ) )
-                            {
-                                $ret[ $v ] = $matches[ 1 + $i ];
+                        foreach ($vars as $i => $v) {
+                            if (isset($matches[1 + $i])) {
+                                $ret[$v] = $matches[1 + $i];
                             }
                         }
 
-                        $hasRequiredScheme = !$requiredSchemes || isset( $requiredSchemes[ $context->getScheme() ] );
-                        if ( $requiredMethods && !isset( $requiredMethods[ $canonicalMethod ] ) && !isset( $requiredMethods[ $requestMethod ] ) )
-                        {
-                            if ( $hasRequiredScheme )
-                            {
+                        $hasRequiredScheme = !$requiredSchemes || isset($requiredSchemes[$context->getScheme()]);
+                        if ($requiredMethods && !isset($requiredMethods[$canonicalMethod]) && !isset($requiredMethods[$requestMethod])) {
+                            if ($hasRequiredScheme) {
                                 $allow += $requiredMethods;
                             }
                             break;
                         }
-                        if ( !$hasRequiredScheme )
-                        {
+                        if (!$hasRequiredScheme) {
                             $allowSchemes += $requiredSchemes;
                             break;
                         }
@@ -177,16 +151,14 @@ class ProjectUrlMatcher extends Symfony\Component\Routing\Tests\Fixtures\Redirec
                         return $ret;
                 }
 
-                if ( 264 === $m )
-                {
+                if (264 === $m) {
                     break;
                 }
-                $regex = substr_replace( $regex, 'F', $m - $offset, 1 + strlen( $m ) );
-                $offset += strlen( $m );
+                $regex = substr_replace($regex, 'F', $m - $offset, 1 + strlen($m));
+                $offset += strlen($m);
             }
         }
-        if ( '/' === $pathinfo && !$allow && !$allowSchemes )
-        {
+        if ('/' === $pathinfo && !$allow && !$allowSchemes) {
             throw new Symfony\Component\Routing\Exception\NoConfigurationException();
         }
 

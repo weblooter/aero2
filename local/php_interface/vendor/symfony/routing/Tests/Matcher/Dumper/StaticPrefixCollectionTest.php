@@ -11,19 +11,18 @@ class StaticPrefixCollectionTest extends TestCase
     /**
      * @dataProvider routeProvider
      */
-    public function testGrouping( array $routes, $expected )
+    public function testGrouping(array $routes, $expected)
     {
-        $collection = new StaticPrefixCollection( '/' );
+        $collection = new StaticPrefixCollection('/');
 
-        foreach ( $routes as $route )
-        {
-            list( $path, $name ) = $route;
-            $staticPrefix = ( new Route( $path ) )->compile()->getStaticPrefix();
-            $collection->addRoute( $staticPrefix, [$name] );
+        foreach ($routes as $route) {
+            list($path, $name) = $route;
+            $staticPrefix = (new Route($path))->compile()->getStaticPrefix();
+            $collection->addRoute($staticPrefix, [$name]);
         }
 
-        $dumped = $this->dumpCollection( $collection );
-        $this->assertEquals( $expected, $dumped );
+        $dumped = $this->dumpCollection($collection);
+        $this->assertEquals($expected, $dumped);
     }
 
     public function routeProvider()
@@ -160,23 +159,19 @@ EOF
         ];
     }
 
-    private function dumpCollection( StaticPrefixCollection $collection, $prefix = '' )
+    private function dumpCollection(StaticPrefixCollection $collection, $prefix = '')
     {
         $lines = [];
 
-        foreach ( $collection->getRoutes() as $item )
-        {
-            if ( $item instanceof StaticPrefixCollection )
-            {
+        foreach ($collection->getRoutes() as $item) {
+            if ($item instanceof StaticPrefixCollection) {
                 $lines[] = $prefix.$item->getPrefix();
-                $lines[] = $this->dumpCollection( $item, $prefix.'-> ' );
-            }
-            else
-            {
-                $lines[] = $prefix.implode( ' ', $item );
+                $lines[] = $this->dumpCollection($item, $prefix.'-> ');
+            } else {
+                $lines[] = $prefix.implode(' ', $item);
             }
         }
 
-        return implode( "\n", $lines );
+        return implode("\n", $lines);
     }
 }

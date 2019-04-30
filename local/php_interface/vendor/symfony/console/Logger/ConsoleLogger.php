@@ -52,7 +52,7 @@ class ConsoleLogger extends AbstractLogger
     ];
     private $errored = false;
 
-    public function __construct( OutputInterface $output, array $verbosityLevelMap = [], array $formatLevelMap = [] )
+    public function __construct(OutputInterface $output, array $verbosityLevelMap = [], array $formatLevelMap = [])
     {
         $this->output = $output;
         $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
@@ -62,20 +62,17 @@ class ConsoleLogger extends AbstractLogger
     /**
      * {@inheritdoc}
      */
-    public function log( $level, $message, array $context = [] )
+    public function log($level, $message, array $context = [])
     {
-        if ( !isset( $this->verbosityLevelMap[ $level ] ) )
-        {
-            throw new InvalidArgumentException( sprintf( 'The log level "%s" does not exist.', $level ) );
+        if (!isset($this->verbosityLevelMap[$level])) {
+            throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
         }
 
         $output = $this->output;
 
         // Write to the error output if necessary and available
-        if ( self::ERROR === $this->formatLevelMap[ $level ] )
-        {
-            if ( $this->output instanceof ConsoleOutputInterface )
-            {
+        if (self::ERROR === $this->formatLevelMap[$level]) {
+            if ($this->output instanceof ConsoleOutputInterface) {
                 $output = $output->getErrorOutput();
             }
             $this->errored = true;
@@ -83,10 +80,8 @@ class ConsoleLogger extends AbstractLogger
 
         // the if condition check isn't necessary -- it's the same one that $output will do internally anyway.
         // We only do it for efficiency here as the message formatting is relatively expensive.
-        if ( $output->getVerbosity() >= $this->verbosityLevelMap[ $level ] )
-        {
-            $output->writeln( sprintf( '<%1$s>[%2$s] %3$s</%1$s>', $this->formatLevelMap[ $level ], $level,
-                $this->interpolate( $message, $context ) ), $this->verbosityLevelMap[ $level ] );
+        if ($output->getVerbosity() >= $this->verbosityLevelMap[$level]) {
+            $output->writeln(sprintf('<%1$s>[%2$s] %3$s</%1$s>', $this->formatLevelMap[$level], $level, $this->interpolate($message, $context)), $this->verbosityLevelMap[$level]);
         }
     }
 
@@ -105,34 +100,25 @@ class ConsoleLogger extends AbstractLogger
      *
      * @author PHP Framework Interoperability Group
      */
-    private function interpolate( string $message, array $context ): string
+    private function interpolate(string $message, array $context): string
     {
-        if ( false === strpos( $message, '{' ) )
-        {
+        if (false === strpos($message, '{')) {
             return $message;
         }
 
         $replacements = [];
-        foreach ( $context as $key => $val )
-        {
-            if ( null === $val || is_scalar( $val ) || ( \is_object( $val ) && method_exists( $val, '__toString' ) ) )
-            {
-                $replacements[ "{{$key}}" ] = $val;
-            }
-            elseif ( $val instanceof \DateTimeInterface )
-            {
-                $replacements[ "{{$key}}" ] = $val->format( \DateTime::RFC3339 );
-            }
-            elseif ( \is_object( $val ) )
-            {
-                $replacements[ "{{$key}}" ] = '[object '.\get_class( $val ).']';
-            }
-            else
-            {
-                $replacements[ "{{$key}}" ] = '['.\gettype( $val ).']';
+        foreach ($context as $key => $val) {
+            if (null === $val || is_scalar($val) || (\is_object($val) && method_exists($val, '__toString'))) {
+                $replacements["{{$key}}"] = $val;
+            } elseif ($val instanceof \DateTimeInterface) {
+                $replacements["{{$key}}"] = $val->format(\DateTime::RFC3339);
+            } elseif (\is_object($val)) {
+                $replacements["{{$key}}"] = '[object '.\get_class($val).']';
+            } else {
+                $replacements["{{$key}}"] = '['.\gettype($val).']';
             }
         }
 
-        return strtr( $message, $replacements );
+        return strtr($message, $replacements);
     }
 }

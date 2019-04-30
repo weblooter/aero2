@@ -42,7 +42,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()
@@ -67,6 +67,6 @@ class ProjectServiceContainer extends Container
      */
     protected function getPublicFooService()
     {
-        return $this->services[ 'public_foo' ] = new \stdClass( ( $this->privates[ 'private_foo' ] ?? ( $this->privates[ 'private_foo' ] = new \stdClass() ) )->bar );
+        return $this->services['public_foo'] = new \stdClass(($this->privates['private_foo'] ?? ($this->privates['private_foo'] = new \stdClass()))->bar);
     }
 }

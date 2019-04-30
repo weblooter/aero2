@@ -33,29 +33,26 @@ class StreamOutput extends Output
     private $stream;
 
     /**
-     * @param resource                      $stream A stream resource
-     * @param int                           $verbosity The verbosity level (one of the VERBOSITY constants in
-     *     OutputInterface)
+     * @param resource                      $stream    A stream resource
+     * @param int                           $verbosity The verbosity level (one of the VERBOSITY constants in OutputInterface)
      * @param bool|null                     $decorated Whether to decorate messages (null for auto-guessing)
      * @param OutputFormatterInterface|null $formatter Output formatter instance (null to use default OutputFormatter)
      *
      * @throws InvalidArgumentException When first argument is not a real stream
      */
-    public function __construct( $stream, int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = null, OutputFormatterInterface $formatter = null )
+    public function __construct($stream, int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = null, OutputFormatterInterface $formatter = null)
     {
-        if ( !\is_resource( $stream ) || 'stream' !== get_resource_type( $stream ) )
-        {
-            throw new InvalidArgumentException( 'The StreamOutput class needs a stream as its first argument.' );
+        if (!\is_resource($stream) || 'stream' !== get_resource_type($stream)) {
+            throw new InvalidArgumentException('The StreamOutput class needs a stream as its first argument.');
         }
 
         $this->stream = $stream;
 
-        if ( null === $decorated )
-        {
+        if (null === $decorated) {
             $decorated = $this->hasColorSupport();
         }
 
-        parent::__construct( $verbosity, $decorated, $formatter );
+        parent::__construct($verbosity, $decorated, $formatter);
     }
 
     /**
@@ -71,20 +68,18 @@ class StreamOutput extends Output
     /**
      * {@inheritdoc}
      */
-    protected function doWrite( $message, $newline )
+    protected function doWrite($message, $newline)
     {
-        if ( $newline )
-        {
+        if ($newline) {
             $message .= PHP_EOL;
         }
 
-        if ( false === @fwrite( $this->stream, $message ) )
-        {
+        if (false === @fwrite($this->stream, $message)) {
             // should never happen
-            throw new RuntimeException( 'Unable to write output.' );
+            throw new RuntimeException('Unable to write output.');
         }
 
-        fflush( $this->stream );
+        fflush($this->stream);
     }
 
     /**
@@ -102,32 +97,28 @@ class StreamOutput extends Output
      */
     protected function hasColorSupport()
     {
-        if ( 'Hyper' === getenv( 'TERM_PROGRAM' ) )
-        {
+        if ('Hyper' === getenv('TERM_PROGRAM')) {
             return true;
         }
 
-        if ( \DIRECTORY_SEPARATOR === '\\' )
-        {
-            return ( \function_exists( 'sapi_windows_vt100_support' )
-                     && @sapi_windows_vt100_support( $this->stream ) )
-                   || false !== getenv( 'ANSICON' )
-                   || 'ON' === getenv( 'ConEmuANSI' )
-                   || 'xterm' === getenv( 'TERM' );
+        if (\DIRECTORY_SEPARATOR === '\\') {
+            return (\function_exists('sapi_windows_vt100_support')
+                && @sapi_windows_vt100_support($this->stream))
+                || false !== getenv('ANSICON')
+                || 'ON' === getenv('ConEmuANSI')
+                || 'xterm' === getenv('TERM');
         }
 
-        if ( \function_exists( 'stream_isatty' ) )
-        {
-            return @stream_isatty( $this->stream );
+        if (\function_exists('stream_isatty')) {
+            return @stream_isatty($this->stream);
         }
 
-        if ( \function_exists( 'posix_isatty' ) )
-        {
-            return @posix_isatty( $this->stream );
+        if (\function_exists('posix_isatty')) {
+            return @posix_isatty($this->stream);
         }
 
-        $stat = @fstat( $this->stream );
+        $stat = @fstat($this->stream);
         // Check if formatted mode is S_IFCHR
-        return $stat ? 0020000 === ( $stat[ 'mode' ] & 0170000 ) : false;
+        return $stat ? 0020000 === ($stat['mode'] & 0170000) : false;
     }
 }

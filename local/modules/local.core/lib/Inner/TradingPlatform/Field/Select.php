@@ -29,7 +29,13 @@ class Select extends AbstractField
         $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
         $strInput .= ($this->getIsMultiple()) ? ' multiple' : '';
         $strInput .= ($this->getIsReadOnly()) ? ' readonly' : '';
-        $strInput .= ($this->getIsMultiple() ? ' size="'.$this->getSize().'"' : '');
+        $strInput .= ($this->getIsMultiple() ? ' size="'.$this->getSize().'"  data-size="'.$this->getSize().'"' : '');
+
+        // INFO Сделали в рамках нашей библиотеки
+        $strInput .= ( !empty($this->getDefaultOption()) ) ? 'title="'.htmlspecialchars($this->getDefaultOption()).'"' : '';
+        $strInput .= ( !empty($this->getIsCanSearch()) && sizeof($this->getOptions()) > 3 ) ? 'data-live-search="true"' : '';
+        // / INFO Сделали в рамках нашей библиотеки
+
         $strInput .= '>';
 
         if (!empty($this->getDefaultOption()) && !$this->getIsMultiple()) {
@@ -63,7 +69,18 @@ class Select extends AbstractField
     /** @inheritDoc */
     public function isValueFilled($mixData)
     {
-        $arOptionValues = array_keys($this->getOptions());
+        $arOptionValues = [];
+        foreach ($this->getOptions() as $k => $v)
+        {
+            if(is_array($v))
+            {
+                $arOptionValues = array_merge(array_keys($v), $arOptionValues);
+            }
+            else
+            {
+                $arOptionValues[] = $k;
+            }
+        }
 
         $boolRes = false;
         if( is_array($mixData) )
@@ -86,5 +103,68 @@ class Select extends AbstractField
         unset($arOptionValues);
 
         return $boolRes;
+    }
+
+    /** @inheritDoc */
+    public function extractValue($mixData, $mixAdditionalData = null)
+    {
+        $arOptionValues = [];
+        foreach ($this->getOptions() as $k => $v)
+        {
+            if(is_array($v))
+            {
+                $arOptionValues = array_merge(array_keys($v), $arOptionValues);
+            }
+            else
+            {
+                $arOptionValues[] = $k;
+            }
+        }
+
+        $mixExtra = null;
+        if( is_array($mixData) )
+        {
+            $mixData = array_diff($mixData, ['']);
+            foreach ($mixData as &$val)
+            {
+                $val = in_array($val, $arOptionValues) ? $val : '';
+            }
+            unset($val);
+            $mixExtra = array_diff($mixData, ['']);
+        }
+        else
+        {
+            $mixExtra = in_array($mixData, $arOptionValues) ? $mixData : null;
+        }
+        unset($arOptionValues);
+
+        return $mixExtra;
+    }
+
+
+    protected $_fieldIsCanSearch = true;
+
+    /**
+     * Разрешить поиск по списку.<br/>
+     * Реализовано в рамках текущей библиотеки.
+     *
+     * @param $bool
+     *
+     * @return  $this
+     */
+    public function setIsCanSearch(bool $bool)
+    {
+        $this->_fieldIsCanSearch = $bool;
+        return $this;
+    }
+
+    /**
+     * Возвращает признак разрешения поиска по списку
+     *
+     * @return bool
+     */
+    public function getIsCanSearch()
+    {
+        return $this->_fieldIsCanSearch;
     }
 }

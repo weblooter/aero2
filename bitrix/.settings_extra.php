@@ -151,12 +151,25 @@ $conf = [
     'tradingplatform' => [
         'value' => [
             'export' => [
-                'export_dir' => '/upload/tradingplatform/export',
-                'batch_size' => 50
+                'export_dir' => '/upload/tradingplatform/export', // Директория хранения экспортных файлов
+                'batch_size' => 50, // Размет батча при фильтрации товаров
+                'max_logs_count' => 10, // Максимальное кол-во логов по ТП
+                'timeout_between_export' => 180, // Интервал создания экспортного файла в минутах
             ]
         ],
         'readonly' => true
-    ]
+    ],
+
+    /**
+     * Курсы валют
+     * www.currencyconverterapi.com
+     */
+    'currencyconverterapi' => [
+        'value' => [
+            'apikey' => '3bd89a05fe5c6539f84c'
+        ],
+        'readonly' => true
+    ],
 ];
 
 return $conf;

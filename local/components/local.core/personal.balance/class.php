@@ -21,7 +21,8 @@ class PersonalBalanceComponent extends \Local\Core\Inner\BxModified\CBitrixCompo
                 'USER_ID' => $GLOBALS['USER']->GetId()
             ],
             'order' => [
-                'DATE_CREATE' => 'DESC'
+                'DATE_CREATE' => 'DESC',
+                'ID' => 'DESC'
             ],
             'select' => [
                 'DATE_CREATE',

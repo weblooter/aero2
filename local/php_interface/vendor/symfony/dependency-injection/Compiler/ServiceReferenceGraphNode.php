@@ -29,21 +29,21 @@ class ServiceReferenceGraphNode
     private $value;
 
     /**
-     * @param string $id The node identifier
+     * @param string $id    The node identifier
      * @param mixed  $value The node value
      */
-    public function __construct( string $id, $value )
+    public function __construct(string $id, $value)
     {
         $this->id = $id;
         $this->value = $value;
     }
 
-    public function addInEdge( ServiceReferenceGraphEdge $edge )
+    public function addInEdge(ServiceReferenceGraphEdge $edge)
     {
         $this->inEdges[] = $edge;
     }
 
-    public function addOutEdge( ServiceReferenceGraphEdge $edge )
+    public function addOutEdge(ServiceReferenceGraphEdge $edge)
     {
         $this->outEdges[] = $edge;
     }

@@ -1,3 +1,3 @@
 <?php
 
-$container->setParameter( 'php', 'php' );
+$container->setParameter('php', 'php');

@@ -36,17 +36,14 @@ class ResolveInvalidReferencesPass implements CompilerPassInterface
     /**
      * Process the ContainerBuilder to resolve invalid references.
      */
-    public function process( ContainerBuilder $container )
+    public function process(ContainerBuilder $container)
     {
         $this->container = $container;
-        $this->signalingException = new RuntimeException( 'Invalid reference.' );
+        $this->signalingException = new RuntimeException('Invalid reference.');
 
-        try
-        {
-            $this->processValue( $container->getDefinitions(), 1 );
-        }
-        finally
-        {
+        try {
+            $this->processValue($container->getDefinitions(), 1);
+        } finally {
             $this->container = $this->signalingException = null;
         }
     }
@@ -56,99 +53,69 @@ class ResolveInvalidReferencesPass implements CompilerPassInterface
      *
      * @throws RuntimeException When an invalid reference is found
      */
-    private function processValue( $value, $rootLevel = 0, $level = 0 )
+    private function processValue($value, $rootLevel = 0, $level = 0)
     {
-        if ( $value instanceof ServiceClosureArgument )
-        {
-            $value->setValues( $this->processValue( $value->getValues(), 1, 1 ) );
-        }
-        elseif ( $value instanceof ArgumentInterface )
-        {
-            $value->setValues( $this->processValue( $value->getValues(), $rootLevel, 1 + $level ) );
-        }
-        elseif ( $value instanceof Definition )
-        {
-            if ( $value->isSynthetic() || $value->isAbstract() )
-            {
+        if ($value instanceof ServiceClosureArgument) {
+            $value->setValues($this->processValue($value->getValues(), 1, 1));
+        } elseif ($value instanceof ArgumentInterface) {
+            $value->setValues($this->processValue($value->getValues(), $rootLevel, 1 + $level));
+        } elseif ($value instanceof Definition) {
+            if ($value->isSynthetic() || $value->isAbstract()) {
                 return $value;
             }
-            $value->setArguments( $this->processValue( $value->getArguments(), 0 ) );
-            $value->setProperties( $this->processValue( $value->getProperties(), 1 ) );
-            $value->setMethodCalls( $this->processValue( $value->getMethodCalls(), 2 ) );
-        }
-        elseif ( \is_array( $value ) )
-        {
+            $value->setArguments($this->processValue($value->getArguments(), 0));
+            $value->setProperties($this->processValue($value->getProperties(), 1));
+            $value->setMethodCalls($this->processValue($value->getMethodCalls(), 2));
+        } elseif (\is_array($value)) {
             $i = 0;
 
-            foreach ( $value as $k => $v )
-            {
-                if ( !$rootLevel )
-                {
+            foreach ($value as $k => $v) {
+                if (!$rootLevel) {
                     $this->currentId = $k;
                 }
-                try
-                {
-                    if ( false !== $i && $k !== $i++ )
-                    {
+                try {
+                    if (false !== $i && $k !== $i++) {
                         $i = false;
                     }
-                    if ( $v !== $processedValue = $this->processValue( $v, $rootLevel, 1 + $level ) )
-                    {
-                        $value[ $k ] = $processedValue;
+                    if ($v !== $processedValue = $this->processValue($v, $rootLevel, 1 + $level)) {
+                        $value[$k] = $processedValue;
                     }
-                }
-                catch ( RuntimeException $e )
-                {
-                    if ( $rootLevel < $level || ( $rootLevel && !$level ) )
-                    {
-                        unset( $value[ $k ] );
-                    }
-                    elseif ( $rootLevel )
-                    {
+                } catch (RuntimeException $e) {
+                    if ($rootLevel < $level || ($rootLevel && !$level)) {
+                        unset($value[$k]);
+                    } elseif ($rootLevel) {
                         throw $e;
-                    }
-                    else
-                    {
-                        $value[ $k ] = null;
+                    } else {
+                        $value[$k] = null;
                     }
                 }
             }
 
             // Ensure numerically indexed arguments have sequential numeric keys.
-            if ( false !== $i )
-            {
-                $value = array_values( $value );
+            if (false !== $i) {
+                $value = array_values($value);
             }
-        }
-        elseif ( $value instanceof Reference )
-        {
-            if ( $this->container->has( $id = (string)$value ) )
-            {
+        } elseif ($value instanceof Reference) {
+            if ($this->container->has($id = (string) $value)) {
                 return $value;
             }
             $invalidBehavior = $value->getInvalidBehavior();
 
-            if ( ContainerInterface::RUNTIME_EXCEPTION_ON_INVALID_REFERENCE === $invalidBehavior && $value instanceof TypedReference && !$this->container->has( $id ) )
-            {
-                $e = new ServiceNotFoundException( $id, $this->currentId );
+            if (ContainerInterface::RUNTIME_EXCEPTION_ON_INVALID_REFERENCE === $invalidBehavior && $value instanceof TypedReference && !$this->container->has($id)) {
+                $e = new ServiceNotFoundException($id, $this->currentId);
 
                 // since the error message varies by $id and $this->currentId, so should the id of the dummy errored definition
-                $this->container->register( $id = sprintf( '.errored.%s.%s', $this->currentId, $id ),
-                    $value->getType() )
-                    ->addError( $e->getMessage() );
+                $this->container->register($id = sprintf('.errored.%s.%s', $this->currentId, $id), $value->getType())
+                    ->addError($e->getMessage());
 
-                return new TypedReference( $id, $value->getType(), $value->getInvalidBehavior() );
+                return new TypedReference($id, $value->getType(), $value->getInvalidBehavior());
             }
 
             // resolve invalid behavior
-            if ( ContainerInterface::NULL_ON_INVALID_REFERENCE === $invalidBehavior )
-            {
+            if (ContainerInterface::NULL_ON_INVALID_REFERENCE === $invalidBehavior) {
                 $value = null;
-            }
-            elseif ( ContainerInterface::IGNORE_ON_INVALID_REFERENCE === $invalidBehavior )
-            {
-                if ( 0 < $level || $rootLevel )
-                {
+            } elseif (ContainerInterface::IGNORE_ON_INVALID_REFERENCE === $invalidBehavior) {
+                if (0 < $level || $rootLevel) {
                     throw $this->signalingException;
                 }
                 $value = null;

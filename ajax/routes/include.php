@@ -55,6 +55,18 @@ return [
         'args' => ['tp_id' => '[0-9]+'],
         'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':delete'
     ],
+    'tradingplatform_deactivate' => [
+        'path' => '/trading-platform/deactivate/{tp_id}/',
+        'methods' => ['POST'],
+        'args' => ['tp_id' => '[0-9]+'],
+        'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':deactivate'
+    ],
+    'tradingplatform_activate' => [
+        'path' => '/trading-platform/activate/{tp_id}/',
+        'methods' => ['POST'],
+        'args' => ['tp_id' => '[0-9]+'],
+        'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':activate'
+    ],
 
     'tradingplatform_form_refresh_row' => [
         'path' => '/trading-platform-form/refresh-row/',

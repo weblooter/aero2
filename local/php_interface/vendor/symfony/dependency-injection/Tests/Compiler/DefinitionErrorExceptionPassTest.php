@@ -26,28 +26,28 @@ class DefinitionErrorExceptionPassTest extends TestCase
     {
         $container = new ContainerBuilder();
         $def = new Definition();
-        $def->addError( 'Things went wrong!' );
-        $def->addError( 'Now something else!' );
-        $container->register( 'foo_service_id' )
-            ->setArguments( [
+        $def->addError('Things went wrong!');
+        $def->addError('Now something else!');
+        $container->register('foo_service_id')
+            ->setArguments([
                 $def,
-            ] );
+            ]);
 
         $pass = new DefinitionErrorExceptionPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     public function testNoExceptionThrown()
     {
         $container = new ContainerBuilder();
         $def = new Definition();
-        $container->register( 'foo_service_id' )
-            ->setArguments( [
+        $container->register('foo_service_id')
+            ->setArguments([
                 $def,
-            ] );
+            ]);
 
         $pass = new DefinitionErrorExceptionPass();
-        $pass->process( $container );
-        $this->assertSame( $def, $container->getDefinition( 'foo_service_id' )->getArgument( 0 ) );
+        $pass->process($container);
+        $this->assertSame($def, $container->getDefinition('foo_service_id')->getArgument(0));
     }
 }

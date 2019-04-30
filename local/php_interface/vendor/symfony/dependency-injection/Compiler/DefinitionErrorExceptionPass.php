@@ -26,36 +26,31 @@ class DefinitionErrorExceptionPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    protected function processValue( $value, $isRoot = false )
+    protected function processValue($value, $isRoot = false)
     {
-        if ( !$value instanceof Definition || empty( $value->getErrors() ) )
-        {
-            return parent::processValue( $value, $isRoot );
+        if (!$value instanceof Definition || empty($value->getErrors())) {
+            return parent::processValue($value, $isRoot);
         }
 
-        if ( $isRoot && !$value->isPublic() )
-        {
+        if ($isRoot && !$value->isPublic()) {
             $graph = $this->container->getCompiler()->getServiceReferenceGraph();
             $runtimeException = false;
-            foreach ( $graph->getNode( $this->currentId )->getInEdges() as $edge )
-            {
-                if ( !$edge->getValue() instanceof Reference || ContainerInterface::RUNTIME_EXCEPTION_ON_INVALID_REFERENCE !== $edge->getValue()->getInvalidBehavior() )
-                {
+            foreach ($graph->getNode($this->currentId)->getInEdges() as $edge) {
+                if (!$edge->getValue() instanceof Reference || ContainerInterface::RUNTIME_EXCEPTION_ON_INVALID_REFERENCE !== $edge->getValue()->getInvalidBehavior()) {
                     $runtimeException = false;
                     break;
                 }
                 $runtimeException = true;
             }
-            if ( $runtimeException )
-            {
-                return parent::processValue( $value, $isRoot );
+            if ($runtimeException) {
+                return parent::processValue($value, $isRoot);
             }
         }
 
         // only show the first error so the user can focus on it
         $errors = $value->getErrors();
-        $message = reset( $errors );
+        $message = reset($errors);
 
-        throw new RuntimeException( $message );
+        throw new RuntimeException($message);
     }
 }

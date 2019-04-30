@@ -49,7 +49,7 @@ class ProjectServiceContainer extends Container
 
     public function compile()
     {
-        throw new LogicException( 'You cannot compile a dumped container that was already compiled.' );
+        throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
 
     public function isCompiled()
@@ -76,7 +76,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getBarServiceService()
     {
-        return $this->services[ 'bar_service' ] = new \stdClass( ( $this->privates[ 'baz_service' ] ?? ( $this->privates[ 'baz_service' ] = new \stdClass() ) ) );
+        return $this->services['bar_service'] = new \stdClass(($this->privates['baz_service'] ?? ($this->privates['baz_service'] = new \stdClass())));
     }
 
     /**
@@ -86,17 +86,13 @@ class ProjectServiceContainer extends Container
      */
     protected function getFooServiceService()
     {
-        return $this->services[ 'foo_service' ] = new \Symfony\Component\DependencyInjection\ServiceLocator( [
-            'bar' => function () {
-                return ( $this->services[ 'bar_service' ] ?? $this->getBarServiceService() );
-            },
-            'baz' => function (): \stdClass {
-                return ( $this->privates[ 'baz_service' ] ?? ( $this->privates[ 'baz_service' ] = new \stdClass() ) );
-            },
-            'nil' => function () {
-                return null;
-            }
-        ] );
+        return $this->services['foo_service'] = new \Symfony\Component\DependencyInjection\ServiceLocator(['bar' => function () {
+            return ($this->services['bar_service'] ?? $this->getBarServiceService());
+        }, 'baz' => function (): \stdClass {
+            return ($this->privates['baz_service'] ?? ($this->privates['baz_service'] = new \stdClass()));
+        }, 'nil' => function () {
+            return NULL;
+        }]);
     }
 
     /**
@@ -106,7 +102,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getTranslator_Loader1Service()
     {
-        return $this->services[ 'translator.loader_1' ] = new \stdClass();
+        return $this->services['translator.loader_1'] = new \stdClass();
     }
 
     /**
@@ -116,7 +112,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getTranslator_Loader2Service()
     {
-        return $this->services[ 'translator.loader_2' ] = new \stdClass();
+        return $this->services['translator.loader_2'] = new \stdClass();
     }
 
     /**
@@ -126,7 +122,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getTranslator_Loader3Service()
     {
-        return $this->services[ 'translator.loader_3' ] = new \stdClass();
+        return $this->services['translator.loader_3'] = new \stdClass();
     }
 
     /**
@@ -136,11 +132,9 @@ class ProjectServiceContainer extends Container
      */
     protected function getTranslator1Service()
     {
-        return $this->services[ 'translator_1' ] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\StubbedTranslator( new \Symfony\Component\DependencyInjection\ServiceLocator( [
-            'translator.loader_1' => function () {
-                return ( $this->services[ 'translator.loader_1' ] ?? ( $this->services[ 'translator.loader_1' ] = new \stdClass() ) );
-            }
-        ] ) );
+        return $this->services['translator_1'] = new \Symfony\Component\DependencyInjection\Tests\Fixtures\StubbedTranslator(new \Symfony\Component\DependencyInjection\ServiceLocator(['translator.loader_1' => function () {
+            return ($this->services['translator.loader_1'] ?? ($this->services['translator.loader_1'] = new \stdClass()));
+        }]));
     }
 
     /**
@@ -150,15 +144,11 @@ class ProjectServiceContainer extends Container
      */
     protected function getTranslator2Service()
     {
-        $this->services[ 'translator_2' ] = $instance = new \Symfony\Component\DependencyInjection\Tests\Fixtures\StubbedTranslator( new \Symfony\Component\DependencyInjection\ServiceLocator( [
-            'translator.loader_2' => function () {
-                return ( $this->services[ 'translator.loader_2' ] ?? ( $this->services[ 'translator.loader_2' ] = new \stdClass() ) );
-            }
-        ] ) );
+        $this->services['translator_2'] = $instance = new \Symfony\Component\DependencyInjection\Tests\Fixtures\StubbedTranslator(new \Symfony\Component\DependencyInjection\ServiceLocator(['translator.loader_2' => function () {
+            return ($this->services['translator.loader_2'] ?? ($this->services['translator.loader_2'] = new \stdClass()));
+        }]));
 
-        $instance->addResource( 'db',
-            ( $this->services[ 'translator.loader_2' ] ?? ( $this->services[ 'translator.loader_2' ] = new \stdClass() ) ),
-            'nl' );
+        $instance->addResource('db', ($this->services['translator.loader_2'] ?? ($this->services['translator.loader_2'] = new \stdClass())), 'nl');
 
         return $instance;
     }
@@ -170,16 +160,14 @@ class ProjectServiceContainer extends Container
      */
     protected function getTranslator3Service()
     {
-        $this->services[ 'translator_3' ] = $instance = new \Symfony\Component\DependencyInjection\Tests\Fixtures\StubbedTranslator( new \Symfony\Component\DependencyInjection\ServiceLocator( [
-            'translator.loader_3' => function () {
-                return ( $this->services[ 'translator.loader_3' ] ?? ( $this->services[ 'translator.loader_3' ] = new \stdClass() ) );
-            }
-        ] ) );
+        $this->services['translator_3'] = $instance = new \Symfony\Component\DependencyInjection\Tests\Fixtures\StubbedTranslator(new \Symfony\Component\DependencyInjection\ServiceLocator(['translator.loader_3' => function () {
+            return ($this->services['translator.loader_3'] ?? ($this->services['translator.loader_3'] = new \stdClass()));
+        }]));
 
-        $a = ( $this->services[ 'translator.loader_3' ] ?? ( $this->services[ 'translator.loader_3' ] = new \stdClass() ) );
+        $a = ($this->services['translator.loader_3'] ?? ($this->services['translator.loader_3'] = new \stdClass()));
 
-        $instance->addResource( 'db', $a, 'nl' );
-        $instance->addResource( 'db', $a, 'en' );
+        $instance->addResource('db', $a, 'nl');
+        $instance->addResource('db', $a, 'en');
 
         return $instance;
     }

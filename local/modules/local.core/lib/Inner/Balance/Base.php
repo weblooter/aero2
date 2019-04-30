@@ -5,7 +5,7 @@ namespace Local\Core\Inner\Balance;
 use Bitrix\Main\UserTable;
 
 /**
- * Базовый класс по работе с балансом
+ * Базовый класс по работе с балансом, списанием и пополнением
  *
  * @package Local\Core\Inner\Balance
  */
@@ -68,7 +68,7 @@ class Base
 
         try {
             if (floor($intBalance) < 1) {
-                throw new \Exception('Баланс должен быть больше нуля.');
+                throw new \Exception('Сумма пополнения должна быть больше нуля.');
             }
 
             $rr = \Local\Core\Model\Data\BalanceLogTable::add([
@@ -110,7 +110,7 @@ class Base
 
         try {
             if (floor($intBalance) < 1) {
-                throw new \Exception('Баланс должен быть больше нуля.');
+                throw new \Exception('Сумма списания должна быть больше нуля.');
             }
 
             $rr = \Local\Core\Model\Data\BalanceLogTable::add([
@@ -132,6 +132,67 @@ class Base
             }
         } catch (\Exception $e) {
             $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
+        }
+
+        return $obResult;
+    }
+
+    /**
+     * Списание денег со счета за олату торговой площадки
+     *
+     * @param $intTradingPlatformId
+     *
+     * @return \Bitrix\Main\Result
+     */
+    public static function payTradingPlatform($intTradingPlatformId)
+    {
+        $obResult = new \Bitrix\Main\Result();
+
+        try
+        {
+            $intStoreId = \Local\Core\Inner\TradingPlatform\Base::getStoreIdByTpId($intTradingPlatformId);
+
+            if( empty( $intStoreId ) )
+            {
+                throw new \Exception('Не удалось получить идентификатор магазина по идентификатору торговой площадки.');
+            }
+            $strTariffCode = \Local\Core\Inner\Store\Base::getTariffCode($intStoreId);
+
+            if( empty($strTariffCode) )
+            {
+                throw new \Exception('Не удалось получить тариф магазина.');
+            }
+
+            if( \Local\Core\Inner\Tariff\Base::getActiveStatus($strTariffCode) != 'Y' )
+            {
+                throw new \Exception('Текущий тариф деактивирован, оплатить его нельзя. Смените тариф.');
+            }
+
+            $intTariffPrice = \Local\Core\Inner\Tariff\Base::getPrice($strTariffCode);
+
+            $intUserId = \Local\Core\Inner\Store\Base::getOwnUserId($intStoreId);
+            if( empty($intUserId) )
+            {
+                throw new \Exception('Не удалось определить владельца магазина.');
+            }
+
+            if( self::getUserBalance($intUserId) < $intTariffPrice )
+            {
+                throw new \Exception('Оплатить торговую площадку невозможно, на счете недостаточно средств. Пополните баланс и активируйте торговую площадку вручную.');
+            }
+
+            $obPayRes = self::payFromAccount($intTariffPrice, $intUserId, 'Оплата торговой площадки "'.\Local\Core\Inner\TradingPlatform\Base::getName($intTradingPlatformId).'" магазина "'.\Local\Core\Inner\Store\Base::getStoreName( \Local\Core\Inner\TradingPlatform\Base::getStoreIdByTpId($intTradingPlatformId) ).'".');
+            if( !$obPayRes->isSuccess() )
+            {
+                $obResult->addErrors( $obPayRes->getErrors() );
+            }
+        }
+        catch (\Exception $e)
+        {
+            if( !empty( $e->getMessage() ) )
+            {
+                $obResult->addError(new \Bitrix\Main\Error($e->getMessage()));
+            }
         }
 
         return $obResult;

@@ -33,16 +33,14 @@ class RepeatedPass implements CompilerPassInterface
      *
      * @throws InvalidArgumentException when the passes don't implement RepeatablePassInterface
      */
-    public function __construct( array $passes )
+    public function __construct(array $passes)
     {
-        foreach ( $passes as $pass )
-        {
-            if ( !$pass instanceof RepeatablePassInterface )
-            {
-                throw new InvalidArgumentException( '$passes must be an array of RepeatablePassInterface.' );
+        foreach ($passes as $pass) {
+            if (!$pass instanceof RepeatablePassInterface) {
+                throw new InvalidArgumentException('$passes must be an array of RepeatablePassInterface.');
             }
 
-            $pass->setRepeatedPass( $this );
+            $pass->setRepeatedPass($this);
         }
 
         $this->passes = $passes;
@@ -51,16 +49,14 @@ class RepeatedPass implements CompilerPassInterface
     /**
      * Process the repeatable passes that run more than once.
      */
-    public function process( ContainerBuilder $container )
+    public function process(ContainerBuilder $container)
     {
-        do
-        {
+        do {
             $this->repeat = false;
-            foreach ( $this->passes as $pass )
-            {
-                $pass->process( $container );
+            foreach ($this->passes as $pass) {
+                $pass->process($container);
             }
-        } while ( $this->repeat );
+        } while ($this->repeat);
     }
 
     /**

@@ -20,9 +20,9 @@ class TaggedIteratorArgument extends IteratorArgument
 {
     private $tag;
 
-    public function __construct( string $tag )
+    public function __construct(string $tag)
     {
-        parent::__construct( [] );
+        parent::__construct([]);
 
         $this->tag = $tag;
     }

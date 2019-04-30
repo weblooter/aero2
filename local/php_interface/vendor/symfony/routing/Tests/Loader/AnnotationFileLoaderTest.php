@@ -25,21 +25,21 @@ class AnnotationFileLoaderTest extends AbstractAnnotationLoaderTest
         parent::setUp();
 
         $this->reader = $this->getReader();
-        $this->loader = new AnnotationFileLoader( new FileLocator(), $this->getClassLoader( $this->reader ) );
+        $this->loader = new AnnotationFileLoader(new FileLocator(), $this->getClassLoader($this->reader));
     }
 
     public function testLoad()
     {
-        $this->reader->expects( $this->once() )->method( 'getClassAnnotation' );
+        $this->reader->expects($this->once())->method('getClassAnnotation');
 
-        $this->loader->load( __DIR__.'/../Fixtures/AnnotatedClasses/FooClass.php' );
+        $this->loader->load(__DIR__.'/../Fixtures/AnnotatedClasses/FooClass.php');
     }
 
     public function testLoadTraitWithClassConstant()
     {
-        $this->reader->expects( $this->never() )->method( 'getClassAnnotation' );
+        $this->reader->expects($this->never())->method('getClassAnnotation');
 
-        $this->loader->load( __DIR__.'/../Fixtures/AnnotatedClasses/FooTrait.php' );
+        $this->loader->load(__DIR__.'/../Fixtures/AnnotatedClasses/FooTrait.php');
     }
 
     /**
@@ -48,17 +48,17 @@ class AnnotationFileLoaderTest extends AbstractAnnotationLoaderTest
      */
     public function testLoadFileWithoutStartTag()
     {
-        $this->loader->load( __DIR__.'/../Fixtures/OtherAnnotatedClasses/NoStartTagClass.php' );
+        $this->loader->load(__DIR__.'/../Fixtures/OtherAnnotatedClasses/NoStartTagClass.php');
     }
 
     public function testLoadVariadic()
     {
-        $route = new Route( ['path' => '/path/to/{id}'] );
-        $this->reader->expects( $this->once() )->method( 'getClassAnnotation' );
-        $this->reader->expects( $this->once() )->method( 'getMethodAnnotations' )
-            ->will( $this->returnValue( [$route] ) );
+        $route = new Route(['path' => '/path/to/{id}']);
+        $this->reader->expects($this->once())->method('getClassAnnotation');
+        $this->reader->expects($this->once())->method('getMethodAnnotations')
+            ->will($this->returnValue([$route]));
 
-        $this->loader->load( __DIR__.'/../Fixtures/OtherAnnotatedClasses/VariadicClass.php' );
+        $this->loader->load(__DIR__.'/../Fixtures/OtherAnnotatedClasses/VariadicClass.php');
     }
 
     /**
@@ -66,24 +66,20 @@ class AnnotationFileLoaderTest extends AbstractAnnotationLoaderTest
      */
     public function testLoadAnonymousClass()
     {
-        $this->reader->expects( $this->never() )->method( 'getClassAnnotation' );
-        $this->reader->expects( $this->never() )->method( 'getMethodAnnotations' );
+        $this->reader->expects($this->never())->method('getClassAnnotation');
+        $this->reader->expects($this->never())->method('getMethodAnnotations');
 
-        $this->loader->load( __DIR__.'/../Fixtures/OtherAnnotatedClasses/AnonymousClassInTrait.php' );
+        $this->loader->load(__DIR__.'/../Fixtures/OtherAnnotatedClasses/AnonymousClassInTrait.php');
     }
 
     public function testSupports()
     {
         $fixture = __DIR__.'/../Fixtures/annotated.php';
 
-        $this->assertTrue( $this->loader->supports( $fixture ),
-            '->supports() returns true if the resource is loadable' );
-        $this->assertFalse( $this->loader->supports( 'foo.foo' ),
-            '->supports() returns true if the resource is loadable' );
+        $this->assertTrue($this->loader->supports($fixture), '->supports() returns true if the resource is loadable');
+        $this->assertFalse($this->loader->supports('foo.foo'), '->supports() returns true if the resource is loadable');
 
-        $this->assertTrue( $this->loader->supports( $fixture, 'annotation' ),
-            '->supports() checks the resource type if specified' );
-        $this->assertFalse( $this->loader->supports( $fixture, 'foo' ),
-            '->supports() checks the resource type if specified' );
+        $this->assertTrue($this->loader->supports($fixture, 'annotation'), '->supports() checks the resource type if specified');
+        $this->assertFalse($this->loader->supports($fixture, 'foo'), '->supports() checks the resource type if specified');
     }
 }

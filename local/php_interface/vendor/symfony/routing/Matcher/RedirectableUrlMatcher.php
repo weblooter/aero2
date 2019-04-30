@@ -22,56 +22,38 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
     /**
      * {@inheritdoc}
      */
-    public function match( $pathinfo )
+    public function match($pathinfo)
     {
-        try
-        {
-            return parent::match( $pathinfo );
-        }
-        catch ( ResourceNotFoundException $e )
-        {
-            if ( !\in_array( $this->context->getMethod(), ['HEAD', 'GET'], true ) )
-            {
+        try {
+            return parent::match($pathinfo);
+        } catch (ResourceNotFoundException $e) {
+            if (!\in_array($this->context->getMethod(), ['HEAD', 'GET'], true)) {
                 throw $e;
             }
 
-            if ( $this->allowSchemes )
-            {
+            if ($this->allowSchemes) {
                 redirect_scheme:
                 $scheme = $this->context->getScheme();
-                $this->context->setScheme( current( $this->allowSchemes ) );
-                try
-                {
-                    $ret = parent::match( $pathinfo );
+                $this->context->setScheme(current($this->allowSchemes));
+                try {
+                    $ret = parent::match($pathinfo);
 
-                    return $this->redirect( $pathinfo, $ret[ '_route' ] ?? null, $this->context->getScheme() ) + $ret;
-                }
-                catch ( ExceptionInterface $e2 )
-                {
+                    return $this->redirect($pathinfo, $ret['_route'] ?? null, $this->context->getScheme()) + $ret;
+                } catch (ExceptionInterface $e2) {
                     throw $e;
+                } finally {
+                    $this->context->setScheme($scheme);
                 }
-                finally
-                {
-                    $this->context->setScheme( $scheme );
-                }
-            }
-            elseif ( '/' === $trimmedPathinfo = rtrim( $pathinfo, '/' ) ? : '/' )
-            {
+            } elseif ('/' === $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/') {
                 throw $e;
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     $pathinfo = $trimmedPathinfo === $pathinfo ? $pathinfo.'/' : $trimmedPathinfo;
-                    $ret = parent::match( $pathinfo );
+                    $ret = parent::match($pathinfo);
 
-                    return $this->redirect( $pathinfo, $ret[ '_route' ] ?? null ) + $ret;
-                }
-                catch ( ExceptionInterface $e2 )
-                {
-                    if ( $this->allowSchemes )
-                    {
+                    return $this->redirect($pathinfo, $ret['_route'] ?? null) + $ret;
+                } catch (ExceptionInterface $e2) {
+                    if ($this->allowSchemes) {
                         goto redirect_scheme;
                     }
                     throw $e;

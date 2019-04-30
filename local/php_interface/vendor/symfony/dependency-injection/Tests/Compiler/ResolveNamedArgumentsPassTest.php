@@ -31,35 +31,34 @@ class ResolveNamedArgumentsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NamedArgumentsDummy::class, NamedArgumentsDummy::class );
-        $definition->setArguments( [
+        $definition = $container->register(NamedArgumentsDummy::class, NamedArgumentsDummy::class);
+        $definition->setArguments([
             2 => 'http://api.example.com',
             '$apiKey' => '123',
-            0 => new Reference( 'foo' ),
-        ] );
-        $definition->addMethodCall( 'setApiKey', ['$apiKey' => '123'] );
+            0 => new Reference('foo'),
+        ]);
+        $definition->addMethodCall('setApiKey', ['$apiKey' => '123']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertEquals( [0 => new Reference( 'foo' ), 1 => '123', 2 => 'http://api.example.com'],
-            $definition->getArguments() );
-        $this->assertEquals( [['setApiKey', ['123']]], $definition->getMethodCalls() );
+        $this->assertEquals([0 => new Reference('foo'), 1 => '123', 2 => 'http://api.example.com'], $definition->getArguments());
+        $this->assertEquals([['setApiKey', ['123']]], $definition->getMethodCalls());
     }
 
     public function testWithFactory()
     {
         $container = new ContainerBuilder();
 
-        $container->register( 'factory', NoConstructor::class );
-        $definition = $container->register( 'foo', NoConstructor::class )
-            ->setFactory( [new Reference( 'factory' ), 'create'] )
-            ->setArguments( ['$apiKey' => '123'] );
+        $container->register('factory', NoConstructor::class);
+        $definition = $container->register('foo', NoConstructor::class)
+            ->setFactory([new Reference('factory'), 'create'])
+            ->setArguments(['$apiKey' => '123']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertSame( [0 => '123'], $definition->getArguments() );
+        $this->assertSame([0 => '123'], $definition->getArguments());
     }
 
     /**
@@ -69,11 +68,11 @@ class ResolveNamedArgumentsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NamedArgumentsDummy::class );
-        $definition->setArguments( ['$apiKey' => '123'] );
+        $definition = $container->register(NamedArgumentsDummy::class);
+        $definition->setArguments(['$apiKey' => '123']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     /**
@@ -83,11 +82,11 @@ class ResolveNamedArgumentsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NotExist::class, NotExist::class );
-        $definition->setArguments( ['$apiKey' => '123'] );
+        $definition = $container->register(NotExist::class, NotExist::class);
+        $definition->setArguments(['$apiKey' => '123']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     /**
@@ -97,119 +96,110 @@ class ResolveNamedArgumentsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NoConstructor::class, NoConstructor::class );
-        $definition->setArguments( ['$apiKey' => '123'] );
+        $definition = $container->register(NoConstructor::class, NoConstructor::class);
+        $definition->setArguments(['$apiKey' => '123']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid service
-     *     "Symfony\Component\DependencyInjection\Tests\Fixtures\NamedArgumentsDummy": method "__construct()" has no
-     *     argument named "$notFound". Check your service definition.
+     * @expectedExceptionMessage Invalid service "Symfony\Component\DependencyInjection\Tests\Fixtures\NamedArgumentsDummy": method "__construct()" has no argument named "$notFound". Check your service definition.
      */
     public function testArgumentNotFound()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NamedArgumentsDummy::class, NamedArgumentsDummy::class );
-        $definition->setArguments( ['$notFound' => '123'] );
+        $definition = $container->register(NamedArgumentsDummy::class, NamedArgumentsDummy::class);
+        $definition->setArguments(['$notFound' => '123']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid service
-     *     "Symfony\Component\DependencyInjection\Tests\Fixtures\TestDefinition1": method
-     *     "Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummyWithoutReturnTypes::createTestDefinition1()"
-     *     has no argument named "$notFound". Check your service definition.
+     * @expectedExceptionMessage Invalid service "Symfony\Component\DependencyInjection\Tests\Fixtures\TestDefinition1": method "Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummyWithoutReturnTypes::createTestDefinition1()" has no argument named "$notFound". Check your service definition.
      */
     public function testCorrectMethodReportedInException()
     {
         $container = new ContainerBuilder();
 
-        $container->register( FactoryDummyWithoutReturnTypes::class, FactoryDummyWithoutReturnTypes::class );
+        $container->register(FactoryDummyWithoutReturnTypes::class, FactoryDummyWithoutReturnTypes::class);
 
-        $definition = $container->register( TestDefinition1::class, TestDefinition1::class );
-        $definition->setFactory( [FactoryDummyWithoutReturnTypes::class, 'createTestDefinition1'] );
-        $definition->setArguments( ['$notFound' => '123'] );
+        $definition = $container->register(TestDefinition1::class, TestDefinition1::class);
+        $definition->setFactory([FactoryDummyWithoutReturnTypes::class, 'createTestDefinition1']);
+        $definition->setArguments(['$notFound' => '123']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     public function testTypedArgument()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NamedArgumentsDummy::class, NamedArgumentsDummy::class );
-        $definition->setArguments( ['$apiKey' => '123', CaseSensitiveClass::class => new Reference( 'foo' )] );
+        $definition = $container->register(NamedArgumentsDummy::class, NamedArgumentsDummy::class);
+        $definition->setArguments(['$apiKey' => '123', CaseSensitiveClass::class => new Reference('foo')]);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertEquals( [new Reference( 'foo' ), '123'], $definition->getArguments() );
+        $this->assertEquals([new Reference('foo'), '123'], $definition->getArguments());
     }
 
     public function testResolvesMultipleArgumentsOfTheSameType()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( SimilarArgumentsDummy::class, SimilarArgumentsDummy::class );
-        $definition->setArguments( [CaseSensitiveClass::class => new Reference( 'foo' ), '$token' => 'qwerty'] );
+        $definition = $container->register(SimilarArgumentsDummy::class, SimilarArgumentsDummy::class);
+        $definition->setArguments([CaseSensitiveClass::class => new Reference('foo'), '$token' => 'qwerty']);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertEquals( [new Reference( 'foo' ), 'qwerty', new Reference( 'foo' )], $definition->getArguments() );
+        $this->assertEquals([new Reference('foo'), 'qwerty', new Reference('foo')], $definition->getArguments());
     }
 
     public function testResolvePrioritizeNamedOverType()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( SimilarArgumentsDummy::class, SimilarArgumentsDummy::class );
-        $definition->setArguments( [
-            CaseSensitiveClass::class => new Reference( 'foo' ),
-            '$token' => 'qwerty',
-            '$class1' => new Reference( 'bar' )
-        ] );
+        $definition = $container->register(SimilarArgumentsDummy::class, SimilarArgumentsDummy::class);
+        $definition->setArguments([CaseSensitiveClass::class => new Reference('foo'), '$token' => 'qwerty', '$class1' => new Reference('bar')]);
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertEquals( [new Reference( 'bar' ), 'qwerty', new Reference( 'foo' )], $definition->getArguments() );
+        $this->assertEquals([new Reference('bar'), 'qwerty', new Reference('foo')], $definition->getArguments());
     }
 
     public function testVariadics()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NamedArgumentsVariadicsDummy::class, NamedArgumentsVariadicsDummy::class );
+        $definition = $container->register(NamedArgumentsVariadicsDummy::class, NamedArgumentsVariadicsDummy::class);
         $definition->setArguments(
             [
                 '$class' => new \stdClass(),
                 '$variadics' => [
-                    new Reference( 'foo' ),
-                    new Reference( 'bar' ),
-                    new Reference( 'baz' ),
+                    new Reference('foo'),
+                    new Reference('bar'),
+                    new Reference('baz'),
                 ],
             ]
         );
 
         $pass = new ResolveNamedArgumentsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
         $this->assertEquals(
             [
                 0 => new \stdClass(),
-                1 => new Reference( 'foo' ),
-                2 => new Reference( 'bar' ),
-                3 => new Reference( 'baz' ),
+                1 => new Reference('foo'),
+                2 => new Reference('bar'),
+                3 => new Reference('baz'),
             ],
             $definition->getArguments()
         );
@@ -218,7 +208,7 @@ class ResolveNamedArgumentsPassTest extends TestCase
 
 class NoConstructor
 {
-    public static function create( $apiKey )
+    public static function create($apiKey)
     {
     }
 }

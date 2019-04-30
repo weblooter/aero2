@@ -32,23 +32,19 @@ class DefaultsConfigurator extends AbstractServiceConfigurator
      *
      * @throws InvalidArgumentException when an invalid tag name or attribute is provided
      */
-    final public function tag( string $name, array $attributes = [] )
+    final public function tag(string $name, array $attributes = [])
     {
-        if ( '' === $name )
-        {
-            throw new InvalidArgumentException( 'The tag name in "_defaults" must be a non-empty string.' );
+        if ('' === $name) {
+            throw new InvalidArgumentException('The tag name in "_defaults" must be a non-empty string.');
         }
 
-        foreach ( $attributes as $attribute => $value )
-        {
-            if ( null !== $value && !is_scalar( $value ) )
-            {
-                throw new InvalidArgumentException( sprintf( 'Tag "%s", attribute "%s" in "_defaults" must be of a scalar-type.',
-                    $name, $attribute ) );
+        foreach ($attributes as $attribute => $value) {
+            if (null !== $value && !is_scalar($value)) {
+                throw new InvalidArgumentException(sprintf('Tag "%s", attribute "%s" in "_defaults" must be of a scalar-type.', $name, $attribute));
             }
         }
 
-        $this->definition->addTag( $name, $attributes );
+        $this->definition->addTag($name, $attributes);
 
         return $this;
     }
@@ -58,8 +54,8 @@ class DefaultsConfigurator extends AbstractServiceConfigurator
      *
      * @return InstanceofConfigurator
      */
-    final public function instanceof( string $fqcn )
+    final public function instanceof(string $fqcn)
     {
-        return $this->parent->instanceof( $fqcn );
+        return $this->parent->instanceof($fqcn);
     }
 }

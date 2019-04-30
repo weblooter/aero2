@@ -22,17 +22,15 @@ trait FactoryTrait
      *
      * @return $this
      */
-    final public function factory( $factory )
+    final public function factory($factory)
     {
-        if ( \is_string( $factory ) && 1 === substr_count( $factory, ':' ) )
-        {
-            $factoryParts = explode( ':', $factory );
+        if (\is_string($factory) && 1 === substr_count($factory, ':')) {
+            $factoryParts = explode(':', $factory);
 
-            throw new InvalidArgumentException( sprintf( 'Invalid factory "%s": the `service:method` notation is not available when using PHP-based DI configuration. Use "[ref(\'%s\'), \'%s\']" instead.',
-                $factory, $factoryParts[ 0 ], $factoryParts[ 1 ] ) );
+            throw new InvalidArgumentException(sprintf('Invalid factory "%s": the `service:method` notation is not available when using PHP-based DI configuration. Use "[ref(\'%s\'), \'%s\']" instead.', $factory, $factoryParts[0], $factoryParts[1]));
         }
 
-        $this->definition->setFactory( static::processValue( $factory, true ) );
+        $this->definition->setFactory(static::processValue($factory, true));
 
         return $this;
     }

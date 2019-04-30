@@ -28,16 +28,13 @@ class CommandTesterTest extends TestCase
 
     protected function setUp()
     {
-        $this->command = new Command( 'foo' );
-        $this->command->addArgument( 'command' );
-        $this->command->addArgument( 'foo' );
-        $this->command->setCode( function ( $input, $output ) {
-            $output->writeln( 'foo' );
-        } );
+        $this->command = new Command('foo');
+        $this->command->addArgument('command');
+        $this->command->addArgument('foo');
+        $this->command->setCode(function ($input, $output) { $output->writeln('foo'); });
 
-        $this->tester = new CommandTester( $this->command );
-        $this->tester->execute( ['foo' => 'bar'],
-            ['interactive' => false, 'decorated' => false, 'verbosity' => Output::VERBOSITY_VERBOSE] );
+        $this->tester = new CommandTester($this->command);
+        $this->tester->execute(['foo' => 'bar'], ['interactive' => false, 'decorated' => false, 'verbosity' => Output::VERBOSITY_VERBOSE]);
     }
 
     protected function tearDown()
@@ -48,52 +45,46 @@ class CommandTesterTest extends TestCase
 
     public function testExecute()
     {
-        $this->assertFalse( $this->tester->getInput()->isInteractive(), '->execute() takes an interactive option' );
-        $this->assertFalse( $this->tester->getOutput()->isDecorated(), '->execute() takes a decorated option' );
-        $this->assertEquals( Output::VERBOSITY_VERBOSE, $this->tester->getOutput()->getVerbosity(),
-            '->execute() takes a verbosity option' );
+        $this->assertFalse($this->tester->getInput()->isInteractive(), '->execute() takes an interactive option');
+        $this->assertFalse($this->tester->getOutput()->isDecorated(), '->execute() takes a decorated option');
+        $this->assertEquals(Output::VERBOSITY_VERBOSE, $this->tester->getOutput()->getVerbosity(), '->execute() takes a verbosity option');
     }
 
     public function testGetInput()
     {
-        $this->assertEquals( 'bar', $this->tester->getInput()->getArgument( 'foo' ),
-            '->getInput() returns the current input instance' );
+        $this->assertEquals('bar', $this->tester->getInput()->getArgument('foo'), '->getInput() returns the current input instance');
     }
 
     public function testGetOutput()
     {
-        rewind( $this->tester->getOutput()->getStream() );
-        $this->assertEquals( 'foo'.PHP_EOL, stream_get_contents( $this->tester->getOutput()->getStream() ),
-            '->getOutput() returns the current output instance' );
+        rewind($this->tester->getOutput()->getStream());
+        $this->assertEquals('foo'.PHP_EOL, stream_get_contents($this->tester->getOutput()->getStream()), '->getOutput() returns the current output instance');
     }
 
     public function testGetDisplay()
     {
-        $this->assertEquals( 'foo'.PHP_EOL, $this->tester->getDisplay(),
-            '->getDisplay() returns the display of the last execution' );
+        $this->assertEquals('foo'.PHP_EOL, $this->tester->getDisplay(), '->getDisplay() returns the display of the last execution');
     }
 
     public function testGetStatusCode()
     {
-        $this->assertSame( 0, $this->tester->getStatusCode(), '->getStatusCode() returns the status code' );
+        $this->assertSame(0, $this->tester->getStatusCode(), '->getStatusCode() returns the status code');
     }
 
     public function testCommandFromApplication()
     {
         $application = new Application();
-        $application->setAutoExit( false );
+        $application->setAutoExit(false);
 
-        $command = new Command( 'foo' );
-        $command->setCode( function ( $input, $output ) {
-            $output->writeln( 'foo' );
-        } );
+        $command = new Command('foo');
+        $command->setCode(function ($input, $output) { $output->writeln('foo'); });
 
-        $application->add( $command );
+        $application->add($command);
 
-        $tester = new CommandTester( $application->find( 'foo' ) );
+        $tester = new CommandTester($application->find('foo'));
 
         // check that there is no need to pass the command name here
-        $this->assertEquals( 0, $tester->execute( [] ) );
+        $this->assertEquals(0, $tester->execute([]));
     }
 
     public function testCommandWithInputs()
@@ -104,21 +95,21 @@ class CommandTesterTest extends TestCase
             'Where do you come from?',
         ];
 
-        $command = new Command( 'foo' );
-        $command->setHelperSet( new HelperSet( [new QuestionHelper()] ) );
-        $command->setCode( function ( $input, $output ) use ( $questions, $command ) {
-            $helper = $command->getHelper( 'question' );
-            $helper->ask( $input, $output, new Question( $questions[ 0 ] ) );
-            $helper->ask( $input, $output, new Question( $questions[ 1 ] ) );
-            $helper->ask( $input, $output, new Question( $questions[ 2 ] ) );
-        } );
+        $command = new Command('foo');
+        $command->setHelperSet(new HelperSet([new QuestionHelper()]));
+        $command->setCode(function ($input, $output) use ($questions, $command) {
+            $helper = $command->getHelper('question');
+            $helper->ask($input, $output, new Question($questions[0]));
+            $helper->ask($input, $output, new Question($questions[1]));
+            $helper->ask($input, $output, new Question($questions[2]));
+        });
 
-        $tester = new CommandTester( $command );
-        $tester->setInputs( ['Bobby', 'Fine', 'France'] );
-        $tester->execute( [] );
+        $tester = new CommandTester($command);
+        $tester->setInputs(['Bobby', 'Fine', 'France']);
+        $tester->execute([]);
 
-        $this->assertEquals( 0, $tester->getStatusCode() );
-        $this->assertEquals( implode( '', $questions ), $tester->getDisplay( true ) );
+        $this->assertEquals(0, $tester->getStatusCode());
+        $this->assertEquals(implode('', $questions), $tester->getDisplay(true));
     }
 
     public function testCommandWithDefaultInputs()
@@ -129,21 +120,21 @@ class CommandTesterTest extends TestCase
             'Where do you come from?',
         ];
 
-        $command = new Command( 'foo' );
-        $command->setHelperSet( new HelperSet( [new QuestionHelper()] ) );
-        $command->setCode( function ( $input, $output ) use ( $questions, $command ) {
-            $helper = $command->getHelper( 'question' );
-            $helper->ask( $input, $output, new Question( $questions[ 0 ], 'Bobby' ) );
-            $helper->ask( $input, $output, new Question( $questions[ 1 ], 'Fine' ) );
-            $helper->ask( $input, $output, new Question( $questions[ 2 ], 'France' ) );
-        } );
+        $command = new Command('foo');
+        $command->setHelperSet(new HelperSet([new QuestionHelper()]));
+        $command->setCode(function ($input, $output) use ($questions, $command) {
+            $helper = $command->getHelper('question');
+            $helper->ask($input, $output, new Question($questions[0], 'Bobby'));
+            $helper->ask($input, $output, new Question($questions[1], 'Fine'));
+            $helper->ask($input, $output, new Question($questions[2], 'France'));
+        });
 
-        $tester = new CommandTester( $command );
-        $tester->setInputs( ['', '', ''] );
-        $tester->execute( [] );
+        $tester = new CommandTester($command);
+        $tester->setInputs(['', '', '']);
+        $tester->execute([]);
 
-        $this->assertEquals( 0, $tester->getStatusCode() );
-        $this->assertEquals( implode( '', $questions ), $tester->getDisplay( true ) );
+        $this->assertEquals(0, $tester->getStatusCode());
+        $this->assertEquals(implode('', $questions), $tester->getDisplay(true));
     }
 
     /**
@@ -158,18 +149,18 @@ class CommandTesterTest extends TestCase
             'Where do you come from?',
         ];
 
-        $command = new Command( 'foo' );
-        $command->setHelperSet( new HelperSet( [new QuestionHelper()] ) );
-        $command->setCode( function ( $input, $output ) use ( $questions, $command ) {
-            $helper = $command->getHelper( 'question' );
-            $helper->ask( $input, $output, new Question( $questions[ 0 ] ) );
-            $helper->ask( $input, $output, new Question( $questions[ 1 ] ) );
-            $helper->ask( $input, $output, new Question( $questions[ 2 ] ) );
-        } );
+        $command = new Command('foo');
+        $command->setHelperSet(new HelperSet([new QuestionHelper()]));
+        $command->setCode(function ($input, $output) use ($questions, $command) {
+            $helper = $command->getHelper('question');
+            $helper->ask($input, $output, new Question($questions[0]));
+            $helper->ask($input, $output, new Question($questions[1]));
+            $helper->ask($input, $output, new Question($questions[2]));
+        });
 
-        $tester = new CommandTester( $command );
-        $tester->setInputs( ['Bobby', 'Fine'] );
-        $tester->execute( [] );
+        $tester = new CommandTester($command);
+        $tester->setInputs(['Bobby', 'Fine']);
+        $tester->execute([]);
     }
 
     public function testSymfonyStyleCommandWithInputs()
@@ -180,18 +171,18 @@ class CommandTesterTest extends TestCase
             'Where do you come from?',
         ];
 
-        $command = new Command( 'foo' );
-        $command->setCode( function ( $input, $output ) use ( $questions, $command ) {
-            $io = new SymfonyStyle( $input, $output );
-            $io->ask( $questions[ 0 ] );
-            $io->ask( $questions[ 1 ] );
-            $io->ask( $questions[ 2 ] );
-        } );
+        $command = new Command('foo');
+        $command->setCode(function ($input, $output) use ($questions, $command) {
+            $io = new SymfonyStyle($input, $output);
+            $io->ask($questions[0]);
+            $io->ask($questions[1]);
+            $io->ask($questions[2]);
+        });
 
-        $tester = new CommandTester( $command );
-        $tester->setInputs( ['Bobby', 'Fine', 'France'] );
-        $tester->execute( [] );
+        $tester = new CommandTester($command);
+        $tester->setInputs(['Bobby', 'Fine', 'France']);
+        $tester->execute([]);
 
-        $this->assertEquals( 0, $tester->getStatusCode() );
+        $this->assertEquals(0, $tester->getStatusCode());
     }
 }

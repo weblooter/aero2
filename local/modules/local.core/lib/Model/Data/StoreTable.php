@@ -464,7 +464,8 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     }
 
     /**
-     * Удалим файл
+     * Удалим файл.<br/>
+     * Удалим все ТП магазина.<br/>
      *
      * @param \Bitrix\Main\ORM\Event $event
      *
@@ -477,6 +478,11 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
         /** @var \Bitrix\Main\ORM\Event $event */
         $arEventParams = $event->getParameters();
         if (!empty($arEventParams['primary'])) {
+
+            /* *********** */
+            /* Удалим файл */
+            /* *********** */
+
             if (self::$__NeedDeleteFileID[$arEventParams['primary']['ID']] > 0) {
                 \Local\Core\Inner\BxModified\CFile::Delete(self::$__NeedDeleteFileID[$arEventParams['primary']['ID']]);
             }
@@ -491,6 +497,19 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             ]);
             while ($ar = $rsStoreTariffLogs->fetch()) {
                 StoreTariffChangeLogTable::delete($ar['ID']);
+            }
+
+            /* ********************** */
+            /* Удалим все ТП магазина */
+            /* ********************** */
+
+            $rsTp = \Local\Core\Model\Data\TradingPlatformTable::getList([
+                'filter' => ['STORE_ID' => $arEventParams['primary']],
+                'select' => ['ID']
+            ]);
+            while ($ar = $rsTp->fetch())
+            {
+                \Local\Core\Model\Data\TradingPlatformTable::delete($ar['ID']);
             }
         }
     }

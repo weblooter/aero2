@@ -120,7 +120,10 @@
                                         <b>"<?=$arResult['TARIFF']['RECOMMEND_TARIFF']['NEXT']['NAME']?>"</b><br />
                                     <? endif; ?>
                                 </p>
-                                <a href="javascript:void(0)" onclick="changeTariff(<?=$arResult['ITEM']['ID']?>, '<?=$arResult['TARIFF']['RECOMMEND_TARIFF']['CODE']?>')" class="btn btn-warning">Перейти на
+                                <?
+                                $strDirection = ( $arResult['TARIFF']['RECOMMEND_TARIFF']['PRICE_PER_TRADING_PLATFORM'] > $arResult['TARIFF']['CURRENT']['PRICE_PER_TRADING_PLATFORM'] ) ? 'up' : 'down';
+                                ?>
+                                <a href="javascript:void(0)" onclick="changeTariff(<?=$arResult['ITEM']['ID']?>, '<?=$arResult['TARIFF']['RECOMMEND_TARIFF']['CODE']?>', '<?=$strDirection?>')" class="btn btn-warning">Перейти на
                                     этот тариф</a>
                             </div>
                         </div>
@@ -271,8 +274,8 @@
 
     function changeTariff($intStoreId, $strTariffCode, $planDirection) {
         var obTextes = {
-            up: 'Выбранный тариф дороже текущего. Мы спишем с Вашего счета средства разницу пропорционально оставшемуся оставшемуся времени до конца расчетного периода. Сменить тариф?',
-            down: 'Выбранный тариф дешевле текущего. Средства, оплаченные за текущий тариф, не будут возвращены. Сменить тариф?'
+            up: 'Выбранный тариф дороже текущего. Мы произведем возврат средств по оплаченным торговым площадкам пропорционально их оставшемуся периоду. После это мы проведем списание средств за каждую активную торговую площадку согласно стоимости выбранного тарифа. Убедитесь, что у Вас хватает средств на счету для оплаты всех активных торговых площадок данного магазина. По торговым площадкам, которые на момент смены тарифного плана были деактивированы, так же произойдет возврат, но активированы они не будут. Сменить тариф?',
+            down: 'Выбранный тариф дешевле текущего. Средства, оплаченные за текущие торговые площадки, не будут возвращены. Сменить тариф?'
         };
         if (confirm(obTextes[$planDirection])) {
             axios.post('/ajax/store/change_tariff/' + $intStoreId + '/' + $strTariffCode + '/')

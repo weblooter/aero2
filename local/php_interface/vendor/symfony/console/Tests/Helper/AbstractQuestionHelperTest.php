@@ -16,18 +16,17 @@ use Symfony\Component\Console\Input\StreamableInputInterface;
 
 abstract class AbstractQuestionHelperTest extends TestCase
 {
-    protected function createStreamableInputInterfaceMock( $stream = null, $interactive = true )
+    protected function createStreamableInputInterfaceMock($stream = null, $interactive = true)
     {
-        $mock = $this->getMockBuilder( StreamableInputInterface::class )->getMock();
-        $mock->expects( $this->any() )
-            ->method( 'isInteractive' )
-            ->will( $this->returnValue( $interactive ) );
+        $mock = $this->getMockBuilder(StreamableInputInterface::class)->getMock();
+        $mock->expects($this->any())
+            ->method('isInteractive')
+            ->will($this->returnValue($interactive));
 
-        if ( $stream )
-        {
-            $mock->expects( $this->any() )
-                ->method( 'getStream' )
-                ->willReturn( $stream );
+        if ($stream) {
+            $mock->expects($this->any())
+                ->method('getStream')
+                ->willReturn($stream);
         }
 
         return $mock;

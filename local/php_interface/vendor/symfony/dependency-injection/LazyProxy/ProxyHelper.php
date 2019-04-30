@@ -19,49 +19,38 @@ namespace Symfony\Component\DependencyInjection\LazyProxy;
 class ProxyHelper
 {
     /**
-     * @return string|null The FQCN or builtin name of the type hint, or null when the type hint references an invalid
-     *     self|parent context
+     * @return string|null The FQCN or builtin name of the type hint, or null when the type hint references an invalid self|parent context
      */
-    public static function getTypeHint( \ReflectionFunctionAbstract $r, \ReflectionParameter $p = null, $noBuiltin = false )
+    public static function getTypeHint(\ReflectionFunctionAbstract $r, \ReflectionParameter $p = null, $noBuiltin = false)
     {
-        if ( $p instanceof \ReflectionParameter )
-        {
+        if ($p instanceof \ReflectionParameter) {
             $type = $p->getType();
-        }
-        else
-        {
+        } else {
             $type = $r->getReturnType();
         }
-        if ( !$type )
-        {
+        if (!$type) {
             return;
         }
-        if ( !\is_string( $type ) )
-        {
+        if (!\is_string($type)) {
             $name = $type->getName();
 
-            if ( $type->isBuiltin() )
-            {
+            if ($type->isBuiltin()) {
                 return $noBuiltin ? null : $name;
             }
         }
-        $lcName = strtolower( $name );
+        $lcName = strtolower($name);
         $prefix = $noBuiltin ? '' : '\\';
 
-        if ( 'self' !== $lcName && 'parent' !== $lcName )
-        {
+        if ('self' !== $lcName && 'parent' !== $lcName) {
             return $prefix.$name;
         }
-        if ( !$r instanceof \ReflectionMethod )
-        {
+        if (!$r instanceof \ReflectionMethod) {
             return;
         }
-        if ( 'self' === $lcName )
-        {
+        if ('self' === $lcName) {
             return $prefix.$r->getDeclaringClass()->name;
         }
-        if ( $parent = $r->getDeclaringClass()->getParentClass() )
-        {
+        if ($parent = $r->getDeclaringClass()->getParentClass()) {
             return $prefix.$parent->name;
         }
     }

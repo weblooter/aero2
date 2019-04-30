@@ -21,7 +21,7 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    private static function __fillStoreRegister($strTariffCode)
+    private static function __fillTariffRegister($strTariffCode)
     {
         if (is_null(self::$__register[$strTariffCode])) {
             $arTmp = \Local\Core\Model\Data\TariffTable::getList([
@@ -43,9 +43,9 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    private static function __getStoreRegister($strTariffCode)
+    private static function __getTariffRegister($strTariffCode)
     {
-        self::__fillStoreRegister($strTariffCode);
+        self::__fillTariffRegister($strTariffCode);
         return self::$__register[$strTariffCode];
     }
 
@@ -75,18 +75,43 @@ class Base
      *
      * @param $strTariffCode
      *
-     * @return array|false
+     * @return array|null
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
     public static function getTariffByCode($strTariffCode)
     {
-        return \Local\Core\Model\Data\TariffTable::getList([
-            'filter' => [
-                'CODE' => $strTariffCode
-            ]
-        ])
-            ->fetch();
+        return self::__getTariffRegister($strTariffCode);
+    }
+
+    /**
+     * Получить стоимость тарифа
+     *
+     * @param $strTariffCode
+     *
+     * @return null|string
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getPrice($strTariffCode)
+    {
+        return self::__getTariffRegister($strTariffCode)['PRICE_PER_TRADING_PLATFORM'];
+    }
+
+    /**
+     * Получить статус активности
+     *
+     * @param $strTariffCode
+     *
+     * @return null|Y|N
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getActiveStatus($strTariffCode)
+    {
+        return self::__getTariffRegister($strTariffCode)['ACTIVE'];
     }
 }

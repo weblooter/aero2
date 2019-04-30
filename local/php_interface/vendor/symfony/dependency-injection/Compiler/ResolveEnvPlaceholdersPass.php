@@ -18,30 +18,25 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class ResolveEnvPlaceholdersPass extends AbstractRecursivePass
 {
-    protected function processValue( $value, $isRoot = false )
+    protected function processValue($value, $isRoot = false)
     {
-        if ( \is_string( $value ) )
-        {
-            return $this->container->resolveEnvPlaceholders( $value, true );
+        if (\is_string($value)) {
+            return $this->container->resolveEnvPlaceholders($value, true);
         }
-        if ( $value instanceof Definition )
-        {
+        if ($value instanceof Definition) {
             $changes = $value->getChanges();
-            if ( isset( $changes[ 'class' ] ) )
-            {
-                $value->setClass( $this->container->resolveEnvPlaceholders( $value->getClass(), true ) );
+            if (isset($changes['class'])) {
+                $value->setClass($this->container->resolveEnvPlaceholders($value->getClass(), true));
             }
-            if ( isset( $changes[ 'file' ] ) )
-            {
-                $value->setFile( $this->container->resolveEnvPlaceholders( $value->getFile(), true ) );
+            if (isset($changes['file'])) {
+                $value->setFile($this->container->resolveEnvPlaceholders($value->getFile(), true));
             }
         }
 
-        $value = parent::processValue( $value, $isRoot );
+        $value = parent::processValue($value, $isRoot);
 
-        if ( $value && \is_array( $value ) && !$isRoot )
-        {
-            $value = array_combine( $this->container->resolveEnvPlaceholders( array_keys( $value ), true ), $value );
+        if ($value && \is_array($value) && !$isRoot) {
+            $value = array_combine($this->container->resolveEnvPlaceholders(array_keys($value), true), $value);
         }
 
         return $value;

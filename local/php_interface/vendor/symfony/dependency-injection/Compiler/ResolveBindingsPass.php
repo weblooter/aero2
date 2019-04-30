@@ -32,29 +32,22 @@ class ResolveBindingsPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    public function process( ContainerBuilder $container )
+    public function process(ContainerBuilder $container)
     {
-        try
-        {
-            parent::process( $container );
+        try {
+            parent::process($container);
 
-            foreach ( $this->unusedBindings as list( $key, $serviceId ) )
-            {
-                $message = sprintf( 'Unused binding "%s" in service "%s".', $key, $serviceId );
-                if ( $this->errorMessages )
-                {
-                    $message .= sprintf( "\nCould be related to%s:",
-                        1 < \count( $this->errorMessages ) ? ' one of' : '' );
+            foreach ($this->unusedBindings as list($key, $serviceId)) {
+                $message = sprintf('Unused binding "%s" in service "%s".', $key, $serviceId);
+                if ($this->errorMessages) {
+                    $message .= sprintf("\nCould be related to%s:", 1 < \count($this->errorMessages) ? ' one of' : '');
                 }
-                foreach ( $this->errorMessages as $m )
-                {
+                foreach ($this->errorMessages as $m) {
                     $message .= "\n - ".$m;
                 }
-                throw new InvalidArgumentException( $message );
+                throw new InvalidArgumentException($message);
             }
-        }
-        finally
-        {
+        } finally {
             $this->usedBindings = [];
             $this->unusedBindings = [];
             $this->errorMessages = [];
@@ -64,141 +57,114 @@ class ResolveBindingsPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    protected function processValue( $value, $isRoot = false )
+    protected function processValue($value, $isRoot = false)
     {
-        if ( $value instanceof TypedReference && $value->getType() === (string)$value )
-        {
+        if ($value instanceof TypedReference && $value->getType() === (string) $value) {
             // Already checked
-            $bindings = $this->container->getDefinition( $this->currentId )->getBindings();
+            $bindings = $this->container->getDefinition($this->currentId)->getBindings();
 
-            if ( isset( $bindings[ $value->getType() ] ) )
-            {
-                return $this->getBindingValue( $bindings[ $value->getType() ] );
+            if (isset($bindings[$value->getType()])) {
+                return $this->getBindingValue($bindings[$value->getType()]);
             }
 
-            return parent::processValue( $value, $isRoot );
+            return parent::processValue($value, $isRoot);
         }
 
-        if ( !$value instanceof Definition || !$bindings = $value->getBindings() )
-        {
-            return parent::processValue( $value, $isRoot );
+        if (!$value instanceof Definition || !$bindings = $value->getBindings()) {
+            return parent::processValue($value, $isRoot);
         }
 
-        foreach ( $bindings as $key => $binding )
-        {
-            list( $bindingValue, $bindingId, $used ) = $binding->getValues();
-            if ( $used )
-            {
-                $this->usedBindings[ $bindingId ] = true;
-                unset( $this->unusedBindings[ $bindingId ] );
-            }
-            elseif ( !isset( $this->usedBindings[ $bindingId ] ) )
-            {
-                $this->unusedBindings[ $bindingId ] = [$key, $this->currentId];
+        foreach ($bindings as $key => $binding) {
+            list($bindingValue, $bindingId, $used) = $binding->getValues();
+            if ($used) {
+                $this->usedBindings[$bindingId] = true;
+                unset($this->unusedBindings[$bindingId]);
+            } elseif (!isset($this->usedBindings[$bindingId])) {
+                $this->unusedBindings[$bindingId] = [$key, $this->currentId];
             }
 
-            if ( isset( $key[ 0 ] ) && '$' === $key[ 0 ] )
-            {
+            if (isset($key[0]) && '$' === $key[0]) {
                 continue;
             }
 
-            if ( null !== $bindingValue && !$bindingValue instanceof Reference && !$bindingValue instanceof Definition )
-            {
-                throw new InvalidArgumentException( sprintf( 'Invalid value for binding key "%s" for service "%s": expected null, an instance of %s or an instance of %s, %s given.',
-                    $key, $this->currentId, Reference::class, Definition::class, \gettype( $bindingValue ) ) );
+            if (null !== $bindingValue && !$bindingValue instanceof Reference && !$bindingValue instanceof Definition) {
+                throw new InvalidArgumentException(sprintf('Invalid value for binding key "%s" for service "%s": expected null, an instance of %s or an instance of %s, %s given.', $key, $this->currentId, Reference::class, Definition::class, \gettype($bindingValue)));
             }
         }
 
-        if ( $value->isAbstract() )
-        {
-            return parent::processValue( $value, $isRoot );
+        if ($value->isAbstract()) {
+            return parent::processValue($value, $isRoot);
         }
 
         $calls = $value->getMethodCalls();
 
-        try
-        {
-            if ( $constructor = $this->getConstructor( $value, false ) )
-            {
+        try {
+            if ($constructor = $this->getConstructor($value, false)) {
                 $calls[] = [$constructor, $value->getArguments()];
             }
-        }
-        catch ( RuntimeException $e )
-        {
+        } catch (RuntimeException $e) {
             $this->errorMessages[] = $e->getMessage();
-            $this->container->getDefinition( $this->currentId )->addError( $e->getMessage() );
+            $this->container->getDefinition($this->currentId)->addError($e->getMessage());
 
-            return parent::processValue( $value, $isRoot );
+            return parent::processValue($value, $isRoot);
         }
 
-        foreach ( $calls as $i => $call )
-        {
-            list( $method, $arguments ) = $call;
+        foreach ($calls as $i => $call) {
+            list($method, $arguments) = $call;
 
-            if ( $method instanceof \ReflectionFunctionAbstract )
-            {
+            if ($method instanceof \ReflectionFunctionAbstract) {
                 $reflectionMethod = $method;
-            }
-            else
-            {
-                $reflectionMethod = $this->getReflectionMethod( $value, $method );
+            } else {
+                $reflectionMethod = $this->getReflectionMethod($value, $method);
             }
 
-            foreach ( $reflectionMethod->getParameters() as $key => $parameter )
-            {
-                if ( array_key_exists( $key, $arguments ) && '' !== $arguments[ $key ] )
-                {
+            foreach ($reflectionMethod->getParameters() as $key => $parameter) {
+                if (array_key_exists($key, $arguments) && '' !== $arguments[$key]) {
                     continue;
                 }
 
-                if ( array_key_exists( '$'.$parameter->name, $bindings ) )
-                {
-                    $arguments[ $key ] = $this->getBindingValue( $bindings[ '$'.$parameter->name ] );
+                if (array_key_exists('$'.$parameter->name, $bindings)) {
+                    $arguments[$key] = $this->getBindingValue($bindings['$'.$parameter->name]);
 
                     continue;
                 }
 
-                $typeHint = ProxyHelper::getTypeHint( $reflectionMethod, $parameter, true );
+                $typeHint = ProxyHelper::getTypeHint($reflectionMethod, $parameter, true);
 
-                if ( !isset( $bindings[ $typeHint ] ) )
-                {
+                if (!isset($bindings[$typeHint])) {
                     continue;
                 }
 
-                $arguments[ $key ] = $this->getBindingValue( $bindings[ $typeHint ] );
+                $arguments[$key] = $this->getBindingValue($bindings[$typeHint]);
             }
 
-            if ( $arguments !== $call[ 1 ] )
-            {
-                ksort( $arguments );
-                $calls[ $i ][ 1 ] = $arguments;
-            }
-        }
-
-        if ( $constructor )
-        {
-            list( , $arguments ) = array_pop( $calls );
-
-            if ( $arguments !== $value->getArguments() )
-            {
-                $value->setArguments( $arguments );
+            if ($arguments !== $call[1]) {
+                ksort($arguments);
+                $calls[$i][1] = $arguments;
             }
         }
 
-        if ( $calls !== $value->getMethodCalls() )
-        {
-            $value->setMethodCalls( $calls );
+        if ($constructor) {
+            list(, $arguments) = array_pop($calls);
+
+            if ($arguments !== $value->getArguments()) {
+                $value->setArguments($arguments);
+            }
         }
 
-        return parent::processValue( $value, $isRoot );
+        if ($calls !== $value->getMethodCalls()) {
+            $value->setMethodCalls($calls);
+        }
+
+        return parent::processValue($value, $isRoot);
     }
 
-    private function getBindingValue( BoundArgument $binding )
+    private function getBindingValue(BoundArgument $binding)
     {
-        list( $bindingValue, $bindingId ) = $binding->getValues();
+        list($bindingValue, $bindingId) = $binding->getValues();
 
-        $this->usedBindings[ $bindingId ] = true;
-        unset( $this->unusedBindings[ $bindingId ] );
+        $this->usedBindings[$bindingId] = true;
+        unset($this->unusedBindings[$bindingId]);
 
         return $bindingValue;
     }

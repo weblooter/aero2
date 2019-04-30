@@ -30,87 +30,85 @@ class ResolveBindingsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $bindings = [CaseSensitiveClass::class => new BoundArgument( new Reference( 'foo' ) )];
+        $bindings = [CaseSensitiveClass::class => new BoundArgument(new Reference('foo'))];
 
-        $definition = $container->register( NamedArgumentsDummy::class, NamedArgumentsDummy::class );
-        $definition->setArguments( [1 => '123'] );
-        $definition->addMethodCall( 'setSensitiveClass' );
-        $definition->setBindings( $bindings );
+        $definition = $container->register(NamedArgumentsDummy::class, NamedArgumentsDummy::class);
+        $definition->setArguments([1 => '123']);
+        $definition->addMethodCall('setSensitiveClass');
+        $definition->setBindings($bindings);
 
-        $container->register( 'foo', CaseSensitiveClass::class )
-            ->setBindings( $bindings );
+        $container->register('foo', CaseSensitiveClass::class)
+            ->setBindings($bindings);
 
         $pass = new ResolveBindingsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertEquals( [new Reference( 'foo' ), '123'], $definition->getArguments() );
-        $this->assertEquals( [['setSensitiveClass', [new Reference( 'foo' )]]], $definition->getMethodCalls() );
+        $this->assertEquals([new Reference('foo'), '123'], $definition->getArguments());
+        $this->assertEquals([['setSensitiveClass', [new Reference('foo')]]], $definition->getMethodCalls());
     }
 
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Unused binding "$quz" in service
-     *     "Symfony\Component\DependencyInjection\Tests\Fixtures\NamedArgumentsDummy".
+     * @expectedExceptionMessage Unused binding "$quz" in service "Symfony\Component\DependencyInjection\Tests\Fixtures\NamedArgumentsDummy".
      */
     public function testUnusedBinding()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( NamedArgumentsDummy::class, NamedArgumentsDummy::class );
-        $definition->setBindings( ['$quz' => '123'] );
+        $definition = $container->register(NamedArgumentsDummy::class, NamedArgumentsDummy::class);
+        $definition->setBindings(['$quz' => '123']);
 
         $pass = new ResolveBindingsPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessageRegexp Unused binding "$quz" in service [\s\S]+ Invalid service ".*\\ParentNotExists":
-     *     class NotExists not found\.
+     * @expectedExceptionMessageRegexp Unused binding "$quz" in service [\s\S]+ Invalid service ".*\\ParentNotExists": class NotExists not found\.
      */
     public function testMissingParent()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->register( ParentNotExists::class, ParentNotExists::class );
-        $definition->setBindings( ['$quz' => '123'] );
+        $definition = $container->register(ParentNotExists::class, ParentNotExists::class);
+        $definition->setBindings(['$quz' => '123']);
 
         $pass = new ResolveBindingsPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     public function testTypedReferenceSupport()
     {
         $container = new ContainerBuilder();
 
-        $bindings = [CaseSensitiveClass::class => new BoundArgument( new Reference( 'foo' ) )];
+        $bindings = [CaseSensitiveClass::class => new BoundArgument(new Reference('foo'))];
 
         // Explicit service id
-        $definition1 = $container->register( 'def1', NamedArgumentsDummy::class );
-        $definition1->addArgument( $typedRef = new TypedReference( 'bar', CaseSensitiveClass::class ) );
-        $definition1->setBindings( $bindings );
+        $definition1 = $container->register('def1', NamedArgumentsDummy::class);
+        $definition1->addArgument($typedRef = new TypedReference('bar', CaseSensitiveClass::class));
+        $definition1->setBindings($bindings);
 
-        $definition2 = $container->register( 'def2', NamedArgumentsDummy::class );
-        $definition2->addArgument( new TypedReference( CaseSensitiveClass::class, CaseSensitiveClass::class ) );
-        $definition2->setBindings( $bindings );
+        $definition2 = $container->register('def2', NamedArgumentsDummy::class);
+        $definition2->addArgument(new TypedReference(CaseSensitiveClass::class, CaseSensitiveClass::class));
+        $definition2->setBindings($bindings);
 
         $pass = new ResolveBindingsPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertEquals( [$typedRef], $container->getDefinition( 'def1' )->getArguments() );
-        $this->assertEquals( [new Reference( 'foo' )], $container->getDefinition( 'def2' )->getArguments() );
+        $this->assertEquals([$typedRef], $container->getDefinition('def1')->getArguments());
+        $this->assertEquals([new Reference('foo')], $container->getDefinition('def2')->getArguments());
     }
 
     public function testScalarSetter()
     {
         $container = new ContainerBuilder();
 
-        $definition = $container->autowire( 'foo', ScalarSetter::class );
-        $definition->setBindings( ['$defaultLocale' => 'fr'] );
+        $definition = $container->autowire('foo', ScalarSetter::class);
+        $definition->setBindings(['$defaultLocale' => 'fr']);
 
-        ( new AutowireRequiredMethodsPass() )->process( $container );
-        ( new ResolveBindingsPass() )->process( $container );
+        (new AutowireRequiredMethodsPass())->process($container);
+        (new ResolveBindingsPass())->process($container);
 
-        $this->assertEquals( [['setDefaultLocale', ['fr']]], $definition->getMethodCalls() );
+        $this->assertEquals([['setDefaultLocale', ['fr']]], $definition->getMethodCalls());
     }
 }

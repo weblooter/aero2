@@ -25,14 +25,13 @@ class ResolveTaggedIteratorArgumentPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    protected function processValue( $value, $isRoot = false )
+    protected function processValue($value, $isRoot = false)
     {
-        if ( !$value instanceof TaggedIteratorArgument )
-        {
-            return parent::processValue( $value, $isRoot );
+        if (!$value instanceof TaggedIteratorArgument) {
+            return parent::processValue($value, $isRoot);
         }
 
-        $value->setValues( $this->findAndSortTaggedServices( $value->getTag(), $this->container ) );
+        $value->setValues($this->findAndSortTaggedServices($value->getTag(), $this->container));
 
         return $value;
     }

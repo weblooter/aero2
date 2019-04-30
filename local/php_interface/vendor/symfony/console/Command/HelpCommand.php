@@ -34,15 +34,14 @@ class HelpCommand extends Command
         $this->ignoreValidationErrors();
 
         $this
-            ->setName( 'help' )
-            ->setDefinition( [
-                new InputArgument( 'command_name', InputArgument::OPTIONAL, 'The command name', 'help' ),
-                new InputOption( 'format', null, InputOption::VALUE_REQUIRED,
-                    'The output format (txt, xml, json, or md)', 'txt' ),
-                new InputOption( 'raw', null, InputOption::VALUE_NONE, 'To output raw command help' ),
-            ] )
-            ->setDescription( 'Displays help for a command' )
-            ->setHelp( <<<'EOF'
+            ->setName('help')
+            ->setDefinition([
+                new InputArgument('command_name', InputArgument::OPTIONAL, 'The command name', 'help'),
+                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, xml, json, or md)', 'txt'),
+                new InputOption('raw', null, InputOption::VALUE_NONE, 'To output raw command help'),
+            ])
+            ->setDescription('Displays help for a command')
+            ->setHelp(<<<'EOF'
 The <info>%command.name%</info> command displays help for a given command:
 
   <info>php %command.full_name% list</info>
@@ -53,10 +52,11 @@ You can also output the help in other formats by using the <comment>--format</co
 
 To display the list of available commands, please use the <info>list</info> command.
 EOF
-            );
+            )
+        ;
     }
 
-    public function setCommand( Command $command )
+    public function setCommand(Command $command)
     {
         $this->command = $command;
     }
@@ -64,18 +64,17 @@ EOF
     /**
      * {@inheritdoc}
      */
-    protected function execute( InputInterface $input, OutputInterface $output )
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ( null === $this->command )
-        {
-            $this->command = $this->getApplication()->find( $input->getArgument( 'command_name' ) );
+        if (null === $this->command) {
+            $this->command = $this->getApplication()->find($input->getArgument('command_name'));
         }
 
         $helper = new DescriptorHelper();
-        $helper->describe( $output, $this->command, [
-            'format' => $input->getOption( 'format' ),
-            'raw_text' => $input->getOption( 'raw' ),
-        ] );
+        $helper->describe($output, $this->command, [
+            'format' => $input->getOption('format'),
+            'raw_text' => $input->getOption('raw'),
+        ]);
 
         $this->command = null;
     }

@@ -21,17 +21,19 @@ class ResolvePrivatesPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $container->register( 'foo', 'stdClass' )
-            ->setPublic( true )
-            ->setPrivate( true );
+        $container->register('foo', 'stdClass')
+            ->setPublic(true)
+            ->setPrivate(true)
+        ;
 
-        $container->setAlias( 'bar', 'foo' )
-            ->setPublic( false )
-            ->setPrivate( false );
+        $container->setAlias('bar', 'foo')
+            ->setPublic(false)
+            ->setPrivate(false)
+        ;
 
-        ( new ResolvePrivatesPass() )->process( $container );
+        (new ResolvePrivatesPass())->process($container);
 
-        $this->assertFalse( $container->getDefinition( 'foo' )->isPublic() );
-        $this->assertFalse( $container->getAlias( 'bar' )->isPublic() );
+        $this->assertFalse($container->getDefinition('foo')->isPublic());
+        $this->assertFalse($container->getAlias('bar')->isPublic());
     }
 }

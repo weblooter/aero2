@@ -27,10 +27,10 @@ class CheckCircularReferencesPassTest extends TestCase
     public function testProcess()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
-        $container->register( 'b' )->addArgument( new Reference( 'a' ) );
+        $container->register('a')->addArgument(new Reference('b'));
+        $container->register('b')->addArgument(new Reference('a'));
 
-        $this->process( $container );
+        $this->process($container);
     }
 
     /**
@@ -39,11 +39,11 @@ class CheckCircularReferencesPassTest extends TestCase
     public function testProcessWithAliases()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
-        $container->setAlias( 'b', 'c' );
-        $container->setAlias( 'c', 'a' );
+        $container->register('a')->addArgument(new Reference('b'));
+        $container->setAlias('b', 'c');
+        $container->setAlias('c', 'a');
 
-        $this->process( $container );
+        $this->process($container);
     }
 
     /**
@@ -54,14 +54,14 @@ class CheckCircularReferencesPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $container
-            ->register( 'a', 'stdClass' )
-            ->setFactory( [new Reference( 'b' ), 'getInstance'] );
+            ->register('a', 'stdClass')
+            ->setFactory([new Reference('b'), 'getInstance']);
 
         $container
-            ->register( 'b', 'stdClass' )
-            ->setFactory( [new Reference( 'a' ), 'getInstance'] );
+            ->register('b', 'stdClass')
+            ->setFactory([new Reference('a'), 'getInstance']);
 
-        $this->process( $container );
+        $this->process($container);
     }
 
     /**
@@ -70,11 +70,11 @@ class CheckCircularReferencesPassTest extends TestCase
     public function testProcessDetectsIndirectCircularReference()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
-        $container->register( 'b' )->addArgument( new Reference( 'c' ) );
-        $container->register( 'c' )->addArgument( new Reference( 'a' ) );
+        $container->register('a')->addArgument(new Reference('b'));
+        $container->register('b')->addArgument(new Reference('c'));
+        $container->register('c')->addArgument(new Reference('a'));
 
-        $this->process( $container );
+        $this->process($container);
     }
 
     /**
@@ -84,15 +84,15 @@ class CheckCircularReferencesPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
+        $container->register('a')->addArgument(new Reference('b'));
 
         $container
-            ->register( 'b', 'stdClass' )
-            ->setFactory( [new Reference( 'c' ), 'getInstance'] );
+            ->register('b', 'stdClass')
+            ->setFactory([new Reference('c'), 'getInstance']);
 
-        $container->register( 'c' )->addArgument( new Reference( 'a' ) );
+        $container->register('c')->addArgument(new Reference('a'));
 
-        $this->process( $container );
+        $this->process($container);
     }
 
     /**
@@ -101,58 +101,58 @@ class CheckCircularReferencesPassTest extends TestCase
     public function testDeepCircularReference()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
-        $container->register( 'b' )->addArgument( new Reference( 'c' ) );
-        $container->register( 'c' )->addArgument( new Reference( 'b' ) );
+        $container->register('a')->addArgument(new Reference('b'));
+        $container->register('b')->addArgument(new Reference('c'));
+        $container->register('c')->addArgument(new Reference('b'));
 
-        $this->process( $container );
+        $this->process($container);
     }
 
     public function testProcessIgnoresMethodCalls()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
-        $container->register( 'b' )->addMethodCall( 'setA', [new Reference( 'a' )] );
+        $container->register('a')->addArgument(new Reference('b'));
+        $container->register('b')->addMethodCall('setA', [new Reference('a')]);
 
-        $this->process( $container );
+        $this->process($container);
 
-        $this->addToAssertionCount( 1 );
+        $this->addToAssertionCount(1);
     }
 
     public function testProcessIgnoresLazyServices()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a' )->setLazy( true )->addArgument( new Reference( 'b' ) );
-        $container->register( 'b' )->addArgument( new Reference( 'a' ) );
+        $container->register('a')->setLazy(true)->addArgument(new Reference('b'));
+        $container->register('b')->addArgument(new Reference('a'));
 
-        $this->process( $container );
+        $this->process($container);
 
         // just make sure that a lazily loaded service does not trigger a CircularReferenceException
-        $this->addToAssertionCount( 1 );
+        $this->addToAssertionCount(1);
     }
 
     public function testProcessIgnoresIteratorArguments()
     {
         $container = new ContainerBuilder();
-        $container->register( 'a' )->addArgument( new Reference( 'b' ) );
-        $container->register( 'b' )->addArgument( new IteratorArgument( [new Reference( 'a' )] ) );
+        $container->register('a')->addArgument(new Reference('b'));
+        $container->register('b')->addArgument(new IteratorArgument([new Reference('a')]));
 
-        $this->process( $container );
+        $this->process($container);
 
         // just make sure that an IteratorArgument does not trigger a CircularReferenceException
-        $this->addToAssertionCount( 1 );
+        $this->addToAssertionCount(1);
     }
 
-    protected function process( ContainerBuilder $container )
+    protected function process(ContainerBuilder $container)
     {
         $compiler = new Compiler();
         $passConfig = $compiler->getPassConfig();
-        $passConfig->setOptimizationPasses( [
-            new AnalyzeServiceReferencesPass( true ),
+        $passConfig->setOptimizationPasses([
+            new AnalyzeServiceReferencesPass(true),
             new CheckCircularReferencesPass(),
-        ] );
-        $passConfig->setRemovingPasses( [] );
+        ]);
+        $passConfig->setRemovingPasses([]);
 
-        $compiler->compile( $container );
+        $compiler->compile($container);
     }
 }

@@ -53,9 +53,9 @@ class Container implements ResettableContainerInterface
     private $compiled = false;
     private $getEnv;
 
-    public function __construct( ParameterBagInterface $parameterBag = null )
+    public function __construct(ParameterBagInterface $parameterBag = null)
     {
-        $this->parameterBag = $parameterBag ? : new EnvPlaceholderParameterBag();
+        $this->parameterBag = $parameterBag ?: new EnvPlaceholderParameterBag();
     }
 
     /**
@@ -70,7 +70,7 @@ class Container implements ResettableContainerInterface
     {
         $this->parameterBag->resolve();
 
-        $this->parameterBag = new FrozenParameterBag( $this->parameterBag->all() );
+        $this->parameterBag = new FrozenParameterBag($this->parameterBag->all());
 
         $this->compiled = true;
     }
@@ -104,9 +104,9 @@ class Container implements ResettableContainerInterface
      *
      * @throws InvalidArgumentException if the parameter is not defined
      */
-    public function getParameter( $name )
+    public function getParameter($name)
     {
-        return $this->parameterBag->get( $name );
+        return $this->parameterBag->get($name);
     }
 
     /**
@@ -116,20 +116,20 @@ class Container implements ResettableContainerInterface
      *
      * @return bool The presence of parameter in container
      */
-    public function hasParameter( $name )
+    public function hasParameter($name)
     {
-        return $this->parameterBag->has( $name );
+        return $this->parameterBag->has($name);
     }
 
     /**
      * Sets a parameter.
      *
-     * @param string $name The parameter name
+     * @param string $name  The parameter name
      * @param mixed  $value The parameter value
      */
-    public function setParameter( $name, $value )
+    public function setParameter($name, $value)
     {
-        $this->parameterBag->set( $name, $value );
+        $this->parameterBag->set($name, $value);
     }
 
     /**
@@ -138,60 +138,45 @@ class Container implements ResettableContainerInterface
      * Setting a service to null resets the service: has() returns false and get()
      * behaves in the same way as if the service was never created.
      *
-     * @param string $id The service identifier
+     * @param string $id      The service identifier
      * @param object $service The service instance
      */
-    public function set( $id, $service )
+    public function set($id, $service)
     {
         // Runs the internal initializer; used by the dumped container to include always-needed files
-        if ( isset( $this->privates[ 'service_container' ] ) && $this->privates[ 'service_container' ] instanceof \Closure )
-        {
-            $initialize = $this->privates[ 'service_container' ];
-            unset( $this->privates[ 'service_container' ] );
+        if (isset($this->privates['service_container']) && $this->privates['service_container'] instanceof \Closure) {
+            $initialize = $this->privates['service_container'];
+            unset($this->privates['service_container']);
             $initialize();
         }
 
-        if ( 'service_container' === $id )
-        {
-            throw new InvalidArgumentException( 'You cannot set service "service_container".' );
+        if ('service_container' === $id) {
+            throw new InvalidArgumentException('You cannot set service "service_container".');
         }
 
-        if ( !( isset( $this->fileMap[ $id ] ) || isset( $this->methodMap[ $id ] ) ) )
-        {
-            if ( isset( $this->syntheticIds[ $id ] ) || !isset( $this->getRemovedIds()[ $id ] ) )
-            {
+        if (!(isset($this->fileMap[$id]) || isset($this->methodMap[$id]))) {
+            if (isset($this->syntheticIds[$id]) || !isset($this->getRemovedIds()[$id])) {
                 // no-op
+            } elseif (null === $service) {
+                throw new InvalidArgumentException(sprintf('The "%s" service is private, you cannot unset it.', $id));
+            } else {
+                throw new InvalidArgumentException(sprintf('The "%s" service is private, you cannot replace it.', $id));
             }
-            elseif ( null === $service )
-            {
-                throw new InvalidArgumentException( sprintf( 'The "%s" service is private, you cannot unset it.',
-                    $id ) );
-            }
-            else
-            {
-                throw new InvalidArgumentException( sprintf( 'The "%s" service is private, you cannot replace it.',
-                    $id ) );
-            }
-        }
-        elseif ( isset( $this->services[ $id ] ) )
-        {
-            throw new InvalidArgumentException( sprintf( 'The "%s" service is already initialized, you cannot replace it.',
-                $id ) );
+        } elseif (isset($this->services[$id])) {
+            throw new InvalidArgumentException(sprintf('The "%s" service is already initialized, you cannot replace it.', $id));
         }
 
-        if ( isset( $this->aliases[ $id ] ) )
-        {
-            unset( $this->aliases[ $id ] );
+        if (isset($this->aliases[$id])) {
+            unset($this->aliases[$id]);
         }
 
-        if ( null === $service )
-        {
-            unset( $this->services[ $id ] );
+        if (null === $service) {
+            unset($this->services[$id]);
 
             return;
         }
 
-        $this->services[ $id ] = $service;
+        $this->services[$id] = $service;
     }
 
     /**
@@ -201,28 +186,25 @@ class Container implements ResettableContainerInterface
      *
      * @return bool true if the service is defined, false otherwise
      */
-    public function has( $id )
+    public function has($id)
     {
-        if ( isset( $this->aliases[ $id ] ) )
-        {
-            $id = $this->aliases[ $id ];
+        if (isset($this->aliases[$id])) {
+            $id = $this->aliases[$id];
         }
-        if ( isset( $this->services[ $id ] ) )
-        {
+        if (isset($this->services[$id])) {
             return true;
         }
-        if ( 'service_container' === $id )
-        {
+        if ('service_container' === $id) {
             return true;
         }
 
-        return isset( $this->fileMap[ $id ] ) || isset( $this->methodMap[ $id ] );
+        return isset($this->fileMap[$id]) || isset($this->methodMap[$id]);
     }
 
     /**
      * Gets a service.
      *
-     * @param string $id The service identifier
+     * @param string $id              The service identifier
      * @param int    $invalidBehavior The behavior when the service does not exist
      *
      * @return object The associated service
@@ -233,14 +215,11 @@ class Container implements ResettableContainerInterface
      *
      * @see Reference
      */
-    public function get(
-        $id, $invalidBehavior = /* self::EXCEPTION_ON_INVALID_REFERENCE */
-    1
-    ) {
-        return $this->services[ $id ]
-               ?? $this->services[ $id = $this->aliases[ $id ] ?? $id ]
-                  ?? ( 'service_container' === $id ? $this : ( $this->factories[ $id ] ?? [$this, 'make'] )( $id,
-                $invalidBehavior ) );
+    public function get($id, $invalidBehavior = /* self::EXCEPTION_ON_INVALID_REFERENCE */ 1)
+    {
+        return $this->services[$id]
+            ?? $this->services[$id = $this->aliases[$id] ?? $id]
+            ?? ('service_container' === $id ? $this : ($this->factories[$id] ?? [$this, 'make'])($id, $invalidBehavior));
     }
 
     /**
@@ -248,74 +227,51 @@ class Container implements ResettableContainerInterface
      *
      * As a separate method to allow "get()" to use the really fast `??` operator.
      */
-    private function make( string $id, int $invalidBehavior )
+    private function make(string $id, int $invalidBehavior)
     {
-        if ( isset( $this->loading[ $id ] ) )
-        {
-            throw new ServiceCircularReferenceException( $id, array_merge( array_keys( $this->loading ), [$id] ) );
+        if (isset($this->loading[$id])) {
+            throw new ServiceCircularReferenceException($id, array_merge(array_keys($this->loading), [$id]));
         }
 
-        $this->loading[ $id ] = true;
+        $this->loading[$id] = true;
 
-        try
-        {
-            if ( isset( $this->fileMap[ $id ] ) )
-            {
-                return /* self::IGNORE_ON_UNINITIALIZED_REFERENCE */
-                    4 === $invalidBehavior ? null : $this->load( $this->fileMap[ $id ] );
+        try {
+            if (isset($this->fileMap[$id])) {
+                return /* self::IGNORE_ON_UNINITIALIZED_REFERENCE */ 4 === $invalidBehavior ? null : $this->load($this->fileMap[$id]);
+            } elseif (isset($this->methodMap[$id])) {
+                return /* self::IGNORE_ON_UNINITIALIZED_REFERENCE */ 4 === $invalidBehavior ? null : $this->{$this->methodMap[$id]}();
             }
-            elseif ( isset( $this->methodMap[ $id ] ) )
-            {
-                return /* self::IGNORE_ON_UNINITIALIZED_REFERENCE */
-                    4 === $invalidBehavior ? null : $this->{$this->methodMap[ $id ]}();
-            }
-        }
-        catch ( \Exception $e )
-        {
-            unset( $this->services[ $id ] );
+        } catch (\Exception $e) {
+            unset($this->services[$id]);
 
             throw $e;
-        }
-        finally
-        {
-            unset( $this->loading[ $id ] );
+        } finally {
+            unset($this->loading[$id]);
         }
 
-        if (/* self::EXCEPTION_ON_INVALID_REFERENCE */
-            1 === $invalidBehavior )
-        {
-            if ( !$id )
-            {
-                throw new ServiceNotFoundException( $id );
+        if (/* self::EXCEPTION_ON_INVALID_REFERENCE */ 1 === $invalidBehavior) {
+            if (!$id) {
+                throw new ServiceNotFoundException($id);
             }
-            if ( isset( $this->syntheticIds[ $id ] ) )
-            {
-                throw new ServiceNotFoundException( $id, null, null, [],
-                    sprintf( 'The "%s" service is synthetic, it needs to be set at boot time before it can be used.',
-                        $id ) );
+            if (isset($this->syntheticIds[$id])) {
+                throw new ServiceNotFoundException($id, null, null, [], sprintf('The "%s" service is synthetic, it needs to be set at boot time before it can be used.', $id));
             }
-            if ( isset( $this->getRemovedIds()[ $id ] ) )
-            {
-                throw new ServiceNotFoundException( $id, null, null, [],
-                    sprintf( 'The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.',
-                        $id ) );
+            if (isset($this->getRemovedIds()[$id])) {
+                throw new ServiceNotFoundException($id, null, null, [], sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $id));
             }
 
             $alternatives = [];
-            foreach ( $this->getServiceIds() as $knownId )
-            {
-                if ( '' === $knownId || '.' === $knownId[ 0 ] )
-                {
+            foreach ($this->getServiceIds() as $knownId) {
+                if ('' === $knownId || '.' === $knownId[0]) {
                     continue;
                 }
-                $lev = levenshtein( $id, $knownId );
-                if ( $lev <= \strlen( $id ) / 3 || false !== strpos( $knownId, $id ) )
-                {
+                $lev = levenshtein($id, $knownId);
+                if ($lev <= \strlen($id) / 3 || false !== strpos($knownId, $id)) {
                     $alternatives[] = $knownId;
                 }
             }
 
-            throw new ServiceNotFoundException( $id, null, null, $alternatives );
+            throw new ServiceNotFoundException($id, null, null, $alternatives);
         }
     }
 
@@ -326,19 +282,17 @@ class Container implements ResettableContainerInterface
      *
      * @return bool true if service has already been initialized, false otherwise
      */
-    public function initialized( $id )
+    public function initialized($id)
     {
-        if ( isset( $this->aliases[ $id ] ) )
-        {
-            $id = $this->aliases[ $id ];
+        if (isset($this->aliases[$id])) {
+            $id = $this->aliases[$id];
         }
 
-        if ( 'service_container' === $id )
-        {
+        if ('service_container' === $id) {
             return false;
         }
 
-        return isset( $this->services[ $id ] );
+        return isset($this->services[$id]);
     }
 
     /**
@@ -356,8 +310,7 @@ class Container implements ResettableContainerInterface
      */
     public function getServiceIds()
     {
-        return array_unique( array_merge( ['service_container'], array_keys( $this->fileMap ),
-            array_keys( $this->methodMap ), array_keys( $this->services ) ) );
+        return array_unique(array_merge(['service_container'], array_keys($this->fileMap), array_keys($this->methodMap), array_keys($this->services)));
     }
 
     /**
@@ -377,9 +330,9 @@ class Container implements ResettableContainerInterface
      *
      * @return string The camelized string
      */
-    public static function camelize( $id )
+    public static function camelize($id)
     {
-        return strtr( ucwords( strtr( $id, ['_' => ' ', '.' => '_ ', '\\' => '_ '] ) ), [' ' => ''] );
+        return strtr(ucwords(strtr($id, ['_' => ' ', '.' => '_ ', '\\' => '_ '])), [' ' => '']);
     }
 
     /**
@@ -389,10 +342,9 @@ class Container implements ResettableContainerInterface
      *
      * @return string The underscored string
      */
-    public static function underscore( $id )
+    public static function underscore($id)
     {
-        return strtolower( preg_replace( ['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'],
-            str_replace( '_', '.', $id ) ) );
+        return strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'], str_replace('_', '.', $id)));
     }
 
     /**
@@ -400,7 +352,7 @@ class Container implements ResettableContainerInterface
      *
      * @return object The service created by the file
      */
-    protected function load( $file )
+    protected function load($file)
     {
         return require $file;
     }
@@ -414,48 +366,38 @@ class Container implements ResettableContainerInterface
      *
      * @throws EnvNotFoundException When the environment variable is not found and has no default value
      */
-    protected function getEnv( $name )
+    protected function getEnv($name)
     {
-        if ( isset( $this->resolving[ $envName = "env($name)" ] ) )
-        {
-            throw new ParameterCircularReferenceException( array_keys( $this->resolving ) );
+        if (isset($this->resolving[$envName = "env($name)"])) {
+            throw new ParameterCircularReferenceException(array_keys($this->resolving));
         }
-        if ( isset( $this->envCache[ $name ] ) || array_key_exists( $name, $this->envCache ) )
-        {
-            return $this->envCache[ $name ];
+        if (isset($this->envCache[$name]) || array_key_exists($name, $this->envCache)) {
+            return $this->envCache[$name];
         }
-        if ( !$this->has( $id = 'container.env_var_processors_locator' ) )
-        {
-            $this->set( $id, new ServiceLocator( [] ) );
+        if (!$this->has($id = 'container.env_var_processors_locator')) {
+            $this->set($id, new ServiceLocator([]));
         }
-        if ( !$this->getEnv )
-        {
-            $this->getEnv = new \ReflectionMethod( $this, __FUNCTION__ );
-            $this->getEnv->setAccessible( true );
-            $this->getEnv = $this->getEnv->getClosure( $this );
+        if (!$this->getEnv) {
+            $this->getEnv = new \ReflectionMethod($this, __FUNCTION__);
+            $this->getEnv->setAccessible(true);
+            $this->getEnv = $this->getEnv->getClosure($this);
         }
-        $processors = $this->get( $id );
+        $processors = $this->get($id);
 
-        if ( false !== $i = strpos( $name, ':' ) )
-        {
-            $prefix = substr( $name, 0, $i );
-            $localName = substr( $name, 1 + $i );
-        }
-        else
-        {
+        if (false !== $i = strpos($name, ':')) {
+            $prefix = substr($name, 0, $i);
+            $localName = substr($name, 1 + $i);
+        } else {
             $prefix = 'string';
             $localName = $name;
         }
-        $processor = $processors->has( $prefix ) ? $processors->get( $prefix ) : new EnvVarProcessor( $this );
+        $processor = $processors->has($prefix) ? $processors->get($prefix) : new EnvVarProcessor($this);
 
-        $this->resolving[ $envName ] = true;
-        try
-        {
-            return $this->envCache[ $name ] = $processor->getEnv( $prefix, $localName, $this->getEnv );
-        }
-        finally
-        {
-            unset( $this->resolving[ $envName ] );
+        $this->resolving[$envName] = true;
+        try {
+            return $this->envCache[$name] = $processor->getEnv($prefix, $localName, $this->getEnv);
+        } finally {
+            unset($this->resolving[$envName]);
         }
     }
 

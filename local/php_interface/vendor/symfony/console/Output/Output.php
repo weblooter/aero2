@@ -33,22 +33,21 @@ abstract class Output implements OutputInterface
     private $formatter;
 
     /**
-     * @param int                           $verbosity The verbosity level (one of the VERBOSITY constants in
-     *     OutputInterface)
+     * @param int                           $verbosity The verbosity level (one of the VERBOSITY constants in OutputInterface)
      * @param bool                          $decorated Whether to decorate messages
      * @param OutputFormatterInterface|null $formatter Output formatter instance (null to use default OutputFormatter)
      */
-    public function __construct( ?int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = false, OutputFormatterInterface $formatter = null )
+    public function __construct(?int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = false, OutputFormatterInterface $formatter = null)
     {
         $this->verbosity = null === $verbosity ? self::VERBOSITY_NORMAL : $verbosity;
-        $this->formatter = $formatter ? : new OutputFormatter();
-        $this->formatter->setDecorated( $decorated );
+        $this->formatter = $formatter ?: new OutputFormatter();
+        $this->formatter->setDecorated($decorated);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setFormatter( OutputFormatterInterface $formatter )
+    public function setFormatter(OutputFormatterInterface $formatter)
     {
         $this->formatter = $formatter;
     }
@@ -64,9 +63,9 @@ abstract class Output implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function setDecorated( $decorated )
+    public function setDecorated($decorated)
     {
-        $this->formatter->setDecorated( $decorated );
+        $this->formatter->setDecorated($decorated);
     }
 
     /**
@@ -80,9 +79,9 @@ abstract class Output implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function setVerbosity( $level )
+    public function setVerbosity($level)
     {
-        $this->verbosity = (int)$level;
+        $this->verbosity = (int) $level;
     }
 
     /**
@@ -128,47 +127,43 @@ abstract class Output implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function writeln( $messages, $options = self::OUTPUT_NORMAL )
+    public function writeln($messages, $options = self::OUTPUT_NORMAL)
     {
-        $this->write( $messages, true, $options );
+        $this->write($messages, true, $options);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function write( $messages, $newline = false, $options = self::OUTPUT_NORMAL )
+    public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
     {
-        if ( !is_iterable( $messages ) )
-        {
+        if (!is_iterable($messages)) {
             $messages = [$messages];
         }
 
         $types = self::OUTPUT_NORMAL | self::OUTPUT_RAW | self::OUTPUT_PLAIN;
-        $type = $types & $options ? : self::OUTPUT_NORMAL;
+        $type = $types & $options ?: self::OUTPUT_NORMAL;
 
         $verbosities = self::VERBOSITY_QUIET | self::VERBOSITY_NORMAL | self::VERBOSITY_VERBOSE | self::VERBOSITY_VERY_VERBOSE | self::VERBOSITY_DEBUG;
-        $verbosity = $verbosities & $options ? : self::VERBOSITY_NORMAL;
+        $verbosity = $verbosities & $options ?: self::VERBOSITY_NORMAL;
 
-        if ( $verbosity > $this->getVerbosity() )
-        {
+        if ($verbosity > $this->getVerbosity()) {
             return;
         }
 
-        foreach ( $messages as $message )
-        {
-            switch ( $type )
-            {
+        foreach ($messages as $message) {
+            switch ($type) {
                 case OutputInterface::OUTPUT_NORMAL:
-                    $message = $this->formatter->format( $message );
+                    $message = $this->formatter->format($message);
                     break;
                 case OutputInterface::OUTPUT_RAW:
                     break;
                 case OutputInterface::OUTPUT_PLAIN:
-                    $message = strip_tags( $this->formatter->format( $message ) );
+                    $message = strip_tags($this->formatter->format($message));
                     break;
             }
 
-            $this->doWrite( $message, $newline );
+            $this->doWrite($message, $newline);
         }
     }
 
@@ -178,5 +173,5 @@ abstract class Output implements OutputInterface
      * @param string $message A message to write to the output
      * @param bool   $newline Whether to add a newline or not
      */
-    abstract protected function doWrite( $message, $newline );
+    abstract protected function doWrite($message, $newline);
 }

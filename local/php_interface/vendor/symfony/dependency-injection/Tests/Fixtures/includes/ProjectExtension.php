@@ -5,27 +5,22 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 class ProjectExtension implements ExtensionInterface
 {
-    public function load( array $configs, ContainerBuilder $configuration )
+    public function load(array $configs, ContainerBuilder $configuration)
     {
-        $configuration->setParameter( 'project.configs', $configs );
-        $configs = array_filter( $configs );
+        $configuration->setParameter('project.configs', $configs);
+        $configs = array_filter($configs);
 
-        if ( $configs )
-        {
-            $config = array_merge( ...$configs );
-        }
-        else
-        {
+        if ($configs) {
+            $config = array_merge(...$configs);
+        } else {
             $config = [];
         }
 
-        $configuration->register( 'project.service.bar', 'FooClass' )->setPublic( true );
-        $configuration->setParameter( 'project.parameter.bar',
-            isset( $config[ 'foo' ] ) ? $config[ 'foo' ] : 'foobar' );
+        $configuration->register('project.service.bar', 'FooClass')->setPublic(true);
+        $configuration->setParameter('project.parameter.bar', isset($config['foo']) ? $config['foo'] : 'foobar');
 
-        $configuration->register( 'project.service.foo', 'FooClass' )->setPublic( true );
-        $configuration->setParameter( 'project.parameter.foo',
-            isset( $config[ 'foo' ] ) ? $config[ 'foo' ] : 'foobar' );
+        $configuration->register('project.service.foo', 'FooClass')->setPublic(true);
+        $configuration->setParameter('project.parameter.foo', isset($config['foo']) ? $config['foo'] : 'foobar');
 
         return $configuration;
     }
@@ -45,7 +40,7 @@ class ProjectExtension implements ExtensionInterface
         return 'project';
     }
 
-    public function getConfiguration( array $config, ContainerBuilder $container )
+    public function getConfiguration(array $config, ContainerBuilder $container)
     {
     }
 }

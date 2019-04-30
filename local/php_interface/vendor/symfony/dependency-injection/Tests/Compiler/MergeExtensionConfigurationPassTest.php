@@ -27,113 +27,108 @@ class MergeExtensionConfigurationPassTest extends TestCase
     {
         $tmpProviders = [];
 
-        $extension = $this->getMockBuilder( 'Symfony\\Component\\DependencyInjection\\Extension\\ExtensionInterface' )->getMock();
-        $extension->expects( $this->any() )
-            ->method( 'getXsdValidationBasePath' )
-            ->will( $this->returnValue( false ) );
-        $extension->expects( $this->any() )
-            ->method( 'getNamespace' )
-            ->will( $this->returnValue( 'http://example.org/schema/dic/foo' ) );
-        $extension->expects( $this->any() )
-            ->method( 'getAlias' )
-            ->will( $this->returnValue( 'foo' ) );
-        $extension->expects( $this->once() )
-            ->method( 'load' )
-            ->will( $this->returnCallback( function ( array $config, ContainerBuilder $container ) use ( &$tmpProviders ) {
+        $extension = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\Extension\\ExtensionInterface')->getMock();
+        $extension->expects($this->any())
+            ->method('getXsdValidationBasePath')
+            ->will($this->returnValue(false));
+        $extension->expects($this->any())
+            ->method('getNamespace')
+            ->will($this->returnValue('http://example.org/schema/dic/foo'));
+        $extension->expects($this->any())
+            ->method('getAlias')
+            ->will($this->returnValue('foo'));
+        $extension->expects($this->once())
+            ->method('load')
+            ->will($this->returnCallback(function (array $config, ContainerBuilder $container) use (&$tmpProviders) {
                 $tmpProviders = $container->getExpressionLanguageProviders();
-            } ) );
+            }));
 
-        $provider = $this->getMockBuilder( 'Symfony\\Component\\ExpressionLanguage\\ExpressionFunctionProviderInterface' )->getMock();
-        $container = new ContainerBuilder( new ParameterBag() );
-        $container->registerExtension( $extension );
-        $container->prependExtensionConfig( 'foo', ['bar' => true] );
-        $container->addExpressionLanguageProvider( $provider );
+        $provider = $this->getMockBuilder('Symfony\\Component\\ExpressionLanguage\\ExpressionFunctionProviderInterface')->getMock();
+        $container = new ContainerBuilder(new ParameterBag());
+        $container->registerExtension($extension);
+        $container->prependExtensionConfig('foo', ['bar' => true]);
+        $container->addExpressionLanguageProvider($provider);
 
         $pass = new MergeExtensionConfigurationPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertEquals( [$provider], $tmpProviders );
+        $this->assertEquals([$provider], $tmpProviders);
     }
 
     public function testExtensionLoadGetAMergeExtensionConfigurationContainerBuilderInstance()
     {
-        $extension = $this->getMockBuilder( FooExtension::class )->setMethods( ['load'] )->getMock();
-        $extension->expects( $this->once() )
-            ->method( 'load' )
-            ->with( $this->isType( 'array' ),
-                $this->isInstanceOf( MergeExtensionConfigurationContainerBuilder::class ) );
+        $extension = $this->getMockBuilder(FooExtension::class)->setMethods(['load'])->getMock();
+        $extension->expects($this->once())
+            ->method('load')
+            ->with($this->isType('array'), $this->isInstanceOf(MergeExtensionConfigurationContainerBuilder::class))
+        ;
 
-        $container = new ContainerBuilder( new ParameterBag() );
-        $container->registerExtension( $extension );
-        $container->prependExtensionConfig( 'foo', [] );
+        $container = new ContainerBuilder(new ParameterBag());
+        $container->registerExtension($extension);
+        $container->prependExtensionConfig('foo', []);
 
         $pass = new MergeExtensionConfigurationPass();
-        $pass->process( $container );
+        $pass->process($container);
     }
 
     public function testExtensionConfigurationIsTrackedByDefault()
     {
-        $extension = $this->getMockBuilder( FooExtension::class )->setMethods( ['getConfiguration'] )->getMock();
-        $extension->expects( $this->exactly( 2 ) )
-            ->method( 'getConfiguration' )
-            ->will( $this->returnValue( new FooConfiguration() ) );
+        $extension = $this->getMockBuilder(FooExtension::class)->setMethods(['getConfiguration'])->getMock();
+        $extension->expects($this->exactly(2))
+            ->method('getConfiguration')
+            ->will($this->returnValue(new FooConfiguration()));
 
-        $container = new ContainerBuilder( new ParameterBag() );
-        $container->registerExtension( $extension );
-        $container->prependExtensionConfig( 'foo', ['bar' => true] );
+        $container = new ContainerBuilder(new ParameterBag());
+        $container->registerExtension($extension);
+        $container->prependExtensionConfig('foo', ['bar' => true]);
 
         $pass = new MergeExtensionConfigurationPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertContains( new FileResource( __FILE__ ), $container->getResources(), '', false, false );
+        $this->assertContains(new FileResource(__FILE__), $container->getResources(), '', false, false);
     }
 
     public function testOverriddenEnvsAreMerged()
     {
         $container = new ContainerBuilder();
-        $container->registerExtension( new FooExtension() );
-        $container->prependExtensionConfig( 'foo', ['bar' => '%env(FOO)%'] );
-        $container->prependExtensionConfig( 'foo', ['bar' => '%env(BAR)%', 'baz' => '%env(BAZ)%'] );
+        $container->registerExtension(new FooExtension());
+        $container->prependExtensionConfig('foo', ['bar' => '%env(FOO)%']);
+        $container->prependExtensionConfig('foo', ['bar' => '%env(BAR)%', 'baz' => '%env(BAZ)%']);
 
         $pass = new MergeExtensionConfigurationPass();
-        $pass->process( $container );
+        $pass->process($container);
 
-        $this->assertSame( ['BAZ', 'FOO'], array_keys( $container->getParameterBag()->getEnvPlaceholders() ) );
-        $this->assertSame( ['BAZ' => 1, 'FOO' => 0], $container->getEnvCounters() );
+        $this->assertSame(['BAZ', 'FOO'], array_keys($container->getParameterBag()->getEnvPlaceholders()));
+        $this->assertSame(['BAZ' => 1, 'FOO' => 0], $container->getEnvCounters());
     }
 
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     * @expectedExceptionMessage Using a cast in "env(int:FOO)" is incompatible with resolution at compile time in
-     *     "Symfony\Component\DependencyInjection\Tests\Compiler\BarExtension". The logic in the extension should be
-     *     moved to a compiler pass, or an env parameter with no cast should be used instead.
+     * @expectedExceptionMessage Using a cast in "env(int:FOO)" is incompatible with resolution at compile time in "Symfony\Component\DependencyInjection\Tests\Compiler\BarExtension". The logic in the extension should be moved to a compiler pass, or an env parameter with no cast should be used instead.
      */
     public function testProcessedEnvsAreIncompatibleWithResolve()
     {
         $container = new ContainerBuilder();
-        $container->registerExtension( new BarExtension() );
-        $container->prependExtensionConfig( 'bar', [] );
+        $container->registerExtension(new BarExtension());
+        $container->prependExtensionConfig('bar', []);
 
-        ( new MergeExtensionConfigurationPass() )->process( $container );
+        (new MergeExtensionConfigurationPass())->process($container);
     }
 
     public function testThrowingExtensionsGetMergedBag()
     {
         $container = new ContainerBuilder();
-        $container->registerExtension( new ThrowingExtension() );
-        $container->prependExtensionConfig( 'throwing', ['bar' => '%env(FOO)%'] );
+        $container->registerExtension(new ThrowingExtension());
+        $container->prependExtensionConfig('throwing', ['bar' => '%env(FOO)%']);
 
-        try
-        {
+        try {
             $pass = new MergeExtensionConfigurationPass();
-            $pass->process( $container );
-            $this->fail( 'An exception should have been thrown.' );
-        }
-        catch ( \Exception $e )
-        {
+            $pass->process($container);
+            $this->fail('An exception should have been thrown.');
+        } catch (\Exception $e) {
         }
 
-        $this->assertSame( ['FOO'], array_keys( $container->getParameterBag()->getEnvPlaceholders() ) );
+        $this->assertSame(['FOO'], array_keys($container->getParameterBag()->getEnvPlaceholders()));
     }
 }
 
@@ -142,11 +137,11 @@ class FooConfiguration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root( 'foo' );
+        $rootNode = $treeBuilder->root('foo');
         $rootNode
             ->children()
-            ->scalarNode( 'bar' )->end()
-            ->scalarNode( 'baz' )->end()
+                ->scalarNode('bar')->end()
+                ->scalarNode('baz')->end()
             ->end();
 
         return $treeBuilder;
@@ -160,29 +155,28 @@ class FooExtension extends Extension
         return 'foo';
     }
 
-    public function getConfiguration( array $config, ContainerBuilder $container )
+    public function getConfiguration(array $config, ContainerBuilder $container)
     {
         return new FooConfiguration();
     }
 
-    public function load( array $configs, ContainerBuilder $container )
+    public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = $this->getConfiguration( $configs, $container );
-        $config = $this->processConfiguration( $configuration, $configs );
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
 
-        if ( isset( $config[ 'baz' ] ) )
-        {
-            $container->getParameterBag()->get( 'env(BOZ)' );
-            $container->resolveEnvPlaceholders( $config[ 'baz' ] );
+        if (isset($config['baz'])) {
+            $container->getParameterBag()->get('env(BOZ)');
+            $container->resolveEnvPlaceholders($config['baz']);
         }
     }
 }
 
 class BarExtension extends Extension
 {
-    public function load( array $configs, ContainerBuilder $container )
+    public function load(array $configs, ContainerBuilder $container)
     {
-        $container->resolveEnvPlaceholders( '%env(int:FOO)%', true );
+        $container->resolveEnvPlaceholders('%env(int:FOO)%', true);
     }
 }
 
@@ -193,12 +187,12 @@ class ThrowingExtension extends Extension
         return 'throwing';
     }
 
-    public function getConfiguration( array $config, ContainerBuilder $container )
+    public function getConfiguration(array $config, ContainerBuilder $container)
     {
         return new FooConfiguration();
     }
 
-    public function load( array $configs, ContainerBuilder $container )
+    public function load(array $configs, ContainerBuilder $container)
     {
         throw new \Exception();
     }

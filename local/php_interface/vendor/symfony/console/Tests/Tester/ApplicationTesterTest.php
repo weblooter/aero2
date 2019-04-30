@@ -26,16 +26,16 @@ class ApplicationTesterTest extends TestCase
     protected function setUp()
     {
         $this->application = new Application();
-        $this->application->setAutoExit( false );
-        $this->application->register( 'foo' )
-            ->addArgument( 'foo' )
-            ->setCode( function ( $input, $output ) {
-                $output->writeln( 'foo' );
-            } );
+        $this->application->setAutoExit(false);
+        $this->application->register('foo')
+            ->addArgument('foo')
+            ->setCode(function ($input, $output) {
+                $output->writeln('foo');
+            })
+        ;
 
-        $this->tester = new ApplicationTester( $this->application );
-        $this->tester->run( ['command' => 'foo', 'foo' => 'bar'],
-            ['interactive' => false, 'decorated' => false, 'verbosity' => Output::VERBOSITY_VERBOSE] );
+        $this->tester = new ApplicationTester($this->application);
+        $this->tester->run(['command' => 'foo', 'foo' => 'bar'], ['interactive' => false, 'decorated' => false, 'verbosity' => Output::VERBOSITY_VERBOSE]);
     }
 
     protected function tearDown()
@@ -46,52 +46,48 @@ class ApplicationTesterTest extends TestCase
 
     public function testRun()
     {
-        $this->assertFalse( $this->tester->getInput()->isInteractive(), '->execute() takes an interactive option' );
-        $this->assertFalse( $this->tester->getOutput()->isDecorated(), '->execute() takes a decorated option' );
-        $this->assertEquals( Output::VERBOSITY_VERBOSE, $this->tester->getOutput()->getVerbosity(),
-            '->execute() takes a verbosity option' );
+        $this->assertFalse($this->tester->getInput()->isInteractive(), '->execute() takes an interactive option');
+        $this->assertFalse($this->tester->getOutput()->isDecorated(), '->execute() takes a decorated option');
+        $this->assertEquals(Output::VERBOSITY_VERBOSE, $this->tester->getOutput()->getVerbosity(), '->execute() takes a verbosity option');
     }
 
     public function testGetInput()
     {
-        $this->assertEquals( 'bar', $this->tester->getInput()->getArgument( 'foo' ),
-            '->getInput() returns the current input instance' );
+        $this->assertEquals('bar', $this->tester->getInput()->getArgument('foo'), '->getInput() returns the current input instance');
     }
 
     public function testGetOutput()
     {
-        rewind( $this->tester->getOutput()->getStream() );
-        $this->assertEquals( 'foo'.PHP_EOL, stream_get_contents( $this->tester->getOutput()->getStream() ),
-            '->getOutput() returns the current output instance' );
+        rewind($this->tester->getOutput()->getStream());
+        $this->assertEquals('foo'.PHP_EOL, stream_get_contents($this->tester->getOutput()->getStream()), '->getOutput() returns the current output instance');
     }
 
     public function testGetDisplay()
     {
-        $this->assertEquals( 'foo'.PHP_EOL, $this->tester->getDisplay(),
-            '->getDisplay() returns the display of the last execution' );
+        $this->assertEquals('foo'.PHP_EOL, $this->tester->getDisplay(), '->getDisplay() returns the display of the last execution');
     }
 
     public function testSetInputs()
     {
         $application = new Application();
-        $application->setAutoExit( false );
-        $application->register( 'foo' )->setCode( function ( $input, $output ) {
+        $application->setAutoExit(false);
+        $application->register('foo')->setCode(function ($input, $output) {
             $helper = new QuestionHelper();
-            $helper->ask( $input, $output, new Question( 'Q1' ) );
-            $helper->ask( $input, $output, new Question( 'Q2' ) );
-            $helper->ask( $input, $output, new Question( 'Q3' ) );
-        } );
-        $tester = new ApplicationTester( $application );
+            $helper->ask($input, $output, new Question('Q1'));
+            $helper->ask($input, $output, new Question('Q2'));
+            $helper->ask($input, $output, new Question('Q3'));
+        });
+        $tester = new ApplicationTester($application);
 
-        $tester->setInputs( ['I1', 'I2', 'I3'] );
-        $tester->run( ['command' => 'foo'] );
+        $tester->setInputs(['I1', 'I2', 'I3']);
+        $tester->run(['command' => 'foo']);
 
-        $this->assertSame( 0, $tester->getStatusCode() );
-        $this->assertEquals( 'Q1Q2Q3', $tester->getDisplay( true ) );
+        $this->assertSame(0, $tester->getStatusCode());
+        $this->assertEquals('Q1Q2Q3', $tester->getDisplay(true));
     }
 
     public function testGetStatusCode()
     {
-        $this->assertSame( 0, $this->tester->getStatusCode(), '->getStatusCode() returns the status code' );
+        $this->assertSame(0, $this->tester->getStatusCode(), '->getStatusCode() returns the status code');
     }
 }
