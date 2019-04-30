@@ -19,6 +19,8 @@ global $USER;
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/ui.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/simple-line-icons.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/montseratt.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/sweetalert.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/input-file.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/personal.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/custom.css');
 
@@ -28,6 +30,8 @@ global $USER;
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/popper.min.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/ionicons.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap-select.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/sweetalert.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/input-file.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/qs.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/personal.js');
 
@@ -64,6 +68,7 @@ global $USER;
             </div>
         </div>
     </header>
+    <section class="content">
     <div class="breadcrumbs">
         <div class="container">
             <? $APPLICATION->IncludeComponent("bitrix:breadcrumb", "universal", Array(
@@ -78,8 +83,5 @@ global $USER;
         </div>
     </div>
     <div class="container" style="min-height: 70vh;">
-        <div class="row">
-            <div class="col-12">
-                <h1><? $APPLICATION->ShowTitle(false) ?></h1>
-            </div>
+        <h1><? $APPLICATION->ShowTitle(false) ?></h1>
 <?}?>

@@ -14,9 +14,7 @@ use Local\Core\Inner\Route;
 
 ?>
 <? if (empty($arResult['ITEMS'])): ?>
-    <p>
-        У Вас нет файлов на конветирование в очереди.
-    </p>
+<div class="alert alert-success">У Вас нет файлов на конветирование в очереди.</div>
 <? else: ?>
     <table class="table">
         <thead>

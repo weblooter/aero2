@@ -326,9 +326,14 @@ header .rightblock .companies a:hover {
     color: #222222;
 }
 
+.breadcrumbs .menu li a:hover {
+    color: var(--orange);
+}
+
 .breadcrumbs .menu li a span {
     float: right;
     font-size: 14px;
+    font-weight: 600;
 }
 
 .breadcrumbs .menu li i {
@@ -340,4 +345,29 @@ header .rightblock .companies a:hover {
 
 .breadcrumbs .bx-breadcrumb-item-text {
     font-family: Montserrat;
+}
+
+footer {
+    background: #222222;
+    margin-top: 40px;
+    padding: 20px 0;
+}
+
+footer p.copy {
+    margin-bottom: 0;
+    text-align: center;
+    color: #a2a2a2;
+    font-size: 12px;
+}
+
+section.content {
+    min-height: calc(100vh - 197px);
+}
+
+#panel {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 15;
 }

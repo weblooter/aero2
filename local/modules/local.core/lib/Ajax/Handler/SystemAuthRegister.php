@@ -6,8 +6,8 @@ class SystemAuthRegister
 {
     public static function try(\Bitrix\Main\HttpRequest $request, \Local\Core\Inner\BxModified\HttpResponse $response, $args)
     {
-        $login = $request["login"];
-        $password = $request["password"];
+        $login = $request->getPost('login');
+        $password = $request->getPost('password');
 
         global $USER;
         $rsUser = \CUser::GetByLogin($login);

@@ -118,6 +118,8 @@ class DataManager extends \Bitrix\Main\ORM\Data\DataManager
     protected static function _initClearComponentCache(\Bitrix\Main\ORM\Event &$event, $arAdditionalParams = [])
     {
         /** @var \Bitrix\Main\ORM\Event $event */
+        \Local\Core\Inner\Cache::deleteComponentCache(['mainpage.calc']);
+
         $arEventParams = $event->getParameters();
         if (!empty($arEventParams['primary']['ID'])) {
             $ar = static::getById($arEventParams['primary']['ID'])

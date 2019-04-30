@@ -3,17 +3,15 @@ require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $APPLICATION->SetPageProperty("TITLE", "Конвертер");
 $APPLICATION->SetTitle("Конвертер");
 ?>
-<div class="col-12">
-    <? $APPLICATION->IncludeComponent(
+<? $APPLICATION->IncludeComponent(
         "local.core:robofeed.convert.list",
         ".default",
         array(
         ),
         false
-    ); ?>
-</div>
-<div class="col-12">
-    <h4>Загрузить новый файл</h4>
+); ?>
+
+    <h3 class="bold">Загрузить новый файл</h3>
     <? $APPLICATION->IncludeComponent(
         "local.core:robofeed.convert.form",
         ".default",
@@ -27,5 +25,4 @@ $APPLICATION->SetTitle("Конвертер");
         ),
         false
     ); ?>
-</div>
 <? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>
