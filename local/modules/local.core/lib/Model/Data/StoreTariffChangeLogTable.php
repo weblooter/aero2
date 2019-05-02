@@ -17,7 +17,7 @@ class StoreTariffChangeLogTable extends \Local\Core\Inner\BxModified\Main\ORM\Da
 {
     public static function getTableName()
     {
-        return 'a_model_store_tariff_change_log';
+        return 'a_model_data_store_tariff_change_log';
     }
 
     /** @see \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager::$arEnumFieldsValues */

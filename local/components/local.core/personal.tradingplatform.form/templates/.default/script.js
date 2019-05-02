@@ -79,7 +79,6 @@ class PersonalTradingplatformFormComponent {
                     var responseHtml = document.createElement('div');
 
                     responseHtml.innerHTML = response.data['FORM_HTML'];
-                    console.log(responseHtml);
                     document.querySelector('form[id="'+classObj.getFormId()+'"] [data-handler-fields]').innerHTML = responseHtml.innerHTML;
 
                     if (responseHtml.querySelectorAll('script').length > 0) {

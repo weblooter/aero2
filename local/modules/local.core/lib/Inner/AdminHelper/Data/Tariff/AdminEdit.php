@@ -311,8 +311,8 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
         $arFields = [
             'SORT' => $request->getPost("SORT") ?? 50,
             'ACTIVE' => $request->getPost("ACTIVE") ?? "N",
-            'DATE_ACTIVE_FROM' => (!empty(trim($request->getPost('DATE_ACTIVE_FROM'))) ? new \Bitrix\Main\Type\DateTime(trim($request->getPost('DATE_ACTIVE_FROM')), 'd.m.Y H:i:s') : ''),
-            'DATE_ACTIVE_TO' => (!empty(trim($request->getPost('DATE_ACTIVE_TO'))) ? new \Bitrix\Main\Type\DateTime(trim($request->getPost('DATE_ACTIVE_TO')), 'd.m.Y H:i:s') : ''),
+            'DATE_ACTIVE_FROM' => (!empty(trim($request->getPost('DATE_ACTIVE_FROM'))) ? new \Bitrix\Main\Type\DateTime(trim($request->getPost('DATE_ACTIVE_FROM')), 'Y-m-d H:i:s') : ''),
+            'DATE_ACTIVE_TO' => (!empty(trim($request->getPost('DATE_ACTIVE_TO'))) ? new \Bitrix\Main\Type\DateTime(trim($request->getPost('DATE_ACTIVE_TO')), 'Y-m-d H:i:s') : ''),
             'NAME' => trim($request->getPost('NAME')),
             'LIMIT_TRADING_PLATFORM' => trim($request->getPost('LIMIT_TRADING_PLATFORM')),
             'LIMIT_IMPORT_PRODUCTS' => trim($request->getPost('LIMIT_IMPORT_PRODUCTS')),

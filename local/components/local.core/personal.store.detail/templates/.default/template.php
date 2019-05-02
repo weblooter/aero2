@@ -170,7 +170,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-muted">
-                            <small>Действует с <?=$arResult['TARIFF']['CHANGED_DATE']->format('Y-m-d H:i')?></small>
+                            <small>Действует с <?=( ( $arResult['TARIFF']['CHANGED_DATE'] instanceof \Bitrix\Main\Type\DateTime ) ? $arResult['TARIFF']['CHANGED_DATE']->format('Y-m-d H:i') : '-' )?></small>
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,9 @@
 
                                 var options = {
                                     title: 'Отчет по импорту товаров из Robofeed XML',
-                                    legend: {position: 'none'}
+                                    legend: {position: 'none'},
+                                    vAxis: {format: '#,###'},
+                                    colors: ['#ff4949', 'rgb(255, 179, 0)', 'rgb(34, 34, 34)']
                                 };
 
                                 var chart = new google.charts.Bar(document.getElementById('chart_div'));

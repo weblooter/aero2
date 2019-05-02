@@ -182,13 +182,14 @@ class Base
     /**
      * Сменяет тариф магазину, проверяя пользователя, баланс и списывая деньги
      *
-     * @param      $intStoreId
-     * @param      $strTariffCode
-     * @param bool $boolSendEmail
+     * @param int $intStoreId ID магазина
+     * @param string $strTariffCode Код тарифа
+     * @param bool $boolSendEmail Признак отправлять уведомление по почте или нет
+     * @param bool $boolRecalculateBalance Если указан true, то перерасчет производится в любом случае. Если false - перерасчет происходит только если цена нового тарифа дороже старого.
      *
      * @return \Bitrix\Main\Result
      */
-    public static function changeStoreTariff($intStoreId, $strTariffCode, $boolSendEmail = true)
+    public static function changeStoreTariff($intStoreId, $strTariffCode, $boolSendEmail = true, $boolRecalculateBalance = false)
     {
         $obResult = new \Bitrix\Main\Result();
 
@@ -253,7 +254,7 @@ class Base
 
                 $newTariffPrice = $arTariff['PRICE_PER_TRADING_PLATFORM'];
 
-                if( $oldTariffPrice < $newTariffPrice )
+                if( $oldTariffPrice < $newTariffPrice || $boolRecalculateBalance)
                 {
                     # Если новый тариф дороже
 
@@ -335,7 +336,9 @@ class Base
         $arReturn = [];
         $arStore = \Local\Core\Model\Data\StoreTable::getByPrimary($intStoreId)
             ->fetch();
-        if ($arStore['PRODUCT_TOTAL_COUNT'] > 0) {
+
+        $arCurrentTariff = \Local\Core\Inner\Tariff\Base::getTariffByCode($arStore['TARIFF_CODE']);
+        if ($arStore['PRODUCT_TOTAL_COUNT'] > 0 && $arCurrentTariff['LIMIT_IMPORT_PRODUCTS'] < $arStore['PRODUCT_TOTAL_COUNT']) {
 
             $arTariff = \Local\Core\Model\Data\TariffTable::getList([
                 'filter' => [

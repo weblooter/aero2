@@ -1006,6 +1006,19 @@ class Resource extends AbstractField
                 }
 
                 break;
+
+            case 'DELIVERY_FIELD':
+                // TODO описать поля доставки
+                /**
+                 * <optgroup label="Доставка"><option value="BASE_FIELD#DELIVERY_AVAILABLE">Признак наличия службы доставки</option><option value="DELIVERY_FIELD#PRICE_FROM#MIN">Стоимость доставки "от" (минимальная)</option><option value="DELIVERY_FIELD#PRICE_FROM#MAX">Стоимость доставки "от" (максимальная)</option><option value="DELIVERY_FIELD#PRICE_TO#MIN">Стоимость доставки "до" (минимальная)</option><option value="DELIVERY_FIELD#PRICE_TO#MAX">Стоимость доставки "до" (максимальная)</option><option value="DELIVERY_FIELD#CURRENCY_CODE#CODE">Валюта стоимости (код)</option><option value="DELIVERY_FIELD#CURRENCY_CODE#NAME">Валюта стоимости (название)</option><option value="DELIVERY_FIELD#DAYS_FROM#MIN">Сроки доставки "от" в днях (минимальные)</option><option value="DELIVERY_FIELD#DAYS_FROM#MAX">Сроки доставки "от" в днях (максимальные)</option><option value="DELIVERY_FIELD#DAYS_TO#MIN">Сроки доставки "до" в днях (минимальные)</option><option value="DELIVERY_FIELD#DAYS_TO#MAX">Сроки доставки "до" в днях (максимальные)</option></optgroup>
+                 */
+                break;
+            case 'PICKUP_FIELD':
+                // TODO описать поля самовывоза
+                /**
+                 * <optgroup label="Самовывоз"><option value="BASE_FIELD#PICKUP_AVAILABLE">Признак наличия самовывоза</option><option value="PICKUP_FIELD#PRICE#MIN">Стоимость самовывоза (минимальная)</option><option value="PICKUP_FIELD#PRICE#MAX">Стоимость самовывоза (максимальная)</option><option value="PICKUP_FIELD#CURRENCY_CODE#CODE">Валюта стоимости (код)</option><option value="PICKUP_FIELD#CURRENCY_CODE#NAME">Валюта стоимости (название)</option><option value="PICKUP_FIELD#SUPPLY_FROM#MIN">Сроки поступления товара в магазин/на склад "от" в днях (минимальные)</option><option value="PICKUP_FIELD#SUPPLY_FROM#MAX">Сроки поступления товара в магазин/на склад "от" в днях (максимальные)</option><option value="PICKUP_FIELD#SUPPLY_TO#MIN">Сроки поступления товара в магазин/на склад "до" в днях (минимальные)</option><option value="PICKUP_FIELD#SUPPLY_TO#MAX">Сроки поступления товара в магазин/на склад "до" в днях (максимальные)</option></optgroup>
+                 */
+                break;
         }
 
         return $strReturn;

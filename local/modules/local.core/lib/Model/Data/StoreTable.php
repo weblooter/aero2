@@ -466,6 +466,7 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
     /**
      * Удалим файл.<br/>
      * Удалим все ТП магазина.<br/>
+     * Удалим все логи смены тарифов магазина.<br/>
      *
      * @param \Bitrix\Main\ORM\Event $event
      *
@@ -510,6 +511,19 @@ class StoreTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
             while ($ar = $rsTp->fetch())
             {
                 \Local\Core\Model\Data\TradingPlatformTable::delete($ar['ID']);
+            }
+
+            /* ************************************* */
+            /* Удалим все логи смены тарифов магазина*/
+            /* ************************************* */
+
+            $rsTp = \Local\Core\Model\Data\StoreTariffChangeLogTable::getList([
+                'filter' => ['STORE_ID' => $arEventParams['primary']],
+                'select' => ['ID']
+            ]);
+            while ($ar = $rsTp->fetch())
+            {
+                \Local\Core\Model\Data\StoreTariffChangeLogTable::delete($ar['ID']);
             }
         }
     }

@@ -1,0 +1,482 @@
+body, html {
+    font-family: Montserrat;
+}
+
+:root{
+    --blue: #039be5;
+    --blue-hover: #038ef4;
+    --blue-transparent: rgba(3, 155, 229, 0.3);
+    --yellow: #ffb300;
+    --yellow-transparent: rgba(255, 202, 40, 0.3);
+    --orange: #f5a226;
+    --gray: #f8f9fa;
+    --gray-hover: #dfe5ee;
+    --darkgray: #222222;
+    --red: #ff4949;
+    --green: #66ab29;
+}
+
+
+.righted {
+    float: right;
+}
+
+[class^="icon-"]:before, [class*=" icon-"]:before,
+[class^="icon-"]:after, [class*=" icon-"]:after {   
+    margin-left: 0;   
+}
+
+label {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+h2 span {
+    color: var(--gray-hover);
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.upper {
+    text-transform: uppercase;
+}
+
+.centered {
+    text-align: center;
+}
+
+a.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border-radius: 4px;
+    background: var(--blue);
+    color: white;
+    -webkit-box-shadow: 0 4px 0 0 var(--blue-hover);
+    box-shadow: 0 4px 0 0 var(--blue-hover);
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+    position: relative;
+    overflow: hidden;
+    padding-top: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: 1px solid var(--blue-hover);
+    border-right: 1px solid var(--blue-hover);
+}
+
+a.btn.mini {
+    padding: 7px 15px;
+    border-bottom: none;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+a.btn.mini:before {
+    float: left;
+    line-height: 19px;
+    margin-right: 13px;
+    font-size: 16px;
+}
+
+a.btn:after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    background: #ffffff57;
+    -webkit-transform: skewX(-15deg);
+    transform: skewX(-15deg);
+    top: 0;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    border: 10px;
+}
+
+a.btn:hover:after {
+    -webkit-animation: blick 0.3s 1;
+    animation: blick 0.3s 1;
+}
+
+@-webkit-keyframes blick {
+    from {
+        left: -55px;
+        width: 40px;
+    }
+    to {
+        left: calc(100% + 15px);
+        width: 100px;
+    }
+}
+
+@keyframes blick {
+    from {
+        left: -55px;
+        width: 40px;
+    }
+    to {
+        left: calc(100% + 15px);
+        width: 100px;
+    }
+}
+
+
+a.btn:active.focus,
+a.btn:active:focus {
+    -webkit-box-shadow: 0 0 0 0 var(--blue-hover);
+    box-shadow: 0 0 0 0 var(--blue-hover);
+	transform: translate(0px,4px);
+    -webkit-transform: translate(0px,4px);
+}
+
+a.btn.orange:active.focus,
+a.btn.orange:active:focus {
+    -webkit-box-shadow: 0 0 0 0 var(--orange);
+    box-shadow: 0 0 0 0 var(--orange);
+}
+
+
+a.btn.focus,
+a.btn:focus,
+a.btn:hover {
+    text-decoration: none
+}
+
+a.btn.active,
+a.btn:active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125)
+}
+
+a.btn.orange {
+    background: var(--yellow);    
+    border-left: 1px solid #ffc667;
+    border-right: 1px solid #ffc667;
+    -webkit-box-shadow: 0 4px 0 0 var(--orange);
+    box-shadow: 0 4px 0 0 var(--orange);
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+a.btn.black {
+    background: var(--darkgray);    
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    -webkit-box-shadow: 0 4px 0 0 #000000;
+    box-shadow: 0 4px 0 0 #000000;
+    color: var(--yellow);
+    text-shadow: none;
+}
+
+a.btn.white {
+    background: transparent;
+    border: 2px solid white;
+    box-shadow: none;
+}
+
+a.btn.white:not(.mini){
+    padding-top: 12px;
+}
+
+a.btn.white:active.focus,
+a.btn.white:active:focus {
+    border-bottom-width: 2px;
+	transform: translate(0px,0px);
+    -webkit-transform: translate(0px,0px);
+}
+
+.bootstrap-select {
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"] {
+    width: 100%;
+    line-height: 38px;
+    height: 38px;
+    background: var(--gray);
+    border: none;
+    padding: 0 15px;
+    font-weight: 600;
+    color: #565656;
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    line-height: 38px;
+    height: 104px;
+    background: var(--gray);
+    border: none;
+    padding: 0 15px;
+    font-weight: 600;
+    color: #565656;
+    margin-bottom: 20px;
+    resize: vertical;
+    min-height: 38px;
+}
+
+input[type="checkbox"].checkbox,
+input[type="radio"].radio {
+    position: absolute;
+    height: 0;
+    width: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+input[type="checkbox"].checkbox+label,
+input[type="radio"].radio+label {
+    position: relative;
+    padding-left: 40px;
+    line-height: 26px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+input[type="checkbox"].checkbox+label:before,
+input[type="radio"].radio+label:before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 7px;
+    background: #efefef;
+}
+
+input[type="checkbox"].checkbox+label:after,
+input[type="radio"].radio+label:after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    position: absolute;
+    left: 3px;
+    top: 10px;
+    background: var(--yellow);
+    border-radius: 3px;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+    -webkit-box-shadow: inset 0 0 10px var(--orange);
+    box-shadow: inset 0 0 10px var(--orange);
+}
+
+input[type="radio"].radio+label:before,
+input[type="radio"].radio+label:after {
+    border-radius: 50%;
+}
+
+input[type="checkbox"].checkbox:checked+label:after,
+input[type="radio"].radio:checked+label:after {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+input[type="checkbox"].checkbox:checked+label:before,
+input[type="radio"].radio:checked+label:before {
+    -webkit-animation: dropshadow 0.3s 1;
+    animation: dropshadow 0.3s 1;
+}
+
+@-webkit-keyframes dropshadow {
+    0% {
+        -webkit-box-shadow: 0 0 0 0px var(--yellow-transparent);
+        box-shadow: 0 0 0 0px var(--yellow-transparent);
+    } 
+    50% {
+        -webkit-box-shadow: 0 0 0 10px var(--yellow-transparent);
+        box-shadow: 0 0 0 10px var(--yellow-transparent);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0px var(--yellow-transparent);
+        box-shadow: 0 0 0 0px var(--yellow-transparent);
+    } 
+}
+
+@keyframes dropshadow {
+    0% {
+        -webkit-box-shadow: 0 0 0 0px var(--yellow-transparent);
+        box-shadow: 0 0 0 0px var(--yellow-transparent);
+    } 
+    50% {
+        -webkit-box-shadow: 0 0 0 10px var(--yellow-transparent);
+        box-shadow: 0 0 0 10px var(--yellow-transparent);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0px var(--yellow-transparent);
+        box-shadow: 0 0 0 0px var(--yellow-transparent);
+    } 
+}
+
+
+input[type="checkbox"].calccheckbox {
+    position: absolute;
+    height: 0;
+    width: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+input[type="checkbox"].calccheckbox + label {
+    position: relative;
+    line-height: 26px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 80px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100px;
+    border: 2px solid var(--gray-hover);
+    border-radius: 6px;
+}
+
+input[type="checkbox"].calccheckbox:checked + label {
+    border-color: var(--orange);
+}
+
+.content ul:not([class]),
+.content ol:not([class]){
+    padding-left: 0;
+    margin: 20px 0;
+    list-style: none;
+}
+
+.content ol:not([class]){
+    counter-reset: olCounter;
+}
+
+.content ul:not([class]) li,
+.content ol:not([class]) li {
+    position: relative;
+    padding-left: 30px;
+    margin: 10px 0;
+}
+
+.content ol:not([class]) li:before {
+    counter-increment: olCounter;
+    content:counter(olCounter)".";
+    color: var(--yellow);
+    display: inline-block;
+    text-align: center;
+    font-weight: 600;
+    position: absolute;
+    width: 25px;
+    left: 0;
+    top: 0px;
+}
+
+.content ul:not([class]) li:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 14px;
+    height: 2px;
+    background: var(--yellow);
+    top: 9px;
+    left: 0;
+}
+
+.nmt {
+    margin-top: 0 !important;
+}
+
+h1.pagetitle {
+    margin-bottom: 60px;
+}
+
+a.button,
+button.button,
+input[type="submit"] {
+    color: #555;
+    background-color: var(--gray);
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 24px;
+    margin: 0;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+a.button:hover,
+button.button:hover,
+input[type="submit"]:hover {
+    background-color: var(--gray-hover);
+}
+
+a.button.red,
+button.button.red,
+input[type="submit"].button.red {
+    background-color: var(--red);
+    color: white;
+}
+
+a.button.red:hover,
+button.button.red:hover,
+input[type="submit"].button.red:hover {
+    background-color: #f13131;
+}
+
+a.button.orange,
+button.button.orange,
+input[type="submit"].button.orange {
+    background-color: var(--yellow);
+    color: white;
+}
+
+a.button.orange:hover,
+button.button.orange:hover,
+input[type="submit"].button.orange:hover {
+    background-color: var(--orange);
+}
+
+a.button.black,
+button.button.black,
+input[type="submit"].button.black {
+    color: #fff;
+    background-color: var(--darkgray);
+}
+
+a.button.black:hover,
+button.button.black:hover,
+input[type="submit"].button.black:hover {
+    background-color: #000000;
+}
+
+a.button:hover,
+a.button:focus,
+button.button:hover,
+button.button:focus,
+input[type="submit"]:hover,
+input[type="submit"]:focus {
+    text-decoration: none;
+}

@@ -2,7 +2,6 @@
 
 namespace Local\Core\Inner\TradingPlatform\Handler\YandexMarket;
 
-use \Local\Core\Inner\Fields;
 use \Local\Core\Inner\Route;
 use \Local\Core\Inner\TradingPlatform\Field;
 

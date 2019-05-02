@@ -176,15 +176,15 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
         while ($ar = $rs->fetch()) {
             $isSelected = ($ar['CODE'] == $this->arResult['TARIFF']['CURRENT']['CODE']);
             ?>
-            <a href="javascript:void(0)"
-               class="dropdown-item <?=$isSelected ? 'active' : ''?>"
-                <?=!$isSelected ? 'onclick="changeTariff('.$this->arResult['ITEM']['ID'].', \''.$ar['CODE'].'\', \''.($ar['PRICE_PER_TRADING_PLATFORM']
-                                                                                                                      > $this->arResult['TARIFF']['CURRENT']['PRICE_PER_TRADING_PLATFORM'] ? 'up' : 'down')
-                                  .'\')"' : ''?>
-            ><?=$ar['NAME']?>,
-                <?=number_format($ar['PRICE_PER_TRADING_PLATFORM'], 0, '.', ' ')?> руб./мес. за ТП,
-                до <?=number_format($ar['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' ')?> товаров
-                <?=(!is_null($ar['DATE_ACTIVE_TO']) ? ' (Доступен до '.$ar['DATE_ACTIVE_TO']->format('Y-m-d').')' : '')?></a>
+            <li>
+                <a href="javascript:void(0)" <?=!$isSelected ? 'onclick="changeTariff('.$this->arResult['ITEM']['ID'].', \''.$ar['CODE'].'\', \''.($ar['PRICE_PER_TRADING_PLATFORM']
+                                                                                                                          > $this->arResult['TARIFF']['CURRENT']['PRICE_PER_TRADING_PLATFORM'] ? 'up' : 'down')
+                                      .'\')"' : ''?>
+                ><?=$ar['NAME']?>,
+                    <?=number_format($ar['PRICE_PER_TRADING_PLATFORM'], 0, '.', ' ')?> руб./мес. за ТП,
+                    до <?=number_format($ar['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' ')?> товаров
+                    <?=(!is_null($ar['DATE_ACTIVE_TO']) ? ' (Доступен до '.$ar['DATE_ACTIVE_TO']->format('Y-m-d').')' : '')?></a>
+            </li>
             <?
         }
     }
