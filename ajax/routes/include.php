@@ -84,10 +84,16 @@ return [
         'methods' => ['POST'],
         'handler' => \Local\Core\Ajax\Handler\SystemAuthAuthorize::class.':try'
     ],
-
     'system_auth_register' => [
         'path' => '/system-auth-register/',
         'methods' => ['POST'],
         'handler' => \Local\Core\Ajax\Handler\SystemAuthRegister::class.':try'
+    ],
+
+    'dadata_search_company_inn' => [
+        'path' => '/dadata/search-company/inn/{inn}/',
+        'methods' => ['POST'],
+        'args' => ['inn' => '[0-9]{10,12}'],
+        'handler' => \Local\Core\Ajax\Handler\Dadata::class.':searchCompanyByInn'
     ]
 ];

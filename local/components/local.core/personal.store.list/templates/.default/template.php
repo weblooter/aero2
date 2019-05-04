@@ -10,67 +10,46 @@
  * @var string                      $templateFolder
  */
 ?>
-<div class="col-xs-12">
 
-    <? if (empty($arResult['ITEMS'])): ?>
-        <p>К компании не привязан ни один сайт</p>
-    <? else: ?>
-        <? foreach ($arResult['ITEMS'] as $arItem): ?>
+<? if (empty($arResult['ITEMS'])): ?>
+    <p>У компании не зарегистрирован ни один магазин.</p>
+<? else: ?>
+    <div class="row">
+    <? foreach ($arResult['ITEMS'] as $arItem): ?>
 
-            <div class="media">
-                <div class="media-body">
-                    <div class="pull-right">
-                        <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'edit', [
+        <div class="col-sm-6 col-md-3 mb-4">
+            <div class="quick-stats__item d-block mb-0">
+                <div class="quick-stats__info">
+                    <h2 class="mb-3">
+                        <a class="quick-stats__link" href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', [
                             '#COMPANY_ID#' => $arParams['COMPANY_ID'],
                             '#STORE_ID#' => $arItem['ID']
-                        ])?>" title="Редактировать">
-                            <ion-icon name="create"></ion-icon>
-                        </a>
-                        <a href="javascript:void(0)" onclick="wblDeleteStore(<?=$arItem['ID']?>)" title="Удалить">
-                            <ion-icon name="trash"></ion-icon>
-                        </a>
+                        ])?>"><?=$arItem['NAME']?></a>
+                    </h2>
+
+                    <div class="actions">
+                        <div class="dropdown actions__item">
+                            <i data-toggle="dropdown" class="zmdi zmdi-more-vert" aria-expanded="false"></i>
+                            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end">
+                                <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'edit', [
+                                    '#COMPANY_ID#' => $arParams['COMPANY_ID'],
+                                    '#STORE_ID#' => $arItem['ID']
+                                ])?>" class="dropdown-item"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Изменить</a>
+                                <a href="javascript:void(0)" onclick="PersonalStoreListComponent.deleteStore('<?=$arItem['ID']?>', '<?=htmlspecialchars($arItem['NAME'])?>')" class="dropdown-item"><i class="zmdi zmdi-delete zmdi-hc-fw"></i> Удалить</a>
+                            </div>
+                        </div>
                     </div>
-                    <h5 class="mt-0">
-                        <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'detail', [
-                            '#COMPANY_ID#' => $arParams['COMPANY_ID'],
-                            '#STORE_ID#' => $arItem['ID']
-                        ])?>">[<?=$arItem['ID']?>] <?=$arItem['NAME']?></a>
-                    </h5>
-                    Активность: <?=($arItem['ACTIVE'] == 'Y') ? 'Активен' : 'Деактивирован'?><br />
-                    Дата создания: <?=date('Y-m-d H:i:s', $arItem['DATE_CREATE']->getTimestamp())?><br />
-                    Источник
-                    данных: <?=($arItem['RESOURCE_TYPE'] == 'LINK') ? 'Ссылка на файл' : 'Загружен файл'?>
+
+                    <p class="mb-0">
+                        <b>Дата создания:</b> <?=( ( $arItem['DATE_CREATE'] instanceof \Bitrix\Main\Type\DateTime ) ? $arItem['DATE_CREATE']->format('Y-m-d H:i') : '-' )?><br/>
+                        <b>Источник данных:</b> <?=($arItem['RESOURCE_TYPE'] == 'LINK') ? 'Ссылка на файл' : 'Загружен файл'?>
+                    </p>
                 </div>
             </div>
-            <hr />
+        </div>
 
-        <? endforeach; ?>
-    <? endif; ?>
+    <? endforeach; ?>
+    </div>
+<? endif; ?>
 
-    <a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID']])?>" class="btn btn-warning">+
-        Добавить магазин</a>
-
-    <?
-    $APPLICATION->IncludeComponent("bitrix:main.pagenavigation", "", array(
-        "NAV_OBJECT" => $arResult['NAV_OBJ'],
-        "SEF_MODE" => "N", // ЧПУ пагинация или нет, Y|N
-        "SHOW_COUNT" => "N",
-    ), false);
-    ?>
-
-</div>
-
-<script type="text/javascript">
-    function wblDeleteStore(intId) {
-        if (confirm('Удалить?')) {
-            axios.post('/ajax/store/delete/' + intId + '/')
-                .then(function (response) {
-                    if (response.data.result == 'SUCCESS') {
-                        alert('OK!');
-                    } else {
-                        alert(response.data['error_text'])
-                    }
-                })
-        }
-    }
-</script>
+<a href="<?=\Local\Core\Inner\Route::getRouteTo('store', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID']])?>" class="btn btn-warning"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Добавить магазин</a>

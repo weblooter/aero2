@@ -1,7 +1,6 @@
 <?
 require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $APPLICATION->SetTitle("Рабочий стол");
-$APPLICATION->AddChainItem('Рабочий стол');
 ?>
 <?/*
     <div class="col-12">
@@ -12,7 +11,9 @@ $APPLICATION->AddChainItem('Рабочий стол');
         )?>" class="btn btn-warning">+ Добавить компанию</a>
 
     </div>
-*/?>
+*/
+/*
+?>
     <a onclick="javascript:swal('Hello world!');" class="button">test simple</a>
     <a onclick="javascript:swal('Here is the title!', '...and here is the text!');" class="button orange">test text</a>
     <a onclick="javascript:swal('Good job!', 'You clicked the button!', 'success');" class="button red">test success</a>
@@ -230,4 +231,5 @@ $APPLICATION->AddChainItem('Рабочий стол');
             }]
         });
     </script>
+*/?>
 <? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>

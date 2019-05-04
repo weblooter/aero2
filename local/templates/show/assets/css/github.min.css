@@ -5,8 +5,8 @@ pre {
     line-height: 19px;
     margin-bottom: 20px;
     margin-top: 20px;    
-    border-top: 3px solid var(--yellow);
-    border-bottom: 3px solid var(--yellow);
+    border-top: 3px solid var(--blue4);
+    border-bottom: 3px solid var(--blue4);
 }
 
 code {
@@ -96,7 +96,7 @@ pre .variable {
 pre .string,
 pre .support.value {
     font-weight: normal;
-    color: var(--orange);
+    color: var(--blue2);
 }
 
 pre .regexp {

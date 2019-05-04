@@ -5,10 +5,10 @@ $intCompanyId = \Bitrix\Main\Application::getInstance()
     ->getRequest()
     ->get('COMPANY_ID');
 
-$APPLICATION->SetTitle("Список магазинов");
+$APPLICATION->SetTitle("Магазины");
 $APPLICATION->SetPageProperty(
     'title',
-    "Список магазинов"
+    "Магазины"
 );
 ?>
 <?
@@ -17,7 +17,6 @@ $GLOBALS['APPLICATION']->IncludeComponent(
     '.default',
     [
         'COMPANY_ID' => $intCompanyId,
-        'ELEM_COUNT' => 1
     ]
 );
 ?>

@@ -67,16 +67,22 @@ img {
 }
 
 .gradient {
-    background-image: -webkit-linear-gradient(left, #fc7751, #f1bc2e);
-    background-image: -o-linear-gradient(left, #fc7751, #f1bc2e);
-    background-image: linear-gradient(to right, #fc7751, #f1bc2e);
+    /*background-image: -webkit-linear-gradient(left, #fc7751, #f1bc2e);*/
+    /*background-image: -o-linear-gradient(left, #fc7751, #f1bc2e);*/
+    /*background-image: linear-gradient(to right, #fc7751, #f1bc2e);*/
+    background-image: -webkit-linear-gradient(left,  var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: -o-linear-gradient(left,  var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: linear-gradient(to right,  var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
     position: relative;
 }
 
 .gradient.second {
-    background-image: -webkit-linear-gradient(left, #f1bc2e, #fc7751);
-    background-image: -o-linear-gradient(left, #f1bc2e, #fc7751);
-    background-image: linear-gradient(to right, #f1bc2e, #fc7751);
+    /*background-image: -webkit-linear-gradient(left, #f1bc2e, #fc7751);*/
+    /*background-image: -o-linear-gradient(left, #f1bc2e, #fc7751);*/
+    /*background-image: linear-gradient(to right, #f1bc2e, #fc7751);*/
+    background-image: -webkit-linear-gradient(right,  var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: -o-linear-gradient(right,  var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: linear-gradient(to left,  var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
     position: relative;
 }
 
@@ -178,7 +184,7 @@ header.fixed {
 }
 
 header.fixed a.logo {
-    color: var(--orange);
+    color: var(--blue2);
     line-height: 70px;
 }
 
@@ -191,8 +197,8 @@ header.fixed ul.mainmenu li a {
 }
 
 header.fixed a.cabinet {
-    background: var(--yellow);
-    border-color: val(--yellow);
+    background: var(--blue4);
+    border-color: val(--blue4);
     text-shadow: none;
 }
 
@@ -290,7 +296,7 @@ section.about .pros .image {
     left: 20px;
     top: calc(50% - 50px);
     background-color: white;
-    border: 1px solid var(--yellow);
+    border: 1px solid var(--blue4);
 }
 
 section.about .pros .image:before {
@@ -317,7 +323,7 @@ section.about .pros_block {
 
 section.about .step h4 span {
     display: block;
-    color: var(--orange);
+    color: var(--blue2);
     margin-bottom: 5px;
     font-size: 14px;
 }
@@ -690,7 +696,7 @@ section.tarifsblock .tarif .block p.subtitle {
 
 section.tarifsblock .tarif .block p.price {
     font-size: 20px;
-    color: var(--orange);
+    color: var(--blue3);
 }
 
 section.tarifsblock .tarif .block p.price.old {
@@ -703,7 +709,7 @@ section.tarifsblock .tarif .block p.subtitle:after {
     content: '';
     width: 20px;
     height: 3px;
-    background: var(--orange);
+    background: var(--blue3);
     display: inline-block;
     left: calc(50% - 10px);
     bottom: -30px;
@@ -733,9 +739,10 @@ section.tarifsblock .tarif .block p.subtitle:after {
     position: absolute;
     display: inline-block;
     width: 30px;
-    height: 30px;    
-    background-image: -webkit-gradient(linear,left top,right top,color-stop(-50%,#f1bc2e),to(#ef8263));
-    background-image: linear-gradient(to right,#f1bc2e -50%,#ef8263 100%);
+    height: 30px;
+    background-image: -webkit-linear-gradient(45deg, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: -o-linear-gradient(45deg, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: linear-gradient(45deg, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
     border-radius: 50%;
     text-align: center;
     line-height: 31px;
@@ -755,7 +762,7 @@ section.tarifsblock .tarif .block p.subtitle:after {
     position: absolute;
     top: 12px;
     right: 20px;
-    color: var(--orange);
+    color: var(--blue2);
     transform: rotate(0deg);
     transition: all 0.2s ease;
 }
@@ -781,7 +788,7 @@ footer .logo {
 
 footer .logo:hover {
     text-decoration: none;
-    color: var(--yellow);
+    color: var(--blue4);
 }
 
 footer ul.footermenu {
@@ -806,12 +813,12 @@ footer ul.footermenu li a {
 
 
 footer ul.footermenu li.active a {
-    color: var(--yellow);
+    color: var(--blue4);
 }
 
 footer ul.footermenu li a:hover {
     text-decoration: none;
-    color: var(--yellow);
+    color: var(--blue4);
 }
 
 footer p.copyright {
@@ -842,7 +849,7 @@ footer p.copyright {
 }
 
 .calculator .addshop span:hover {
-    color: var(--orange);
+    color: var(--blue2);
 }
 
 .calculator .addshop span:before {
@@ -857,7 +864,7 @@ footer p.copyright {
     border-radius: 50%;
     text-align: center;
     font-size: 30px;
-    color: var(--yellow);
+    color: var(--blue4);
 }
 
 header .mobilemenu_toggle {
@@ -993,7 +1000,7 @@ ul.breadcrumbs li span {
 }
 
 .leftmenu-container ul.leftmenu li a:hover {
-    color: var(--orange);
+    color: var(--blue2);
     text-decoration: none;
 }
 

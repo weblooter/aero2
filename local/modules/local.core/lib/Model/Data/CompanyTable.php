@@ -278,6 +278,19 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
     }
 
     /**
+     * @param Event $event
+     *
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function onAfterAdd(Event $event)
+    {
+        # Вызывается строго в конце
+        self::_initClearComponentCache($event, []);
+    }
+
+    /**
      * @param \Bitrix\Main\ORM\Event $event
      *
      * @throws \Bitrix\Main\ArgumentException
@@ -314,6 +327,9 @@ class CompanyTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManage
 
         // Скинем кэш деталки компании
         \Local\Core\Inner\Cache::deleteComponentCache(['personal.company.detail'], ['company_id='.$arFields['ID']]);
+
+        // Скинем кэш меню текущего владельца
+        \Local\Core\Inner\Cache::deleteComponentCache(['personal.asidemenu'], ['userId='.$arFields['USER_OWN_ID']]);
 
     }
 

@@ -5,7 +5,7 @@ $arLocalRoutes = [
             'URL' => '/personal/company/',
             'BREADCRUMBS' => function ($arParams = [])
                 {
-                    $GLOBALS['APPLICATION']->AddChainItem("Мои компании", \Local\Core\Inner\Route::getRouteTo('company', 'list'));
+                    $GLOBALS['APPLICATION']->AddChainItem("Компании", \Local\Core\Inner\Route::getRouteTo('company', 'list'));
                 }
         ],
         'add' => [
@@ -13,7 +13,7 @@ $arLocalRoutes = [
             'BREADCRUMBS' => function ($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs('company', 'list');
-                    $GLOBALS['APPLICATION']->AddChainItem("Создание компании", \Local\Core\Inner\Route::getRouteTo('company', 'add'));
+                    $GLOBALS['APPLICATION']->AddChainItem("Добавить компанию", \Local\Core\Inner\Route::getRouteTo('company', 'add'));
                 }
         ],
         'detail' => [
@@ -40,7 +40,7 @@ $arLocalRoutes = [
             'BREADCRUMBS' => function ($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs('company', 'detail', ['COMPANY_ID' => $arParams['COMPANY_ID']]);
-                    $GLOBALS['APPLICATION']->AddChainItem("Список магазинов", \Local\Core\Inner\Route::getRouteTo('store', 'list', ['#COMPANY_ID#' => $arParams['COMPANY_ID']]));
+                    $GLOBALS['APPLICATION']->AddChainItem("Магазины", \Local\Core\Inner\Route::getRouteTo('store', 'list', ['#COMPANY_ID#' => $arParams['COMPANY_ID']]));
                 }
         ],
         'detail' => [
@@ -82,10 +82,16 @@ $arLocalRoutes = [
         'references' => [
             'URL' => '/development/references/'
         ],
-        'convert' => [
-            'URL' => '/personal/convert/'
+    ],
+    'tools' => [
+        'list' => [
+            'URL' => '/personal/tools/'
+        ],
+        'converter' => [
+            'URL' => '/personal/tools/converter/'
         ],
     ],
+
     'balance' => [
         'list' => [
             'URL' => '/personal/balance/',

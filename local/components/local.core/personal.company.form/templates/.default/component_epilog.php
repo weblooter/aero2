@@ -8,8 +8,6 @@ if ($arParams['COMPANY_ID'] > 0) {
     }
 } else {
     \Local\Core\Inner\Route::fillRouteBreadcrumbs('company', 'add');
-    if (!empty($arResult['FIELDS']['COMPANY_NAME_SHORT']['VALUE'])) {
-        $GLOBALS['APPLICATION']->SetTitle('Создание компании');
-        $GLOBALS['APPLICATION']->SetPageProperty('title', 'Создание компании');
-    }
+    $GLOBALS['APPLICATION']->SetTitle('Добавить компанию');
+    $GLOBALS['APPLICATION']->SetPageProperty('title', 'Добавить компанию');
 }

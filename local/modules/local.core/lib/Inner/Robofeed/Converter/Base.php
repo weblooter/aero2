@@ -88,7 +88,7 @@ class Base
                         'EMAIL' => $arUser['EMAIL'],
                         'HOW_MADE_ROBOFEED_ROUTE' => Route::getRouteTo('development', 'robofeed'),
                         'STORE_ROUTE' => Route::getRouteTo('store', 'list'),
-                        'CONVERT_ROUTE' => Route::getRouteTo('development', 'convert'),
+                        'CONVERT_ROUTE' => Route::getRouteTo('tools', 'converter'),
                     ];
                     switch ($arUpdateFields['STATUS']) {
                         case 'SU':

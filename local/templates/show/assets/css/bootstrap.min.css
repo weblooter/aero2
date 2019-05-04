@@ -1401,13 +1401,13 @@ textarea {
 }
 
 a {
-    color: var(--yellow);
+    color: var(--blue4);
     text-decoration: none
 }
 
 a:focus,
 a:hover {
-    color: var(--orange);
+    color: var(--blue2);
     text-decoration: underline
 }
 

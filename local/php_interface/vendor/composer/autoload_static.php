@@ -226,6 +226,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Agent\\TradingPlatform\\CreateQueueToExportTradingPlatform' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/TradingPlatform/CreateQueueToExportTradingPlatform.php',
         'Local\\Core\\Agent\\TradingPlatform\\MonthlyPayment' => __DIR__ . '/../..' . '/../modules/local.core/lib/Agent/TradingPlatform/MonthlyPayment.php',
         'Local\\Core\\Ajax\\Handler\\Company' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/Company.php',
+        'Local\\Core\\Ajax\\Handler\\Dadata' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/Dadata.php',
         'Local\\Core\\Ajax\\Handler\\Example' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/Example.php',
         'Local\\Core\\Ajax\\Handler\\Store' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/Store.php',
         'Local\\Core\\Ajax\\Handler\\SystemAuthAuthorize' => __DIR__ . '/../..' . '/../modules/local.core/lib/Ajax/Handler/SystemAuthAuthorize.php',

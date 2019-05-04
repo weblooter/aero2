@@ -130,6 +130,7 @@ return array(
     'Local\\Core\\Agent\\TradingPlatform\\CreateQueueToExportTradingPlatform' => $baseDir . '/../modules/local.core/lib/Agent/TradingPlatform/CreateQueueToExportTradingPlatform.php',
     'Local\\Core\\Agent\\TradingPlatform\\MonthlyPayment' => $baseDir . '/../modules/local.core/lib/Agent/TradingPlatform/MonthlyPayment.php',
     'Local\\Core\\Ajax\\Handler\\Company' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/Company.php',
+    'Local\\Core\\Ajax\\Handler\\Dadata' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/Dadata.php',
     'Local\\Core\\Ajax\\Handler\\Example' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/Example.php',
     'Local\\Core\\Ajax\\Handler\\Store' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/Store.php',
     'Local\\Core\\Ajax\\Handler\\SystemAuthAuthorize' => $baseDir . '/../modules/local.core/lib/Ajax/Handler/SystemAuthAuthorize.php',

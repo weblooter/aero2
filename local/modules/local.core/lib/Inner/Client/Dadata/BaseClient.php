@@ -118,6 +118,7 @@ abstract class BaseClient
                     'Authorization: Token '.$this->token,
                 ),
                 'content' => json_encode($query->toArray()),
+                'timeout' => 5.0
             ),
         );
         $context = stream_context_create($options);

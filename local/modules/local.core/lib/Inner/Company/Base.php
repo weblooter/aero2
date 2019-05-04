@@ -31,7 +31,8 @@ class Base
                     'TYPE',
                     'NAME',
                     'USER_OWN_ID',
-                    'VERIFIED'
+                    'VERIFIED',
+                    'USER_OWN_ID'
                 ]
             ])
                 ->fetch();
@@ -145,5 +146,21 @@ class Base
     {
         $ar = self::__getCompanyRegister($intCompanyId);
         return $ar['NAME'];
+    }
+
+    /**
+     * Получить владельца компании
+     *
+     * @param $intCompanyId
+     *
+     * @return mixed
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getCompanyOwn($intCompanyId)
+    {
+        $ar = self::__getCompanyRegister($intCompanyId);
+        return $ar['USER_OWN_ID'];
     }
 }
