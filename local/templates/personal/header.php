@@ -33,12 +33,14 @@ global $USER;
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/bower_components/trumbowyg/dist/ui/trumbowyg.min.css');
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/bower_components/rateYo/min/jquery.rateyo.min.css');
+    $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/bower_components/fileinput/fileinput.min.css');
 
     $obAsset->addCss(SITE_TEMPLATE_PATH.'/assets/css/app.min.css');
 
     /* ** */
     /* JS */
     /* ** */
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/localcore.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/js/qs.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/jquery/dist/jquery.min.js');
@@ -48,6 +50,7 @@ global $USER;
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/jquery-scrollLock/jquery-scrollLock.min.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/remarkable-bootstrap-notify/dist/bootstrap-notify.min.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/sweetalert2/dist/sweetalert2.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/fileinput/fileinput.min.js');
 
     /* **** */
     /* FORM */
@@ -78,7 +81,7 @@ global $USER;
         });
     </script>
 </head>
-<body data-sa-theme="1">
+<body data-sa-theme>
 <?if( $GLOBALS['USER']->IsAdmin() ):?>
     <div id="panel">
         <? $APPLICATION->ShowPanel(); ?>
@@ -381,9 +384,13 @@ global $USER;
             </li>
         </ul>
 
-        <div class="clock">
-            <div class="time">
+        <div class="clock dropdown">
+            <a href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="time text-secondary">
                 <i class="zmdi zmdi-balance-wallet zmdi-hc-fw"></i> <?=number_format(\Local\Core\Inner\Balance\Base::getUserBalance($GLOBALS['USER']->GetId()), 0, '.', ' ');?> руб.
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu--icon">
+                <a href="<?=\Local\Core\Inner\Route::getRouteTo('balance', 'top-up', ['#HANDLER#' => '']);?>" class="dropdown-item"><i class="zmdi zmdi-plus"></i> Пополнить баланс</a>
+                <a href="<?=\Local\Core\Inner\Route::getRouteTo('balance', 'list');?>" class="dropdown-item"><i class="zmdi zmdi-receipt"></i> Посмотреть историю</a>
             </div>
         </div>
     </header>

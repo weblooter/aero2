@@ -7,22 +7,16 @@ $intCompanyId = \Bitrix\Main\Application::getInstance()
     ->getRequest()
     ->get('COMPANY_ID');
 ?>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <? $APPLICATION->IncludeComponent(
-                    "local.core:personal.company.form",
-                    "",
-                    Array(
-                        "AJAX_MODE" => "Y",
-                        "AJAX_OPTION_ADDITIONAL" => "",
-                        "AJAX_OPTION_HISTORY" => "N",
-                        "AJAX_OPTION_JUMP" => "N",
-                        "AJAX_OPTION_STYLE" => "N",
-                        'COMPANY_ID' => $intCompanyId
-                    )
-                ); ?>
-            </div>
-        </div>
-    </div>
-    <br><? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>
+<? $APPLICATION->IncludeComponent(
+    "local.core:personal.company.form",
+    "",
+    Array(
+        "AJAX_MODE" => "Y",
+        "AJAX_OPTION_ADDITIONAL" => "",
+        "AJAX_OPTION_HISTORY" => "N",
+        "AJAX_OPTION_JUMP" => "N",
+        "AJAX_OPTION_STYLE" => "N",
+        'COMPANY_ID' => $intCompanyId
+    )
+); ?>
+<? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>

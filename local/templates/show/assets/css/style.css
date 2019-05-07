@@ -1015,3 +1015,10 @@ ul.breadcrumbs li span {
 .leftmenu-container ul.leftmenu ul {
     margin: 0;
 }
+
+.header-space {
+    height: 100px;
+    background-image: -webkit-linear-gradient(left, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: -o-linear-gradient(left, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+    background-image: linear-gradient(to right, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
+}

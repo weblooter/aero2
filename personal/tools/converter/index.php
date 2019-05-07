@@ -3,15 +3,13 @@ require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $APPLICATION->SetPageProperty("TITLE", "Конвертер");
 $APPLICATION->SetTitle("Конвертер");
 ?>
-<? $APPLICATION->IncludeComponent(
-        "local.core:robofeed.convert.list",
-        ".default",
-        array(
-        ),
-        false
-); ?>
-
-    <h3 class="bold">Загрузить новый файл</h3>
+    <? $APPLICATION->IncludeComponent(
+            "local.core:robofeed.convert.list",
+            ".default",
+            array(
+            ),
+            false
+    ); ?>
     <?$APPLICATION->IncludeComponent(
         "local.core:robofeed.convert.form",
         ".default",

@@ -28,7 +28,7 @@ class PersonalCompanyListComponent {
                             swal({
                                 title: 'Ошибка!',
                                 type: 'error',
-                                html: 'Во время удаления компании "'+strCompanyName+'" произошла ошибка:<br/>'+response.data['error_text']
+                                html: '<p class="text-left">Во время удаления компании "'+strCompanyName+'" произошла ошибка:<br/>'+response.data['error_text']+'</p>'
                             });
                         }
                     });

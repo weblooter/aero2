@@ -30,7 +30,7 @@ $arLocalRoutes = [
             'BREADCRUMBS' => function ($arParams = [])
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs('company', 'list');
-                    $GLOBALS['APPLICATION']->AddChainItem('Редактирование компании '.\Local\Core\Inner\Company\Base::getCompanyName($arParams['COMPANY_ID']));
+                    $GLOBALS['APPLICATION']->AddChainItem('Редактирование компании "'.\Local\Core\Inner\Company\Base::getCompanyName($arParams['COMPANY_ID']).'"');
                 }
         ],
     ],
@@ -59,7 +59,7 @@ $arLocalRoutes = [
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs('store', 'list', ['COMPANY_ID' => $arParams['COMPANY_ID']]);
 
-                    $GLOBALS['APPLICATION']->AddChainItem("Добавление сайта", \Local\Core\Inner\Route::getRouteTo('store', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID']]));
+                    $GLOBALS['APPLICATION']->AddChainItem("Добавить магазин", \Local\Core\Inner\Route::getRouteTo('store', 'add', ['#COMPANY_ID#' => $arParams['COMPANY_ID']]));
                 }
         ],
         'edit' => [
@@ -68,7 +68,7 @@ $arLocalRoutes = [
                 {
                     \Local\Core\Inner\Route::fillRouteBreadcrumbs('store', 'list', ['COMPANY_ID' => $arParams['COMPANY_ID']]);
 
-                    $GLOBALS['APPLICATION']->AddChainItem("Редактирование ".\Local\Core\Inner\Store\Base::getStoreName($arParams['STORE_ID']), \Local\Core\Inner\Route::getRouteTo('store', 'edit', [
+                    $GLOBALS['APPLICATION']->AddChainItem("Редактирование магазина \"".\Local\Core\Inner\Store\Base::getStoreName($arParams['STORE_ID']).'"', \Local\Core\Inner\Route::getRouteTo('store', 'edit', [
                         '#COMPANY_ID#' => $arParams['COMPANY_ID'],
                         '#STORE_ID#' => $arParams['STORE_ID']
                     ]));

@@ -28,7 +28,7 @@ class PersonalStoreListComponent {
                             swal({
                                 title: 'Ошибка!',
                                 type: 'error',
-                                html: 'Во время удаления магазина "'+strStoreName+'" произошла ошибка:<br/>'+response.data['error_text']
+                                html: '<p class="text-left">Во время удаления магазина "'+strStoreName+'" произошла ошибка:<br/>'+response.data['error_text']+'</p>'
                             });
                         }
                     });

@@ -370,8 +370,8 @@ abstract class AbstractField
      */
     public function getRow($htmlInputRender)
     {
-        $strInfotext = '<label class="'.( $this->getIsRequired() ? 'required' : '' ).'">'.$this->getTitle().':';
-        $strInfotext .= (!is_null($this->getDescription())) ? '<button class="icon-info robotip__starter" type="button" tabindex="-1"><div class="robotip__content">'.$this->getDescription().'</div></button>' : '';
+        $strInfotext = '<label class="'.( $this->getIsRequired() ? 'font-weight-bold' : '' ).'">'.$this->getTitle().( $this->getIsRequired() ? ' * ' : '' ).':';
+        $strInfotext .= (!is_null($this->getDescription())) ? '<i class="zmdi zmdi-help-outline zmdi-hc-fw lead text-secondary" data-toggle="tooltip" data-html="true" data-placement="bottom" title="'.htmlspecialchars($this->getDescription()).'"></i>' : '';
         $strInfotext .= '</label>';
 
         if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {
@@ -382,10 +382,10 @@ abstract class AbstractField
         return <<<DOCHERE
 <div class="form-group" id="$strRowHash">
     <div class="row">
-        <div class="col-xs-4">
+        <div class="col-md-4">
             $strInfotext
         </div>
-        <div class="col-xs-8">
+        <div class="col-md-8">
             $htmlInputRender
         </div>
     </div>

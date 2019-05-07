@@ -46,7 +46,7 @@ class Textarea extends AbstractField
 
     private function makeInput($value)
     {
-        $strInput = '<textarea type="text" class="form-control '.( $this->getIsMultiple() ? '' : ' mb-3' ).'" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
+        $strInput = '<textarea type="text" class="form-control '.( $this->getIsMultiple() ? '' : ' mb-4' ).' textarea-autosize" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
 
         $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
         $strInput .= (!empty($this->getPlaceholder())) ? ' placeholder="'.htmlspecialchars($this->getPlaceholder()).'"' : '';

@@ -14,24 +14,24 @@ class ResourceBuilder extends \Local\Core\Inner\TradingPlatform\Field\AbstractFi
         $smallTextHash = sha1($this->getName().time());
 
         $this->addToRender('
-<div class="inputs-group">
-    <textarea class="form-control" name="'.$this->getName().'" onkeyup="PersonalTradingplatformFormComponent.replaceBuilderSmallString(this)" data-small-text-hash="'.$smallTextHash.'">'.$this->getValue().'</textarea>
-    <div class="input-group-btn">
-        <button class="btn orange dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить</button>
-        <ul class="dropdown-menu dropdown-menu-float-right" style="max-height: 300px; overflow-y: scroll;">');
+<div class="input-group mb-2">
+    <textarea class="form-control textarea-autosize" name="'.$this->getName().'" onkeyup="PersonalTradingplatformFormComponent.replaceBuilderSmallString(this)" data-small-text-hash="'.$smallTextHash.'">'.$this->getValue().'</textarea>
+    <div class="input-group-append">
+        <button class="btn btn-secondary dropdown-toggle h-100" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Добавить</button>
+        <div class="dropdown-menu dropdown-menu-right" style="max-height: 300px; overflow-y: scroll;">');
         foreach ($this->getOptions() as $h => $a) {
-            $this->addToRender('<li class="dropdown-header">'.$h.'</li>');
+            $this->addToRender('<div class="font-weight-bold p-3 pt-2 pt-2 border border-secondary border-left-0 border-right-0 border-top-0 lead">'.$h.'</div>');
 
             foreach ($a as $k => $v) {
-                $this->addToRender('<li><a class="dropdown-item" href="javascript:void(0)" onclick="PersonalTradingplatformFormComponent.addBuilderValueToInput(\'{{'.$k.'}}\', \''.$this->getName().'\');">'.$v.'</a></li>');
+                $this->addToRender('<a class="dropdown-item" href="javascript:void(0)" onclick="PersonalTradingplatformFormComponent.addBuilderValueToInput(\'{{'.$k.'}}\', \''.$this->getName().'\');">'.$v.'</a>');
             }
         }
 
 
-        $this->addToRender('</ul>
+        $this->addToRender('</div>
     </div>
 </div>
-<small class="form-text text-muted" data-small-text-id="'.$smallTextHash.'">'.$this->getSmallString().'</small>');
+<small class="form-text text-muted mb-4" data-small-text-id="'.$smallTextHash.'">'.$this->getSmallString().'</small>');
     }
 
     private function getSmallString()

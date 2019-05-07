@@ -14,9 +14,11 @@ use Local\Core\Inner\Route;
 
 ?>
 <? if (empty($arResult['ITEMS'])): ?>
-<div class="alert alert-success">У Вас нет файлов на конветирование в очереди.</div>
+    <p>
+        У Вас нет файлов на конветирование в очереди.
+    </p>
 <? else: ?>
-    <table class="table">
+    <table class="table table-inverse">
         <thead>
         <tr>
             <th width="20%">Дата и файл</th>
@@ -26,24 +28,7 @@ use Local\Core\Inner\Route;
         </thead>
         <tbody>
         <? foreach ($arResult['ITEMS'] as $arItem): ?>
-            <?
-            $strStatusColor = null;
-            switch ($arItem['STATUS']) {
-                case 'SU':
-                    $strStatusColor = 'table-success';
-                    break;
-                case 'ER':
-                    $strStatusColor = 'table-danger';
-                    break;
-                case 'IN':
-                    $strStatusColor = 'table-info';
-                    break;
-                default:
-                    $strStatusColor = 'table-dark';
-                    break;
-            }
-            ?>
-            <tr class="<?=$strStatusColor?>">
+            <tr>
                 <td>
                     <?=date('Y-m-d H:i:s', $arItem['DATE_MODIFIED']->getTimestamp())?><br />
                     <b><?=$arItem['ORIGINAL_FILE_NAME']?></b>
@@ -54,10 +39,10 @@ use Local\Core\Inner\Route;
                     <?
                     switch ($arItem['STATUS']) {
                         case 'SU':
-                            echo '<br/><a class="btn btn-warning" href="'.\Bitrix\Main\Application::getInstance()
+                            echo '<br/><a class="btn btn-outline-secondary" href="'.\Bitrix\Main\Application::getInstance()
                                     ->getContext()
                                     ->getRequest()
-                                    ->getRequestedPageDirectory().'/?getFile='.urlencode(\Local\Core\Inner\BxModified\CFile::GetPath($arItem['EXPORT_FILE_ID'])).'" target="_blank">Скачать файл</a>';
+                                    ->getRequestedPageDirectory().'/?getFile='.urlencode(\Local\Core\Inner\BxModified\CFile::GetPath($arItem['EXPORT_FILE_ID'])).'" target="_blank"><i class="zmdi zmdi-cloud-download zmdi-hc-fw"></i> Скачать файл</a>';
                             break;
                         case 'ER':
 
@@ -66,14 +51,19 @@ use Local\Core\Inner\Route;
                             }
 
                             if (!empty($arItem['VALID_ERROR_MESSAGE'])) {
-                                echo '<br/>Ваш файл содержит не все необходимые нам данные, из-за чего мы не смогли сконвертировать его в Robofeed XML. Изучите <a href="'
-                                     .Route::getRouteTo('development', 'robofeed').'" target="_blank">как сделать Robofeed XML</a>.<br/>
+                                echo '<br/>Ваш файл содержит не все необходимые нам данные, из-за чего мы не смогли сконвертировать его в Robofeed XML.<a href="'
+                                     .Route::getRouteTo('development', 'robofeed').'" class="btn btn-outline-secondary" target="_blank">Как сделать Robofeed XML?</a><br/><br/>
 Так же Вы можете скачать то, что получилось и попробовать загрузить его в магазин, выставив у поля <b>"Поведение импорта при ошибке"</b> значение <b>"Актуализировать только валидные"</b>.<br/>
-<a class="btn btn-warning" href="'.\Bitrix\Main\Application::getInstance()
+<a class="btn btn-outline-secondary" href="'.\Bitrix\Main\Application::getInstance()
                                          ->getContext()
                                          ->getRequest()
-                                         ->getRequestedPageDirectory().'/?getFile='.urlencode(\Local\Core\Inner\BxModified\CFile::GetPath($arItem['EXPORT_FILE_ID'])).'" target="_blank">Скачать что получилось</a><br/>
-<details><summary>Ошибки валидации:</summary><div>'.$arItem['VALID_ERROR_MESSAGE'].'</div></details>';
+                                         ->getRequestedPageDirectory().'/?getFile='.urlencode(\Local\Core\Inner\BxModified\CFile::GetPath($arItem['EXPORT_FILE_ID'])).'" target="_blank"><i class="zmdi zmdi-cloud-download zmdi-hc-fw"></i> Скачать что получилось</a>
+<button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapse'.$arItem['ID'].'">Смотреть ошибки валидации</button>
+<div class="collapse" id="collapse'.$arItem['ID'].'"><br/>
+    <div class="card card-body mb-0">'.$arItem['VALID_ERROR_MESSAGE'].'</div>
+</div>
+
+';
                             }
                             break;
                     }

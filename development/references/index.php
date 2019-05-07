@@ -3,9 +3,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetPageProperty("TITLE", "Справочники");
 $APPLICATION->SetTitle("Справочники");
 ?>
-
-<div class="col-12">
-    <h2>Справочники</h2>
+    <h1>Справочники</h1>
     <ul>
         <li><a href="/development/references/#measure">Справочник единиц измерений</a></li>
         <li><a href="/development/references/#currency">Справочник валют</a></li>
@@ -138,6 +136,5 @@ $APPLICATION->SetTitle("Справочники");
         ?>
         </tbody>
     </table>
-</div>
 
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

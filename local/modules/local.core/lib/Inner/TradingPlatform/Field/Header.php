@@ -17,9 +17,7 @@ class Header extends AbstractField
     /** @inheritDoc */
     public function getRow($htmlInputRender)
     {
-        return '<div class="form-group">
-    <h3 class="bold"><span>'.$this->getValue().'</span></h3>
-</div>';
+        return '<div class="form-group"><div class="card"><h5 class="card-header text-center">'.$this->getValue().'</h5></div></div>';
     }
 
     /** @inheritDoc */

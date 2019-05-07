@@ -27,7 +27,7 @@ class RobofeedConvertListComponent extends \Local\Core\Inner\BxModified\CBitrixC
                 'USER_ID' => $GLOBALS['USER']->GetId()
             ],
             'order' => ['DATE_MODIFIED' => 'DESC'],
-            'select' => ['DATE_MODIFIED', 'ORIGINAL_FILE_NAME', 'HANDLER', 'STATUS', 'EXPORT_FILE_ID', 'ERROR_MESSAGE', 'VALID_ERROR_MESSAGE']
+            'select' => ['DATE_MODIFIED', 'ORIGINAL_FILE_NAME', 'HANDLER', 'STATUS', 'EXPORT_FILE_ID', 'ERROR_MESSAGE', 'VALID_ERROR_MESSAGE', 'ID']
         ]);
         while ($ar = $rsConvert->fetch()) {
             $this->arResult['ITEMS'][] = $ar;

@@ -181,17 +181,17 @@
     },
     {
         "name": "spatie/array-to-xml",
-        "version": "2.8.1",
-        "version_normalized": "2.8.1.0",
+        "version": "2.9.0",
+        "version_normalized": "2.9.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spatie/array-to-xml.git",
-            "reference": "2bf193b3f795d5a42e147c4fa155c288878312e7"
+            "reference": "934a35b7505059830a515ab9b06fa25fa9dab0bf"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/2bf193b3f795d5a42e147c4fa155c288878312e7",
-            "reference": "2bf193b3f795d5a42e147c4fa155c288878312e7",
+            "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/934a35b7505059830a515ab9b06fa25fa9dab0bf",
+            "reference": "934a35b7505059830a515ab9b06fa25fa9dab0bf",
             "shasum": ""
         },
         "require": {
@@ -202,7 +202,7 @@
             "phpunit/phpunit": "^7.0",
             "spatie/phpunit-snapshot-assertions": "^2.0"
         },
-        "time": "2019-03-15T18:43:25+00:00",
+        "time": "2019-05-06T06:33:48+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -232,8 +232,8 @@
     },
     {
         "name": "symfony/asset",
-        "version": "v4.2.7",
-        "version_normalized": "4.2.7.0",
+        "version": "v4.2.8",
+        "version_normalized": "4.2.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/asset.git",
@@ -436,17 +436,17 @@
     },
     {
         "name": "symfony/http-foundation",
-        "version": "v4.2.7",
-        "version_normalized": "4.2.7.0",
+        "version": "v4.2.8",
+        "version_normalized": "4.2.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/http-foundation.git",
-            "reference": "6ebbe61f48069033225c9d3fa7eb5ed116d766d6"
+            "reference": "1ea878bd3af18f934dedb8c0de60656a9a31a718"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/6ebbe61f48069033225c9d3fa7eb5ed116d766d6",
-            "reference": "6ebbe61f48069033225c9d3fa7eb5ed116d766d6",
+            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/1ea878bd3af18f934dedb8c0de60656a9a31a718",
+            "reference": "1ea878bd3af18f934dedb8c0de60656a9a31a718",
             "shasum": ""
         },
         "require": {
@@ -457,7 +457,7 @@
             "predis/predis": "~1.0",
             "symfony/expression-language": "~3.4|~4.0"
         },
-        "time": "2019-04-17T14:56:00+00:00",
+        "time": "2019-05-01T08:36:31+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -740,17 +740,17 @@
     },
     {
         "name": "symfony/var-dumper",
-        "version": "v4.2.7",
-        "version_normalized": "4.2.7.0",
+        "version": "v4.2.8",
+        "version_normalized": "4.2.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/var-dumper.git",
-            "reference": "e760a38e12b15032325e64be63f7ffc1817af617"
+            "reference": "3c4084cb1537c0e2ad41aad622bbf55a44a5c9ce"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/var-dumper/zipball/e760a38e12b15032325e64be63f7ffc1817af617",
-            "reference": "e760a38e12b15032325e64be63f7ffc1817af617",
+            "url": "https://api.github.com/repos/symfony/var-dumper/zipball/3c4084cb1537c0e2ad41aad622bbf55a44a5c9ce",
+            "reference": "3c4084cb1537c0e2ad41aad622bbf55a44a5c9ce",
             "shasum": ""
         },
         "require": {
@@ -773,7 +773,7 @@
             "ext-intl": "To show region name in time zone dump",
             "symfony/console": "To use the ServerDumpCommand and/or the bin/var-dump-server script"
         },
-        "time": "2019-04-17T14:57:01+00:00",
+        "time": "2019-05-01T12:55:36+00:00",
         "bin": [
             "Resources/bin/var-dump-server"
         ],

@@ -45,61 +45,82 @@ class YandexMoney implements PaymentInterface
                 ->fetch();
             $strLabelCode = $arUserLastBalanceUpId['ID'].'|'.$GLOBALS['USER']->GetId();
             ?>
-            <p>
-                При оплате картой комиссия составляет 3%.
-            </p>
-            <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" data-ya-payment-form>
-                <input type="hidden" name="receiver" value="<?=$arConf['receiver_id']?>">
-                <input type="hidden" name="quickpay-form" value="shop">
-
-                <input type="hidden" name="targets" value="Robofeed.ru - Пополнение баланса пользователя <?=$GLOBALS['USER']->GetEmail()?> (<?=$GLOBALS['USER']->GetId()?>)">
-                <input type="hidden" name="paymentType" value="AC">
-                <input type="hidden" name="sum" value="" />
-
-                <input type="hidden" name="formcomment" value="Robofeed.ru: Пополнение баланса">
-                <input type="hidden" name="short-dest" value="Robofeed.ru: Пополнение баланса">
-                <input type="hidden" name="label" value="<?=$strLabelCode?>">
-                <input type="hidden" name="comment" value="Пополнение баланса пользователя <?=$GLOBALS['USER']->GetEmail()?> (<?=$GLOBALS['USER']->GetId()?>)">
-                <input type="hidden" name="successURL" value="<?=$arConf['successURL']?>">
-
-
-                <input type="hidden" name="need-fio" value="false">
-                <input type="hidden" name="need-email" value="false">
-                <input type="hidden" name="need-phone" value="true">
-                <input type="hidden" name="need-address" value="false">
-
-                <div class="row">
-                    <div class="form-group col-3">
-                        <label>Сумма пополнения</label>
-                        <input type="text" class="form-control" name="TOTAL_SUMM" onkeyup="calculateInsert()" onchange="calculateInsert()" onblur="calculateInsert()" value="500" />
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Оплата картой</div>
+                    <div class="card-subtitle">
+                        При оплате картой комиссия составляет 3%.<br/>
+                        Минимальная сумма пополнения - 100 российских рублей.
                     </div>
-                    <div class="form-group col-3">
-                        <label>Итого необходимо заплатить</label>
-                        <input type="text" class="form-control" data-will-be-insert disabled value="0" />
-                    </div>
+
+                    <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" data-ya-payment-form>
+                        <input type="hidden" name="receiver" value="<?=$arConf['receiver_id']?>">
+                        <input type="hidden" name="quickpay-form" value="shop">
+
+                        <input type="hidden" name="targets" value="Robofeed.ru - Пополнение баланса пользователя <?=$GLOBALS['USER']->GetEmail()?> (<?=$GLOBALS['USER']->GetId()?>)">
+                        <input type="hidden" name="paymentType" value="AC">
+                        <input type="hidden" name="sum" value="" />
+
+                        <input type="hidden" name="formcomment" value="Robofeed.ru: Пополнение баланса">
+                        <input type="hidden" name="short-dest" value="Robofeed.ru: Пополнение баланса">
+                        <input type="hidden" name="label" value="<?=$strLabelCode?>">
+                        <input type="hidden" name="comment" value="Пополнение баланса пользователя <?=$GLOBALS['USER']->GetEmail()?> (<?=$GLOBALS['USER']->GetId()?>)">
+                        <input type="hidden" name="successURL" value="<?=$arConf['successURL']?>">
+
+
+                        <input type="hidden" name="need-fio" value="false">
+                        <input type="hidden" name="need-email" value="false">
+                        <input type="hidden" name="need-phone" value="true">
+                        <input type="hidden" name="need-address" value="false">
+
+                        <div class="row">
+                            <div class="form-group col-md-4 col-lg-3">
+                                <label>Сумма пополнения: </label>
+                                <input type="text" class="form-control" name="TOTAL_SUMM" onkeyup="PaymentYandexMoney.calculateInsert()" onchange="PaymentYandexMoney.calculateInsert()" onblur="PaymentYandexMoney.calculateInsert()" value="500" />
+                            </div>
+                            <div class="form-group col-md-4 col-lg-3">
+                                <label>Итого к оплате: </label>
+                                <p class="lead" data-will-be-insert readonly>
+                                    500
+                                </p>
+                            </div>
+                            <div class="form-group col-md-4 col-lg-3">
+                                <label>&nbsp;</label><br/>
+                                <button class="btn btn-secondary">Пополнить счет</button>
+                            </div>
+                        </div>
+                        <div class="clearboth"></div>
+                    </form>
+
                 </div>
-                <div class="clearboth"></div>
-                <button class="btn btn-warning">Пополнить счет</button>
-            </form>
+
+            </div>
 
             <script type="text/javascript">
-                function calculateInsert() {
-                    var inputEnter = document.querySelector('[data-ya-payment-form] [name="TOTAL_SUMM"]'),
-                        inputView = document.querySelector('[data-ya-payment-form] [data-will-be-insert]'),
-                        inputReal = document.querySelector('[data-ya-payment-form] [name="sum"]'),
-                        summ = inputEnter.value.replace(/[^\d]/g, ''),
-                        realSumm = 0;
+                class PaymentYandexMoney
+                {
+                    static calculateInsert() {
+                        var inputEnter = document.querySelector('[data-ya-payment-form] [name="TOTAL_SUMM"]'),
+                            inputView = document.querySelector('[data-ya-payment-form] [data-will-be-insert]'),
+                            inputReal = document.querySelector('[data-ya-payment-form] [name="sum"]'),
+                            summ = inputEnter.value.replace(/[^\d]/g, ''),
+                            realSumm = 0;
 
-                    if (summ < 0)
-                        summ = 0;
-                    inputEnter.value = summ;
-                    realSumm = Math.ceil(summ * 1.03);
-                    inputView.value = realSumm;
-                    inputReal.value = realSumm;
+                        if (summ < 0)
+                            summ = 0;
+                        inputEnter.value = summ;
+                        realSumm = Math.ceil(summ * 1.03);
+                        if( realSumm < 100 || isNaN(realSumm) )
+                        {
+                            realSumm = 103;
+                        }
+                        inputView.innerText = ( realSumm.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ") );
+                        inputReal.value = realSumm;
+                    }
                 }
 
                 document.addEventListener('DOMContentLoaded', function () {
-                    calculateInsert();
+                    PaymentYandexMoney.calculateInsert();
                 })
             </script>
             <?

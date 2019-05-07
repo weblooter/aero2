@@ -144,7 +144,7 @@ class ImportData
                 ImportLogTable::add($arLoggerData);
             }
 
-            $arCompany = \Local\Core\Model\Data\CompanyTable::getByPrimary($arStore['COMPANY_ID'], ['select' => ['USER_OWN_ID']])
+            $arCompany = \Local\Core\Model\Data\CompanyTable::getByPrimary($arStore['COMPANY_ID'], ['select' => ['USER_OWN_ID', 'ID']])
                 ->fetch();
             $arUser = \Bitrix\Main\UserTable::getByPrimary($arCompany['USER_OWN_ID'], ['select' => ['EMAIL']])
                 ->fetch();
@@ -154,7 +154,8 @@ class ImportData
                     \Local\Core\Inner\TriggerMail\Robofeed\Import::error([
                         "EMAIL" => $arUser['EMAIL'],
                         'STORE_NAME' => $arStore['NAME'],
-                        'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
+                        'ERROR_MSG' => $arLoggerData['ERROR_TEXT'],
+                        'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']])
                     ]);
                     break;
                 case 'SU':
@@ -167,7 +168,8 @@ class ImportData
                         \Local\Core\Inner\TriggerMail\Robofeed\Import::successWithWarning([
                             "EMAIL" => $arUser['EMAIL'],
                             'STORE_NAME' => $arStore['NAME'],
-                            'ERROR_MSG' => $arLoggerData['ERROR_TEXT']
+                            'ERROR_MSG' => $arLoggerData['ERROR_TEXT'],
+                            'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']])
                         ]);
                     } else {
 
@@ -185,7 +187,9 @@ class ImportData
                     if ($arStore['ALERT_IF_XML_NOT_MODIFIED'] == 'Y') {
                         \Local\Core\Inner\TriggerMail\Robofeed\Import::xmlNotModified([
                             "EMAIL" => $arUser['EMAIL'],
-                            'STORE_NAME' => $arStore['NAME']
+                            'STORE_NAME' => $arStore['NAME'],
+                            'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']]),
+                            'STORE_EDIT_LINK' => Route::getRouteTo('store', 'edit', ['#COMPANY_ID#' => $arStore['COMPANY_ID'], '#STORE_ID#' => $arStore['ID']]),
                         ]);
                     }
                     break;

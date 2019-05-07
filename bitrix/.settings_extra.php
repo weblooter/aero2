@@ -30,18 +30,6 @@ $conf = [
     ],
 
     /**
-     * Конфиг для работы со счетами.
-     */
-    'bill' => [
-        'value' => [
-            // Класс и метод, отвечающий за построение ACCOUNT_NUMBER
-            'bill_account_number_constructor_class' => Local\Core\Inner\Bill\Base::class,
-            'bill_account_number_constructor_method' => 'createAccountNumber'
-        ],
-        'readonly' => true
-    ],
-
-    /**
      * Кофиг для работы с магазинами
      */
     'store' => [
@@ -103,7 +91,7 @@ $conf = [
             'smtp' => [
                 'host' => 'smtp.yandex.ru',
                 'login' => 'info@robofeed.ru',
-                'password' => 'G=YDV{55w>u-eYH;',
+                'password' => '>4+QGny@T]y7cdh{',
                 'name' => 'info@robofeed.ru',
             ]
         ],

@@ -1,13 +1,13 @@
 <?
 /**
- * @global CMain                      $APPLICATION
- * @var array                         $arParams
- * @var array                         $arResult
- * @var \MainpageCalcComponent        $component
- * @var CBitrixComponentTemplate      $this
- * @var string                        $templateName
- * @var string                        $componentPath
- * @var string                        $templateFolder
+ * @var array                    $arParams
+ * @var array                    $arResult
+ * @var \MainpageCalcComponent   $component
+ * @var CBitrixComponentTemplate $this
+ * @var string                   $templateName
+ * @var string                   $componentPath
+ * @var string                   $templateFolder
+ * @global CMain                 $APPLICATION
  */
 ?>
 <section id="tarifs" class="tarifsblock" data-start="<?=$arResult["START_ELEM"]["ITERATOR"]?>" data-values='<?=$arResult["VALUES"]?>'>
@@ -56,11 +56,12 @@
                                 <div class="block">
                                     <div class="image" style="background-image: url('<?=$this->GetFolder()?>/images/<?=$arResult["START_ELEM"]["CODE"]?>.png')"></div>
                                     <h4><?=$arResult["START_ELEM"]["NAME"]?></h4>
-                                    <p class="subtitle"><?=$arResult["START_ELEM"]["LIMIT_FROM"]?> &mdash; <?=$arResult["START_ELEM"]["LIMIT"]?> товаров</p>
-                                    <?if($arResult["START_ELEM"]["PRICE_OLD"]){?>
-                                        <p class="price old" data-price="<?=$arResult["START_ELEM"]["PRICE_OLD"]?>"><span><?=$arResult["START_ELEM"]["PRICE_OLD"]?></span> руб. / месяц</p>
-                                    <?}?>
-                                    <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>"><span><?=$arResult["START_ELEM"]["PRICE"]?></span> руб. / месяц</p>
+                                    <p class="subtitle">до <?=number_format($arResult["START_ELEM"]["LIMIT"], 0, '.', ' ')?> товаров</p>
+                                    <? if ($arResult["START_ELEM"]["PRICE_OLD"]) { ?>
+                                        <p class="price old" data-price="<?=$arResult["START_ELEM"]["PRICE_OLD"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE_OLD"], 0, '.', ' ')?></span>
+                                            руб. / месяц</p>
+                                    <? } ?>
+                                    <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE"], 0, '.', ' ')?></span> руб. / месяц</p>
                                 </div>
                             </div>
                         </div>
@@ -111,36 +112,41 @@
                             <div class="block">
                                 <div class="image" style="background-image: url('<?=$this->GetFolder()?>/images/<?=$arResult["START_ELEM"]["CODE"]?>.png')"></div>
                                 <h4><?=$arResult["START_ELEM"]["NAME"]?></h4>
-                                <p class="subtitle"><?=$arResult["START_ELEM"]["LIMIT_FROM"]?> &mdash; <?=$arResult["START_ELEM"]["LIMIT"]?> товаров</p>
-                                <?if($arResult["START_ELEM"]["PRICE_OLD"]){?>
-                                <p class="price old" data-price="<?=$arResult["START_ELEM"]["PRICE_OLD"]?>"><span><?=$arResult["START_ELEM"]["PRICE_OLD"]?></span> руб. / месяц</p>
-                                <?}?>
-                                <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>"><span><?=$arResult["START_ELEM"]["PRICE"]?></span> руб. / месяц</p>
+                                <p class="subtitle">до <?=number_format($arResult["START_ELEM"]["LIMIT"], 0, '.', ' ')?> товаров</p>
+                                <? if ($arResult["START_ELEM"]["PRICE_OLD"]) { ?>
+                                    <p class="price old" data-price="<?=$arResult["START_ELEM"]["PRICE_OLD"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE_OLD"], 0, '.', ' ')?></span> руб.
+                                        / месяц</p>
+                                <? } ?>
+                                <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE"], 0, '.', ' ')?></span> руб. / месяц</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <?
-            foreach($arResult["ITEMS"] as $key => $arItem){?>
+            foreach ($arResult["ITEMS"] as $key => $arItem) {
+                ?>
                 <div class="tarif" data-tarif="<?=$arItem["LIMIT"]?>">
                     <div class="block">
                         <div class="image" style="background-image: url('<?=$this->GetFolder()?>/images/<?=$arItem["CODE"]?>.png')"></div>
                         <h4><?=$arItem["NAME"]?></h4>
-                        <p class="subtitle"><?if($key == 0){echo '1';}else{echo $arResult["ITEMS"][$key-1]["LIMIT"];}?> &mdash; <?=$arItem["LIMIT"]?> товаров</p>
-                        <?if($arItem["PRICE_OLD"]){?>
-                        <p class="price old" data-price="<?=$arItem["PRICE_OLD"]?>"><span>0</span> руб. / месяц</p>
-                        <?}?>
+                        <p class="subtitle">
+                            до <?=number_format($arItem["LIMIT"], 0, '.', ' ')?> товаров
+                        </p>
+                        <? if ($arItem["PRICE_OLD"]) {
+                            ?>
+                            <p class="price old" data-price="<?=$arItem["PRICE_OLD"]?>"><span>0</span> руб. / месяц</p>
+                        <? } ?>
                         <p class="price" data-price="<?=$arItem["PRICE"]?>"><span>0</span> руб. / месяц</p>
                     </div>
                 </div>
-            <?}?>
-            <?$last = end($arResult["ITEMS"]);?>
+            <? } ?>
+            <? $last = end($arResult["ITEMS"]); ?>
             <div class="tarif" data-tarif="> <?=$last["LIMIT"]?>">
                 <div class="block">
                     <div class="image" style="background-image: url('<?=$this->GetFolder()?>/images/<?=$last["CODE"]?>.png')"></div>
                     <h4>Индивидуальное предложение</h4>
-                    <p class="subtitle">Более <?=$last["LIMIT"]?> товаров</p>
+                    <p class="subtitle">Более <?=number_format($last["LIMIT"], 0,'.', ' ')?> товаров</p>
                     <p class="price">Индивидуально</p>
                 </div>
             </div>

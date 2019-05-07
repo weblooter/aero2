@@ -18,9 +18,6 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     })
 </script>
 <?}*/?>
-<div id="panel">
-    <? //$APPLICATION->ShowPanel(); ?>
-</div>
 </section>
 </main>
 
@@ -59,6 +56,5 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     <p>Sorry for the inconvenience!</p>
 </div>
 <![endif]-->
-
 </body>
 </html>

@@ -13,7 +13,8 @@ class Import
             "C_FIELDS" => array(
                 "EMAIL" => $arFields['EMAIL'],
                 'STORE_NAME' => $arFields['STORE_NAME'],
-                'ERROR_MSG' => $arFields['ERROR_MSG']
+                'ERROR_MSG' => $arFields['ERROR_MSG'],
+                'STORE_LINK' => $arFields['STORE_LINK']
             )
         ));
     }
@@ -39,7 +40,8 @@ class Import
             "C_FIELDS" => array(
                 "EMAIL" => $arFields['EMAIL'],
                 'STORE_NAME' => $arFields['STORE_NAME'],
-                'ERROR_MSG' => $arFields['ERROR_MSG']
+                'ERROR_MSG' => $arFields['ERROR_MSG'],
+                'STORE_LINK' => $arFields['STORE_LINK']
             )
         ));
     }
@@ -51,7 +53,9 @@ class Import
             "LID" => "s1",
             "C_FIELDS" => array(
                 "EMAIL" => $arFields['EMAIL'],
-                'STORE_NAME' => $arFields['STORE_NAME']
+                'STORE_NAME' => $arFields['STORE_NAME'],
+                'STORE_LINK' => $arFields['STORE_LINK'],
+                'STORE_EDIT_LINK' => $arFields['STORE_EDIT_LINK'],
             )
         ));
     }

@@ -234,7 +234,7 @@
                         type: 'text',
                         id: this.parentContainer.id + '_' + this.id,
                         name: this.name,
-                        className: '',
+                        className: 'form-control',
                         value: (this.IsValue() ? this.valuesContainer[this.id] : '')
                     },
                     style: {display: 'none'},
@@ -460,7 +460,7 @@
         props = {
             id: this.parentContainer.id + '_' + this.id,
             name: this.name,
-            className: '',
+            className: 'form-control',
             selectedIndex: -1
         };
         if (this.multiple) {
@@ -1735,7 +1735,7 @@
                 {
                     props: {
                         id: parentContainer.id + this.sepID + obTreeLevel.id + '_wrap',
-                        className: 'condition-wrapper'
+                        className: 'condition-wrapper mb-3'
                     },
                     style: {zIndex: zIndex + 100}
                 }
@@ -2092,7 +2092,10 @@
                         {
                             props: {
                                 id: divAdd.id + '_link',
-                                className: ''
+                                className: 'btn btn-outline-secondary',
+                            },
+                            attrs: {
+                                href: 'javascript:void(0)'
                             },
                             style: {
                                 display: ''
@@ -2105,7 +2108,7 @@
                         {
                             props: {
                                 id: divAdd.id + '_select',
-                                className: ''
+                                className: 'form-control'
                             },
                             style: {
                                 display: 'none'
@@ -2277,7 +2280,14 @@
                             id: obTreeLevel.id + '_del',
                             className: 'condition-delete',
                             title: this.messTree.DELETE_CONTROL
-                        }
+                        },
+                        children: [
+                            BX.create('I', {
+                                props: {
+                                    className: 'zmdi zmdi-close zmdi-hc-fw'
+                                }
+                            })
+                        ]
                     }
                 ));
                 if (!!delBtn) {

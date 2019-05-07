@@ -1,9 +1,11 @@
 div.condition-border {
     padding: 10px 8px 5px 65px;
 
-    box-shadow: 0 1px 0 #eeeeee;
-    -webkit-box-shadow: 0 1px 0 #eeeeee;
-    background-color: var(--gray);
+    /*box-shadow: 0 1px 0 #eeeeee;*/
+    /*-webkit-box-shadow: 0 1px 0 #eeeeee;*/
+    background-color:  rgb(0, 0, 0, 0.1);
+    border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+    border: 2px solid #fff;
 
     font-weight: 600;
     font-size: 13px;
@@ -11,31 +13,31 @@ div.condition-border {
     position: relative;
 }
 
-div.condition-border a,
-div.condition-border a:link,
-div.condition-border a:visited,
-div.condition-container a,
-div.condition-container a:link,
-div.condition-container a:visited {
-    color: #222222;
+div.condition-border a:not(.btn),
+div.condition-border a:link:not(.btn),
+div.condition-border a:visited:not(.btn),
+div.condition-container a:not(.btn),
+div.condition-container a:link:not(.btn),
+div.condition-container a:visited:not(.btn) {
+    color: #fff;
     text-decoration: none;
     cursor: pointer;
-    border-bottom: 1px dashed var(--orange);
+    border-bottom: 1px dashed #fff;
     padding: 1px 0 1px 0;
     line-height: 20px;
 }
 
-div.condition-border a:hover,
-div.condition-container a:hover {
-    color: #222222;
+div.condition-border a:hover:not(.btn),
+div.condition-container a:hover:not(.btn) {
+    color: #fff;
     text-decoration: none;
     cursor: pointer;
     border-bottom: 1px solid transparent;
 }
 
-div.condition-border a:active,
-div.condition-container a:active {
-    color: #222222;
+div.condition-border a:active:not(.btn),
+div.condition-container a:active:not(.btn) {
+    color: #fff;
     text-decoration: none;
     cursor: pointer;
     border-bottom: 1px solid transparent;
@@ -43,10 +45,10 @@ div.condition-container a:active {
 
 div.condition-container {
     padding: 10px 18px 5px 65px;
-    box-shadow: 0 1px 0 #eceded;
-    -webkit-box-shadow: 0 1px 0 #eceded;
-    background-color: white;
-    border-left: 2px solid var(--yellow);
+    /*box-shadow: 0 1px 0 #eceded;*/
+    /*-webkit-box-shadow: 0 1px 0 #eceded;*/
+    background-color: rgb(0, 0, 0, 0.1);
+    /*border-left: 2px solid var(--yellow);*/
     margin-top: 10px;
     position: relative;
 }
@@ -139,7 +141,7 @@ div.condition-container span.control-string {
 div.condition-border div.condition-simple-control {
     padding: 5px 8px 5px 12px;
     border-radius: 0;
-    background-color: #ffffff;
+    background-color: rgb(0, 0, 0, 0.1);
     background-image: none;
     font-weight: 600;
     margin-top: 10px;
@@ -152,7 +154,7 @@ div.condition-container div.condition-simple-control {
     border: none;
     border-radius: 0;
     border-left: 2px solid var(--yellow);
-    background-color: #f8f9fa;
+    background-color: rgb(0, 0, 0, 0.1);
     background-image: none;
 
     font-weight: 600;
@@ -190,9 +192,9 @@ div.condition-simple-control span.control-prefix {
     -webkit-box-shadow: none;
     border: none;
     border-radius: 0px;
-    background-color: #ffb300;
+    background-color: #fff;
     background-image: none;
-    color: white;
+    color: #222;
 }
 
 div.condition-add {
@@ -202,13 +204,13 @@ div.condition-add {
     font-weight: 600;
 }
 
-div.condition-add a,
-div.condition-add a:link,
-div.condition-add a:visited {
-    color: #222222;
+div.condition-add a:not(.btn),
+div.condition-add a:link:not(.btn),
+div.condition-add a:visited:not(.btn) {
+    color: #f1ba2e !important;
     text-decoration: none;
     cursor: pointer;
-    border-bottom: 1px dashed #222222;
+    border-bottom: 1px dashed #f1ba2e;
 }
 
 div.condition-add a:hover {
@@ -227,9 +229,9 @@ div.condition-add a:active {
 
 div.condition-delete {
     float: right;
-    width: 7px;
-    height: 7px;
-    background: transparent url("../images/cond-delete.png") no-repeat scroll left top;
+    width: auto;
+    height: auto;
+    /*background: transparent url("../images/cond-delete.png") no-repeat scroll left top;*/
     cursor: pointer;
     display: none;
     margin: 5px -10px 0 0;
@@ -239,8 +241,10 @@ div.condition-delete {
 }
 
 div.condition-delete:hover {
-    background: transparent url("../images/cond-delete.png") no-repeat scroll left bottom;
+    /*background: transparent url("../images/cond-delete.png") no-repeat scroll left bottom;*/
 }
+
+div.condition-delete i {font-size: 14px; color: #fff;}
 
 div.condition-border div.condition-simple-control div.condition-delete {
     margin: 5px 0 0 0;
@@ -259,7 +263,7 @@ div.condition-logic {
     width: 55px;
     height: 30px;
     border-radius: 4px;
-    color: #fff !important;
+    color: #fff;
     font-weight: 600 !important;
     border: 0 none transparent;
     line-height: 30px !important;
@@ -270,14 +274,16 @@ div.condition-logic {
     font-size: 11px;
 }
 
-div.condition-logic-and {
-    background-color: var(--yellow);
+div.condition-logic-and,
+div.condition-logic-or {
+    background-color: #fff;
+    color: #222;
 }
 
-div.condition-logic-or {
-    background-color: #c7c7c7;
-    color: #ffffff !important;
-}
+/*div.condition-logic-or {*/
+/*    background-color: #c7c7c7;*/
+/*    color: #ffffff !important;*/
+/*}*/
 
 div.condition-wrapper {
     position: relative;
@@ -309,18 +315,22 @@ span.condition-space {
 .condition-wrapper input[type="text"],
 .condition-wrapper input[type="number"],
 .condition-wrapper input[type="password"] {
-    border: none;
-    border-bottom: 2px solid var(--orange);
-    height: 22px;
-    margin-bottom: 0px;
+    /*border: none;*/
+    /*border-bottom: 2px solid var(--orange);*/
+    /*height: 22px;*/
+    /*margin-bottom: 0px;*/
     width: auto;
+    display: inline-block;
 }
 
 .condition-wrapper select {
-    border: none;
-    border-bottom: 2px solid var(--orange);
-    height: 22px;
-    background: transparent;
+    cursor: pointer;
+    display: inline-block;
+    width: auto;
+    /*border: none;*/
+    /*border-bottom: 2px solid var(--orange);*/
+    /*height: 22px;*/
+    /*background: transparent;*/
 }
 
 .bx-calendar .bx-calendar-form-input {
@@ -341,3 +351,6 @@ span.condition-space {
 .popup-window * {
     font-family: Montserrat;
 }
+
+.condition-wrapper select option,
+.condition-wrapper select optgroup {color: #222;}

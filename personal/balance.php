@@ -2,10 +2,7 @@
 require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php" );
 $APPLICATION->SetTitle("Баланс");
 ?>
-    <div class="col-12">
-        <?
-        $APPLICATION->IncludeComponent('local.core:personal.balance', '.default');
-        ?>
-    </div>
-
+<?
+$APPLICATION->IncludeComponent('local.core:personal.balance', '.default');
+?>
 <? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>

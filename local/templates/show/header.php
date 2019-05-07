@@ -10,57 +10,47 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><? $APPLICATION->ShowTitle(); ?></title>
     <?
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/popper.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/ionicons.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery-1.12.1.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap-select.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/slick.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/ion.rangeSlider.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery.sticky-kit.min.js');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addJs(SITE_TEMPLATE_PATH.'/assets/js/script.js');
+    $obAssets = \Bitrix\Main\Page\Asset::getInstance();
 
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/montseratt.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/simple-line-icons.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-select.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/slick.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/ion.rangeSlider.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/github.min.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/ui.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/style.css');
-    \Bitrix\Main\Page\Asset::getInstance()
-        ->addCss(SITE_TEMPLATE_PATH.'/assets/css/responsive.css');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/popper.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/ionicons.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery-1.12.1.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap-select.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/slick.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/ion.rangeSlider.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery.sticky-kit.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/script.js');
+
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/fonts/montseratt.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/simple-line-icons.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap.min.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/bootstrap-select.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/slick.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/ion.rangeSlider.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/github.min.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/ui.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/style.css');
+    $obAssets->addCss(SITE_TEMPLATE_PATH.'/assets/css/responsive.css');
     ?>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <script type="text/javascript">
-        axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
+        var qs;
+        document.addEventListener('DOMContentLoaded', function () {
+            axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
+            axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+            axios.defaults.headers.common['Content-Type'] = 'application/json';
+            qs = Qs;
+        });
     </script>
 </head>
 <body>
-<div id="panel">
-    <? $APPLICATION->ShowPanel(); ?>
-</div>
+<?if( $GLOBALS['USER']->IsAdmin() ):?>
+    <div id="panel">
+        <? $APPLICATION->ShowPanel(); ?>
+    </div>
+<?endif;?>
 <header>
     <div class="container">
         <div class="inner">
@@ -93,3 +83,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     </div>
 </header>
 <div class="content">
+<?if( $_SERVER['PHP_SELF'] != '/index.php' ):?>
+    <div class="header-space"></div>
+    <div class="container">
+<?endif;?>

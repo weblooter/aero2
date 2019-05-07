@@ -10,3 +10,6 @@
 
 #panel {position: fixed; top: -135px; -webkit-transition: top .2s ease-out 0s; -moz-transition: top .2s ease-out 0s; -o-transition: top .2s ease-out 0s; transition: top .2s ease-out 0s; z-index: 99999999999999; width: 100%;}
 #panel:hover {position: fixed; top: 0px;}
+
+.quick-stats__item .tradingplatform__img {height: 50px; max-width: 100%;}
+.quick-stats__item .tradingplatform__title {overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}

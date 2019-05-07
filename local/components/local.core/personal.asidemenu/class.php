@@ -116,7 +116,7 @@ class PersonalAsideMenuComponent extends \Local\Core\Inner\BxModified\CBitrixCom
             [
                 'LINK' => \Local\Core\Inner\Route::getRouteTo('tools', 'list'),
                 'TEXT' => 'Инструменты',
-                'ICON_CLASS' => 'zmdi zmdi-ungroup zmdi-hc-fw',
+                'ICON_CLASS' => 'zmdi zmdi-ungroup',
                 'CHILDS' => [
                     [
                         'LINK' => \Local\Core\Inner\Route::getRouteTo('tools', 'converter'),
@@ -126,7 +126,25 @@ class PersonalAsideMenuComponent extends \Local\Core\Inner\BxModified\CBitrixCom
             ]
         ];
 
-        $arResult['ITEMS'] = array_merge($arResult['ITEMS'], [$arCompanyMenu], $arTools);
+        $arBalance = [
+            [
+                'LINK' => \Local\Core\Inner\Route::getRouteTo('balance', 'list'),
+                'TEXT' => 'Баланс',
+                'ICON_CLASS' => 'zmdi zmdi-money',
+                'CHILDS' => [
+                    [
+                        'LINK' => \Local\Core\Inner\Route::getRouteTo('balance', 'top-up', ['#HANDLER#' => '']),
+                        'TEXT' => 'Пополнить баланс'
+                    ],
+                    [
+                        'LINK' => \Local\Core\Inner\Route::getRouteTo('balance', 'list'),
+                        'TEXT' => 'Посмотреть историю'
+                    ]
+                ]
+            ]
+        ];
+
+        $arResult['ITEMS'] = array_merge($arResult['ITEMS'], [$arCompanyMenu], $arTools, $arBalance);
 
         $arResult['ITEMS'] = $this->markActiveChain($arResult['ITEMS']);
 
@@ -182,7 +200,12 @@ class PersonalAsideMenuComponent extends \Local\Core\Inner\BxModified\CBitrixCom
             }
             else
             {
-                if( $strCurPageDirectory == $arLvlItem['LINK'] )
+                $strLink = $arLvlItem['LINK'];
+                if( stripos($strLink, '?') !== false )
+                {
+                    $strLink = strstr($strLink, '?', true);
+                }
+                if( $strCurPageDirectory == $strLink )
                 {
                     $arLvlItem['ACTIVE'] = true;
                     $backBoolSelected = true;

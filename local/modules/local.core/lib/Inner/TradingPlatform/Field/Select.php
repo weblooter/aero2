@@ -25,21 +25,22 @@ class Select extends AbstractField
 
     private function makeSelect()
     {
-        $strInput = '<div class="selectwrapper mb-3"><select name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
+        $strInput = '<div class="mb-4"><select class="select2" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
         $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
         $strInput .= ($this->getIsMultiple()) ? ' multiple' : '';
         $strInput .= ($this->getIsReadOnly()) ? ' readonly' : '';
         $strInput .= ($this->getIsMultiple() ? ' size="'.$this->getSize().'"  data-size="'.$this->getSize().'"' : '');
 
         // INFO Сделали в рамках нашей библиотеки
-        $strInput .= ( !empty($this->getDefaultOption()) ) ? 'title="'.htmlspecialchars($this->getDefaultOption()).'"' : '';
-        $strInput .= ( !empty($this->getIsCanSearch()) && sizeof($this->getOptions()) > 3 ) ? 'data-live-search="true"' : '';
+        $strInput .= ( !empty($this->getDefaultOption()) ) ? ' data-placeholder="'.htmlspecialchars($this->getDefaultOption()).'"' : '';
+        $strInput .= ( !empty($this->getIsCanSearch()) && sizeof($this->getOptions()) > 5 ) ? '' : ' data-minimum-results-for-search="Infinity"';
         // / INFO Сделали в рамках нашей библиотеки
 
         $strInput .= '>';
 
-        if (!empty($this->getDefaultOption()) && !$this->getIsMultiple()) {
-            $strInput .= '<option '.(empty($this->getValue()) ? 'selected' : '').' disabled>'.$this->getDefaultOption().'</option>';
+        if( !empty($this->getDefaultOption()) && !$this->getIsMultiple() )
+        {
+            $strInput .= '<option value="">'.$this->getDefaultOption().'</option>';
         }
 
         foreach ($this->getOptions() as $k => $v) {

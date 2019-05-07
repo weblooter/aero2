@@ -1,4 +1,5 @@
 <?
+
 class MainpageCalcComponent extends \Local\Core\Inner\BxModified\CBitrixComponent
 {
     public function executeComponent()
@@ -8,88 +9,104 @@ class MainpageCalcComponent extends \Local\Core\Inner\BxModified\CBitrixComponen
         $this->includeComponentTemplate();
     }
 
-    private function fillResult(){
+    public function onPrepareComponentParams($arParams)
+    {
+        if (empty($arParams['SHOW_TARIFFS']) || !is_array($arParams['SHOW_TARIFFS'])) {
+            $arParams['SHOW_TARIFFS'] = [];
+        }
+        return $arParams;
+    }
+
+    private function fillResult()
+    {
+        $arNewResult = [];
         $obCache = \Bitrix\Main\Application::getInstance()
             ->getCache();
-        if ($obCache->startDataCache((60 * 60 * 24 * 7), "mainpage_calc", \Local\Core\Inner\Cache::getComponentCachePath(['mainpage.calc'])))
-        {
-            $arPreresult = [];
-            $items = [];
-            $rs = \Local\Core\Model\Data\TariffTable::getList( [
-                'select' => array(
-                    "ACTIVE",
-                    "TYPE",
-                    "CODE",
-                    "NAME",
-                    "PRICE_PER_TRADING_PLATFORM",
-                    "LIMIT_IMPORT_PRODUCTS",
-                    "IS_ACTION",
-                    "SWITCH_AFTER_ACTIVE_TO"
-                ),
-                'filter' => array(
-                    "ACTIVE" => "Y",
-                    "TYPE" => "PUB",
-                    "!CODE" => "TRIAL_7_DAYS"
-                ),
-                'order' => array(
-                    "LIMIT_IMPORT_PRODUCTS" => "ASC"
-                )
-            ] );
-            while ( $res = $rs->fetch() )
-            {
-                if ( $res[ "IS_ACTION" ] == "Y" )
-                {
-                    $arPreresult[ "ACTION_ITEMS" ][ $res[ "CODE" ] ] = $res;
+        if (
+        $obCache->startDataCache(
+            (60 * 60 * 3),
+            "mainpage_calc",
+            \Local\Core\Inner\Cache::getComponentCachePath(['mainpage.calc'])
+        )
+        ) {
+            try {
+                if (empty($this->arParams['SHOW_TARIFFS'])) {
+                    throw new \Exception();
                 }
-                else
-                {
-                    $arPreresult[ "REGULAR_ITEMS" ][ $res[ "CODE" ] ] = $res;
+
+                $rs = \Local\Core\Model\Data\TariffTable::getList([
+                    'filter' => [
+                        'CODE' => $this->arParams['SHOW_TARIFFS'],
+                        'IS_DEFAULT' => 'N',
+                        'ACTIVE' => 'Y',
+                        'TYPE' => 'PUB',
+                        '>PRICE_PER_TRADING_PLATFORM' => 0,
+                        [
+                            'LOGIC' => 'OR',
+                            ['DATE_ACTIVE_TO' => false],
+                            ['>DATE_ACTIVE_TO' => new \Bitrix\Main\Type\DateTime()]
+                        ],
+                        [
+                            'LOGIC' => 'OR',
+                            ['DATE_ACTIVE_FROM' => false],
+                            ['<DATE_ACTIVE_FROM' => new \Bitrix\Main\Type\DateTime()]
+                        ]
+                    ],
+                    'order' => ['PRICE_PER_TRADING_PLATFORM' => 'ASC', 'IS_ACTION' => 'DESC'],
+                    'select' => [
+                        'CODE',
+                        'NAME',
+                        'PRICE' => 'PRICE_PER_TRADING_PLATFORM',
+                        'LIMIT' => 'LIMIT_IMPORT_PRODUCTS',
+                        'SWITCH_AFTER_ACTIVE_TO',
+                        'SWITCH_TARIFF',
+                        'PRICE_OLD' => 'LOCAL_CORE_MODEL_DATA_TARIFF_SWITCH_TARIFF_PRICE_PER_TRADING_PLATFORM',
+                    ],
+                    'runtime' => [
+                        (new \Bitrix\Main\ORM\Fields\Relations\Reference(
+                            'SWITCH_TARIFF',
+                            \Local\Core\Model\Data\TariffTable::class,
+                            \Bitrix\Main\ORM\Query\Join::on('this.SWITCH_AFTER_ACTIVE_TO', 'ref.CODE')
+                        ))
+                    ]
+                ]);
+
+                if ($rs->getSelectedRowsCount() < 1) {
+                    throw new \Exception();
                 }
+
+                while ($ar = $rs->fetch()) {
+                    $arAddItem = [
+                        'NAME' => $ar['NAME'],
+                        'CODE' => $ar['CODE'],
+                        'PRICE' => $ar['PRICE'],
+                        'LIMIT' => $ar['LIMIT'],
+                    ];
+
+                    if ($ar['PRICE_OLD'] > 0) {
+                        $arAddItem['PRICE_OLD'] = $ar['PRICE_OLD'];
+                    }
+
+                    $arNewResult['ITEMS'][$ar['PRICE']] = $arAddItem;
+                    $arNewResult['VALUES'][$ar['PRICE']] = $ar['LIMIT'];
+                }
+
+                asort($arNewResult['VALUES']);
+                ksort($arNewResult['ITEMS']);
+                $arNewResult['VALUES'] = array_values($arNewResult['VALUES']);
+                $arNewResult['VALUES'][] = '> '.$arNewResult['VALUES'][sizeof($arNewResult['VALUES']) - 1];
+                $arNewResult['VALUES'] = implode(',', $arNewResult['VALUES']);
+                $arNewResult['ITEMS'] = array_values($arNewResult['ITEMS']);
+                $arNewResult['START_ELEM'] = $arNewResult['ITEMS'][1];
+                $arNewResult['START_ELEM']['ITERATOR'] = 1;
+
+                $obCache->endDataCache($arNewResult);
+            } catch (\Exception $e) {
+                $obCache->abortDataCache();
             }
-
-            if ( count( $arPreresult[ "ACTION_ITEMS" ] ) > 0 )
-            {
-                foreach ( $arPreresult[ "ACTION_ITEMS" ] as $arItem )
-                {
-                    $origin = $arPreresult[ "REGULAR_ITEMS" ][ $arItem[ "SWITCH_AFTER_ACTIVE_TO" ] ];
-                    $items[ $origin[ "CODE" ] ] = array(
-                        "NAME" => $origin[ "NAME" ],
-                        "CODE" => $origin[ "CODE" ],
-                        "PRICE" => $arItem[ "PRICE_PER_TRADING_PLATFORM" ],
-                        "PRICE_OLD" => $origin[ "PRICE_PER_TRADING_PLATFORM" ],
-                        "LIMIT" => $arItem[ "LIMIT_IMPORT_PRODUCTS" ]
-                    );
-                    $arResult[ "VALUES" ] .= $arItem[ "LIMIT_IMPORT_PRODUCTS" ].',';
-                }
-            }
-
-            foreach ( $arPreresult[ "REGULAR_ITEMS" ] as $arItem )
-            {
-                if ( !$items[ $arItem[ "CODE" ] ] )
-                {
-                    $items[ $arItem[ "CODE" ] ] = array(
-                        "NAME" => $arItem[ "NAME" ],
-                        "CODE" => $arItem[ "CODE" ],
-                        "PRICE" => $arItem[ "PRICE_PER_TRADING_PLATFORM" ],
-                        "LIMIT" => $arItem[ "LIMIT_IMPORT_PRODUCTS" ]
-                    );
-                    $arResult[ "VALUES" ] .= $arItem[ "LIMIT_IMPORT_PRODUCTS" ].',';
-                }
-            }
-
-            ksort( $items );
-
-            $arResult[ "ITEMS" ] = array_values( $items );
-
-            $arResult[ "VALUES" ] .= '> '.$arResult[ "ITEMS" ][ count( $arResult[ "ITEMS" ] ) - 1 ][ "LIMIT" ];
-
-            $arResult[ "START_ELEM" ] = $arResult[ "ITEMS" ][ round( count( $arResult[ "ITEMS" ] ) / 2 ) ];
-            $arResult[ "START_ELEM" ][ "LIMIT_FROM" ] = $arResult[ "ITEMS" ][ round( count( $arResult[ "ITEMS" ] ) / 2 ) - 1 ][ "LIMIT" ];
-            $arResult[ "START_ELEM" ][ "ITERATOR" ] = round( count( $arResult[ "ITEMS" ] ) / 2 );
-            $obCache->endDataCache($arResult);
         } else {
-            $arResult = $obCache->getVars();
+            $arNewResult = $obCache->getVars();
         }
-        $this->arResult = $arResult;
+        $this->arResult = $arNewResult;
     }
 }

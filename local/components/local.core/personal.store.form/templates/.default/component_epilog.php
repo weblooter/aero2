@@ -19,6 +19,6 @@ if ($arParams['STORE_ID'] > 0) {
 } else {
     \Local\Core\Inner\Route::fillRouteBreadcrumbs('store', 'add', ['COMPANY_ID' => $arParams['COMPANY_ID']]);
 
-    $APPLICATION->SetTitle('Создание магазина');
-    $APPLICATION->SetPageProperty('title', 'Создание магазина');
+    $APPLICATION->SetTitle('Добавить магазин');
+    $APPLICATION->SetPageProperty('title', 'Добавить магазин');
 }

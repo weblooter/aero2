@@ -19,17 +19,15 @@ $APPLICATION->SetPageProperty(
     "Редактирование торговой площадки"
 );
 ?>
-<div class="col-12">
-    <?
-    $GLOBALS['APPLICATION']->IncludeComponent(
-        'local.core:personal.tradingplatform.form',
-        '.default',
-        [
-            'COMPANY_ID' => $intCompanyId,
-            'STORE_ID' => $intStoreId,
-            'TP_ID' => $intTradingPlatformId
-        ]
-    );
-    ?>
-</div>
+<?
+$GLOBALS['APPLICATION']->IncludeComponent(
+    'local.core:personal.tradingplatform.form',
+    '.default',
+    [
+        'COMPANY_ID' => $intCompanyId,
+        'STORE_ID' => $intStoreId,
+        'TP_ID' => $intTradingPlatformId
+    ]
+);
+?>
 <? require( $_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php" ); ?>
