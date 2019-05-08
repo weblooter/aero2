@@ -232,7 +232,7 @@ Build date: 2018-12-12 00:07:25
 .irs--big .irs-line {
   top: 33px;
   height: 12px;
-  background-color: var(--gray-hover);
+  background-color: #eee;
 }
 .irs--big .irs-bar {
   top: 33px;
