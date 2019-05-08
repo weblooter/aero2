@@ -72,13 +72,11 @@ global $USER;
 
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <script type="text/javascript">
-        var qs;
-        document.addEventListener('DOMContentLoaded', function () {
-            axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
-            axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-            axios.defaults.headers.common['Content-Type'] = 'application/json';
-            qs = Qs;
-        });
+        LocalCore.setRecaptchaSiteKey('<?=\Bitrix\Main\Config\Configuration::getInstance()->get('recaptcha')['site_key']?>');
+        axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
+        axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        axios.defaults.headers.common['Content-Type'] = 'application/json';
+        var qs = Qs;
     </script>
 </head>
 <body data-sa-theme>
@@ -87,8 +85,8 @@ global $USER;
         <? $APPLICATION->ShowPanel(); ?>
     </div>
 <?endif;?>
-
-<main class="main">
+<?if( !defined('ERROR_404') && $GLOBALS['USER']->IsAuthorized() ):?>
+    <main class="main">
 
     <header class="header">
         <div class="navigation-trigger hidden-xl-up" data-sa-action="aside-open" data-sa-target=".sidebar">
@@ -96,7 +94,7 @@ global $USER;
         </div>
 
         <div class="logo hidden-sm-down">
-            <h1><a href="/personal/">ROBOFEED</a></h1>
+            <a href="/personal/">ROBOFEED</a>
         </div>
 
         <form class="search">
@@ -407,10 +405,9 @@ global $USER;
                     </div>
                 </div>
 
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="empty.html#">View Profile</a>
-                    <a class="dropdown-item" href="empty.html#">Settings</a>
-                    <a class="dropdown-item" href="empty.html#">Logout</a>
+                <div class="dropdown-menu dropdown-menu--icon">
+                    <a class="dropdown-item" href="<?=\Local\Core\Inner\Route::getRouteTo('personal', 'settings')?>"><i class="zmdi zmdi-shield-security"></i> Настойки</a>
+                    <a class="dropdown-item" href="?logout=yes"><i class="zmdi zmdi-power"></i> Выйти</a>
                 </div>
             </div>
 
@@ -421,12 +418,13 @@ global $USER;
     </aside>
 
     <section class="content">
-        <? $APPLICATION->IncludeComponent("bitrix:breadcrumb", ".default", Array(
-            "PATH" => "",
-            "SITE_ID" => "s1",
-            "START_FROM" => 1
-        )); ?>
+    <? $APPLICATION->IncludeComponent("bitrix:breadcrumb", ".default", Array(
+        "PATH" => "",
+        "SITE_ID" => "s1",
+        "START_FROM" => 1
+    )); ?>
 
-        <header class="content__title">
-            <h1><?$APPLICATION->ShowTitle(false)?></h1>
-        </header>
+    <header class="content__title">
+        <h1><?$APPLICATION->ShowTitle(false)?></h1>
+    </header>
+<?endif;?>

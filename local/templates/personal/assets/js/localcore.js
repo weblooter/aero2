@@ -8,4 +8,19 @@ class LocalCore {
         $('[type="file"].file').fileinput({'showUpload':false, 'showCancel':false});
         $('[data-toggle="tooltip"]').tooltip();
     }
+
+    static setRecaptchaSiteKey(strKey)
+    {
+        this._recaptchaSiteKey = strKey;
+    }
+
+    static getRecaptchaSiteKey()
+    {
+        return this._recaptchaSiteKey;
+    }
+
+    static isEmail(strEmail)
+    {
+        return /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i.test( strEmail );
+    }
 }

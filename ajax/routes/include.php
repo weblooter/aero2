@@ -79,15 +79,20 @@ return [
         'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':refreshForm'
     ],
 
-    'system_auth_authorize' => [
-        'path' => '/system-auth-authorize/',
+    'system_user_authorize' => [
+        'path' => '/system-user-authorize/',
         'methods' => ['POST'],
-        'handler' => \Local\Core\Ajax\Handler\SystemAuthAuthorize::class.':try'
+        'handler' => \Local\Core\Ajax\Handler\SystemUser::class.':tryAuth'
     ],
-    'system_auth_register' => [
-        'path' => '/system-auth-register/',
+    'system_user_register' => [
+        'path' => '/system-user-register/',
         'methods' => ['POST'],
-        'handler' => \Local\Core\Ajax\Handler\SystemAuthRegister::class.':try'
+        'handler' => \Local\Core\Ajax\Handler\SystemUser::class.':tryReg'
+    ],
+    'system_user_restore_password' => [
+        'path' => '/system-user-restore-password/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\SystemUser::class.':tryRestorePassword'
     ],
 
     'dadata_search_company_inn' => [

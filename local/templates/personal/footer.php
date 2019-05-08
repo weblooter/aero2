@@ -3,23 +3,10 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 ?>
-<?/*if($USER->isAuthorized()){?>
-        </div>
-    </section>
-    <footer>
-        <div class="container">
-            <p class="copy">Copyright ROBOFEED <?=date("Y")?></p>
-        </div>
-    </footer>
-
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        PersonalTemplate.init();
-    })
-</script>
-<?}*/?>
+<?if( !defined('ERROR_404') && $GLOBALS['USER']->IsAuthorized() ):?>
 </section>
 </main>
+<?endif;?>
 
 
 <!-- Older IE warning message -->
@@ -56,5 +43,6 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     <p>Sorry for the inconvenience!</p>
 </div>
 <![endif]-->
+
 </body>
 </html>

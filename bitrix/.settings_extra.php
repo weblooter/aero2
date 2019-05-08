@@ -158,6 +158,17 @@ $conf = [
         ],
         'readonly' => true
     ],
+
+    /**
+     * Рекаптча
+     */
+    'recaptcha' => [
+        'value' => [
+            'site_key' => '6LeHa6IUAAAAABnsTMSgj2oD-oTt1_8ygDlQ2KaQ',
+            'secret_key' => '6LeHa6IUAAAAALWXwZqEgKXi1d-88-SCJM4JycFT'
+        ],
+        'readonly' => true
+    ]
 ];
 
 return $conf;

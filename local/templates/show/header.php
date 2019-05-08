@@ -15,6 +15,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/popper.min.js');
     $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/ionicons.js');
     $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/axios.min.js');
+    $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/qs.js');
     $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/jquery-1.12.1.min.js');
     $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap.min.js');
     $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/js/bootstrap-select.min.js');

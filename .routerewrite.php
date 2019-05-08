@@ -1,5 +1,14 @@
 <?
 $arLocalRoutes = [
+    'personal' => [
+        'settings' => [
+            'URL' => '/personal/settings/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    $GLOBALS['APPLICATION']->AddChainItem("Настройки", \Local\Core\Inner\Route::getRouteTo('personal', 'settings'));
+                }
+        ],
+    ],
     'company' => [
         'list' => [
             'URL' => '/personal/company/',
@@ -108,15 +117,6 @@ $arLocalRoutes = [
                     $GLOBALS['APPLICATION']->AddChainItem("Пополнить баланс", \Local\Core\Inner\Route::getRouteTo('balance', 'top-up', ['#HANDLER#' => '']));
                 }
         ]
-    ],
-    'settings' => [
-        'list' => [
-            'URL' => '/personal/settings/',
-            'BREADCRUMBS' => function ($arParams = [])
-            {
-                $GLOBALS['APPLICATION']->AddChainItem("Настройки", \Local\Core\Inner\Route::getRouteTo('settings', 'list'));
-            }
-        ],
     ],
     'tradingplatform' => [
         'list' => [

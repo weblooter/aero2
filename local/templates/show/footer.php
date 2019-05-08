@@ -22,7 +22,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
                 "MENU_CACHE_TIME" => "3600",
                 "MENU_CACHE_TYPE" => "N",
                 "MENU_CACHE_USE_GROUPS" => "Y",
-                "ROOT_MENU_TYPE" => "top",
+                "ROOT_MENU_TYPE" => "bottom",
                 "USE_EXT" => "N"
             )
         );?>
