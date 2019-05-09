@@ -64,70 +64,83 @@ class Currency
     {
         $intRate = null;
 
-        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+        if( $fromCode == 'RUR' )
+            $fromCode = 'RUB';
 
-        if( $obCache->startDataCache(
-            60*10,
-                __METHOD__.__LINE__,
-            \Local\Core\Inner\Cache::getCachePath(['Inner', 'Currency', 'getRate'], [$fromCode.'_'.$toCode])
-        ) )
+        if( $toCode == 'RUR' )
+            $toCode = 'RUB';
+
+        if( $fromCode == $toCode )
         {
-            $obHttp = new \Bitrix\Main\Web\HttpClient();
-            $obHttp->get('https://free.currconv.com/api/v7/convert?q='.$fromCode.'_'.$toCode.'&compact=ultra&apiKey='.\Bitrix\Main\Config\Configuration::getInstance()->get('currencyconverterapi')['apikey']);
-            if( $obHttp->getStatus() == 200 )
-            {
-                $intRate = json_decode($obHttp->getResult(), true)[$fromCode.'_'.$toCode];
-            }
-
-            if( !empty( $intRate ) )
-            {
-                $ar = \Local\Core\Model\Data\CurrencyRateTable::getList([
-                    'filter' => [
-                        'CURRENCY_FROM' => $fromCode,
-                        'CURRENCY_TO' => $toCode,
-                    ],
-                    'select' => ['ID']
-                ])->fetch();
-                if( !empty( $ar['ID'] ) )
-                {
-                    \Local\Core\Model\Data\CurrencyRateTable::update($ar['ID'], ['RATE' => $intRate]);
-                }
-                else
-                {
-                    \Local\Core\Model\Data\CurrencyRateTable::add([
-                        'CURRENCY_FROM' => $fromCode,
-                        'CURRENCY_TO' => $toCode,
-                        'RATE' => $intRate
-                    ]);
-                }
-            }
-            else
-            {
-                $ar = \Local\Core\Model\Data\CurrencyRateTable::getList([
-                    'filter' => [
-                        'CURRENCY_FROM' => $fromCode,
-                        'CURRENCY_TO' => $toCode,
-                    ],
-                    'select' => ['ID', 'RATE']
-                ])->fetch();
-                if( !empty( $ar['RATE'] ) )
-                {
-                    $intRate = $ar['RATE'];
-                }
-            }
-
-            if( empty( $intRate ) )
-            {
-                $obCache->abortDataCache();
-            }
-            else
-            {
-                $obCache->endDataCache($intRate);
-            }
+            $intRate = 1;
         }
         else
         {
-            $intRate = $obCache->getVars();
+            $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+
+            if( $obCache->startDataCache(
+                60*10,
+                __METHOD__.__LINE__,
+                \Local\Core\Inner\Cache::getCachePath(['Inner', 'Currency', 'getRate'], [$fromCode.'_'.$toCode])
+            ) )
+            {
+                $obHttp = new \Bitrix\Main\Web\HttpClient();
+                $obHttp->get('https://free.currconv.com/api/v7/convert?q='.$fromCode.'_'.$toCode.'&compact=ultra&apiKey='.\Bitrix\Main\Config\Configuration::getInstance()->get('currencyconverterapi')['apikey']);
+                if( $obHttp->getStatus() == 200 )
+                {
+                    $intRate = json_decode($obHttp->getResult(), true)[$fromCode.'_'.$toCode];
+                }
+
+                if( !empty( $intRate ) )
+                {
+                    $ar = \Local\Core\Model\Data\CurrencyRateTable::getList([
+                        'filter' => [
+                            'CURRENCY_FROM' => $fromCode,
+                            'CURRENCY_TO' => $toCode,
+                        ],
+                        'select' => ['ID']
+                    ])->fetch();
+                    if( !empty( $ar['ID'] ) )
+                    {
+                        \Local\Core\Model\Data\CurrencyRateTable::update($ar['ID'], ['RATE' => $intRate]);
+                    }
+                    else
+                    {
+                        \Local\Core\Model\Data\CurrencyRateTable::add([
+                            'CURRENCY_FROM' => $fromCode,
+                            'CURRENCY_TO' => $toCode,
+                            'RATE' => $intRate
+                        ]);
+                    }
+                }
+                else
+                {
+                    $ar = \Local\Core\Model\Data\CurrencyRateTable::getList([
+                        'filter' => [
+                            'CURRENCY_FROM' => $fromCode,
+                            'CURRENCY_TO' => $toCode,
+                        ],
+                        'select' => ['ID', 'RATE']
+                    ])->fetch();
+                    if( !empty( $ar['RATE'] ) )
+                    {
+                        $intRate = $ar['RATE'];
+                    }
+                }
+
+                if( empty( $intRate ) )
+                {
+                    $obCache->abortDataCache();
+                }
+                else
+                {
+                    $obCache->endDataCache($intRate);
+                }
+            }
+            else
+            {
+                $intRate = $obCache->getVars();
+            }
         }
 
         return $intRate;

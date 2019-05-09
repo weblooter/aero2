@@ -148,6 +148,8 @@ class Validator extends \Local\Core\Inner\Robofeed\Validator\AbstractValidator
                                 $arImages[] = $obField->getValidValue((string)$obXmlImage);
                             }
                         }
+                        $arOfferFields['@value'][$elemName] = $arImages;
+                        unset($arImages);
                     }
                     break;
 

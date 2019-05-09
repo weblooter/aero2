@@ -4898,6 +4898,9 @@ a.bg-danger:focus, a.bg-danger:hover {
 .border-white {
     border-color: #fff !important
 }
+.border-dark {
+    border-color: #222 !important
+}
 
 .rounded {
     border-radius: 2px !important
@@ -9945,7 +9948,7 @@ button, input, optgroup, select, textarea {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: rgba(255, 255, 255, .7);
+    color: rgba(255, 255, 255, .85);
     margin-bottom: 0
 }
 

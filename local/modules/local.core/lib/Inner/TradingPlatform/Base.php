@@ -185,7 +185,7 @@ class Base
             $strCode = self::__getTpRegister($intTradingPlatformId)['CODE'];
             $strExportFileFormat = \Local\Core\Inner\TradingPlatform\Factory::factory(self::__getTpRegister($intTradingPlatformId)['HANDLER'])
                 ->getExportFileFormat();
-            $strReturn = (\Bitrix\Main\Config\Configuration::getInstance()->get('tradingplatform')['export']['export_dir'] ?? '/upload/tradingplatform/export').'/'.self::getStoreIdByTpId($intTradingPlatformId).'/'.$strCode.'.'.$strExportFileFormat;
+            $strReturn = (\Bitrix\Main\Config\Configuration::getInstance()->get('tradingplatform')['export']['export_dir'] ?? '/upload/tradingplatform/export').'/'.self::getStoreId($intTradingPlatformId).'/'.$strCode.'.'.$strExportFileFormat;
         } catch (\Throwable $e) {
 
         }
@@ -203,7 +203,7 @@ class Base
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function getStoreIdByTpId($intTradingPlatformId)
+    public static function getStoreId($intTradingPlatformId)
     {
         return self::__getTpRegister($intTradingPlatformId)['STORE_ID'];
     }
@@ -254,7 +254,7 @@ class Base
                 else
                 {
                     $strAddTime = 'now + 1 month';
-                    if( \Local\Core\Inner\Tariff\Base::getDefaultTariff()['CODE'] == \Local\Core\Inner\Store\Base::getTariffCode(\Local\Core\Inner\TradingPlatform\Base::getStoreIdByTpId($intTradingPlatformId)) )
+                    if( \Local\Core\Inner\Tariff\Base::getDefaultTariff()['CODE'] == \Local\Core\Inner\Store\Base::getTariffCode(\Local\Core\Inner\TradingPlatform\Base::getStoreId($intTradingPlatformId)) )
                     {
                         $strAddTime = 'now + 7 day';
                     }

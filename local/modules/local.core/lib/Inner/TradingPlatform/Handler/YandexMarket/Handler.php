@@ -16,7 +16,26 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     /** @inheritDoc */
     public static function getTitle()
     {
-        return 'Яндекс маркет';
+        return 'Яндекс.Маркет';
+    }
+
+    /** @inheritDoc */
+    public static function getMainCurrency()
+    {
+        return 'RUB';
+    }
+
+    /** @inheritDoc */
+    public static function getSupportedCurrency()
+    {
+        return [
+            'RUB',
+            'BYN',
+            'UAH',
+            'KZT',
+            'EUR',
+            'USD'
+        ];
     }
 
     /** @inheritDoc */
@@ -25,9 +44,9 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
         return $this->getShopBaseFields() + $this->getDefaultDeliveryFields() + $this->getDefaultPickupFields() + $this->getOfferFields();
     }
 
-    private function getShopBaseFields()
+    protected function getShopBaseFields()
     {
-        return [
+        $arShopFields = [
             '#header_y1' => (new Field\Header())->setValue('Настройки магазина'),
 
             'shop__name' => (new Field\InputText())->setTitle('Короткое название магазина')
@@ -68,23 +87,19 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
             'shop__email' => (new Field\InputText())->setTitle('Контактный адрес разработчиков CMS или агентства, осуществляющего техподдержку')
                 ->setName('HANDLER_RULES[shop][email]')
                 ->setPlaceholder('info@example.com')
-                ->setValue($this->getHandlerRules()['shop']['email'])
+                ->setValue($this->getHandlerRules()['shop']['email']),
         ];
-    }
 
-    private function getDefaultDeliveryFields()
-    {
-        $arDeliveryFields = [];
 
-        $arDeliveryFields['#header_y2'] = (new Field\Header())->setValue('Условия доставки');
+        $arShopFields['#header_y1.1'] = (new Field\Header())->setValue('Условия доставки магазина по умолчанию');
 
-        $arDeliveryFields['shop__offers__offer__@delivery_data_source'] = (new Field\Select())->setTitle('Источник данных для доставки курьером')
-            ->setName('HANDLER_RULES[shop][offers][offer][@delivery_data_source]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@delivery_data_source'] ?? 'ROBOFEED')
+        $arShopFields['shop__@delivery'] = (new Field\Select())->setTitle('Имеется ли у магазина возможность курьерской доставки?')
+            ->setName('HANDLER_RULES[shop][@delivery]')
+            ->setValue($this->getHandlerRules()['shop']['@delivery'] ??  'N')
             ->setIsRequired()
             ->setOptions([
-                'ROBOFEED' => 'Использовать данные, загруженные в Robofeed XML',
-                'CUSTOM' => 'Заполню самостоятельно'
+                'Y' => 'Да',
+                'N' => 'Нет'
             ])
             ->setEvent([
                 'onchange' => [
@@ -92,24 +107,103 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                 ]
             ]);
 
-        if ($this->getHandlerRules()['shop']['offers']['offer']['@delivery_data_source'] == 'CUSTOM') {
+        if( ( $this->getHandlerRules()['shop']['@delivery'] ?? 'N' ) == 'Y' )
+        {
+            $arShopFields['#header_y1.1_info'] = (new Field\Infoblock())->setValue(<<<DOCHERE
+Яндекс.Маркет требует указывать условия доставки магазина по умолчанию вне зависимости, указаны ли условия у каждого товара или нет. Эти условия распространяются на все предложения магазина, кроме предложений с индивидуальными условиями доставки.<br/>
+Этот блок работает отдельно от блока <b>"Условия доставки товара"</b>.
+DOCHERE
+);
 
-            $arDeliveryFields['shop__offers__offer__delivery'] = (new Field\Select())->setTitle('Возможность курьерской доставки')
-                ->setName('HANDLER_RULES[shop][offers][offer][delivery]')
+            $arShopFields['shop__delivery-options__option__@attr__cost'] = (new Field\InputText())->setTitle('Стоимость доставки по умолчанию')
+                ->setDescription('В качестве значения используйте только целые числа. Для бесплатной доставки укажите значение 0.')
+                ->setName('HANDLER_RULES[shop][delivery-options][option][@attr][cost]')
+                ->setIsRequired()
+                ->setValue($this->getHandlerRules()['shop']['delivery-options']['option']['@attr']['cost'] ?? 0);
+
+            $arShopFields['shop__delivery-options__option__@attr__days'] = (new Field\Resource())->setTitle('Срок доставки в рабочих днях по умолчанию')
+                ->setDescription('Можно указать как конкретное количество дней, так и период «от — до». Например, срок доставки от 2 до 4 дней опишите так: 2-4. <i>При указании периода «от — до» интервал срока доставки должен составлять <b>не более двух</b> дней.</i>')
+                ->setName('HANDLER_RULES[shop][delivery-options][option][@attr][days]')
+                ->setStoreId($this->getTradingPlatformStoreId())
+                ->setAllowTypeList([
+                    Field\Resource::TYPE_SIMPLE,
+                    Field\Resource::TYPE_IGNORE,
+                ])
+                ->setSimpleField((new Field\InputText()))
+                ->setValue($this->getHandlerRules()['shop']['delivery-options']['option']['@attr']['days'] ?? [
+                        'TYPE' => Field\Resource::TYPE_SIMPLE,
+                        Field\Resource::TYPE_SIMPLE.'_VALUE' => '1-3'
+                    ])
+                ->setEpilog((new Field\Infoblock())->setValue('<b>Неопределенный срок доставки (товары «на заказ»).</b><br/>
+Если точный срок доставки неизвестен, используйте значение 32 или больше (либо выберите значение <b>"Игнорировать поле"</b>). Для таких товаров на Маркете будет показана надпись «на заказ».
+<br/>
+Внимание. Магазин должен доставить товары «на заказ» в срок до двух месяцев. Точный срок необходимо согласовать с покупателем.'));
+
+            $arShopFields['shop__delivery-options__option__@attr__order-before'] = (new Field\Resource())->setTitle('Время, до которого нужно сделать заказ, чтобы получить его в этот срок, по умолчанию')
+                ->setDescription('В качестве значения используйте только целое число от 0 до 24.<br/>
+Если значение не указано или проигнорировано, ЯндекМаркет использует значение по умолчанию — 13.')
+                ->setName('HANDLER_RULES[shop][delivery-options][option][@attr][order-before]')
+                ->setStoreId($this->getTradingPlatformStoreId())
+                ->setAllowTypeList([
+                    Field\Resource::TYPE_SIMPLE,
+                    Field\Resource::TYPE_IGNORE,
+                ])
+                ->setSimpleField((new Field\InputText()))
+                ->setValue($this->getHandlerRules()['shop']['delivery-options']['option']['@attr']['order-before'] ?? ['TYPE' => Field\Resource::TYPE_IGNORE]);
+        }
+
+        return $arShopFields;
+    }
+
+    protected function getDefaultDeliveryFields()
+    {
+        $arDeliveryFields = [];
+
+        if( ( $this->getHandlerRules()['shop']['@delivery'] ?? 'N' ) == 'Y' )
+        {
+
+            $arDeliveryFields['#header_y2'] = (new Field\Header())->setValue('Условия доставки товара');
+
+            $arDeliveryFields['shop__offers__offer__@delivery_data_source'] = (new Field\Select())->setTitle('Источник данных для доставки курьером')
+                ->setName('HANDLER_RULES[shop][offers][offer][@delivery_data_source]')
+                ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@delivery_data_source'] ?? 'ROBOFEED')
                 ->setIsRequired()
                 ->setOptions([
-                    'Y' => 'Да',
-                    'N' => 'Нет'
+                    'ROBOFEED' => 'Использовать данные, загруженные в Robofeed XML',
+                    'CUSTOM' => 'Заполню самостоятельно'
                 ])
                 ->setEvent([
                     'onchange' => [
                         'PersonalTradingplatformFormComponent.refreshForm()'
                     ]
-                ])
-                ->setValue($this->getHandlerRules()['shop']['offers']['offer']['delivery'] ?? 'Y');
+                ]);
 
+            if ($this->getHandlerRules()['shop']['offers']['offer']['@delivery_data_source'] == 'CUSTOM') {
 
-            if ($this->getHandlerRules()['shop']['offers']['offer']['delivery'] == 'Y' || empty($this->getHandlerRules()['shop']['offers']['offer']['delivery'])) {
+                $arDeliveryFields['shop__offers__offer__delivery'] = (new Field\Resource())->setTitle('Возможность курьерской доставки')
+                    ->setName('HANDLER_RULES[shop][offers][offer][delivery]')
+                    ->setIsRequired()
+                    ->setStoreId($this->getTradingPlatformStoreId())
+                    ->setAllowTypeList([
+                        Field\Resource::TYPE_SELECT,
+                        Field\Resource::TYPE_LOGIC,
+                    ])
+                    ->setSelectField(
+                        (new Field\Select())
+                            ->setOptions([
+                                'Y' => 'Да',
+                                'N' => 'Нет'
+                            ])
+                    )
+                    ->setValue($this->getHandlerRules()['shop']['offers']['offer']['delivery'] ?? [
+                            'TYPE' => Field\Resource::TYPE_SELECT,
+                            Field\Resource::TYPE_SELECT.'_VALUE' => 'Y'
+                        ]);
+
+                $arDeliveryFields['shop__offers__offer__delivery-options__option__@info'] = (new Field\Infoblock())->setValue(<<<DOCHERE
+Условия, описанные ниже, будут применены к товарам, которые будут иметь признак возможности курьерской доставки.
+DOCHERE
+);
                 $arDeliveryFields['shop__offers__offer__delivery-options__option__@attr__cost'] = (new Field\Resource())->setTitle('Стоимость доставки')
                     ->setDescription('В качестве значения используйте только целые числа. Для бесплатной доставки укажите значение 0.')
                     ->setName('HANDLER_RULES[shop][offers][offer][delivery-options][option][@attr][cost]')
@@ -136,7 +230,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     ->setValue($this->getHandlerRules()['shop']['offers']['offer']['delivery-options']['option']['@attr']['days'] ??
                                ['TYPE' => Field\Resource::TYPE_SIMPLE, Field\Resource::TYPE_SIMPLE.'_VALUE' => '1-3'])
                     ->setEpilog((new Field\Infoblock())->setValue('<b>Неопределенный срок доставки (товары «на заказ»).</b><br/>
-Если точный срок доставки неизвестен, используйте в атрибуте days значение 32 или больше (либо выберите значение <b>"Игнорировать поле"</b>). Для таких товаров на Маркете будет показана надпись «на заказ».
+Если точный срок доставки неизвестен, используйте значение 32 или больше (либо выберите значение <b>"Игнорировать поле"</b>). Для таких товаров на Маркете будет показана надпись «на заказ».
 <br/>
 Внимание. Магазин должен доставить товары «на заказ» в срок до двух месяцев. Точный срок необходимо согласовать с покупателем.'));
 
@@ -153,16 +247,17 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     ->setSimpleField((new Field\InputText()))
                     ->setValue($this->getHandlerRules()['shop']['offers']['offer']['delivery-options']['option']['@attr']['order-before'] ?? ['TYPE' => Field\Resource::TYPE_IGNORE]);
             }
+
         }
 
         return $arDeliveryFields;
     }
 
-    private function getDefaultPickupFields()
+    protected function getDefaultPickupFields()
     {
         $arDeliveryFields = [];
 
-        $arDeliveryFields['#header_y3'] = (new Field\Header())->setValue('Условия самовывоза');
+        $arDeliveryFields['#header_y3'] = (new Field\Header())->setValue('Условия самовывоза товара');
 
         $arDeliveryFields['shop__offers__offer__@pickup_data_source'] = (new Field\Select())->setTitle('Источник данных для самовывоза')
             ->setName('HANDLER_RULES[shop][offers][offer][@pickup_data_source]')
@@ -241,7 +336,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
 
     protected static $arParamsListCache;
 
-    private function getOfferFields()
+    protected function getOfferFields()
     {
         $arFields = [
             '#header_y4' => (new Field\Header())->setValue('Торговые предложения')
@@ -252,7 +347,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@offer_data_source'] ?? 'ROBOFEED')
             ->setIsRequired()
             ->setOptions([
-                'ROBOFEED' => 'Автоматческое заполнение на основании Robofeed XML',
+                'ROBOFEED' => 'Автоматическое заполнение на основе данных из Robofeed XML',
                 'CUSTOM' => 'Заполню самостоятельно'
             ])
             ->setEvent([
@@ -837,7 +932,7 @@ DOCHERE
         return $arFields;
     }
 
-    private function _getCountryListToSelect()
+    protected function _getCountryListToSelect()
     {
         $arCountries = [];
         $obCache = \Bitrix\Main\Application::getInstance()
@@ -894,6 +989,12 @@ DOCHERE
                 throw new \Exception();
             }
 
+            $this->fillShopDeliveryDefault($obResult);
+
+            if (!$obResult->isSuccess()) {
+                throw new \Exception();
+            }
+
             $this->addToTmpExportFile('<offers>');
             $this->beginFilterProduct($obResult);
             $this->addToTmpExportFile('</offers>');
@@ -932,6 +1033,27 @@ DOCHERE
         }
     }
 
+    protected function fillShopDeliveryDefault(\Bitrix\Main\Result $obResult){
+        if( $this->getHandlerRules()['shop']['@delivery'] == 'Y' )
+        {
+            $this->addToTmpExportFile('<delivery-options>');
+
+            $strDeliveryOption = '<option cost="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__cost'])).'"';
+            if( !is_null($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__days'])) )
+            {
+                $strDeliveryOption .= ' days="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__days'])).'"';
+            }
+            if( !is_null($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__order-before'])) )
+            {
+                $strDeliveryOption .= ' order-before="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__order-before'])).'"';
+            }
+            $strDeliveryOption .= ' />';
+            $this->addToTmpExportFile($strDeliveryOption);
+
+            $this->addToTmpExportFile('</delivery-options>');
+        }
+    }
+
     protected function fillCurrencies(\Bitrix\Main\Result $obResult)
     {
         $this->addToTmpExportFile('<currencies>');
@@ -944,15 +1066,32 @@ DOCHERE
             if ($rsCurrencies->getSelectedRowsCount() < 1) {
                 $obResult->addError(new \Bitrix\Main\Error('Не обнаружен ни один код валюты среди товаров.'));
             } else {
+
+                $arUsedCurrencies = [];
                 while ($ar = $rsCurrencies->fetch()) {
-                    switch ($ar['CURRENCY_CODE']) {
-                        case 'RUB':
-                            $this->addToTmpExportFile('<currency id="RUR"/>');
-                            break;
-                        default:
-                            $this->addToTmpExportFile('<currency id="'.htmlspecialchars($ar['CURRENCY_CODE']).'"/>');
-                            break;
+
+                    $strCurrencyCode = $ar['CURRENCY_CODE'];
+
+                    if( !in_array( $strCurrencyCode, static::getSupportedCurrency() ) )
+                    {
+                        $strCurrencyCode = static::getMainCurrency();
                     }
+
+                    if( $strCurrencyCode == 'RUB' )
+                    {
+                        $strCurrencyCode = 'RUR';
+                    }
+
+                    if( !in_array($strCurrencyCode, $arUsedCurrencies) )
+                    {
+                        $this->addToTmpExportFile('<currency id="'.htmlspecialchars($strCurrencyCode).'" rate="'.( round( \Local\Core\Inner\Currency::getRate($strCurrencyCode, static::getMainCurrency()), 3 ) ).'"/>');
+                        $arUsedCurrencies[] = $strCurrencyCode;
+                    }
+                }
+
+                if( !in_array( ( ( static::getMainCurrency() == 'RUB' ) ? 'RUR' : static::getMainCurrency() ) , $arUsedCurrencies) )
+                {
+                    $this->addToTmpExportFile('<currency id="'.htmlspecialchars( ( ( static::getMainCurrency() == 'RUB' ) ? 'RUR' : static::getMainCurrency() ) ).'" rate="1"/>');
                 }
             }
         } else {
@@ -1024,7 +1163,7 @@ DOCHERE
 
                 $this->fillPriceAndCurrency($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__price'], $arExportProductData),
                     $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__currencyId'], $arExportProductData),
-                    $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__oldprice'], $arExportProductData), $arOfferXml, $arExportProductData);
+                    $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__oldprice'], $arExportProductData), $arOfferXml);
 
                 if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__description'], $arExportProductData))) {
                     $arOfferXml['description']['_cdata'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__description'], $arExportProductData);
@@ -1041,14 +1180,14 @@ DOCHERE
                 }
                 if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__country_of_origin'], $arExportProductData))) {
 
-                    $arOfferXml['country_of_origin'] = $this->extraYandexCountry($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__country_of_origin'], $arExportProductData));
+                    $arOfferXml['country_of_origin'] = $this->extractYandexCountry($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__country_of_origin'], $arExportProductData));
                 }
                 if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__adult'], $arExportProductData))) {
                     $arOfferXml['adult'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__adult'], $arExportProductData) == 'Y') ? 'true' : 'false';
                 }
                 if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__weight'], $arExportProductData)) && !empty($arExportProductData['WEIGHT_UNIT_CODE'])) {
                     $arOfferXml['weight'] = \Local\Core\Inner\Measure::convert($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__weight'], $arExportProductData),
-                        $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM');
+                        $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM', 3);
                 }
                 if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__dimensions'], $arExportProductData))) {
 
@@ -1106,9 +1245,9 @@ DOCHERE
                         $intHeight = $ar[$heiK];
 
                         if ($intLength > 0 && $intWidth > 0 && $intHeight > 0) {
-                            $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT').'/'
-                                                        .\Local\Core\Inner\Measure::convert($intWidth, $arExportProductData['WIDTH_UNIT_CODE'], 'CMT').'/'
-                                                        .\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT');
+                            $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT', 3).'/'
+                                                        .\Local\Core\Inner\Measure::convert($intWidth, $arExportProductData['WIDTH_UNIT_CODE'], 'CMT', 3).'/'
+                                                        .\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT', 3);
                         } else {
                             $arOfferXml['dimensions'] = null;
                         }
@@ -1146,7 +1285,7 @@ DOCHERE
 
                 $this->fillPriceAndCurrency($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__price']),
                     $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__currencyId']), $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__oldprice']),
-                    $arOfferXml, $arExportProductData);
+                    $arOfferXml);
 
                 if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__description']))) {
                     $arOfferXml['description']['_cdata'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__description']);
@@ -1162,21 +1301,21 @@ DOCHERE
                 }
                 if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__country_of_origin']))) {
 
-                    $arOfferXml['country_of_origin'] = $this->extraYandexCountry($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__country_of_origin']));
+                    $arOfferXml['country_of_origin'] = $this->extractYandexCountry($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__country_of_origin']));
                 }
                 if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__adult']))) {
                     $arOfferXml['adult'] = ($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__adult']) == 'Y') ? 'true' : 'false';
                 }
                 if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__weight'])) && !empty($arExportProductData['WEIGHT_UNIT_CODE'])) {
                     $arOfferXml['weight'] = \Local\Core\Inner\Measure::convert($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__weight']),
-                        $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM');
+                        $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM', 3);
                 }
                 if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__dimensions']))) {
                     $arOfferXml['dimensions'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__dimensions']);
                     list($intLength, $intWidth, $intHeight) = explode('/', $arOfferXml['dimensions']);
                     if ($intLength > 0 && $intWidth > 0 && $intHeight > 0) {
-                        $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT').'/'.\Local\Core\Inner\Measure::convert($intWidth,
-                                $arExportProductData['WIDTH_UNIT_CODE'], 'CMT').'/'.\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT');
+                        $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT', 3).'/'.\Local\Core\Inner\Measure::convert($intWidth,
+                                $arExportProductData['WIDTH_UNIT_CODE'], 'CMT', 3).'/'.\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT', 3);
                     } else {
                         $arOfferXml['dimensions'] = null;
                     }
@@ -1224,58 +1363,65 @@ DOCHERE
              * DELIVERY
              ******** */
 
-            switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@delivery_data_source'], $arExportProductData)) {
-                case 'CUSTOM':
+            if( $this->getHandlerRules()['shop']['@delivery'] == 'Y' )
+            {
+                switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@delivery_data_source'], $arExportProductData)) {
+                    case 'CUSTOM':
 
-                    $arOfferXml['delivery'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery'], $arExportProductData) == 'Y') ? 'true' : 'false';
+                        $arOfferXml['delivery'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery'], $arExportProductData) == 'Y') ? 'true' : 'false';
 
-                    if ($arOfferXml['delivery'] == 'true') {
-                        $arOption = [];
-                        $arOption['cost'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__cost'], $arExportProductData);
-                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData))) {
-                            $arOption['days'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData);
-                        }
-                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'], $arExportProductData))) {
-                            $arOption['order-before'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'],
-                                $arExportProductData);
-                        }
-
-                        $arOfferXml['delivery-options']['option'] = [
-                            '_attributes' => $arOption
-                        ];
-                    }
-
-                    break;
-
-                case 'ROBOFEED':
-
-                    $arOfferXml['delivery'] = ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y') ? 'true' : 'false';
-                    if ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y' && !empty($arExportProductData['DELIVERY_OPTIONS'])) {
-                        foreach ($arExportProductData['DELIVERY_OPTIONS'] as $arOptionData) {
+                        if ($arOfferXml['delivery'] == 'true') {
                             $arOption = [];
-                            $arOption['cost'] = (!empty($arOptionData['PRICE_TO'])
-                                                 && $arOptionData['PRICE_TO'] > $arOptionData['PRICE_FROM']) ? $arOptionData['PRICE_TO'] : $arOptionData['PRICE_FROM'];
-
-                            if (!empty($arOptionData['DAYS_FROM']) && !empty($arOptionData['DAYS_TO']) && ($arOptionData['DAYS_TO'] - $arOptionData['DAYS_FROM']) <= 2) {
-                                $arOption['days'] = $arOptionData['DAYS_FROM'].'-'.$arOptionData['DAYS_TO'];
-                            } elseif (!empty($arOptionData['DAYS_TO'])) {
-                                $arOption['days'] = $arOptionData['DAYS_TO'];
-                            } elseif (!empty($arOptionData['DAYS_FROM'])) {
-                                $arOption['days'] = $arOptionData['DAYS_FROM'];
+                            $arOption['cost'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__cost'], $arExportProductData);
+                            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData))) {
+                                $arOption['days'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData);
+                            }
+                            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'], $arExportProductData))) {
+                                $arOption['order-before'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'],
+                                    $arExportProductData);
                             }
 
-                            if ($arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23) {
-                                $arOption['order-before'] = $arOptionData['ORDER_BEFORE'];
-                            }
-
-                            $arOfferXml['delivery-options']['option'][] = [
+                            $arOfferXml['delivery-options']['option'] = [
                                 '_attributes' => $arOption
                             ];
-
                         }
-                    }
 
-                    break;
+                        break;
+
+                    case 'ROBOFEED':
+
+                        $arOfferXml['delivery'] = ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y') ? 'true' : 'false';
+                        if ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y' && !empty($arExportProductData['DELIVERY_OPTIONS'])) {
+                            foreach ($arExportProductData['DELIVERY_OPTIONS'] as $arOptionData) {
+                                $arOption = [];
+                                $arOption['cost'] = (!empty($arOptionData['PRICE_TO'])
+                                                     && $arOptionData['PRICE_TO'] > $arOptionData['PRICE_FROM']) ? $arOptionData['PRICE_TO'] : $arOptionData['PRICE_FROM'];
+
+                                if (!empty($arOptionData['DAYS_FROM']) && !empty($arOptionData['DAYS_TO']) && ($arOptionData['DAYS_TO'] - $arOptionData['DAYS_FROM']) <= 2) {
+                                    $arOption['days'] = $arOptionData['DAYS_FROM'].'-'.$arOptionData['DAYS_TO'];
+                                } elseif (!empty($arOptionData['DAYS_TO'])) {
+                                    $arOption['days'] = $arOptionData['DAYS_TO'];
+                                } elseif (!empty($arOptionData['DAYS_FROM'])) {
+                                    $arOption['days'] = $arOptionData['DAYS_FROM'];
+                                }
+
+                                if ($arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23) {
+                                    $arOption['order-before'] = $arOptionData['ORDER_BEFORE'];
+                                }
+
+                                $arOfferXml['delivery-options']['option'][] = [
+                                    '_attributes' => $arOption
+                                ];
+
+                            }
+                        }
+
+                        break;
+                }
+            }
+            else
+            {
+                $arOfferXml['delivery'] = 'false';
             }
 
             /** *****
@@ -1308,7 +1454,10 @@ DOCHERE
 
                     $arOfferXml['pickup'] = ($arExportProductData['PICKUP_AVAILABLE'] == 'Y') ? 'true' : 'false';
                     if ($arExportProductData['PICKUP_AVAILABLE'] == 'Y' && !empty($arExportProductData['PICKUP_OPTIONS'])) {
-                        foreach ($arExportProductData['PICKUP_OPTIONS'] as $arOptionData) {
+                        if( !empty( $arExportProductData['PICKUP_OPTIONS'] ) )
+                        {
+                            $arOptionData = $arExportProductData['PICKUP_OPTIONS'][0];
+
                             $arOption = [];
                             $arOption['cost'] = $arOptionData['PRICE'];
 
@@ -1327,7 +1476,6 @@ DOCHERE
                             $arOfferXml['pickup-options']['option'][] = [
                                 '_attributes' => $arOption
                             ];
-
                         }
                     }
 
@@ -1384,7 +1532,7 @@ DOCHERE
      *
      * @return string|null
      */
-    protected function extraYandexCountry($strCountry)
+    protected function extractYandexCountry($strCountry)
     {
         $strReturn = null;
         switch ($strCountry) {
@@ -1909,7 +2057,7 @@ DOCHERE
      *
      * @param string $intPrice            Актуальная соимость
      * @param string $strCurrencyCode     Текущий код валюты
-     * @param string $intOldPrice         Стаая цена или null
+     * @param string $intOldPrice         Старая цена или null
      * @param array  $arOfferXml          Массив, в который новые значения будут дописаны, ссылка
      * @param array  $arExportProductData Массив полей текущего товара
      *
@@ -1917,51 +2065,22 @@ DOCHERE
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    protected function fillPriceAndCurrency($intPrice, $strCurrencyCode, $intOldPrice, &$arOfferXml, $arExportProductData)
+    protected function fillPriceAndCurrency($intPrice, $strCurrencyCode, $intOldPrice, &$arOfferXml)
     {
-        if (
-            !empty($arExportProductData['@HANDLER_SETTINGS']['CONVERT_CURRENCY_TO'])
-            && $arExportProductData['@HANDLER_SETTINGS']['CONVERT_CURRENCY_TO'] != 'NOT_CONVERT'
-        ) {
-            $intNewPrice = \Local\Core\Inner\Currency::convert($intPrice, $strCurrencyCode, $this->getFinalCurrency($arExportProductData, $strCurrencyCode));
-            if (!is_null($intNewPrice)) {
-                $arOfferXml['price'] = $intNewPrice;
-                $arOfferXml['oldprice'] = \Local\Core\Inner\Currency::convert($intOldPrice, $strCurrencyCode, $this->getFinalCurrency($arExportProductData, $strCurrencyCode));
-                $arOfferXml['currencyId'] = ($this->getFinalCurrency($arExportProductData, $strCurrencyCode) == 'RUB') ? 'RUR' : $this->getFinalCurrency($arExportProductData, $strCurrencyCode);
-            } else {
-                $arOfferXml['price'] = $intPrice;
-                $arOfferXml['oldprice'] = $intOldPrice;
-                $arOfferXml['currencyId'] = ($strCurrencyCode == 'RUB') ? 'RUR' : $strCurrencyCode;
-            }
-        } else {
-            $arOfferXml['price'] = $intPrice;
-            $arOfferXml['oldprice'] = $intOldPrice;
-            $arOfferXml['currencyId'] = ($strCurrencyCode == 'RUB') ? 'RUR' : $strCurrencyCode;
-        }
-    }
 
-    /**
-     * Определить финальную валюту
-     *
-     * @param array  $arExportProductData Массив полей текущего товара
-     * @param string $strCurrentCurrency  Текущий код валюты
-     *
-     * @return |null
-     */
-    protected function getFinalCurrency($arExportProductData, $strCurrentCurrency)
-    {
-        $strReturn = null;
-
-        if (
-            !empty($arExportProductData['@HANDLER_SETTINGS']['CONVERT_CURRENCY_TO'])
-            && $arExportProductData['@HANDLER_SETTINGS']['CONVERT_CURRENCY_TO'] != 'NOT_CONVERT'
-        ) {
-            $strReturn = $arExportProductData['@HANDLER_SETTINGS']['CONVERT_CURRENCY_TO'];
-        } else {
-            $strReturn = $strCurrentCurrency;
+        $intNewPrice = \Local\Core\Inner\Currency::convert($intPrice, $strCurrencyCode, $this->getFinalCurrency($strCurrencyCode));
+        if (!is_null($intNewPrice)) {
+            $arOfferXml['price'] = $intNewPrice;
+            $arOfferXml['oldprice'] = \Local\Core\Inner\Currency::convert($intOldPrice, $strCurrencyCode, $this->getFinalCurrency($strCurrencyCode));
+            $arOfferXml['currencyId'] = ($this->getFinalCurrency($strCurrencyCode) == 'RUB') ? 'RUR' : $this->getFinalCurrency($strCurrencyCode);
         }
 
-        return $strReturn;
+        if(
+            $arOfferXml['price'] >= $arOfferXml['oldprice']
+        )
+        {
+            unset($arOfferXml['oldprice']);
+        }
     }
 
     /**

@@ -8,21 +8,8 @@ use Local\Core\Inner\Client\Dadata\Exception\ArgumentException;
 
 
 /**
- * <ul>
- * <li>ID</li>
- * <li>EXECUTE_BY</li>
- * <li>WORKER_CLASS_NAME</li>
- * <li>INPUT_DATA</li>
- * <li>ATTEMPTS_LEFT, попыток осталось, дефолт 10</li>
- * <li>STATUS</li>
- * <li>EXECUTE_AT</li>
- * <li>STATUS</li>
- * <li>IS_EXECUTE_NOW</li>
- * <li>LAST_EXECUTE_START</li>
- * <li>DATE_ADD</li>
- * <li>DATE_UPDATE</li>
- * </ul>
- * Class JobQueue
+ * <ul><li>ID - ID | Fields\IntegerField</li><li>DATE_CREATE - Дата создания [2019-05-09 20:24:02] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [2019-05-09 20:24:02] | Fields\DatetimeField</li><li>EXECUTE_BY - EXECUTE_BY [RUNNER] | Fields\StringField</li><li>WORKER_CLASS_NAME - WORKER_CLASS_NAME | Fields\StringField</li><li>INPUT_DATA - INPUT_DATA | Fields\TextField</li><li>HASH - HASH | Fields\StringField</li><li>ATTEMPTS_LEFT - ATTEMPTS_LEFT [10] | Fields\IntegerField</li><li>STATUS - STATUS [N] | Fields\EnumField<br/>&emsp;N<br/>&emsp;S<br/>&emsp;E<br/>&emsp;F<br/></li><li>EXECUTE_AT - EXECUTE_AT | Fields\DatetimeField</li><li>IS_EXECUTE_NOW - IS_EXECUTE_NOW [N] | Fields\EnumField<br/>&emsp;Y<br/>&emsp;N<br/></li><li>LAST_EXECUTE_START - LAST_EXECUTE_START | Fields\DatetimeField</li></ul>
+ *
  * @package Local\Core\Model\Data
  * @see     JobQueueTable::STATUS_ENUM_NEW
  * @see     JobQueueTable::STATUS_ENUM_SUCCESS

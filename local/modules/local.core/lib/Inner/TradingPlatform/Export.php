@@ -3,6 +3,9 @@
 
 namespace Local\Core\Inner\TradingPlatform;
 
+use Bitrix\Main\UserTable;
+use Local\Core\Inner\Route;
+
 /**
  * Класс экспорта ТП
  *
@@ -14,15 +17,17 @@ class Export
      * Запускает процесс формирования экспортного файла для ТП
      *
      * @param integer $intId ID ТП
+     * @param bool $boolSendMailIfError Отправлять письмо об ошибке или нет
      *
      * @return \Bitrix\Main\Result
      * @throws \Bitrix\Main\ArgumentException
      * @throws \Bitrix\Main\ObjectPropertyException
      * @throws \Bitrix\Main\SystemException
      */
-    public static function execute($intId)
+    public static function execute($intId, $boolSendMailIfError = false)
     {
         $obResult = new \Bitrix\Main\Result();
+        $arFilledCheckErrors = [];
 
         if( \Local\Core\Model\Data\TradingPlatformTable::getList(['filter' => ['ID' => $intId], 'select' => ['ID']])->getSelectedRowsCount() > 0 )
         {
@@ -45,6 +50,10 @@ class Export
                         $obResult->addErrors($obRes->getErrors());
                     }
                 }
+                else
+                {
+                    $arFilledCheckErrors = $obCheckResult->getErrorMessages();
+                }
 
             } catch (\Local\Core\Inner\TradingPlatform\Exceptions\TradingPlatformNotFoundException $e) {
                 $obResult->addError(new \Bitrix\Main\Error('Не удалось загрузить торговую площадку.'));
@@ -56,9 +65,9 @@ class Export
             finally
             {
                 $arLog = [
-                    'STORE_ID' => \Local\Core\Inner\TradingPlatform\Base::getStoreIdByTpId($intId),
+                    'STORE_ID' => \Local\Core\Inner\TradingPlatform\Base::getStoreId($intId),
                     'TP_ID' => $intId,
-                    'RESULT' => $obResult->isSuccess() ? 'SU' : 'ER',
+                    'RESULT' => $obResult->isSuccess() && empty($arFilledCheckErrors) ? 'SU' : 'ER',
                     'PRODUCTS_TOTAL' => !empty( $obResult->getData()['PRODUCTS_TOTAL'] ) ? $obResult->getData()['PRODUCTS_TOTAL'] : 0,
                     'PRODUCTS_EXPORTED' => !empty( $obResult->getData()['PRODUCTS_EXPORTED'] ) ? $obResult->getData()['PRODUCTS_EXPORTED'] : 0
                 ];
@@ -68,6 +77,24 @@ class Export
                 }
 
                 \Local\Core\Model\Data\TradingPlatformExportLogTable::add($arLog);
+
+                if( ( !$obResult->isSuccess() || !empty( $arFilledCheckErrors ) )  && $boolSendMailIfError )
+                {
+                    $arFilledCheckErrors = array_merge($arFilledCheckErrors, $obResult->getErrorMessages());
+                    $intStoreID = \Local\Core\Inner\TradingPlatform\Base::getStoreId($intId);
+                    $arUser = \Bitrix\Main\UserTable::getByPrimary(\Local\Core\Inner\Store\Base::getOwnUserId($intStoreID), ['select' => ['EMAIL']])->fetch();
+
+                    if( !empty( $arUser['EMAIL'] ) )
+                    {
+                        \Local\Core\Inner\TriggerMail\TradingPlatform\Export::errorDuringExport([
+                            'EMAIL' => $arUser['EMAIL'],
+                            'STORE_NAME' => \Local\Core\Inner\Store\Base::getStoreName($intStoreID),
+                            'TP_NAME' => \Local\Core\Inner\TradingPlatform\Base::getName($intId),
+                            'ERROR_TEXT' => implode('<br/>', $arFilledCheckErrors),
+                            'STORE_ROUTE' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => \Local\Core\Inner\Store\Base::getCompanyId($intStoreID), '#STORE_ID#' => $intStoreID ])
+                        ]);
+                    }
+                }
             }
 
         }

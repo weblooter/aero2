@@ -449,7 +449,7 @@ $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/flot/jquery.flot.r
             <div class="card-body">
                 <h4 class="card-title">Тариф</h4>
                 <div class="actions">
-                    <a href="#" class="actions__item zmdi zmdi-edit zmdi-hc-fw" title="Сменить тариф"></a>
+                    <a href="javascript:void(0)" class="actions__item zmdi zmdi-edit zmdi-hc-fw" title="Сменить тариф" data-toggle="modal" data-target="#change-tariff-modal"></a>
                 </div>
 
                 <table class="table table-striped">
@@ -566,3 +566,6 @@ $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/flot/jquery.flot.r
     PersonalStoreDetailComponent.setStoreListLink('<?=\Local\Core\Inner\Route::getRouteTo('store', 'list', ['#COMPANY_ID#' => $arResult['ITEM']['COMPANY_ID']])?>');
     PersonalStoreDetailComponent.init();
 </script>
+<?
+$component->printTariffListHtml();
+?>

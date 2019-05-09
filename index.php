@@ -10,17 +10,12 @@ $APPLICATION->IncludeComponent(
 	array(
 		"COMPONENT_TEMPLATE" => ".default",
 		"SHOW_TARIFFS" => array(
-			0 => "20180330_BEF_5000",
 			1 => "20180330_BEF_5000_DIS",
-			2 => "20190330_BEF_10000",
 			3 => "20190330_BEF_10000_DIS",
-			4 => "20190330_BEF_20000",
 			5 => "20190330_BEF_20000_DIS",
-			6 => "20190330_BEF_30000",
 			7 => "20190330_BEF_30000_DIS",
-			8 => "20190330_BEF_40000",
 			9 => "20190330_BEF_40000_DIS",
-			10 => "20190330_BEF_50000",
+			10 => "20190330_BEF_50000_DIS",
 		)
 	),
 	false

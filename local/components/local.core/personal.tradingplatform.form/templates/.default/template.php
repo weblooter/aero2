@@ -175,11 +175,11 @@
                 </script>
 
             <? if ($arResult['STATUS'] == 'UPDATE_SUCCESS'): ?>
-                <div class="alert alert-success" role="alert">
+                <div class="alert alert-success mt-4" role="alert">
                     Данные успешно обновлены
                 </div>
             <? elseif ($arResult['STATUS'] == 'ERROR'): ?>
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger mt-4" role="alert">
                     <?=$arResult['ERROR_TEXT'];?>
                 </div>
             <? endif; ?>

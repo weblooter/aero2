@@ -168,24 +168,76 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
             'select' => [
                 'NAME',
                 'CODE',
+                'TYPE',
                 'LIMIT_IMPORT_PRODUCTS',
                 'PRICE_PER_TRADING_PLATFORM',
                 'DATE_ACTIVE_TO',
+                'SWITCH_AFTER_ACTIVE_TO',
+                'SWITCHED_TARIFF_DATA_' => 'SWITCHED_TARIFF'
+            ],
+            'runtime' => [
+                ( new \Bitrix\Main\ORM\Fields\Relations\Reference(
+                        'SWITCHED_TARIFF',
+                    \Local\Core\Model\Data\TariffTable::class,
+                    \Bitrix\Main\ORM\Query\Join::on('this.SWITCH_AFTER_ACTIVE_TO', 'ref.CODE')
+                ) )
             ]
         ]);
-        while ($ar = $rs->fetch()) {
-            $isSelected = ($ar['CODE'] == $this->arResult['TARIFF']['CURRENT']['CODE']);
-            ?>
-            <li>
-                <a href="javascript:void(0)" <?=!$isSelected ? 'onclick="changeTariff('.$this->arResult['ITEM']['ID'].', \''.$ar['CODE'].'\', \''.($ar['PRICE_PER_TRADING_PLATFORM']
-                                                                                                                          > $this->arResult['TARIFF']['CURRENT']['PRICE_PER_TRADING_PLATFORM'] ? 'up' : 'down')
-                                      .'\')"' : ''?>
-                ><?=$ar['NAME']?>,
-                    <?=number_format($ar['PRICE_PER_TRADING_PLATFORM'], 0, '.', ' ')?> руб./мес. за ТП,
-                    до <?=number_format($ar['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' ')?> товаров
-                    <?=(!is_null($ar['DATE_ACTIVE_TO']) ? ' (Доступен до '.$ar['DATE_ACTIVE_TO']->format('Y-m-d').')' : '')?></a>
-            </li>
-            <?
-        }
+        ?>
+        <div class="modal fade" id="change-tariff-modal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title pull-left">Список тарифных планов</h5>
+                    </div>
+                    <div class="modal-body">
+                        <?
+                        if ($rs->getSelectedRowsCount() < 1):?>
+                            <p>
+                                Смена тарифного плана временно недоступна.
+                            </p>
+                        <? else:?>
+                            <div class="listview">
+
+                                <?
+                                while ($ar = $rs->fetch()) {
+                                    $isSelected = ($ar['CODE'] == $this->arResult['TARIFF']['CURRENT']['CODE']);
+                                    ?>
+                                    <div class="listview__item <?=($isSelected) ? 'bg-warning text-dark' : ''?> border border-secondary border-left-0 border-right-0 border-top-0">
+                                        <div class="listview__content">
+                                            <?if( $ar['TYPE'] == 'PER' ):?>
+                                            <span class="badge badge-warning <?=($isSelected) ? 'border border-dark' : ''?>">Персонализированный тариф</span>
+                                            <?endif;?>
+                                            <div class="lead <?=($isSelected) ? ' text-dark' : ' text-warning'?>"><?=$ar['NAME']?></div>
+                                            <p class="mb-3 <?=($isSelected) ? ' text-dark' : ''?>">
+                                                <b>Стоимость:</b> <?=number_format($ar['PRICE_PER_TRADING_PLATFORM'], 0, '.', ' ')?> руб./мес. за площаду<br />
+                                                <b>Максимум товаров:</b> <?=number_format($ar['LIMIT_IMPORT_PRODUCTS'], 0, '.', ' ')?><br/>
+                                                <?
+                                                if ($ar['DATE_ACTIVE_TO'] instanceof \Bitrix\Main\Type\DateTime): ?>
+                                                    <b>Тариф действует до:</b> <?=$ar['DATE_ACTIVE_TO']->format('Y-m-d H:i')?><br/>
+                                                    <b>Будет переключен на тариф:</b> <?=( !empty( $ar['SWITCHED_TARIFF_DATA_NAME'] ) ? $ar['SWITCHED_TARIFF_DATA_NAME'] : \Local\Core\Inner\Tariff\Base::getDefaultTariff()['NAME'] )?>
+                                                <?endif; ?>
+                                            </p>
+                                            <?if( !$isSelected ):?>
+                                                <a href="javascript:void(0)" class="btn btn-outline-secondary" onclick="PersonalStoreDetailComponent.changeTariff('<?=$this->arResult['ITEM']['ID']?>', '<?=$ar['CODE']?>', '<?=($ar['PRICE_PER_TRADING_PLATFORM'] > $this->arResult['TARIFF']['CURRENT']['PRICE_PER_TRADING_PLATFORM'] ? 'up' : 'down')?>')">Выбрать тариф</a>
+                                            <?endif;?>
+                                        </div>
+                                    </div>
+                                    <?
+                                }
+                                ?>
+
+                                <div class="clearfix mb-3"></div>
+                            </div>
+                        <?endif; ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?
     }
 }

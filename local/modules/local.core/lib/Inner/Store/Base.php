@@ -438,4 +438,19 @@ class Base
     {
         return self::__getStoreRegister($intStoreId)['COMPANY_USER_OWN_ID'];
     }
+
+    /**
+     * Получить ID компании магазина
+     *
+     * @param $intStoreId
+     *
+     * @return mixed
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getCompanyId($intStoreId)
+    {
+        return self::__getStoreRegister($intStoreId)['COMPANY_ID'];
+    }
 }

@@ -83,7 +83,7 @@
                     {
                         $strStatusClass = 'alert-danger';
                         $strActiveStatusIcon = 'zmdi zmdi-alert-circle-o';
-                        $strErrorHtml = (!empty( $strErrorHtml ) ? '<br/><br/>' : '').'<b>Ошибка валидации торговой площадки:</b><br/>'.implode('<br/>', $obCheckRes->getErrorMessages()).'<br/><br/><b>До момента устранения ошибок экспортный файл обновляться не будет!</b>';
+                        $strErrorHtml .= (!empty( $strErrorHtml ) ? '<br/><br/>' : '').'<b>Ошибка валидации торговой площадки:</b><br/>'.implode('<br/>', $obCheckRes->getErrorMessages()).'<br/><br/><b>До момента устранения ошибок экспортный файл обновляться не будет!</b>';
                     }
 
 
@@ -244,11 +244,6 @@
                                             <?
                                             break;
                                         case 'ER':
-
-                                            if( !empty( $arLastLog['ERROR_TEXT'] ) )
-                                            {
-                                                $strErrorHtml .= (!empty( $strErrorHtml ) ? '<br/><br/>' : '').'<b>Во время формирования экспортного файла были обнаружены ошибки:</b><br/>'.$arLastLog['ERROR_TEXT'];
-                                            }
                                             ?>
 
                                             <table class="table table-striped mb-4">

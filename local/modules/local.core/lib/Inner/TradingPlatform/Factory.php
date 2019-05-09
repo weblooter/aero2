@@ -27,6 +27,10 @@ class Factory
                 return new Handler\YandexMarket\Handler();
                 break;
 
+            case 'autoru_parts':
+                return new Handler\AutoruParts\Handler();
+                break;
+
             default:
                 throw new \Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException();
                 break;
@@ -42,7 +46,8 @@ class Factory
     public static function getFactoryList()
     {
         return [
-            Handler\YandexMarket\Handler::getCode() => Handler\YandexMarket\Handler::getTitle()
+            Handler\YandexMarket\Handler::getCode() => Handler\YandexMarket\Handler::getTitle(),
+            Handler\AutoruParts\Handler::getCode() => Handler\AutoruParts\Handler::getTitle(),
         ];
     }
 }

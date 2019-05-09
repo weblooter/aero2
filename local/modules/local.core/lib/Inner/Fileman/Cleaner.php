@@ -38,7 +38,7 @@ class Cleaner
         self::$__arFinedRegisteredFiles = self::__getFilesFromCFile();
 
         // Проверим файловую структуру с b_file и удалим левые файлы
-        self::__checkAndClearDirFiles(\Bitrix\Main\Application::getDocumentRoot().'/'.\Bitrix\Main\Config\Option::get('main', 'upload_dir', 'upload'));
+        self::__checkAndClearDirFiles(\Bitrix\Main\Application::getDocumentRoot().'/'.\Bitrix\Main\Config\Option::get('main', 'upload_dir', 'upload').'/local.core');
 
         // Пройдемся по ORM файлам
         self::$__arFinedRegisteredFiles = array_keys(self::$__arFinedRegisteredFiles);

@@ -15,13 +15,13 @@ class Infoblock extends AbstractField
     /** @inheritDoc */
     protected function execute()
     {
-        $this->addToRender('<div class="alert '.$this->getType().' mt-3">'.$this->getValue().'</div>');
+        $this->addToRender('<div class="alert '.$this->getType().' mb-3">'.$this->getValue().'</div>');
     }
 
     /** @inheritDoc */
     public function getRow($htmlInputRender)
     {
-        return '<div class="row"><div class="col-12">'.$htmlInputRender.'</div></div>';
+        return '<div class="form-group"><div class="row"><div class="col-12">'.$htmlInputRender.'</div></div></div>';
     }
 
     protected $_fieldType = self::TYPE_INFO;

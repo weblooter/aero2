@@ -13,6 +13,7 @@ final class Runner
     const TIME_BETWEEN_CYCLES = 10;
     const MAX_CYCLES_COUNT = 5;
     const MAXIMUM_WORKERS = 2;
+    const WORKER_TIMEOUT = (60*60);
     private static $arProcess = [];
 
     public function __construct()
@@ -207,7 +208,8 @@ final class Runner
                 try {
                     $rand = rand();
                     self::$arProcess[$rand] = new Process(join(' ', $this->getProcessConfig((int)$ar['ID'], $executorID)));
-                    self::$arProcess[$rand]->setTimeout(0);
+                    self::$arProcess[$rand]->setTimeout( \Bitrix\Main\Config\Configuration::getInstance()
+                                                             ->get('job_queue')['WORKER_TIMEOUT'] ?? self::WORKER_TIMEOUT );
                     self::$arProcess[$rand]->start();
 
                 } catch (\Throwable $t) {
@@ -242,6 +244,23 @@ final class Runner
         $arReturn[] = (string)$jobID;
         $arReturn[] = $executorID;
         return $arReturn;
+    }
+
+    /**
+     * Получить текущие запущенные процессы ранера
+     *
+     * @return array
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getExecutedProcesses()
+    {
+        return \Local\Core\Model\Data\JobQueueTable::getList([
+            'filter' => [
+                'IS_EXECUTE_NOW' => 'Y'
+            ]
+        ])->fetchAll();
     }
 }
 

@@ -23,7 +23,7 @@ class Runner extends Command
         $this->setName('runner')
             ->setDescription('Запускает раннер для очереди задач. 
                              Пример вызова:
-                             $ <info>php -d mbstring.func_overload=2 console runner</info>');
+                             $ php -d mbstring.func_overload=2 console runner');
     }
 
     /**

@@ -19,6 +19,20 @@ abstract class AbstractHandler
     abstract public static function getTitle();
 
     /**
+     * Возвращает основную валюты торговой площадки
+     *
+     * @return string Код валюты из справочника валют
+     */
+    abstract public static function getMainCurrency();
+
+    /**
+     * Возвращает список поддерживаемых валют торговой площадки, включая основную
+     *
+     * @return array Коды валют из справочника валют
+     */
+    abstract public static function getSupportedCurrency();
+
+    /**
      * Вывод полей для редактирования в форме
      */
     public function printFormFields()
@@ -54,7 +68,7 @@ abstract class AbstractHandler
     protected function getGeneralFields()
     {
         return [
-            '#header_g1' => (new Field\Header())->setValue('Настройки обработки'),
+            '#header_g1' => (new Field\Header())->setValue('Общие настройки обработки'),
 
             '@handler_settings__CONVERT_CURRENCY_TO' => (new Field\Select())->setTitle('Конвертация цен')
                 ->setName('HANDLER_RULES[@handler_settings][CONVERT_CURRENCY_TO]')
@@ -70,8 +84,10 @@ abstract class AbstractHandler
                 ])
                 ->setValue($this->getHandlerRules()['@handler_settings']['CONVERT_CURRENCY_TO'] ?? 'NOT_CONVERT')
                 ->setEpilog((new Field\Infoblock())->setValue(<<<DOCHERE
-Конвертация валюты будет происходить на основании курсов, предоставленным сервисом https://www.currencyconverterapi.com/ .<br/>
-Если курсы данного сервиса Вам не устравивают, Вы можете самостоятельно сконвертировать Валюты, передать их в Robofeed XML и выбрать в данном поле <b>"Оставлять цены в переданных валютах"</b>.
+Конвертация валюты будет происходить на основании курсов, предоставленных сервисом <a href="https://www.currencyconverterapi.com/" target="_blank">https://www.currencyconverterapi.com/</a> .<br/>
+Если курсы данного сервиса Вам не устраивают, Вы можете самостоятельно сконвертировать Валюты, передать их в Robofeed XML и выбрать в данном поле <b>"Оставлять цены в переданных валютах"</b>.<br/>
+<br/>
+<b>Внимание!</b> Некоторые торговые площадки могут не поддерживать передаваемую Вами валюту. В таких случаях мы будем вынуждены принудительно переконвертировать валюту товара и стоимость в Российский рубль либо в валюту, которую торговая площадка считает основной.
 DOCHERE
                 )),
 
@@ -383,8 +399,8 @@ DOCHERE
                 $arExportProductData = array_merge(
                     $arExportProductData,
                     $arParamsByProdId[$arExportProductData['ID']],
-                    ['DELIVERY_OPTIONS' => $arDelivery],
-                    ['PICKUP_OPTIONS' => $arPickup],
+                    ['DELIVERY_OPTIONS' => $arDelivery[$arExportProductData['ID']]],
+                    ['PICKUP_OPTIONS' => $arPickup[$arExportProductData['ID']]],
                     ['@HANDLER_SETTINGS' => $arHandlerSettings]
                 );
                 if ($arExportProductData['EXPIRY_DATE'] instanceof \Bitrix\Main\Type\DateTime) {
@@ -497,7 +513,7 @@ DOCHERE
 
     /**
      * Извлекает значение из объекта Field\AbstractField.
-     * Для того что бы извлечение прошло успешно необходимо иметь значение в $this->>getFields()['#field__path#']
+     * Для того что бы извлечение прошло успешно необходимо иметь значение в $this->getFields()['#field__path#']
      *  и $this->getHandlerRules()['field']['path']
      * Пример использования:
      * <pre>
@@ -512,5 +528,36 @@ DOCHERE
     protected function extractFilledValueFromRule(\Local\Core\Inner\TradingPlatform\Field\AbstractField $obField, $arAdditionalData = [])
     {
         return $obField->extractValue($this->getTPFieldDataByFieldName($obField->getName()), $arAdditionalData);
+    }
+
+
+    /**
+     * Определить финальную валюту, к которой будет приведена стоимость
+     *
+     * @param string $strCurrentCurrency  Текущий код валюты
+     *
+     * @return |null
+     */
+    protected function getFinalCurrency($strCurrentCurrency)
+    {
+        $strReturn = null;
+
+        switch ($this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']))
+        {
+            case 'NOT_CONVERT':
+                $strReturn = $strCurrentCurrency;
+                break;
+
+            default:
+                $strReturn = $this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']);
+                break;
+        }
+
+        if( !in_array($strReturn, static::getSupportedCurrency()) )
+        {
+            $strReturn = static::getMainCurrency();
+        }
+
+        return $strReturn;
     }
 }

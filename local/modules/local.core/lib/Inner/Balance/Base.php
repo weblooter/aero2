@@ -150,7 +150,7 @@ class Base
 
         try
         {
-            $intStoreId = \Local\Core\Inner\TradingPlatform\Base::getStoreIdByTpId($intTradingPlatformId);
+            $intStoreId = \Local\Core\Inner\TradingPlatform\Base::getStoreId($intTradingPlatformId);
 
             if( empty( $intStoreId ) )
             {
@@ -181,7 +181,7 @@ class Base
                 throw new \Exception('Оплатить торговую площадку невозможно, на счете недостаточно средств. Пополните баланс и активируйте торговую площадку вручную.');
             }
 
-            $obPayRes = self::payFromAccount($intTariffPrice, $intUserId, 'Оплата торговой площадки "'.\Local\Core\Inner\TradingPlatform\Base::getName($intTradingPlatformId).'" магазина "'.\Local\Core\Inner\Store\Base::getStoreName( \Local\Core\Inner\TradingPlatform\Base::getStoreIdByTpId($intTradingPlatformId) ).'".');
+            $obPayRes = self::payFromAccount($intTariffPrice, $intUserId, 'Оплата торговой площадки "'.\Local\Core\Inner\TradingPlatform\Base::getName($intTradingPlatformId).'" магазина "'.\Local\Core\Inner\Store\Base::getStoreName( \Local\Core\Inner\TradingPlatform\Base::getStoreId($intTradingPlatformId) ).'".');
             if( !$obPayRes->isSuccess() )
             {
                 $obResult->addErrors( $obPayRes->getErrors() );

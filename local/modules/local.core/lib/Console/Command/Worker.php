@@ -19,7 +19,7 @@ class Worker extends Command
         $this->setName('worker')
             ->setDescription("Запускает worker, исполняющий задачу из очереди. 
                              Пример вызова для дебага: 
-                             $ <info>php -d mbstring.func_overload=2 console worker 1002 NONE</info>")
+                             $ php -d mbstring.func_overload=2 console worker 1002 NONE")
             ->addArgument('jobID', InputArgument::REQUIRED, '')
             ->addArgument('executorID', InputArgument::REQUIRED, '');
     }

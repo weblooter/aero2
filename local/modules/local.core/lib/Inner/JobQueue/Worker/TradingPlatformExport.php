@@ -22,7 +22,7 @@ class TradingPlatformExport extends Inner\JobQueue\Abstracts\Worker implements I
         $result = new Main\Result();
         $arInputData = $this->getInputData();
 
-        \Local\Core\Inner\TradingPlatform\Export::execute($arInputData['TP_ID']);
+        \Local\Core\Inner\TradingPlatform\Export::execute($arInputData['TP_ID'], true);
 
         return $result;
     }
