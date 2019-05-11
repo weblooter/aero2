@@ -2,3 +2,6 @@
 .local-core-dropdown-title {text-decoration: none !important; border-bottom: 1px dashed blue;}
 .local-core-dropdown-input-line {display: inline-block;}
 .local-core-dropdown-input-line .form-control {width: auto;}
+
+.taxonomy-collapse-btn[aria-expanded="false"]::before {content: 'Раскрыть';}
+.taxonomy-collapse-btn[aria-expanded="true"]::before {content: 'Скрыть';}

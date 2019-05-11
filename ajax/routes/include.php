@@ -78,6 +78,12 @@ return [
         'methods' => ['POST'],
         'handler' => \Local\Core\Ajax\Handler\TradingPlatform::class.':refreshForm'
     ],
+    'taxonomy' => [
+        'path' => '/taxonomy/{action}/',
+        'methods' => ['POST'],
+        'args' => ['action' => '[A-Za-z\-\_0-9]+'],
+        'handler' => \Local\Core\Ajax\Handler\Taxonomy::class.':getTaxonomyResult'
+    ],
 
     'system_user_authorize' => [
         'path' => '/system-user-authorize/',
@@ -100,5 +106,5 @@ return [
         'methods' => ['POST'],
         'args' => ['inn' => '[0-9]{10,12}'],
         'handler' => \Local\Core\Ajax\Handler\Dadata::class.':searchCompanyByInn'
-    ]
+    ],
 ];

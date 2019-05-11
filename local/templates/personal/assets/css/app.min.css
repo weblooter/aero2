@@ -446,13 +446,17 @@ hr {
 }
 
 .blockquote {
-    font-size: 1.25rem
+    font-size: 1rem;
+    line-height: 1.20;
+    padding-left: 1rem;
+    border-left: 2px solid transparent;
 }
 
 .blockquote-footer {
     display: block;
     font-size: 80%;
-    color: rgba(255, 255, 255, .7)
+    color: rgba(255, 255, 255, .7);
+    padding-top: 0.5rem;
 }
 
 .blockquote-footer::before {

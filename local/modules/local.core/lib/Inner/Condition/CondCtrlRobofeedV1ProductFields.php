@@ -136,51 +136,59 @@ class CondCtrlRobofeedV1ProductFields extends CondCtrlComplex
             $obCache->startDataCache(60 * 60 * 24, __METHOD__.'#CATEGORY#STORE_ID='.self::getStoreId(),
                 \Local\Core\Inner\Cache::getCachePath(['Model', 'Robofeed', 'V1', 'StoreCategoryTable'], ['CategoryConditionList', 'storeId='.self::$intStoreId]))
             ) {
-                $rsCategories = \Local\Core\Model\Robofeed\StoreCategoryFactory::factory(1)
-                    ->setStoreId(self::$intStoreId)::getList([
-                        'select' => ['CATEGORY_ID', 'CATEGORY_NAME', 'CATEGORY_PARENT_ID'],
-                        'order' => ['CATEGORY_PARENT_ID' => 'ASC', 'CATEGORY_NAME' => 'ASC']
-                    ]);
+                if( \Local\Core\Inner\Store\Base::hasSuccessImport( static::getStoreId() ) )
+                {
 
-                $arTmpCategory = [];
-                while ($ar = $rsCategories->fetch()) {
-                    $arTmpCategory[] = [
-                        'ID' => $ar['CATEGORY_ID'],
-                        'NAME' => $ar['CATEGORY_NAME'],
-                        'PARENT_ID' => $ar['CATEGORY_PARENT_ID'],
-                    ];
-                }
+                    $rsCategories = \Local\Core\Model\Robofeed\StoreCategoryFactory::factory( \Local\Core\Inner\Store\Base::getLastSuccessImportVersion( static::getStoreId() ) )
+                        ->setStoreId(self::$intStoreId)::getList([
+                            'select' => ['CATEGORY_ID', 'CATEGORY_NAME', 'CATEGORY_PARENT_ID'],
+                            'order' => ['CATEGORY_PARENT_ID' => 'ASC', 'CATEGORY_NAME' => 'ASC']
+                        ]);
 
-                if (empty($arTmpCategory)) {
-                    $obCache->abortDataCache();
-                    self::$arCategories[self::$intStoreId] = [];
-                } else {
+                    $arTmpCategory = [];
+                    while ($ar = $rsCategories->fetch()) {
+                        $arTmpCategory[] = [
+                            'ID' => $ar['CATEGORY_ID'],
+                            'NAME' => $ar['CATEGORY_NAME'],
+                            'PARENT_ID' => $ar['CATEGORY_PARENT_ID'],
+                        ];
+                    }
 
-                    global $funGetChild;
-                    $funGetChild = function ($intParentId, $intLvl = 1) use ($arTmpCategory)
-                        {
-                            $arReturn = [];
-                            foreach ($arTmpCategory as $val) {
-                                if ($val['PARENT_ID'] == $intParentId) {
-                                    $arReturn[$val['ID']] = str_repeat('. ', $intLvl).htmlspecialchars($val['NAME']);
-                                    global $funGetChild;
-                                    $arChilds = $funGetChild($val['ID'], ($intLvl + 1));
-                                    if (!empty($arChilds)) {
-                                        $arReturn += $arChilds;
+                    if (empty($arTmpCategory)) {
+                        $obCache->abortDataCache();
+                        self::$arCategories[self::$intStoreId] = [];
+                    } else {
+
+                        global $funGetChild;
+                        $funGetChild = function ($intParentId, $intLvl = 1) use ($arTmpCategory)
+                            {
+                                $arReturn = [];
+                                foreach ($arTmpCategory as $val) {
+                                    if ($val['PARENT_ID'] == $intParentId) {
+                                        $arReturn[$val['ID']] = str_repeat('. ', $intLvl).htmlspecialchars($val['NAME']);
+                                        global $funGetChild;
+                                        $arChilds = $funGetChild($val['ID'], ($intLvl + 1));
+                                        if (!empty($arChilds)) {
+                                            $arReturn += $arChilds;
+                                        }
                                     }
                                 }
-                            }
 
-                            return $arReturn;
-                        };
-                    $arVals = $funGetChild(null);
-                    $i = 1;
-                    foreach ($arVals as $value => $label)
-                    {
-                        self::$arCategories[self::$intStoreId][$i] = ['value' => $value, 'label' => $label];
-                        $i++;
+                                return $arReturn;
+                            };
+                        $arVals = $funGetChild(null);
+                        $i = 1;
+                        foreach ($arVals as $value => $label)
+                        {
+                            self::$arCategories[self::$intStoreId][$i] = ['value' => $value, 'label' => $label];
+                            $i++;
+                        }
+                        $obCache->endDataCache(self::$arCategories[self::$intStoreId]);
                     }
-                    $obCache->endDataCache(self::$arCategories[self::$intStoreId]);
+                }
+                else
+                {
+                   $obCache->abortDataCache();
                 }
             } else {
                 self::$arCategories[self::$intStoreId] = $obCache->getVars();

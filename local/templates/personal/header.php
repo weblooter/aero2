@@ -57,6 +57,7 @@ global $USER;
     /* **** */
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/jquery-mask-plugin/dist/jquery.mask.min.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/select2/dist/js/select2.full.min.js');
+    $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/select2/dist/js/ru.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/dropzone/dist/min/dropzone.min.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/moment/min/moment.min.js');
     $obAsset->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/flatpickr/dist/flatpickr.min.js');

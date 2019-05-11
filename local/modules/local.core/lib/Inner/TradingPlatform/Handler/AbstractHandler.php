@@ -67,27 +67,38 @@ abstract class AbstractHandler
      */
     protected function getGeneralFields()
     {
+
+        $strMainCurrency = '';
+        $arConvertToOptions = [
+            'NOT_CONVERT' => 'Оставлять цены в переданных валютах'
+        ];
+        $rs = \Local\Core\Model\Reference\CurrencyTable::getList([
+            'filter' => ['CODE' => $this::getSupportedCurrency()],
+            'select' => ['CODE', 'NAME']
+        ]);
+        while ($ar = $rs->fetch())
+        {
+            $arConvertToOptions[ $ar['CODE'] ] = 'Конвертировать в "'.htmlspecialchars($ar['NAME']).'"';
+            if( $ar['CODE'] == $this::getMainCurrency() )
+            {
+                $strMainCurrency =  '<br/><br/><b>Основная валюта текущией торговой площадки:</b> '.htmlspecialchars($ar['NAME']).'.';
+            }
+        }
+
         return [
             '#header_g1' => (new Field\Header())->setValue('Общие настройки обработки'),
 
             '@handler_settings__CONVERT_CURRENCY_TO' => (new Field\Select())->setTitle('Конвертация цен')
                 ->setName('HANDLER_RULES[@handler_settings][CONVERT_CURRENCY_TO]')
                 ->setIsRequired()
-                ->setOptions([
-                    'NOT_CONVERT' => 'Оставлять цены в переданных валютах',
-                    'RUB' => 'Конвертировать в "Российский рубль"',
-                    'BYN' => 'Конвертировать в "Белорусский рубль"',
-                    'UAH' => 'Конвертировать в "Гривна"',
-                    'KZT' => 'Конвертировать в "Тенге"',
-                    'EUR' => 'Конвертировать в "Евро"',
-                    'USD' => 'Конвертировать в "Доллар США"',
-                ])
+                ->setOptions($arConvertToOptions)
                 ->setValue($this->getHandlerRules()['@handler_settings']['CONVERT_CURRENCY_TO'] ?? 'NOT_CONVERT')
                 ->setEpilog((new Field\Infoblock())->setValue(<<<DOCHERE
 Конвертация валюты будет происходить на основании курсов, предоставленных сервисом <a href="https://www.currencyconverterapi.com/" target="_blank">https://www.currencyconverterapi.com/</a> .<br/>
 Если курсы данного сервиса Вам не устраивают, Вы можете самостоятельно сконвертировать Валюты, передать их в Robofeed XML и выбрать в данном поле <b>"Оставлять цены в переданных валютах"</b>.<br/>
 <br/>
 <b>Внимание!</b> Некоторые торговые площадки могут не поддерживать передаваемую Вами валюту. В таких случаях мы будем вынуждены принудительно переконвертировать валюту товара и стоимость в Российский рубль либо в валюту, которую торговая площадка считает основной.
+$strMainCurrency
 DOCHERE
                 )),
 

@@ -2,11 +2,43 @@ class LocalCore {
     static initFormComponents() {
         if ($(".textarea-autosize")[0] && autosize($(".textarea-autosize")), $("input-mask")[0] && $(".input-mask").mask(), $("select.select2")[0]) {
             var a = $(".select2-parent")[0] ? $(".select2-parent") : $("body");
-            $("select.select2").select2({dropdownAutoWidth: !0, width: "100%", dropdownParent: a})
+            $("select.select2").select2({dropdownAutoWidth: !0, width: "100%", dropdownParent: a, language: "ru",})
         }
 
-        $('[type="file"].file').fileinput({'showUpload':false, 'showCancel':false});
-        $('[data-toggle="tooltip"]').tooltip();
+        if( $('[type="file"].file').length > 0 )
+        {
+            $('[type="file"].file').fileinput({'showUpload':false, 'showCancel':false});
+        }
+
+        if( $('[data-toggle="tooltip"]').length > 0 )
+        {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+
+        if( $('select.taxonomy-field-select').length > 0 )
+        {
+            $('select.taxonomy-field-select').each(function (k, v) {
+                $(v).select2({
+                    dropdownAutoWidth: !0,
+                    width: "100%",
+                    placeholder: $(v).attr('data-placeholder'),
+                    language: "ru",
+                    minimumInputLength: 3,
+                    ajax: {
+                        transport: function (params, success, failure) {
+                            axios.post('/ajax/taxonomy/'+$(v).attr('data-action')+'/', qs.stringify(params.data))
+                                .then(function (response) {
+                                    success(response.data);
+                                })
+                                .catch(function (error) {
+                                    failure(error.data);
+                                });
+                        },
+                        cache: false
+                    }
+                });
+            });
+        }
     }
 
     static setRecaptchaSiteKey(strKey)

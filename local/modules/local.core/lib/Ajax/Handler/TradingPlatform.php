@@ -155,4 +155,39 @@ class TradingPlatform
 
         $response->setContentJson($arResult);
     }
+
+    public static function getTaxonomyResult(\Bitrix\Main\HttpRequest $request, \Local\Core\Inner\BxModified\HttpResponse $response, $args)
+    {
+        $arResult = [];
+
+        switch ($args['direction'])
+        {
+            case 'autoru':
+                $arTaxonomyOptions = ( new \Local\Core\Inner\TradingPlatform\Field\Taxonomy )
+                    ->setRightColumn(\Local\Core\Inner\TradingPlatform\Handler\AutoruParts\Handler::getAutoruCategoriesTaxonomy())
+                    ->getConvertedRightColumn();
+
+                $strQuery = mb_strtoupper(trim($request->getPost('q')));
+
+                foreach ($arTaxonomyOptions as $value => $text)
+                {
+                    if( !empty( $strQuery ) )
+                    {
+                        if( stripos( $text,  $strQuery) !== false )
+                        {
+                            $arResult[] = ['id' => htmlspecialchars($value), 'text' => htmlspecialchars($text)];
+                        }
+                    }
+                    else
+                    {
+                        $arResult[] = ['id' => htmlspecialchars($value), 'text' => htmlspecialchars($text)];
+                    }
+                }
+                break;
+        }
+
+        $response->setContentJson([
+            'results' => $arResult
+        ]);
+    }
 }
