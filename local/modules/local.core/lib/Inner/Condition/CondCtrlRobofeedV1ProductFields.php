@@ -612,13 +612,14 @@ class CondCtrlRobofeedV1ProductFields extends CondCtrlComplex
                             'FIELD' => $strColumnNameInTable,
                             'FIELD_TYPE' => 'text',
                             'FIELD_LENGTH' => 255,
-                            'LABEL' => 'Ссылка на изображение',
-                            'PREFIX' => 'Ссылка на изображение',
+                            'LABEL' => 'Ссылки на изображения',
+                            'PREFIX' => 'Ссылки на изображения',
                             'LOGIC' => static::GetLogic(array(
                                 self::LOCAL_CORE_CONDITION_LOGIC_EQ,
                                 self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
                                 self::LOCAL_CORE_CONDITION_LOGIC_CONT,
-                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_CONT
+                                self::LOCAL_CORE_CONDITION_LOGIC_NOT_CONT,
+                                self::LOCAL_CORE_CONDITION_LOGIC_GR,
                             )),
                             'JS_VALUE' => array(
                                 'type' => 'input',
@@ -1082,8 +1083,8 @@ class CondCtrlRobofeedV1ProductFields extends CondCtrlComplex
             'ID' => 'CondProdDeliveryAvailable',
             'FIELD' => 'DELIVERY_AVAILABLE',
             'FIELD_TYPE' => 'string',
-            'LABEL' => 'Имеется ли служба доставки',
-            'PREFIX' => 'Имеется ли служба доставки',
+            'LABEL' => 'Возможна ли доставка',
+            'PREFIX' => 'Возможна ли доставка',
             'LOGIC' => static::GetLogic(array(
                 self::LOCAL_CORE_CONDITION_LOGIC_EQ,
             )),
@@ -1100,8 +1101,8 @@ class CondCtrlRobofeedV1ProductFields extends CondCtrlComplex
             'ID' => 'CondProdPickupAvailable',
             'FIELD' => 'PICKUP_AVAILABLE',
             'FIELD_TYPE' => 'string',
-            'LABEL' => 'Имеется ли возможность самовывоза',
-            'PREFIX' => 'Имеется ли возможность самовывоза',
+            'LABEL' => 'Возможен ли самовывоз',
+            'PREFIX' => 'Возможен ли самовывоз',
             'LOGIC' => static::GetLogic(array(
                 self::LOCAL_CORE_CONDITION_LOGIC_EQ,
             )),

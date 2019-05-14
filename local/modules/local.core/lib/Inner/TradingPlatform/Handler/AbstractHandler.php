@@ -571,4 +571,18 @@ DOCHERE
 
         return $strReturn;
     }
+
+    /**
+     * Конвертирует массив структуры "\Spatie\ArrayToXml\ArrayToXml" в строку
+     *
+     * @param array  $arOfferXml массив структуры "\Spatie\ArrayToXml\ArrayToXml"
+     * @param string $elemName   название дочернего элемента
+     *
+     * @return string
+     */
+    protected function convertArrayToString($arOfferXml, $elemName)
+    {
+        $q = \Spatie\ArrayToXml\ArrayToXml::convert($arOfferXml, $elemName, false, 'UTF-8', '1.0');
+        return trim(str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $q));
+    }
 }

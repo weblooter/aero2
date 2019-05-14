@@ -45,7 +45,7 @@ class PersonalTradingPlatformFormComponent extends \Local\Core\Inner\BxModified\
 
             $arUpdateFields['NAME'] = $obRequest->getPost('TP_DATA')['NAME'];
             $arUpdateFields['PRODUCT_FILTER'] = \Local\Core\Inner\Condition\Base::parseCondition($obRequest->getPost('TP_DATA')['PRODUCT_FILTER'], $this->arParams['STORE_ID']);
-            $arUpdateFields['HANDLER_RULES'] = $obRequest->getPost('HANDLER_RULES') ;
+            $arUpdateFields['HANDLER_RULES'] = $obRequest->getPost('HANDLER_RULES');
 
             if( $this->arParams['TP_ID'] > 0 )
             {

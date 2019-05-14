@@ -371,7 +371,7 @@ abstract class AbstractField
     public function getRow($htmlInputRender)
     {
         $strInfotext = '<label class="'.( $this->getIsRequired() ? 'font-weight-bold' : '' ).'">'.$this->getTitle().( $this->getIsRequired() ? ' * ' : '' ).':';
-        $strInfotext .= (!is_null($this->getDescription())) ? '<i class="zmdi zmdi-help-outline zmdi-hc-fw lead text-secondary" data-toggle="tooltip" data-html="true" data-placement="bottom" title="'.htmlspecialchars($this->getDescription()).'"></i>' : '';
+        $strInfotext .= (!is_null($this->getDescription())) ? ' <i class="zmdi zmdi-help-outline lead text-secondary" data-toggle="tooltip" data-html="true" data-placement="bottom" title="'.htmlspecialchars($this->getDescription()).'"></i>' : '';
         $strInfotext .= '</label>';
 
         if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {

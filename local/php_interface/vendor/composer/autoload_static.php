@@ -392,6 +392,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\Store\\SwitchActionTariffs' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Store/SwitchActionTariffs.php',
         'Local\\Core\\Inner\\Tariff\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/Tariff/Base.php',
         'Local\\Core\\Inner\\TaxonomyData\\AutoruCategory' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TaxonomyData/AutoruCategory.php',
+        'Local\\Core\\Inner\\TaxonomyData\\AutoruMarkModel' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TaxonomyData/AutoruMarkModel.php',
         'Local\\Core\\Inner\\TaxonomyData\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TaxonomyData/Base.php',
         'Local\\Core\\Inner\\TradingPlatform\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Base.php',
         'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\HandlerNotFoundException' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/HandlerNotFoundException.php',

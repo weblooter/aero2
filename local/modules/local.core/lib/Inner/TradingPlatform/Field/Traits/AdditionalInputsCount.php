@@ -7,7 +7,7 @@ namespace Local\Core\Inner\TradingPlatform\Field\Traits;
 trait AdditionalInputsCount
 {
     /** @var int $_intAdditionalInputsCount Кол-во дополнительных полей, если поле помечено как множественное */
-    protected $_intAdditionalInputsCount = 2;
+    protected $_intAdditionalInputsCount = 1;
 
     /**
      * Задать кол-во дополнительных полей. Применяется если поле множественное

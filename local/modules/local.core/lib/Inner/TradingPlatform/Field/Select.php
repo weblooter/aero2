@@ -27,7 +27,7 @@ class Select extends AbstractField
     {
         $strInput = '<div class="mb-4"><select class="select2" name="'.$this->getName().($this->getIsMultiple() ? '[]' : '').'"';
         $strInput .= (!empty($this->getEvent())) ? ' '.$this->getEventCollected() : '';
-        $strInput .= ($this->getIsMultiple()) ? ' multiple' : '';
+        $strInput .= ($this->getIsMultiple()) ? ' multiple data-close-On-Select="false"' : '';
         $strInput .= ($this->getIsReadOnly()) ? ' readonly' : '';
         $strInput .= ($this->getIsMultiple() ? ' size="'.$this->getSize().'"  data-size="'.$this->getSize().'"' : '');
 

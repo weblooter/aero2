@@ -8589,7 +8589,10 @@ select::-ms-expand {
 }
 
 .header, .header--scrolled, .search--toggled {
-    box-shadow: 0 0 13px rgb(0, 0, 0, .22)
+    box-shadow: 0 0 13px rgb(0, 0, 0, .22);
+}
+.header--scrolled, .search--toggled {
+    z-index: 600 !important;
 }
 
 .nav-tabs .nav-link {

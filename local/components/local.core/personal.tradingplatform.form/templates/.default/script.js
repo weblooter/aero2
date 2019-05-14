@@ -1,9 +1,5 @@
 class PersonalTradingplatformFormComponent {
 
-    /* **************** */
-    /* AJAX AND REFRESH */
-    /* **************** */
-
     /**
      * Возвращает ID формы
      * @return {string}
@@ -12,14 +8,30 @@ class PersonalTradingplatformFormComponent {
         return 'tradingplatformform';
     }
 
+    static showLoading()
+    {
+        document.querySelector('#'+this.getFormId()+' .page-loader').classList.add('d-block');
+    }
+
+    static hideLoading()
+    {
+        document.querySelector('#'+this.getFormId()+' .page-loader').classList.remove('d-block');
+    }
+
+    /* **************** */
+    /* AJAX AND REFRESH */
+    /* **************** */
+
     /**
      * Собирает значения формы
      *
      * @return {object}
      */
     static getFormData() {
-        var formData = new FormData(document.forms[this.getFormId()]);
-        var result = {};
+        var classObj = this,
+            formData = new FormData(document.forms[this.getFormId()]),
+            result = {};
+
         formData.forEach(function (value, key) {
             if (/(\[\]$)/g.test(key)) {
                 key = key.replace(/(\[\]$)/g, '');
@@ -41,8 +53,12 @@ class PersonalTradingplatformFormComponent {
      * @param idRow Хэш блока
      */
     static refreshRow(idRow) {
-        var formdata = this.getFormData();
+        var classObj = this,
+            formdata = this.getFormData();
+
         formdata.LOCAL_CORE_REFRESH_ROW = idRow;
+
+        classObj.showLoading();
 
         axios.post('/ajax/trading-platform-form/refresh-row/', qs.stringify(formdata))
             .then(function (response) {
@@ -60,9 +76,12 @@ class PersonalTradingplatformFormComponent {
                     }
                     LocalCore.initFormComponents();
                 }
+                classObj.hideLoading();
             })
             .catch(function (error) {
                 console.log(error);
+
+                classObj.hideLoading();
             });
     }
 
@@ -70,8 +89,10 @@ class PersonalTradingplatformFormComponent {
      * Обновить всю форму
      */
     static refreshForm() {
-        var formdata = this.getFormData(),
-            classObj = this;
+        var classObj = this,
+            formdata = this.getFormData();
+
+        classObj.showLoading();
 
         axios.post('/ajax/trading-platform-form/refresh-form/', qs.stringify(formdata))
             .then(function (response) {
@@ -87,10 +108,12 @@ class PersonalTradingplatformFormComponent {
                         }
                     }
                     LocalCore.initFormComponents();
+                    classObj.hideLoading();
                 }
             })
             .catch(function (error) {
                 console.log(error);
+                classObj.hideLoading();
             });
     }
 
@@ -171,5 +194,56 @@ class PersonalTradingplatformFormComponent {
     static changeLogicFieldValue(val, text, strDropdownHash) {
         document.querySelector('[data-dropdown-hash-id="' + strDropdownHash + '"] [type="hidden"]').value = val;
         document.querySelector('[data-dropdown-hash-id="' + strDropdownHash + '"] .local-core-dropdown-title').innerText = text;
+    }
+
+    /* ******** */
+    /* TAXONOMY */
+    /* ******** */
+    static toggleDisplayBlockTaxonomy(idRow)
+    {
+        var classObj = this;
+
+        classObj.showLoading();
+
+        setTimeout(function () {
+            try {
+
+                var taxonomyRowObj = document.querySelector('#'+classObj.getFormId()+' [id="'+idRow+'"]'),
+                    boolNeedHideNotEmpty = taxonomyRowObj.querySelector('[data-taxonomy-hide]').checked;
+
+                if( taxonomyRowObj.querySelectorAll('[data-taxonomyRowWrapper]').length > 0 )
+                {
+                    for (var i = 0; i < taxonomyRowObj.querySelectorAll('[data-taxonomyRowWrapper]').length; i++)
+                    {
+                        var taxonomyRowWrapperObj = taxonomyRowObj.querySelectorAll('[data-taxonomyRowWrapper]')[i];
+
+                        if( taxonomyRowWrapperObj.querySelectorAll('select[name]').length > 0 )
+                        {
+                            switch ( ( taxonomyRowWrapperObj.querySelector('select[name]').value != '' ) ) {
+                                case true:
+                                    if( boolNeedHideNotEmpty )
+                                    {
+                                        taxonomyRowWrapperObj.classList.add('d-none');
+                                    }
+                                    else
+                                    {
+                                        taxonomyRowWrapperObj.classList.remove('d-none');
+                                    }
+                                    break;
+
+                                case false:
+                                    taxonomyRowWrapperObj.classList.remove('d-none');
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                classObj.hideLoading();
+            }
+            catch (e) {
+                classObj.hideLoading();
+            }
+        }, 1);
     }
 }

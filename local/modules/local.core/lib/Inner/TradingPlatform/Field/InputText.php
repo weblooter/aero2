@@ -22,15 +22,15 @@ class InputText extends AbstractField
                 $this->setValue([$this->getValue()]);
             }
 
-            for ($i = 0; $i < (sizeof($this->getValue()) + $this->getAdditionalInputsCount()); $i++) {
+            for ($i = 0; $i < (sizeof(array_diff($this->getValue(), [''], [null])) + $this->getAdditionalInputsCount()); $i++) {
                 $strInput = '<div class="input-group mb-3">';
                 $strInput .= $this->makeInput($this->getValue()[$i]);
 
                 if ($this->getIsCanAddNewInput()) {
-                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-warning">+</a></div>';
+                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-secondary" onclick="PersonalTradingplatformFormComponent.refreshRow(\''.$this->getRowHash().'\')"><i class="zmdi zmdi-plus"></i></a></div>';
                 }
                 if ($i > 0) {
-                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-danger" onclick="PersonalTradingplatformFormComponent.removeMultipleRow(this)">-</a></div>';
+                    $strInput .= '<div class="input-group-append"><a href="javascript:void(0)" class="btn btn-danger" onclick="PersonalTradingplatformFormComponent.removeMultipleRow(this)"><i class="zmdi zmdi-close"></i></a></div>';
                 }
                 $strInput .= '</div>';
 

@@ -13,7 +13,7 @@ trait AddNewInput
      *
      * @return $this
      */
-    public function setIsCanAddNewInput(bool $bool)
+    public function setIsCanAddNewInput(bool $bool = true)
     {
         $this->_fieldIsCanAddNewInput = $bool;
         return $this;

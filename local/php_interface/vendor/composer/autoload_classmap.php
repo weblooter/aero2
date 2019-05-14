@@ -296,6 +296,7 @@ return array(
     'Local\\Core\\Inner\\Store\\SwitchActionTariffs' => $baseDir . '/../modules/local.core/lib/Inner/Store/SwitchActionTariffs.php',
     'Local\\Core\\Inner\\Tariff\\Base' => $baseDir . '/../modules/local.core/lib/Inner/Tariff/Base.php',
     'Local\\Core\\Inner\\TaxonomyData\\AutoruCategory' => $baseDir . '/../modules/local.core/lib/Inner/TaxonomyData/AutoruCategory.php',
+    'Local\\Core\\Inner\\TaxonomyData\\AutoruMarkModel' => $baseDir . '/../modules/local.core/lib/Inner/TaxonomyData/AutoruMarkModel.php',
     'Local\\Core\\Inner\\TaxonomyData\\Base' => $baseDir . '/../modules/local.core/lib/Inner/TaxonomyData/Base.php',
     'Local\\Core\\Inner\\TradingPlatform\\Base' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Base.php',
     'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\HandlerNotFoundException' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/HandlerNotFoundException.php',

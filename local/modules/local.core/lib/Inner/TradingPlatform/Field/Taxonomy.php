@@ -13,33 +13,57 @@ class Taxonomy extends AbstractField
     /** @inheritDoc */
     protected function execute()
     {
-        if( empty( $this->getLeftColumn() ) )
-        {
+        if (empty($this->getLeftColumn())) {
             throw new \Exception('Необходимо задать левую колонку');
         }
 
-        if( empty( $this->getRightColumn() ) )
-        {
+        if (empty($this->getRightColumn())) {
             throw new \Exception('Необходимо задать правую колонку');
         }
-        if( empty( $this->getAction() ) )
-        {
+        if (empty($this->getAction())) {
             throw new \Exception('Необходимо задать экшен таксономии');
         }
 
         $arConvertedRightColumn = \Local\Core\Inner\TaxonomyData\Base::convertData($this->getRightColumn());
 
-        foreach ($this->getLeftColumn() as $value => $text)
-        {
-            $this->addToRender('<div class="row mb-4"><div class="col-md-4"><label>'.$text.' [ID '.$value.']</label></div>');
-            $this->addToRender('<div class="col-md-8"><select name="'.$this->getName().'['.$value.']" class="taxonomy-field-select" data-action="'.$this->getAction().'" data-placeholder="'.$this->getDefaultOption().'">');
+        // INFO Тут были заметки для автокомплита но хуй там
+        /*
+        \Bitrix\Main\Page\Asset::getInstance()->addString('<script type="text/javascript">
+var LocalCoreTaxonomy'.$this->getRowHash().' = {
+    "leftColumn": JSON.parse(\''.addcslashes(json_encode($this->getLeftColumn(), JSON_UNESCAPED_UNICODE), '\'').'\'),
+    "rightColumn": JSON.parse(\''.addcslashes(json_encode($arConvertedRightColumn, JSON_UNESCAPED_UNICODE), '\'').'\'),
+};
+</script>');
+        */
 
-            if( !empty( $this->getValue()[ $value ] ) && !empty( $arConvertedRightColumn[ $this->getValue()[ $value ] ] ) )
-            {
-                $this->addToRender('<option value="'.htmlspecialchars( $this->getValue()[ $value ] ).'">'.htmlspecialchars($arConvertedRightColumn[ $this->getValue()[ $value ] ]).'</option>');
+        foreach ($this->getLeftColumn() as $valueLeftColumn => $text) {
+
+            $boolHasValue = false;
+            $strOption = '';
+            if (!empty($this->getValue()[$valueLeftColumn])) {
+
+                if( $this->getIsMultiple() )
+                {
+                    foreach ($this->getValue()[$valueLeftColumn] as $valueRightColumn)
+                    {
+                        if( !empty( $arConvertedRightColumn[$valueRightColumn] ) )
+                        {
+                            $boolHasValue = true;
+                            $strOption .= '<option value="'.htmlspecialchars($valueRightColumn).'" selected>'.htmlspecialchars($arConvertedRightColumn[$valueRightColumn]).'</option>';
+                        }
+                    }
+                }
+                elseif( !empty( $arConvertedRightColumn[$this->getValue()[$valueLeftColumn]] ) )
+                {
+                    $boolHasValue = true;
+                    $strOption .= '<option value="'.htmlspecialchars($this->getValue()[$valueLeftColumn]).'" selected>'.htmlspecialchars($arConvertedRightColumn[$this->getValue()[$valueLeftColumn]]).'</option>';
+                }
             }
 
-            $this->addToRender('</select></div></div>');
+            $this->addToRender('<div class="row mb-4 '.($boolHasValue ? ' d-none' : '').'" data-taxonomyRowWrapper><div class="col-md-4"><label>'.$text.'</label></div>');
+            $this->addToRender('<div class="col-md-8"><select ');
+            $this->addToRender(' name="'.$this->getName().'['.$valueLeftColumn.']'.( $this->getIsMultiple() ? '[]" multiple data-close-On-Select="false"' : '"' ));
+            $this->addToRender(' class="taxonomy-field-select" data-action="'.$this->getAction().'" data-placeholder="'.htmlspecialchars($this->getDefaultOption()).'">'.$strOption.'</select></div></div>');
         }
 
     }
@@ -47,20 +71,38 @@ class Taxonomy extends AbstractField
     /** @inheritDoc */
     public function getRow($htmlInputRender)
     {
-        $strTitle = $this->getTitle().( $this->getIsRequired() ? ' * ' : '' );
+        $strTitle = '<label class="'.($this->getIsRequired() ? 'font-weight-bold' : '').'">'.$this->getTitle().($this->getIsRequired() ? ' * ' : '').':</label>';
         $strRowHash = $this->getRowHash();
 
         $strAdminPath = '';
         if ($GLOBALS['USER']->IsAdmin() && !empty($this->getName())) {
-            $strAdminPath = '<small class="pl-4"><mark>'.$this->getName().'</mark></small>';
+            $strAdminPath = '<br/><small><mark>'.$this->getName().'</mark></small>';
         }
 
         return <<<DOCHERE
 <div class="form-group" id="$strRowHash">
-    <div class="card"><h5 class="card-header text-center">$strTitle <a href="javascript:void(0)" class="btn btn-secondary btn-sm taxonomy-collapse-btn" data-toggle="collapse" data-target="#collapseTaxonomy$strRowHash" aria-expanded="false"></a>$strAdminPath</h5></div>
-    <div class="collapse border border-secondary p-3" id="collapseTaxonomy$strRowHash">
-        $htmlInputRender
-        <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-4">
+            $strTitle
+            $strAdminPath
+        </div>
+        <div class="col-md-8">
+        
+            <label class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" checked onchange="PersonalTradingplatformFormComponent.toggleDisplayBlockTaxonomy('$strRowHash')" data-taxonomy-hide />
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">Скрыть проставленные соответствия</span>
+            </label>
+            <br/>
+
+            <a href="javascript:void(0)" class="btn btn-secondary taxonomy-collapse-btn" data-toggle="collapse" data-target="#collapseTaxonomy$strRowHash" aria-expanded="false"></a>
+        </div>
+    </div>
+    <div class="card mt-4">
+        <div class="collapse card-body p-3" id="collapseTaxonomy$strRowHash">
+            $htmlInputRender
+            <div class="clearfix"></div>
+        </div>
     </div>
 </div>
 DOCHERE;
@@ -80,6 +122,7 @@ DOCHERE;
         $this->arLeftColumn = $ar;
         return $this;
     }
+
     public function getLeftColumn()
     {
         return $this->arLeftColumn;
@@ -100,6 +143,7 @@ DOCHERE;
         $this->arRightColumn = $ar;
         return $this;
     }
+
     public function getRightColumn()
     {
         return $this->arRightColumn;
@@ -119,6 +163,7 @@ DOCHERE;
         $this->_fieldAction = $str;
         return $this;
     }
+
     public function getAction()
     {
         return $this->_fieldAction;
@@ -128,24 +173,11 @@ DOCHERE;
     public function isValueFilled($mixData)
     {
         $boolRes = false;
-        if( is_array($mixData) )
-        {
+        if (is_array($mixData)) {
             $mixData = array_diff($mixData, ['']);
-            if( !empty( $mixData ) && sizeof($mixData) > 0 )
-            {
+            if (!empty($mixData) && sizeof($mixData) > 0) {
                 $boolRes = true;
-                foreach ($mixData as $strVal)
-                {
-                    if( !(bool)strlen( trim( $strVal ) ) ){
-                        $boolRes = false;
-                        break;
-                    }
-                }
             }
-        }
-        else
-        {
-            $boolRes = (bool)strlen( trim( $mixData ) );
         }
 
         return $boolRes;
@@ -155,18 +187,9 @@ DOCHERE;
     public function extractValue($mixData, $mixAdditionalData = null)
     {
         $mixExtract = null;
-        if( is_array($mixData) )
+        if( !empty( $mixData[ $mixAdditionalData ] ) )
         {
-            foreach ($mixData as &$str)
-            {
-                $str = (string)(trim($str));
-            }
-            unset($str);
-            $mixExtract = array_diff($mixData, ['']);
-        }
-        elseif( is_scalar($mixData) )
-        {
-            $mixExtract = (string)(trim($mixData));
+            $mixExtract = $mixData[ $mixAdditionalData ];
         }
 
         return $mixExtract;
@@ -198,4 +221,21 @@ DOCHERE;
     {
         return $this->_fieldDefaultOption;
     }
+
+
+    // INFO Тут были заметки для автокомплита но хуй там
+    /*
+    protected $_fieldIsAutocomplete = false;
+
+    public function setIsAutocomplete($bool = true)
+    {
+        $this->_fieldIsAutocomplete = $bool;
+        return $this;
+    }
+
+    public function getIsAutocomplete()
+    {
+        return $this->_fieldIsAutocomplete;
+    }
+    */
 }

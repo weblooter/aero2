@@ -192,7 +192,8 @@ class Resource extends AbstractField
 
             $obSimpleField = clone $this->getSimpleField()
                 ->setName($this->getName().'['.self::TYPE_SIMPLE.'_VALUE]')
-                ->setValue($this->getValue()[self::TYPE_SIMPLE.'_VALUE']);
+                ->setValue($this->getValue()[self::TYPE_SIMPLE.'_VALUE'])
+                ->setRowHash($this->getRowHash());
 
             $this->addToRender($obSimpleField->getRender());
         }
@@ -237,7 +238,8 @@ class Resource extends AbstractField
         if ($this->getSelectField() instanceof Select) {
             $obSelectField = clone $this->getSelectField()
                 ->setName($this->getName().'['.self::TYPE_SELECT.'_VALUE]')
-                ->setValue($this->getValue()[self::TYPE_SELECT.'_VALUE']);
+                ->setValue($this->getValue()[self::TYPE_SELECT.'_VALUE'])
+                ->setRowHash($this->getRowHash());
 
             $this->addToRender($obSelectField->getRender());
         }
@@ -380,7 +382,7 @@ class Resource extends AbstractField
                         break;
 
                     case 'image':
-                        $arBaseOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Ссылка на изображение';
+                        $arBaseOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Ссылки на изображения';
                         break;
 
                     case 'countryOfProductionCode':
@@ -640,7 +642,8 @@ class Resource extends AbstractField
             switch ($v) {
                 case self::TYPE_SIMPLE:
                     if ($this->getSimpleField() instanceof AbstractField) {
-                        $obResourceField->setSimpleField(clone $this->getSimpleField());
+                        $obResourceField->setSimpleField(clone $this->getSimpleField())
+                            ->setRowHash($this->getRowHash());
                     } else {
                         unset($arAllowList[$k]);
                     }
@@ -648,7 +651,8 @@ class Resource extends AbstractField
 
                 case self::TYPE_SELECT:
                     if ($this->getSelectField() instanceof AbstractField) {
-                        $obResourceField->setSelectField(clone $this->getSelectField());
+                        $obResourceField->setSelectField(clone $this->getSelectField())
+                            ->setRowHash($this->getRowHash());
                     } else {
                         unset($arAllowList[$k]);
                     }
@@ -835,6 +839,71 @@ class Resource extends AbstractField
     protected static $arReferenceFieldCache = [];
     protected static $arCustomFieldCache = [];
 
+
+    protected function fillReferenceFieldCache($strReferenceType)
+    {
+        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
+        $className = null;
+        switch ($strReferenceType)
+        {
+            case 'CURRENCY':
+                $className = 'CurrencyTable';
+                break;
+            case 'COUNTRY':
+                $className = 'CountryTable';
+                break;
+            case 'MEASURE':
+                $className = 'MeasureTable';
+                break;
+        }
+
+        if( !is_null($className) )
+        {
+            if( $obCache->startDataCache(
+                60*60*24*7,
+                __METHOD__.__LINE__,
+                \Local\Core\Inner\Cache::getCachePath(['Model', 'Reference', $className], ['ResourceReferenceField'])
+            ) )
+            {
+                $obReference = null;
+                switch ($strReferenceType)
+                {
+                    case 'CURRENCY':
+                        $obReference = \Local\Core\Model\Reference\CurrencyTable::getList(['select' => ['NAME', 'CODE', 'NUMBER_OF_CURRENCY']]);
+                        break;
+                    case 'COUNTRY':
+                        $obReference = \Local\Core\Model\Reference\CountryTable::getList(['select' => ['NAME', 'CODE']]);
+                        break;
+                    case 'MEASURE':
+                        $obReference = \Local\Core\Model\Reference\MeasureTable::getList(['select' => ['NAME', 'CODE']]);
+                        break;
+                }
+
+                if( is_null($obReference) )
+                {
+                    $obCache->abortDataCache();
+                }
+                elseif( $obReference->getSelectedRowsCount() < 1)
+                {
+                    $obCache->abortDataCache();
+                }
+                else
+                {
+                    while ($ar = $obReference->fetch())
+                    {
+                        self::$arReferenceFieldCache[ $strReferenceType ][ $ar['CODE'] ] = $ar;
+                    }
+
+                    $obCache->endDataCache(self::$arReferenceFieldCache[ $strReferenceType ]);
+                }
+            }
+            else
+            {
+                self::$arReferenceFieldCache[ $strReferenceType ] = $obCache->getVars();
+            }
+        }
+    }
+
     protected function extractSourceValue($mixData, $mixAdditionalData = null)
     {
         $strReturn = null;
@@ -845,9 +914,11 @@ class Resource extends AbstractField
             case 'BASE_FIELD':
                 $strReturn = $mixAdditionalData[$arData[1]];
                 break;
+
             case 'PARAM_FIELD':
                 $strReturn = $mixAdditionalData['PARAM_'.$arData[1]];
                 break;
+
             case 'REFERENCE_FIELD':
 
                 if( !is_null( $mixAdditionalData[$arData[1]] ) )
@@ -876,67 +947,7 @@ class Resource extends AbstractField
 
                     if( is_null( self::$arReferenceFieldCache[ $strReferenceType ] ) )
                     {
-                        $obCache = \Bitrix\Main\Application::getInstance()->getCache();
-                        $className = null;
-                        switch ($strReferenceType)
-                        {
-                            case 'CURRENCY':
-                                $className = 'CurrencyTable';
-                                break;
-                            case 'COUNTRY':
-                                $className = 'CountryTable';
-                                break;
-                            case 'MEASURE':
-                                $className = 'MeasureTable';
-                                break;
-                        }
-
-                        if( !is_null($className) )
-                        {
-                            if( $obCache->startDataCache(
-                                60*60*24*7,
-                                __METHOD__.__LINE__,
-                                \Local\Core\Inner\Cache::getCachePath(['Model', 'Reference', $className], ['ResourceReferenceField'])
-                            ) )
-                            {
-                                $obReference = null;
-                                switch ($strReferenceType)
-                                {
-                                    case 'CURRENCY':
-                                        $obReference = \Local\Core\Model\Reference\CurrencyTable::getList(['select' => ['NAME', 'CODE', 'NUMBER_OF_CURRENCY']]);
-                                        break;
-                                    case 'COUNTRY':
-                                        $obReference = \Local\Core\Model\Reference\CountryTable::getList(['select' => ['NAME', 'CODE']]);
-                                        break;
-                                    case 'MEASURE':
-                                        $obReference = \Local\Core\Model\Reference\MeasureTable::getList(['select' => ['NAME', 'CODE']]);
-                                        break;
-                                }
-
-                                if( is_null($obReference) )
-                                {
-                                    $obCache->abortDataCache();
-                                }
-                                elseif( $obReference->getSelectedRowsCount() < 1)
-                                {
-                                    $obCache->abortDataCache();
-                                }
-                                else
-                                {
-                                    while ($ar = $obReference->fetch())
-                                    {
-                                        self::$arReferenceFieldCache[ $strReferenceType ][ $ar['CODE'] ] = $ar;
-                                    }
-
-                                    $obCache->endDataCache(self::$arReferenceFieldCache[ $strReferenceType ]);
-                                }
-                            }
-                            else
-                            {
-                                self::$arReferenceFieldCache[ $strReferenceType ] = $obCache->getVars();
-                            }
-                        }
-
+                        $this->fillReferenceFieldCache($strReferenceType);
                     }
 
                     switch ($arData[2])
@@ -950,6 +961,7 @@ class Resource extends AbstractField
                 }
 
                 break;
+
             case 'CUSTOM_FIELD':
 
                 switch ($arData[1])
@@ -1008,16 +1020,178 @@ class Resource extends AbstractField
                 break;
 
             case 'DELIVERY_FIELD':
-                // TODO описать поля доставки
-                /**
-                 * <optgroup label="Доставка"><option value="BASE_FIELD#DELIVERY_AVAILABLE">Признак наличия службы доставки</option><option value="DELIVERY_FIELD#PRICE_FROM#MIN">Стоимость доставки "от" (минимальная)</option><option value="DELIVERY_FIELD#PRICE_FROM#MAX">Стоимость доставки "от" (максимальная)</option><option value="DELIVERY_FIELD#PRICE_TO#MIN">Стоимость доставки "до" (минимальная)</option><option value="DELIVERY_FIELD#PRICE_TO#MAX">Стоимость доставки "до" (максимальная)</option><option value="DELIVERY_FIELD#CURRENCY_CODE#CODE">Валюта стоимости (код)</option><option value="DELIVERY_FIELD#CURRENCY_CODE#NAME">Валюта стоимости (название)</option><option value="DELIVERY_FIELD#DAYS_FROM#MIN">Сроки доставки "от" в днях (минимальные)</option><option value="DELIVERY_FIELD#DAYS_FROM#MAX">Сроки доставки "от" в днях (максимальные)</option><option value="DELIVERY_FIELD#DAYS_TO#MIN">Сроки доставки "до" в днях (минимальные)</option><option value="DELIVERY_FIELD#DAYS_TO#MAX">Сроки доставки "до" в днях (максимальные)</option></optgroup>
-                 */
+
+                if( !empty( $mixAdditionalData['DELIVERY_OPTIONS'] ) )
+                {
+                    switch ($arData[1])
+                    {
+                        case 'PRICE_FROM':
+                            switch ($arData[2])
+                            {
+                                case 'MIN':
+                                    $strReturn = min(array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'PRICE_FROM'));
+                                    break;
+
+                                case 'MAX':
+                                    $strReturn = max(array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'PRICE_FROM'));
+                                    break;
+                            }
+                            break;
+
+                        case 'PRICE_TO':
+                            switch ($arData[2])
+                            {
+                                case 'MIN':
+                                    $strReturn = min(array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'PRICE_TO'));
+                                    break;
+
+                                case 'MAX':
+                                    $strReturn = max(
+                                        array_merge(
+                                            array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'PRICE_TO'),
+                                            array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'PRICE_FROM')
+                                        )
+                                    );
+                                    break;
+                            }
+                            break;
+
+                        case 'CURRENCY_CODE':
+                            if( is_null( self::$arReferenceFieldCache[ 'CURRENCY' ] ) )
+                            {
+                                $this->fillReferenceFieldCache('CURRENCY');
+                            }
+
+                            switch ($arData[2])
+                            {
+                                case 'CODE':
+                                    if(
+                                        is_array(self::$arReferenceFieldCache[ 'CURRENCY' ])
+                                        && !empty( self::$arReferenceFieldCache[ 'CURRENCY' ][ $mixAdditionalData['DELIVERY_OPTIONS'][0]['CURRENCY_CODE'] ] )
+                                    )
+                                    {
+                                        $strReturn = $mixAdditionalData['DELIVERY_OPTIONS'][0]['CURRENCY_CODE'];
+                                    }
+                                    break;
+
+                                case 'NAME':
+                                    if(
+                                        is_array(self::$arReferenceFieldCache[ 'CURRENCY' ])
+                                        && !empty( self::$arReferenceFieldCache[ 'CURRENCY' ][ $mixAdditionalData['DELIVERY_OPTIONS'][0]['CURRENCY_CODE'] ] )
+                                    )
+                                    {
+                                        $strReturn = self::$arReferenceFieldCache[ 'CURRENCY' ][ $mixAdditionalData['DELIVERY_OPTIONS'][0]['CURRENCY_CODE'] ]['NAME'];
+                                    }
+                                    break;
+                            }
+                            break;
+
+                        case 'DAYS_FROM':
+                            switch ($arData[2])
+                            {
+                                case 'MIN':
+                                    $strReturn = min(array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'DAYS_FROM'));
+                                    break;
+
+                                case 'MAX':
+                                    $strReturn = max(array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'DAYS_FROM'));
+                                    break;
+                            }
+                            break;
+
+                        case 'DAYS_TO':
+                            switch ($arData[2])
+                            {
+                                case 'MIN':
+                                    $strReturn = min(array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'DAYS_TO'));
+                                    break;
+
+                                case 'MAX':
+                                    $strReturn = max(array_column($mixAdditionalData['DELIVERY_OPTIONS'], 'DAYS_TO'));
+                                    break;
+                            }
+                            break;
+                    }
+                }
                 break;
+
             case 'PICKUP_FIELD':
-                // TODO описать поля самовывоза
-                /**
-                 * <optgroup label="Самовывоз"><option value="BASE_FIELD#PICKUP_AVAILABLE">Признак наличия самовывоза</option><option value="PICKUP_FIELD#PRICE#MIN">Стоимость самовывоза (минимальная)</option><option value="PICKUP_FIELD#PRICE#MAX">Стоимость самовывоза (максимальная)</option><option value="PICKUP_FIELD#CURRENCY_CODE#CODE">Валюта стоимости (код)</option><option value="PICKUP_FIELD#CURRENCY_CODE#NAME">Валюта стоимости (название)</option><option value="PICKUP_FIELD#SUPPLY_FROM#MIN">Сроки поступления товара в магазин/на склад "от" в днях (минимальные)</option><option value="PICKUP_FIELD#SUPPLY_FROM#MAX">Сроки поступления товара в магазин/на склад "от" в днях (максимальные)</option><option value="PICKUP_FIELD#SUPPLY_TO#MIN">Сроки поступления товара в магазин/на склад "до" в днях (минимальные)</option><option value="PICKUP_FIELD#SUPPLY_TO#MAX">Сроки поступления товара в магазин/на склад "до" в днях (максимальные)</option></optgroup>
-                 */
+
+
+                if( !empty( $mixAdditionalData['PICKUP_OPTIONS'] ) )
+                {
+                    switch ($arData[1])
+                    {
+                        case 'PRICE':
+                            switch ($arData[2])
+                            {
+                                case 'MIN':
+                                    $strReturn = min(array_column($mixAdditionalData['PICKUP_OPTIONS'], 'PRICE'));
+                                    break;
+
+                                case 'MAX':
+                                    $strReturn = max(array_column($mixAdditionalData['PICKUP_OPTIONS'], 'PRICE'));
+                                    break;
+                            }
+                            break;
+
+                        case 'CURRENCY_CODE':
+                            if( is_null( self::$arReferenceFieldCache[ 'CURRENCY' ] ) )
+                            {
+                                $this->fillReferenceFieldCache('CURRENCY');
+                            }
+
+                            switch ($arData[2])
+                            {
+                                case 'CODE':
+                                    if(
+                                        is_array(self::$arReferenceFieldCache[ 'CURRENCY' ])
+                                        && !empty( self::$arReferenceFieldCache[ 'CURRENCY' ][ $mixAdditionalData['PICKUP_OPTIONS'][0]['CURRENCY_CODE'] ] )
+                                    )
+                                    {
+                                        $strReturn = $mixAdditionalData['PICKUP_OPTIONS'][0]['CURRENCY_CODE'];
+                                    }
+                                    break;
+
+                                case 'NAME':
+                                    if(
+                                        is_array(self::$arReferenceFieldCache[ 'CURRENCY' ])
+                                        && !empty( self::$arReferenceFieldCache[ 'CURRENCY' ][ $mixAdditionalData['PICKUP_OPTIONS'][0]['CURRENCY_CODE'] ] )
+                                    )
+                                    {
+                                        $strReturn = self::$arReferenceFieldCache[ 'CURRENCY' ][ $mixAdditionalData['PICKUP_OPTIONS'][0]['CURRENCY_CODE'] ]['NAME'];
+                                    }
+                                    break;
+                            }
+                            break;
+
+                        case 'SUPPLY_FROM':
+                            switch ($arData[2])
+                            {
+                                case 'MIN':
+                                    $strReturn = min(array_column($mixAdditionalData['PICKUP_OPTIONS'], 'SUPPLY_FROM'));
+                                    break;
+
+                                case 'MAX':
+                                    $strReturn = max(array_column($mixAdditionalData['PICKUP_OPTIONS'], 'SUPPLY_FROM'));
+                                    break;
+                            }
+                            break;
+
+                        case 'SUPPLY_TO':
+                            switch ($arData[2])
+                            {
+                                case 'MIN':
+                                    $strReturn = min(array_column($mixAdditionalData['PICKUP_OPTIONS'], 'SUPPLY_TO'));
+                                    break;
+
+                                case 'MAX':
+                                    $strReturn = max(array_column($mixAdditionalData['PICKUP_OPTIONS'], 'SUPPLY_TO'));
+                                    break;
+                            }
+                            break;
+                    }
+                }
                 break;
         }
 

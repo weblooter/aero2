@@ -26,6 +26,10 @@ class Base
                 return AutoruCategory::getData();
                 break;
 
+            case 'AutoruMarkModel':
+                return AutoruMarkModel::getData();
+                break;
+
             default:
                 return null;
                 break;

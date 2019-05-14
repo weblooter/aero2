@@ -374,5 +374,10 @@ class ImportData
          * @see \Local\Core\Inner\TradingPlatform\Field\Resource::extractSourceValue()
          */
         \Local\Core\Inner\Cache::deleteCache(['Inner', 'TradingPlatform', 'Field', 'Resource'], ['CustomFieldCategoryList', 'storeId='.$intStoreId]);
+
+        /**
+         * Удалим кэш таксономии "Марка Модель" обработчика ТП "Авто.ру"
+         */
+        \Local\Core\Inner\Cache::deleteCache(['Inner', 'TradingPlatform', 'Handler', 'AutoruParts', 'Handler'], ['MarkModelTaxonomy', 'storeId='.$intStoreId]);
     }
 }

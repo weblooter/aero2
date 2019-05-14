@@ -121,6 +121,14 @@
             ?>
 
                 <form action="<?=$strFormAction?>" method="post" id="tradingplatformform">
+                    <div class="page-loader d-block">
+                        <div class="page-loader__spinner">
+                            <svg viewBox="25 25 50 50">
+                                <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+                            </svg>
+                        </div>
+                    </div>
+
                     <?=bitrix_sessid_post();?>
                     <input type="hidden" name="TP_DATA[HANDLER]" value="<?=($arResult['TP_DATA']['HANDLER']) ? $arResult['TP_DATA']['HANDLER'] : \Bitrix\Main\Application::getInstance()
                         ->getContext()
@@ -168,11 +176,7 @@
                         ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID']])?>" class="btn btn-dark"><i class="zmdi zmdi-arrow-back"></i> Вернуться в магазин</a>
                     &ensp;
                     <button type="submit" class="btn btn-warning" name="SAVE" value="Y"><?=($arParams['TP_ID'] > 0) ? 'Обновить' : 'Сохранить'?></button>
-
                 </form>
-                <script type="text/javascript">
-                    LocalCore.initFormComponents();
-                </script>
 
             <? if ($arResult['STATUS'] == 'UPDATE_SUCCESS'): ?>
                 <div class="alert alert-success mt-4" role="alert">
@@ -185,12 +189,16 @@
             <? endif; ?>
 
                 <script type="text/javascript">
+                    LocalCore.initFormComponents();
                     <?
                     $arOptions = (new \Local\Core\Inner\TradingPlatform\Field\Resource())
                         ->setStoreId($arParams['STORE_ID'])
                         ->getSourceOptionsToJs();
                     ?>
                     PersonalTradingplatformFormComponent.setBuilderOptions(JSON.parse('<?=$arOptions?>'));
+                    window.onload = function(){
+                        PersonalTradingplatformFormComponent.hideLoading();
+                    };
                 </script>
 
             <? endif; ?>

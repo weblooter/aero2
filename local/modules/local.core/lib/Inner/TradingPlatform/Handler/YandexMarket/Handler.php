@@ -472,15 +472,21 @@ HEREDOC
                     'group' => ['CODE'],
                     'order' => ['NAME' => 'ASC']
                 ]);
-            while ($ar = $rsProductProps->fetch()) {
-                self::$arParamsListCache[$this->getTradingPlatformStoreId()][$ar['CODE']] = $ar['NAME'].' ['.$ar['CODE'].']';
+            if( $rsProductProps->getSelectedRowsCount() > 0 )
+            {
+                while ($ar = $rsProductProps->fetch()) {
+                    self::$arParamsListCache[$this->getTradingPlatformStoreId()][$ar['CODE']] = $ar['NAME'].' ['.$ar['CODE'].']';
+                }
+            }
+            else
+            {
+                self::$arParamsListCache[$this->getTradingPlatformStoreId()] = [];
             }
         }
 
         $arFields['shop__offers__offer__param'] = (new Field\Select())->setTitle('Характеристики товара')
             ->setDescription('Выберите характеристики, которые необходимо передавать в ЯндексМаркет.')
             ->setName('HANDLER_RULES[shop][offers][offer][param]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['param'])
             ->setIsMultiple()
             ->setOptions(['#ALL' => 'Передавать все характеристики'] + self::$arParamsListCache[$this->getTradingPlatformStoreId()])
             ->setDefaultOption('-- Выберите параметры --')
@@ -2081,19 +2087,5 @@ DOCHERE
         {
             unset($arOfferXml['oldprice']);
         }
-    }
-
-    /**
-     * Конвертирует массив структуры "\Spatie\ArrayToXml\ArrayToXml" в строку
-     *
-     * @param array  $arOfferXml массив структуры "\Spatie\ArrayToXml\ArrayToXml"
-     * @param string $elemName   название дочернего элемента
-     *
-     * @return string
-     */
-    protected function convertArrayToString($arOfferXml, $elemName)
-    {
-        $q = \Spatie\ArrayToXml\ArrayToXml::convert($arOfferXml, $elemName, false, 'UTF-8', '1.0');
-        return trim(str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $q));
     }
 }
