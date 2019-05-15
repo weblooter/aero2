@@ -102,12 +102,6 @@ $strMainCurrency
 DOCHERE
                 )),
 
-            '@handler_settings__DOMAIN_LINK' => (new Field\InputText())->setTitle('Ссылка на сайт')
-                ->setName('HANDLER_RULES[@handler_settings][DOMAIN_LINK]')
-                ->setIsRequired()
-                ->setValue($this->getHandlerRules()['@handler_settings']['DOMAIN_LINK'] ?? '')
-                ->setPlaceholder('https://example.com'),
-
             '@handler_settings__UTM' => (new Field\InputText())->setTitle('UTM и другие метки')
                 ->setName('HANDLER_RULES[@handler_settings][UTM]')
                 ->setValue($this->getHandlerRules()['@handler_settings']['UTM'] ?? '')
@@ -418,22 +412,22 @@ DOCHERE
                     $arExportProductData['EXPIRY_DATE'] = $arExportProductData['EXPIRY_DATE']->getTimestamp();
                 }
 
-                if (empty($arExportProductData['WEIGHT'])) {
+                if (empty($arExportProductData['WEIGHT']) || $arExportProductData['WEIGHT'] < 1) {
                     $arExportProductData['WEIGHT'] = $arHandlerSettings['DEFAULT_WEIGHT'];
                     $arExportProductData['WEIGHT_UNIT_CODE'] = 'GRM';
                 }
 
-                if (empty($arExportProductData['WIDTH'])) {
+                if (empty($arExportProductData['WIDTH']) || $arExportProductData['WIDTH'] < 1) {
                     $arExportProductData['WIDTH'] = $arHandlerSettings['DEFAULT_WIDTH'];
                     $arExportProductData['WIDTH_UNIT_CODE'] = 'MMT';
                 }
 
-                if (empty($arExportProductData['HEIGHT'])) {
+                if (empty($arExportProductData['HEIGHT']) || $arExportProductData['HEIGHT'] < 1) {
                     $arExportProductData['HEIGHT'] = $arHandlerSettings['DEFAULT_HEIGHT'];
                     $arExportProductData['HEIGHT_UNIT_CODE'] = 'MMT';
                 }
 
-                if (empty($arExportProductData['LENGTH'])) {
+                if (empty($arExportProductData['LENGTH']) || $arExportProductData['LENGTH'] < 1) {
                     $arExportProductData['LENGTH'] = $arHandlerSettings['DEFAULT_LENGTH'];
                     $arExportProductData['LENGTH_UNIT_CODE'] = 'MMT';
                 }

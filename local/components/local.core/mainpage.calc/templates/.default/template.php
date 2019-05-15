@@ -22,30 +22,7 @@
                             <input type="text" class="range">
                             <h4>Торговые площадки</h4>
                             <div class="row">
-                                <div class="col-sm-4 col-xs-6">
-                                    <input type="checkbox" class="calccheckbox" id="platform1-1" checked>
-                                    <label for="platform1-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform1.svg);"></label>
-                                </div>
-                                <div class="col-sm-4 col-xs-6">
-                                    <input type="checkbox" class="calccheckbox" id="platform2-1">
-                                    <label for="platform2-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform2.svg);"></label>
-                                </div>
-                                <div class="col-sm-4 col-xs-6">
-                                    <input type="checkbox" class="calccheckbox" id="platform3-1">
-                                    <label for="platform3-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform3.svg);"></label>
-                                </div>
-                                <div class="col-sm-4 col-xs-6">
-                                    <input type="checkbox" class="calccheckbox" id="platform4-1">
-                                    <label for="platform4-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform4.svg);"></label>
-                                </div>
-                                <div class="col-sm-4 col-xs-6">
-                                    <input type="checkbox" class="calccheckbox" id="platform5-1">
-                                    <label for="platform5-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform5.svg);"></label>
-                                </div>
-                                <div class="col-sm-4 col-xs-6">
-                                    <input type="checkbox" class="calccheckbox" id="platform6-1">
-                                    <label for="platform6-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform6.svg);"></label>
-                                </div>
+                                <? $GLOBALS['APPLICATION']->IncludeFile($this->GetFolder().'/include/tp-list.php') ?>
                             </div>
                         </div>
                     </div>
@@ -78,30 +55,7 @@
                         <input type="text" class="range">
                         <h4>Торговые площадки</h4>
                         <div class="row">
-                            <div class="col-sm-4 col-xs-6">
-                                <input type="checkbox" class="calccheckbox" id="platform1-1" checked>
-                                <label for="platform1-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform1.svg);"></label>
-                            </div>
-                            <div class="col-sm-4 col-xs-6">
-                                <input type="checkbox" class="calccheckbox" id="platform2-1">
-                                <label for="platform2-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform2.svg);"></label>
-                            </div>
-                            <div class="col-sm-4 col-xs-6">
-                                <input type="checkbox" class="calccheckbox" id="platform3-1">
-                                <label for="platform3-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform3.svg);"></label>
-                            </div>
-                            <div class="col-sm-4 col-xs-6">
-                                <input type="checkbox" class="calccheckbox" id="platform4-1">
-                                <label for="platform4-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform4.svg);"></label>
-                            </div>
-                            <div class="col-sm-4 col-xs-6">
-                                <input type="checkbox" class="calccheckbox" id="platform5-1">
-                                <label for="platform5-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform5.svg);"></label>
-                            </div>
-                            <div class="col-sm-4 col-xs-6">
-                                <input type="checkbox" class="calccheckbox" id="platform6-1">
-                                <label for="platform6-1" style="background-image: url(<?=SITE_TEMPLATE_PATH?>/assets/images/platform6.svg);"></label>
-                            </div>
+                            <? $GLOBALS['APPLICATION']->IncludeFile($this->GetFolder().'/include/tp-list.php') ?>
                         </div>
                     </div>
                 </div>

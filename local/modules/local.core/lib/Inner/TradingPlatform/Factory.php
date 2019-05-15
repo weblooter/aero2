@@ -31,6 +31,10 @@ class Factory
                 return new Handler\AutoruParts\Handler();
                 break;
 
+            case 'beru':
+                return new Handler\Beru\Handler();
+                break;
+
             default:
                 throw new \Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException();
                 break;
@@ -48,6 +52,7 @@ class Factory
         return [
             Handler\YandexMarket\Handler::getCode() => Handler\YandexMarket\Handler::getTitle(),
             Handler\AutoruParts\Handler::getCode() => Handler\AutoruParts\Handler::getTitle(),
+            Handler\Beru\Handler::getCode() => Handler\Beru\Handler::getTitle(),
         ];
     }
 }

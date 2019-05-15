@@ -412,7 +412,9 @@ DOCHERE
                 break;
         }
 
-        $arRet['#header_3'] = (new Field\Header())->setValue('Формирование соответствий марки и модели');
+        $arRet['#header_3'] = (new Field\Header())->setValue('Формирование марки и модели');
+
+        /*
         $arRet['#header_3.info'] = (new Field\Infoblock())->setValue(
             <<<DOCHERE
 <i>Авто.ру</i> требует, что бы название марки и модели автомобилей передавались строго в их формате. Для этого Вам необходимо проставить соответствия между Вашими марками и моделями и <i>Авто.ру</i>.
@@ -425,6 +427,7 @@ DOCHERE
 DOCHERE
 
         );
+        */
 
         $arRet['part__compatibility__@buildType'] = (new Field\Select())->setTitle('Способ передачи марки, модели и года производства')
             ->setName('HANDLER_RULES[part][compatibility][@buildType]')
@@ -446,7 +449,8 @@ DOCHERE
         {
             $arRet['#header_3.successImportError'] = (new Field\Infoblock())
                 ->setType(Field\Infoblock::TYPE_ERROR)
-                ->setValue('Построить соответствие невозможно - у магазина не было ни одного успешного импорта!');
+                ->setValue('Построить марки и модели невозможно - у магазина не было ни одного успешного импорта!');
+                //->setValue('Построить соответствие невозможно - у магазина не было ни одного успешного импорта!');
         }
         else
         {
@@ -467,6 +471,7 @@ DOCHERE
                             ]
                         ]);
 
+                    /*
                     if( empty($this->getHandlerRules()['part']['compatibility']['@paramSource']) )
                     {
                         $strAttention = 'Для построение списка соответствий заполните поля:<br/>&middot; '
@@ -480,6 +485,7 @@ DOCHERE
                     {
                         $arLeftColumnData = $this->getStoreMarkModelOneParamsTaxonomy($this->getHandlerRules()['part']['compatibility']['@paramSource']);
                     }
+                    */
 
                     break;
 
@@ -521,6 +527,7 @@ DOCHERE
                         ]);
 
 
+                    /*
                     if(
                         empty($this->getHandlerRules()['part']['compatibility']['@markSource'])
                         || empty($this->getHandlerRules()['part']['compatibility']['@modelSource'])
@@ -551,10 +558,12 @@ DOCHERE
                             $this->getHandlerRules()['part']['compatibility']['@yearSource']
                         );
                     }
+                    */
 
                     break;
             }
 
+            /*
             if( is_array($arLeftColumnData) )
             {
                 $arRet['part__compatibility__@taxonomyData'] = (new Field\Taxonomy())->setTitle('Соответствия марок и моделей')
@@ -566,6 +575,7 @@ DOCHERE
                     ->setValue($this->getHandlerRules()['part']['compatibility']['@taxonomyData'])
                     ->setIsMultiple();
             }
+            */
         }
 
         return $arRet;
@@ -640,8 +650,10 @@ DOCHERE
     }
 
     /**
-     * Получить таксономию левой колонки марки модели, если данные хранятся в одном св-ве
+     * Получить таксономию левой колонки марки модели, если данные хранятся в одном св-ве<br/>
+     * UPDATE: Как выяснилось автору и так збс все хавает
      *
+     * @deprecated
      * @param $strPropCode
      *
      * @return array
@@ -703,8 +715,10 @@ DOCHERE
     }
 
     /**
-     * Получить таксономию левой колонки марки модели, если данные хранятся в разных св-вах
+     * Получить таксономию левой колонки марки модели, если данные хранятся в разных св-вах<br/>
+     * UPDATE: Как выяснилось автору и так збс все хавает
      *
+     * @deprecated
      * @param      $strMarkCode
      * @param      $strModelCode
      * @param null $strYearCode
@@ -908,10 +922,10 @@ DOCHERE
                 case 'ONE_PARAM':
                     if( !is_null($this->extractFilledValueFromRule($this->getFields()['part__compatibility__@paramSource'], $arExportProductData)) )
                     {
-                        $tmpVal = $arExportProductData['PARAMS'][ $this->extractFilledValueFromRule($this->getFields()['part__compatibility__@paramSource'], $arExportProductData) ]['VALUE'];
-                        if( !is_null($tmpVal) )
+                        $strMarkModel = $arExportProductData['PARAMS'][ $this->extractFilledValueFromRule($this->getFields()['part__compatibility__@paramSource'], $arExportProductData) ]['VALUE'];
+                        if( !empty($strMarkModel) )
                         {
-                            $strLeftColumnValue = $tmpVal;
+                            $arOfferXml['compatibility']['car'] = $strMarkModel;
                         }
                     }
                     break;
@@ -932,13 +946,15 @@ DOCHERE
                         $arTmpData = array_diff($arTmpData, [''], [null]);
                         if( !empty($arTmpData) )
                         {
-                            $strLeftColumnValue = implode(' ', $arTmpData);
+                            $arOfferXml['compatibility']['car'] = implode(' ', $arTmpData);
                         }
+
                     }
 
                     break;
             }
 
+            /*
             if(
                 !is_null($strLeftColumnValue)
                 && !is_null($this->extractFilledValueFromRule($this->getFields()['part__compatibility__@taxonomyData'], mb_strtoupper($strLeftColumnValue)))
@@ -950,6 +966,7 @@ DOCHERE
             {
                 $arOfferXml['compatibility']['car'] = $strLeftColumnValue;
             }
+            */
 
 
 

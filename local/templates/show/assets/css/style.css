@@ -1022,3 +1022,6 @@ ul.breadcrumbs li span {
     background-image: -o-linear-gradient(left, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
     background-image: linear-gradient(to right, var(--blue1), var(--blue2), var(--blue3), var(--blue4), var(--blue5), var(--blue6));
 }
+
+.shoprow .shop .tp-icon {position: relative; overflow: hidden;}
+.shoprow .shop .tp-icon.tp-coming-soon::before {content: 'Скоро'; position: absolute; right: -63px; bottom: 44px; background-color: var(--blue2); color: #fff; display: block; width: 100%; text-align: center; transform: rotate(45deg); font-size: 14px; height: 26px; line-height: 26px;}
