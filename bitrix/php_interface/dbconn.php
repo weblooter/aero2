@@ -8,12 +8,13 @@ define("SHORT_INSTALL_CHECK", true);
 define("DBPersistent", false);
 
 $arConnection = require($_SERVER['DOCUMENT_ROOT'].'/local/php_interface/connection_data.php');
+$arConnection = $arConnection[ ( !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : end(array_diff(explode('/', $_SERVER['DOCUMENT_ROOT']), [''])) ) ];
 
 $DBType = "mysql";
-$DBHost = $arConnection[ $_SERVER['SERVER_NAME'] ]['host'];
-$DBLogin = $arConnection[ $_SERVER['SERVER_NAME'] ]['username'];
-$DBPassword = $arConnection[ $_SERVER['SERVER_NAME'] ]['password'];
-$DBName = $arConnection[ $_SERVER['SERVER_NAME'] ]['dbname'];
+$DBHost = $arConnection['host'];
+$DBLogin = $arConnection['username'];
+$DBPassword = $arConnection['password'];
+$DBName = $arConnection['dbname'];
 $DBDebug = false;
 $DBDebugToFile = false;
 

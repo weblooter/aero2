@@ -1,5 +1,6 @@
 <?php
 $arConnection = require($_SERVER['DOCUMENT_ROOT'].'/local/php_interface/connection_data.php');
+$arConnection = $arConnection[ ( !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : end(array_diff(explode('/', $_SERVER['DOCUMENT_ROOT']), [''])) ) ];
 
 return array (
   'utf_mode' => 
@@ -61,10 +62,10 @@ return array (
       'default' => 
       array (
         'className' => '\\Bitrix\\Main\\DB\\MysqliConnection',
-        'host' => $arConnection[ $_SERVER['SERVER_NAME'] ]['host'],
-        'database' => $arConnection[ $_SERVER['SERVER_NAME'] ]['dbname'],
-        'login' => $arConnection[ $_SERVER['SERVER_NAME'] ]['username'],
-        'password' => $arConnection[ $_SERVER['SERVER_NAME'] ]['password'],
+        'host' => $arConnection['host'],
+        'database' => $arConnection['dbname'],
+        'login' => $arConnection['username'],
+        'password' => $arConnection['password'],
         'options' => 2,
       ),
     ),
