@@ -52,7 +52,8 @@ final class Runner
      */
     private static function getProcessName()
     {
-        return 'robofeed_queue_job_runner';
+        $strJobPrefix = end(array_diff(explode('/', $_SERVER['DOCUMENT_ROOT']), ['']));
+        return $strJobPrefix.'_queue_job_runner';
     }
 
     /**

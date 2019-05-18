@@ -32,38 +32,38 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 
 <!-- Older IE warning message -->
 <!--[if IE]>
-<div class="ie-warning">
-    <h1>Warning!!</h1>
-    <p>You are using an outdated version of Internet Explorer, please upgrade to any of the following web browsers to access this website.</p>
+<div class="ie-warning" style="background: #222;">
+    <h1>Внимание!</h1>
+    <p>Наш функционал в Вашем браузере может некорректно работать. Что бы этого избежать скачайте один из браузеров, приведенных ниже.</p>
 
-    <div class="ie-warning__downloads">
-        <a href="http://www.google.com/chrome">
-            <img src="img/browsers/chrome.png" alt="">
-        </a>
+    <div class="ie-warning__downloads alert alert-warning" style="background: #222;">
+        <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>
 
-        <a href="https://www.mozilla.org/en-US/firefox/new">
-            <img src="img/browsers/firefox.png" alt="">
-        </a>
+        <a href="https://www.mozilla.org/en-US/firefox/new" target="_blank">Firefox</a>
 
-        <a href="http://www.opera.com">
-            <img src="img/browsers/opera.png" alt="">
-        </a>
+        <a href="http://www.opera.com" target="_blank">Opera</a>
 
-        <a href="https://support.apple.com/downloads/safari">
-            <img src="img/browsers/safari.png" alt="">
-        </a>
-
-        <a href="https://www.microsoft.com/en-us/windows/microsoft-edge">
-            <img src="img/browsers/edge.png" alt="">
-        </a>
-
-        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-            <img src="img/browsers/ie.png" alt="">
-        </a>
+        <a href="https://support.apple.com/downloads/safari" target="_blank">Safari</a>
     </div>
-    <p>Sorry for the inconvenience!</p>
+    <p>Нам очень жаль за доставленные неудобства.</p>
 </div>
 <![endif]-->
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(53708524, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+    });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/53708524" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 
 </body>
 </html>
