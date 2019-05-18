@@ -150,7 +150,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 ];
             }
 
-            /*
             if (
             $this->checkRights("can_delete")
                 ->isSuccess()
@@ -162,7 +161,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                     "ICON" => "btn_delete",
                 ];
             }
-            */
 
         }
 
@@ -209,15 +207,15 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 ((int)$this->id > 0) ? new \Local\Core\Inner\AdminHelper\EditField\Html($columnName["ID"], "ID", $this->id) : null,
                 ((int)$this->id > 0) ? new \Local\Core\Inner\AdminHelper\EditField\Hidden("", "ID", $this->id) : null,
 
-                (new \Local\Core\Inner\AdminHelper\EditField\Date($columnName["DATE_CREATE"], "DATE_CREATE"))->setEditable(false),
+                (new \Local\Core\Inner\AdminHelper\EditField\Date($columnName["DATE_CREATE"], "DATE_CREATE"))->setEditable(true),
 
-                (new \Local\Core\Inner\AdminHelper\EditField\User($columnName['USER_ID'], 'USER_ID'))->setEditable(((int)$this->id > 0) ? false : $canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\User($columnName['USER_ID'], 'USER_ID'))->setEditable(((int)$this->id > 0) ? true : $canEdit)
                     ->setRequired(true),
 
-                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['OPERATION'], 'OPERATION'))->setEditable(((int)$this->id > 0) ? false : $canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Text($columnName['OPERATION'], 'OPERATION'))->setEditable(((int)$this->id > 0) ? true : $canEdit)
                     ->setRequired(true),
 
-                (new \Local\Core\Inner\AdminHelper\EditField\Textarea($columnName['NOTE'], 'NOTE'))->setEditable(((int)$this->id > 0) ? false : $canEdit)
+                (new \Local\Core\Inner\AdminHelper\EditField\Textarea($columnName['NOTE'], 'NOTE'))->setEditable(((int)$this->id > 0) ? true : $canEdit)
                     ->setRequired(true),
             ]
         ];
@@ -241,7 +239,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
         if ((int)$id > 0) {
 
-            /*
             $rightEdit = $this->checkRights("can_edit");
             if ($rightEdit->isSuccess()) {
                 try {
@@ -255,7 +252,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
             } else {
                 $result->addErrors($rightEdit->getErrors());
             }
-            */
         } else {
 
             $arFields = [
@@ -292,7 +288,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
         $result = new \Bitrix\Main\Result();
 
-        /*
         if ($this->id) {
             $rightDelete = $this->checkRights("can_delete");
 
@@ -309,7 +304,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 $result->addErrors($rightDelete->getErrors());
             }
         }
-        */
 
         return $result;
     }

@@ -3888,6 +3888,17 @@ tbody.collapse.show {
     background-color: #bd2130
 }
 
+.badge-light {
+    color: #fff;
+    background-color: rgba(255, 255, 255, .125);
+}
+
+.badge-light[href]:focus, .badge-light[href]:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, .125);
+}
+
 .jumbotron {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
@@ -9582,6 +9593,7 @@ button, input, optgroup, select, textarea {
 .sidebar {
     width: 250px;
     position: fixed;
+    top: 0;
     left: 0;
     height: 100%;
     z-index: 101;
@@ -9824,11 +9836,6 @@ button, input, optgroup, select, textarea {
     position: absolute;
     left: 0;
     transition: left .2s, background-color, .2s
-}
-
-.messages__search .form-group:before, .results__search:before {
-    content: "";
-    font-family: Material-Design-Iconic-Font
 }
 
 .toggle-switch__helper:before {
@@ -10524,7 +10531,8 @@ button, input, optgroup, select, textarea {
     display: flex;
     -ms-flex-direction: row;
     flex-direction: row;
-    height: calc(100vh - 180px)
+    height: calc(100vh - 240px);
+    background-color: rgb(0, 0, 0, .3);
 }
 
 .messages__sidebar {
@@ -10578,7 +10586,7 @@ button, input, optgroup, select, textarea {
 .messages__header, .messages__reply {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 auto;
-    flex: 0 0 auto
+    flex: 0 0 auto;
 }
 
 .messages__content {
@@ -10609,7 +10617,8 @@ button, input, optgroup, select, textarea {
     margin-left: -.5rem
 }
 
-.messages__item:not(.messages__item--right) > .messages__details > p {
+.messages__item:not(.messages__item--right) > .messages__details > p,
+.messages__item:not(.messages__item--right) > .messages__details > textarea{
     background-color: rgba(255, 255, 255, .08)
 }
 
@@ -10617,12 +10626,21 @@ button, input, optgroup, select, textarea {
     max-width: 500px
 }
 
-.messages__details > p {
+.messages__details > p,
+.messages__details > textarea {
     border-radius: 2px;
-    padding: 1rem 1.3rem;
     margin-bottom: 0;
     display: inline-block;
-    text-align: left
+    text-align: left;
+    font-size: 13px;
+}
+
+.messages__details > p {
+    padding: 1rem 1.3rem;
+}
+.messages__details > textarea {
+    padding: 1rem 1.3rem;
+    box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
 }
 
 .messages__details > p + p {
@@ -10681,10 +10699,11 @@ button, input, optgroup, select, textarea {
     margin-bottom: -5px;
     border: 0;
     border-radius: 2px;
-    padding: 1rem 1.5rem;
+    /*padding: 1rem 1.5rem;*/
     resize: none;
     background-color: transparent;
-    color: rgba(255, 255, 255, .85)
+    color: rgba(255, 255, 255, .85);
+    max-height: 150px;
 }
 
 .messages__reply__text::-webkit-input-placeholder {
@@ -10810,7 +10829,7 @@ button, input, optgroup, select, textarea {
     box-shadow: 0 1px 5px rgb(0, 0, 0, .1)
 }
 
-.notes__item > a, .todo__labels > a {
+.notes__item > .note__layer, .todo__labels > a {
     transition: background-color .3s
 }
 
@@ -11025,8 +11044,8 @@ button, input, optgroup, select, textarea {
     margin-bottom: 30px
 }
 
-.notes__item > a {
-    height: 155px;
+.notes__item > .note__layer {
+    height: auto;
     background-color: rgb(0, 0, 0, .2);
     display: block;
     padding: 1.8rem 2rem;
@@ -11038,12 +11057,12 @@ button, input, optgroup, select, textarea {
     transition: opacity .3s
 }
 
-.notes__item > a, .notes__item > a:before {
+.notes__item > .note__layer, .notes__item > .note__layer:before {
     border-radius: 2px;
     box-shadow: 0 1px 1px rgb(0, 0, 0, .08)
 }
 
-.notes__item > a:before {
+.notes__item > .note__layer:before {
     content: '';
     position: absolute;
     width: calc(100% - 10px);
@@ -11368,7 +11387,7 @@ button, input, optgroup, select, textarea {
     [data-sa-theme] {
         background-size: cover;
         background-attachment: fixed;
-        background-position: center
+        background-position: bottom;
     }
 }
 
@@ -11431,7 +11450,7 @@ button, input, optgroup, select, textarea {
 
     background-size: 100% auto;
     background-repeat: no-repeat;
-    background-position: 0 101%;
+    background-position: bottom;
 }
 
 @media (min-width: 320px) {
@@ -11563,7 +11582,8 @@ button, input, optgroup, select, textarea {
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
-    height: 100vh;
+    /*height: 100vh;*/
+    height: 100%;
     width: 100%
 }
 

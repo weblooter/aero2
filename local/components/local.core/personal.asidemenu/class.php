@@ -112,7 +112,7 @@ class PersonalAsideMenuComponent extends \Local\Core\Inner\BxModified\CBitrixCom
             $arCompanyMenu = $obCache->getVars();
         }
 
-        $arTools = [
+        $arOtherMenu = [
             [
                 'LINK' => \Local\Core\Inner\Route::getRouteTo('tools', 'list'),
                 'TEXT' => 'Инструменты',
@@ -123,10 +123,7 @@ class PersonalAsideMenuComponent extends \Local\Core\Inner\BxModified\CBitrixCom
                         'TEXT' => 'Конвертер'
                     ]
                 ]
-            ]
-        ];
-
-        $arBalance = [
+            ],
             [
                 'LINK' => \Local\Core\Inner\Route::getRouteTo('balance', 'list'),
                 'TEXT' => 'Баланс',
@@ -141,10 +138,33 @@ class PersonalAsideMenuComponent extends \Local\Core\Inner\BxModified\CBitrixCom
                         'TEXT' => 'Посмотреть историю'
                     ]
                 ]
+            ],
+            'help' => [
+                'LINK' => \Local\Core\Inner\Route::getRouteTo('help', 'list'),
+                'TEXT' => 'Помощь',
+                'ICON_CLASS' => 'zmdi zmdi-help',
+                'CHILDS' => [
+                    [
+                        'LINK' => \Local\Core\Inner\Route::getRouteTo('help', 'help-center'),
+                        'TEXT' => 'Справочный центр'
+                    ],
+                    [
+                        'LINK' => \Local\Core\Inner\Route::getRouteTo('support', 'list'),
+                        'TEXT' => 'Поддержка'
+                    ]
+                ]
             ]
         ];
 
-        $arResult['ITEMS'] = array_merge($arResult['ITEMS'], [$arCompanyMenu], $arTools, $arBalance);
+        if( $GLOBALS['USER']->IsAdmin() )
+        {
+            $arOtherMenu['help']['CHILDS'][] =[
+                'LINK' => \Local\Core\Inner\Route::getRouteTo('support-admin', 'list'),
+                'TEXT' => 'Поддержка (админ)'
+            ];
+        }
+
+        $arResult['ITEMS'] = array_merge($arResult['ITEMS'], [$arCompanyMenu], $arOtherMenu);
 
         $arResult['ITEMS'] = $this->markActiveChain($arResult['ITEMS']);
 
@@ -179,6 +199,10 @@ class PersonalAsideMenuComponent extends \Local\Core\Inner\BxModified\CBitrixCom
     {
         $strCurPageDirectory = \Bitrix\Main\Application::getInstance()->getContext()->getRequest()->getRequestedPageDirectory().'/';
         if( preg_match('/^\/personal\/company\/([0-9]+)\/store\/([0-9]+)\//', $strCurPageDirectory, $matches) )
+        {
+            $strCurPageDirectory = $matches[0];
+        }
+        elseif( preg_match('/^\/personal\/help\/support\/(admin\/)?/', $strCurPageDirectory, $matches) )
         {
             $strCurPageDirectory = $matches[0];
         }

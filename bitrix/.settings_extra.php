@@ -93,7 +93,7 @@ $conf = [
                 'host' => 'smtp.yandex.ru',
                 'login' => 'info@robofeed.ru',
                 'password' => '>4+QGny@T]y7cdh{',
-                'name' => 'info@robofeed.ru',
+                'name' => 'Robofeed.ru - Сервис интеграций с торговыми площадками',
             ]
         ],
         'readonly' => true

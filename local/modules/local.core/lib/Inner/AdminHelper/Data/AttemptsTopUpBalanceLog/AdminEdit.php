@@ -150,7 +150,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 ];
             }
 
-            /*
             if (
             $this->checkRights("can_delete")
                 ->isSuccess()
@@ -162,7 +161,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                     "ICON" => "btn_delete",
                 ];
             }
-            */
 
         }
 
@@ -206,7 +204,13 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
 
         $strQueryData = '<pre>'.print_r((array)json_decode($this->data['QUERY_DATA']), true).'</pre>';
 
-        $strAdditionalData = \Local\Core\Inner\Payment\Factory::factory($this->data['HANDLER'])::getAdditionalDataInAdmin($this->data['ADDITIONAL_DATA']);
+        $strAdditionalData = '';
+        $strHandlerTitle = '';
+        if( !is_null($this->data['HANDLER']) )
+        {
+            $strAdditionalData = \Local\Core\Inner\Payment\Factory::factory($this->data['HANDLER'])::getAdditionalDataInAdmin($this->data['ADDITIONAL_DATA']);
+            $strHandlerTitle = \Local\Core\Inner\Payment\Factory::factory($this->data['HANDLER'])::getTitle();
+        }
 
         return [
             "main" => [
@@ -220,7 +224,7 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 (new \Local\Core\Inner\AdminHelper\EditField\SimpleText($columnName['USER_ID'], 'USER_ID')),
 
                 (new \Local\Core\Inner\AdminHelper\EditField\SimpleText($columnName['HANDLER'], 'HANDLER',
-                    '['.$this->data['HANDLER'].'] '.\Local\Core\Inner\Payment\Factory::factory($this->data['HANDLER'])::getTitle())),
+                    '['.$this->data['HANDLER'].'] '.$strHandlerTitle)),
 
                 (new \Local\Core\Inner\AdminHelper\EditField\SimpleText($columnName['QUERY_DATA'], 'QUERY_DATA', $strQueryData)),
                 (new \Local\Core\Inner\AdminHelper\EditField\SimpleText($columnName['ADDITIONAL_DATA'], 'ADDITIONAL_DATA', $strAdditionalData)),
@@ -257,7 +261,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
         $id = (int)$request->getPost("ID");
         $arFields = [];
 
-        /*
         if ((int)$id > 0) {
 
             $rightEdit = $this->checkRights("can_edit");
@@ -291,7 +294,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 $result->addErrors($rightAdd->getErrors());
             }
         }
-        */
 
         return $result;
     }
@@ -303,7 +305,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
     {
         $result = new \Bitrix\Main\Result();
 
-        /*
         if ($this->id) {
             $rightDelete = $this->checkRights("can_delete");
 
@@ -320,7 +321,6 @@ class AdminEdit extends \Local\Core\Inner\AdminHelper\EditBase
                 $result->addErrors($rightDelete->getErrors());
             }
         }
-        */
 
         return $result;
     }

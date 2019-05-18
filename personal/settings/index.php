@@ -2,13 +2,5 @@
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Настройки");
 ?>
-    <div class="container-fluid">
-        <div class="row">
-
-            <div class="col-12">
-                text here...
-            </div>
-
-        </div>
-    </div>
+<? $GLOBALS['APPLICATION']->IncludeComponent('local.core:personal.setting', '.default', []);?>
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

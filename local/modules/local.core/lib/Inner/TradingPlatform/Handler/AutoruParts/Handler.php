@@ -345,21 +345,20 @@ DOCHERE
 Полный список категорий вы можете найти на странице <a href="https://auto.ru/parts/" target="_blank">Запчасти</a>.
 <div class="blockquote-footer"> Авто.ру</div>
 </blockquote>
-Ввиду данного требования мы можем предложить 2 варианта решения данного требования:<br/>
-<span class="lead text-warning">1.</span> <b>Сформировать название самостоятельно</b>, согласно требованию <i>Авто.ру</i>, передать в Robofeed XML  в поле <code><nobr>robofeed->offers->offer->fullName</nobr></code> или <code><nobr>robofeed->offers->offer->param</nobr></code> и выбрать необходимое поле как источник данных.<br/>
-<span class="lead text-warning">2.</span> <b>Построить название динамически</b> на основании данных, переданных в Robofeed XML. В таком случае необходимо корректно заполнить <code><nobr>robofeed->offers->offer->simpleName</nobr></code> и <code><nobr>robofeed->categories</nobr></code> в Robofeed XML согласно нашим требованиям. Вам будет предложено проставить соответствия между Вашими категориями и категориями <i>Авто.ру</i>, которые мы собрали заранее.<br/>
+Наше тестирование показывает, что <i class="font-weight-bold">Авто.ру</i> успешно воспринимает названия категорий, которые отличаются от их, в случае, если названия категории указано полностью, без сокращений. Ввиду этого, если данное правило Вами соблюдено, мы предлагаем использовать метод формирования <b>"Передавать без изменений"</b> и в поле <b>"Полное название товара"</b> выставить значение <b>"Полное название товара"</b> из поля Robofeed XML.<br/>
 <br/>
-Если Вам не важна категория размещения и Вы допускаете размещения позиций в <b>"Разное"</b> - рекомендуем выбрать способ формирования <b>"Названия товаров сформированы нами"</b> и в название передать источник "<b>Полное название товара</b>".<br/>
+В случае, если Ваши товары после импорта будут попадать не в свои категории, или Вы передаете сокращенные названия категорий, мы рекомендуем выставить значение <b>"Сформировать название динамически"</b> и проставить соответствия между Вашими категориями и категориями <i class="font-weight-bold">Авто.ру</i>.<br/>
 <br/>
-Если выбран способ формирования <b>"Сформировать название динамически"</b> и у какой либо категории не проставлено соответствие, то при построении экспортного файла у такой категории будет использоваться ее название из Robofeed XML.
+Дополнительная информация по динамическому формированию названия:<br/>
+<span class="lead text-warning">1.</span> Если у какой-либо категории не проставлено соответствие, то при построении экспортного файла у такой категории будет использоваться ее название из Robofeed XML.<br/>
+<span class="lead text-warning">2.</span> Стоит понимать, что при сохранении сопоставленных категорий мы сохраняем соотношение <b>идентификатора Вашей категории</b> к названию категории <i class="font-weight-bold">Авто.ру</i>. Это означает, что при смене названия категории на Вашем сайте проставлять соответствие заново не нужно, если у категории не сменился идентификатор. В то же время, если на сайте созданы новые категории, которые передаются в Robofeed XML, то необходимо вернуться на страницу настройки текущей торговой площадки и проставить новые соответствия. В противном случае сценарий начнет работать по пункту 1, описанному выше.
 DOCHERE
             ),
 
-            'part__title__@data-source' => (new Field\Select())->setTitle('Способ формирования названия')
+            'part__title__@data-source' => (new Field\Select())->setTitle('Метод формирования названия')
                 ->setName('HANDLER_RULES[part][title][@data-source]')
-                ->setIsRequired()
                 ->setOptions([
-                    'MYSELF' => 'Названия товаров сформированы нами',
+                    'MYSELF' => 'Передавать без изменений',
                     'DYNAMIC' => 'Сформировать название динамически',
                 ])
                 ->setDefaultOption('-- Выберите способ формирования --')
@@ -1030,16 +1029,30 @@ DOCHERE
 
             if (!is_null($this->extractFilledValueFromRule($this->getFields()['part__properties'], $arExportProductData)))
             {
-                foreach ($this->extractFilledValueFromRule($this->getFields()['part__properties'], $arExportProductData) as $propCode)
+                if (in_array('#ALL', $this->extractFilledValueFromRule($this->getFields()['part__properties'], $arExportProductData)))
                 {
-                    if( !empty( $arExportProductData['PARAMS'][$propCode]['VALUE'] ) )
-                    {
+                    foreach ($arExportProductData['PARAMS'] as $arParam) {
                         $arOfferXml['properties']['property'][] = [
                             '_attributes' => [
-                                'name' => $arExportProductData['PARAMS'][$propCode]['NAME']
+                                'name' => trim($arParam['NAME'])
                             ],
-                            '_value' => $arExportProductData['PARAMS'][$propCode]['VALUE'],
+                            '_value' => trim($arParam['VALUE'])
                         ];
+                    }
+                }
+                else
+                {
+                    foreach ($this->extractFilledValueFromRule($this->getFields()['part__properties'], $arExportProductData) as $propCode)
+                    {
+                        if( !empty( $arExportProductData['PARAMS'][$propCode]['VALUE'] ) )
+                        {
+                            $arOfferXml['properties']['property'][] = [
+                                '_attributes' => [
+                                    'name' => $arExportProductData['PARAMS'][$propCode]['NAME']
+                                ],
+                                '_value' => $arExportProductData['PARAMS'][$propCode]['VALUE'],
+                            ];
+                        }
                     }
                 }
             }

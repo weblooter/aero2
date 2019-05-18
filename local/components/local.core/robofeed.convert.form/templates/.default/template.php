@@ -43,7 +43,7 @@
 
                     <div class="form-group col-sm-4">
                         <label>Файл * :</label>
-                        <input type="file" name="CONVERT[FILE]" class="file" data-show-preview="false" data-msg-placeholder="Загрузите файл" required />
+                        <input type="file" name="CONVERT[FILE]" class="file" data-show-preview="false" data-msg-placeholder="Загрузите файл" data-show-cancel="false" data-show-upload="false" required />
                         <small class="form-text text-muted">Ограничение по размеру
                             - <?=$component->intMaxUploadFileSizeMb?> Мб.
                         </small>

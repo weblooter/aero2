@@ -238,7 +238,6 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
             ];
         }
 
-        /*
         if (
         $this->checkRights("can_delete")
             ->isSuccess()
@@ -250,7 +249,6 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
                 "ACTION" => "if(confirm('Действительно удалить?')) ".$this->CAdminList->ActionDoGroup($fields["ID"], "delete", $addParams)
             ];
         }
-        */
 
         return $actions;
     }
@@ -266,7 +264,7 @@ class AdminList extends \Local\Core\Inner\AdminHelper\ListBase
         $this->checkRights("can_delete")
             ->isSuccess()
         ) {
-            //            $actions["delete"] = "Удалить";
+            $actions["delete"] = "Удалить";
         }
 
         if (

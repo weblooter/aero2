@@ -18,6 +18,14 @@ $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/flot/jquery.flot.r
 
 
 <div class="row">
+    <?if( empty( $arResult['LOG'] ) ):?>
+        <div class="col-12">
+            <div class="alert alert-warning">
+                Ожидайте импорта товаров. После успешного импорта Вы сможете продолжить работу с магазином.
+            </div>
+        </div>
+    <?endif;?>
+
     <div class="col-lg-6">
 
         <div class="card">
@@ -96,6 +104,25 @@ $obAssets->addJs(SITE_TEMPLATE_PATH.'/assets/bower_components/flot/jquery.flot.r
                             <?=( ( $arResult['ITEM']['DATE_LAST_SUCCESS_IMPORT'] instanceof \Bitrix\Main\Type\DateTime ) ? $arResult['ITEM']['DATE_LAST_SUCCESS_IMPORT']->format('Y-m-d H:i') : 'Успешного импорта не было')?>
                         </td>
                     </tr>
+                    <?if( !empty($arResult['LOG']) && is_array($arResult['LOG']) ):?>
+                        <tr>
+                            <th>Следующий импорт будет примерно в:</th>
+                            <td>
+                                <?
+                                if( end($arResult['LOG'])['DATE_CREATE'] instanceof \Bitrix\Main\Type\DateTime )
+                                {
+                                    $nextTime =  end($arResult['LOG'])['DATE_CREATE'];
+                                    $nextTime->add('+'.( \Bitrix\Main\Config\Configuration::getInstance()->get('robofeed')['import']['timeout_between_import_robofeed'] ?? 240 ).' min' );
+                                    echo $nextTime->format('Y-m-d H:i');
+                                }
+                                else
+                                {
+                                    echo 'Уточнить время невозможно';
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    <?endif;?>
 
                     <?
                     switch ($arResult['ITEM']['LAST_IMPORT_RESULT']) {

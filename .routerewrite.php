@@ -100,7 +100,6 @@ $arLocalRoutes = [
             'URL' => '/personal/tools/converter/'
         ],
     ],
-
     'balance' => [
         'list' => [
             'URL' => '/personal/balance/',
@@ -144,6 +143,68 @@ $arLocalRoutes = [
 
                     $GLOBALS['APPLICATION']->AddChainItem('Редактирование "'.\Local\Core\Inner\TradingPlatform\Base::getName($arParams['TP_ID']).'"',
                         \Local\Core\Inner\Route::getRouteTo('tradingplatform', 'edit', ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#TP_ID#' => $arParams['TP_ID']]));
+                }
+        ]
+    ],
+    'help' => [
+        'list' => [
+            'URL' => '/personal/help/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    $GLOBALS['APPLICATION']->AddChainItem("Помощь", \Local\Core\Inner\Route::getRouteTo('help', 'list'));
+                }
+        ],
+        'help-center' => [
+            'URL' => '/personal/help/help-center/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('help', 'list');
+                    $GLOBALS['APPLICATION']->AddChainItem("Справочный центр", \Local\Core\Inner\Route::getRouteTo('help', 'help-center'));
+                }
+        ],
+        'help-center-detail' => [
+            'URL' => '/personal/help/help-center/#HELP_ID#/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('help', 'list');
+                }
+        ]
+    ],
+
+    'support' => [
+        'list' => [
+            'URL' => '/personal/help/support/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('help', 'list');
+                    $GLOBALS['APPLICATION']->AddChainItem("Поддержка", \Local\Core\Inner\Route::getRouteTo('support', 'list'));
+                }
+        ],
+        'detail' => [
+            'URL' => '/personal/help/support/#SUPPORT_ID#/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('support', 'list');
+                    $GLOBALS['APPLICATION']->AddChainItem("Обращение #".$arParams['SUPPORT_ID'], \Local\Core\Inner\Route::getRouteTo('support', 'detail', ['SUPPORT_ID' => $arParams['SUPPORT_ID']]));
+                }
+        ]
+    ],
+    'support-admin' => [
+        'list' => [
+            'URL' => '/personal/help/support/admin/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('help', 'list');
+                    $GLOBALS['APPLICATION']->AddChainItem('Для админов');
+                    $GLOBALS['APPLICATION']->AddChainItem("Поддержка", \Local\Core\Inner\Route::getRouteTo('support', 'list'));
+                }
+        ],
+        'detail' => [
+            'URL' => '/personal/help/support/admin/#SUPPORT_ID#/',
+            'BREADCRUMBS' => function ($arParams = [])
+                {
+                    \Local\Core\Inner\Route::fillRouteBreadcrumbs('support-admin', 'list');
+                    $GLOBALS['APPLICATION']->AddChainItem("Обращение #".$arParams['SUPPORT_ID'], \Local\Core\Inner\Route::getRouteTo('support', 'detail', ['SUPPORT_ID' => $arParams['SUPPORT_ID']]));
                 }
         ]
     ]

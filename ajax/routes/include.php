@@ -107,4 +107,21 @@ return [
         'args' => ['inn' => '[0-9]{10,12}'],
         'handler' => \Local\Core\Ajax\Handler\Dadata::class.':searchCompanyByInn'
     ],
+
+    'support_add_message' => [
+        'path' => '/support/add-message/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\Support::class.':addMessage'
+    ],
+    'support_add_message_admin' => [
+        'path' => '/support/add-message-admin/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\Support::class.':addMessageAdmin'
+    ],
+
+    'support_close_task' => [
+        'path' => '/support/close-task/',
+        'methods' => ['POST'],
+        'handler' => \Local\Core\Ajax\Handler\Support::class.':closeTask'
+    ],
 ];

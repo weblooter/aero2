@@ -5,6 +5,27 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 ?>
 <?if( !defined('ERROR_404') && $GLOBALS['USER']->IsAuthorized() ):?>
 </section>
+
+    <aside class="sidebar">
+        <div class="scrollbar-inner">
+
+            <div class="user">
+                <div class="user__info" data-toggle="dropdown">
+                    <?$GLOBALS['APPLICATION']->IncludeFile('include/sideUserInfo.php', false, ['MODE' => 'PHP'])?>
+                </div>
+
+                <div class="dropdown-menu dropdown-menu--icon">
+                    <a class="dropdown-item" href="<?=\Local\Core\Inner\Route::getRouteTo('personal', 'settings')?>"><i class="zmdi zmdi-shield-security"></i> Настойки</a>
+                    <a class="dropdown-item" href="?logout=yes"><i class="zmdi zmdi-power"></i> Выйти</a>
+                </div>
+            </div>
+
+            <?
+            $GLOBALS['APPLICATION']->IncludeComponent('local.core:personal.asidemenu', '.default', []);
+            ?>
+        </div>
+    </aside>
+
 </main>
 <?endif;?>
 

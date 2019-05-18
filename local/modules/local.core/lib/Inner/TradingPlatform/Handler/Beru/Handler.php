@@ -142,7 +142,7 @@ DOCHERE
     {
         $arDeliveryFields = [];
 
-        if( ( $this->getHandlerRules()['shop']['@delivery'] ?? 'N' ) == 'Y' )
+        if( ( $this->getHandlerRules()['shop']['@delivery'] ?? 'Y' ) == 'Y' )
         {
 
             $arDeliveryFields['#header_y2'] = (new Field\Header())->setValue('Условия доставки товара');
@@ -944,10 +944,8 @@ DOCHERE
             ])
             ->setSimpleField((new Field\InputText()))
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['dimensions'] ?? [
-                    'VALUE' => [
-                        'TYPE' => Field\Resource::TYPE_BUILDER,
-                        Field\Resource::TYPE_BUILDER.'_VALUE' => '{{BASE_FIELD#LENGTH}}/{{BASE_FIELD#WIDTH}}/{{BASE_FIELD#HEIGHT}}'
-                    ]
+                    'TYPE' => Field\Resource::TYPE_BUILDER,
+                    Field\Resource::TYPE_BUILDER.'_VALUE' => '{{BASE_FIELD#LENGTH}}/{{BASE_FIELD#WIDTH}}/{{BASE_FIELD#HEIGHT}}'
                 ])
             ->setEpilog((new Field\Infoblock())->setValue(<<<DOCHERE
 Мы рекомендуем установить тип данных <b>"Сложное значение"</b> и выставить ему значение:<br/>

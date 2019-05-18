@@ -55,4 +55,41 @@ class LocalCore {
     {
         return /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i.test( strEmail );
     }
+
+    static notify(title, sessage)
+    {
+
+        $.notify({
+            title: title,
+            message: sessage,
+            url: ''
+        },{
+            element: 'body',
+            type: 'inverse',
+            allow_dismiss: true,
+            placement: {
+                from: 'top',
+                align: 'right'
+            },
+            offset: {
+                x: 20,
+                y: 20
+            },
+            spacing: 10,
+            z_index: 1031,
+            delay: 3000,
+            timer: 1000,
+            url_target: '_blank',
+            mouse_over: false,
+            animate: {
+                enter: 'animated fadeInLeft',
+                exit: 'animated fadeOutLeft'
+            },
+            template:   '<div data-notify="container" class="alert alert-dismissible alert-{0} alert--notify" role="alert">' +
+                '<button type="button" aria-hidden="true" data-notify="dismiss" class="close"><i class="zmdi zmdi-close text-secondary"></i></button>' +
+                '<div class="d-inline-block" data-notify="title">{1}</div> ' +
+                '<span class="d-block" data-notify="message">{2}</span>' +
+                '</div>'
+        });
+    }
 }

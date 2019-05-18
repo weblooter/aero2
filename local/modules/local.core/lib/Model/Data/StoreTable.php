@@ -5,8 +5,6 @@ namespace Local\Core\Model\Data;
 use Bitrix\Main\ORM\EntityError;
 use Bitrix\Main\ORM\Event;
 use \Bitrix\Main\ORM\Fields, \Bitrix\Main\Entity;
-use Bitrix\Seo\LeadAds\Field;
-use Local\Core\Inner\Company\Base;
 
 // TODO сделать OnAfterAdd OnAfterUpdate, которое будет ставить очередь на выполнение проверки файла
 // TODO добавить в getMap данные по последней проверке (подключать orm логов сайтов)

@@ -95,5 +95,26 @@ $arUrlRewrite = array(
         "PATH" => "/personal/tradingplatform-edit.php",
         "SORT" => "430",
     ),
+    array(
+        "CONDITION" => "#^/personal/help/support/([0-9]+)/(\?.*)?$#",
+        "RULE" => "SUPPORT_ID=$1&TMP=$2",
+        "ID" => "",
+        "PATH" => "/personal/help/support/detail.php",
+        "SORT" => "510",
+    ),
+    array(
+        "CONDITION" => "#^/personal/help/support/admin/(\?.*)?$#",
+        "RULE" => "TMP=$1",
+        "ID" => "",
+        "PATH" => "/personal/help/support/detail-admin.php",
+        "SORT" => "520",
+    ),
+    array(
+        "CONDITION" => "#^/personal/help/support/admin/([0-9]+)/(\?.*)?$#",
+        "RULE" => "SUPPORT_ID=$1&TMP=$2",
+        "ID" => "",
+        "PATH" => "/personal/help/support/detail-admin.php",
+        "SORT" => "520",
+    ),
 );
 ?>
