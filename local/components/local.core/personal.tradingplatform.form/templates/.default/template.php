@@ -18,7 +18,7 @@
                 <a class="quick-stats__item d-block mb-0 bg-secondary" href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add',
                     ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => $k])?>">
                     <div class="quick-stats__info text-center">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/assets/img/tradingplatform-icons/<?=$k?>.svg" class="d-block m-auto mb-3 tradingplatform__img" />
+                        <img src="/local/templates/.default/assets/img/tradingplatform-icons/<?=$k?>.svg" class="d-block m-auto mb-3 tradingplatform__img" />
                         <h5 class="mt-3 mb-0 text-dark tradingplatform__title">
                             <?=$v?>
                         </h5>

@@ -1,6 +1,7 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
-$APPLICATION->SetTitle("Главная");
+$APPLICATION->SetTitle("Robofeed.ru - Сервис интеграций с торговыми площадками");
+$APPLICATION->SetPageProperty('title', "Robofeed.ru - Сервис интеграций с торговыми площадками");
 $APPLICATION->IncludeFile(SITE_TEMPLATE_PATH.'/include/mainpage_firstslide.php');
 $APPLICATION->IncludeFile(SITE_TEMPLATE_PATH.'/include/mainpage_about.php');
 $APPLICATION->IncludeFile(SITE_TEMPLATE_PATH.'/include/mainpage_platforms.php');

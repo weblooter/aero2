@@ -1,6 +1,7 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Robofeed v1");
+$APPLICATION->SetTitle("Robofeed XML v1");
+$APPLICATION->SetPageProperty('title', "Robofeed XML v1");
 ?>
 <?
 $obAssets = \Bitrix\Main\Page\Asset::getInstance();

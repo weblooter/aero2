@@ -30,11 +30,8 @@
                 <a href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add',
                     ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => ''])?>" class="actions__item zmdi zmdi-plus" title="Добавить торговую площадку"></a>
             </div>
-            <?
-        }
-        ?>
 
-        <?if( !empty( $arResult['ITEMS'] ) ):?>
+            <?if( !empty( $arResult['ITEMS'] ) ):?>
 
             <div class="accordion" role="tablist">
                 <? foreach ($arResult['ITEMS'] as $arItem): ?>
@@ -310,6 +307,9 @@
             <a href="<?=\Local\Core\Inner\Route::getRouteTo('tradingplatform', 'add',
                 ['#COMPANY_ID#' => $arParams['COMPANY_ID'], '#STORE_ID#' => $arParams['STORE_ID'], '#HANDLER#' => ''])?>" class="btn btn-outline-secondary">Добавить торговую площадку</a>
         <?endif;?>
+            <?
+        }
+        ?>
 
     </div>
 </div>

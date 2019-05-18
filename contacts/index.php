@@ -1,6 +1,7 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Договор-оферта");
+$APPLICATION->SetTitle("Контакты");
+$APPLICATION->SetPageProperty('title', "Контакты");
 ?>
 <h1>Контакты</h1>
 <table class="table table-striped" style="width: auto;">

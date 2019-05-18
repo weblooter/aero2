@@ -29,6 +29,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
         <p class="copyright">© ROBOFEED <?=date('Y')?></p>
     </div>
 </footer>
+
 </body>
 
 </html>

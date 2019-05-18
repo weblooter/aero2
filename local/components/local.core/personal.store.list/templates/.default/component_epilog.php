@@ -11,3 +11,6 @@
  */
 
 \Local\Core\Inner\Route::fillRouteBreadcrumbs('store', 'list', ['COMPANY_ID' => $arParams['COMPANY_ID']]);
+
+$GLOBALS['APPLICATION']->SetTitle('Магазины');
+$GLOBALS['APPLICATION']->SetPageProperty('title', 'Магазины');

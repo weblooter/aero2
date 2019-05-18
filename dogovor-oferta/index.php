@@ -1,6 +1,7 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Договор-оферта");
+$APPLICATION->SetPageProperty('title', "Договор-оферта");
 ?>
 <h1>
     Оферта на оказание услуг «Робофид»
