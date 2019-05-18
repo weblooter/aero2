@@ -6,11 +6,14 @@ if(!(defined("CHK_EVENT") && CHK_EVENT===true))
 
 define("SHORT_INSTALL_CHECK", true);
 define("DBPersistent", false);
+
+$arConnection = require($_SERVER['DOCUMENT_ROOT'].'/local/php_interface/connection_data.php');
+
 $DBType = "mysql";
-$DBHost = "localhost";
-$DBLogin = "userdev1";
-$DBPassword = "T4SsXh7dxyY2388d";
-$DBName = "dbdev1";
+$DBHost = $arConnection[ $_SERVER['SERVER_NAME'] ]['host'];
+$DBLogin = $arConnection[ $_SERVER['SERVER_NAME'] ]['username'];
+$DBPassword = $arConnection[ $_SERVER['SERVER_NAME'] ]['password'];
+$DBName = $arConnection[ $_SERVER['SERVER_NAME'] ]['dbname'];
 $DBDebug = false;
 $DBDebugToFile = false;
 
