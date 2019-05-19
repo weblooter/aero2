@@ -13,7 +13,7 @@
             <p class="question"><b>У меня нет программиста, может ли Вы помочь мне в создании Robofeed XML?</b></p>
             <p class="answer">
                 Мы заняты расширением функционала сервиса, списком поддерживаемых торговых площадок и технической поддержкой. По этой причине, к сожалению, у нас не остается времени на помощь в создании Robofeed XML.<br/>
-                Тем не менее наши партнеры из <a href="https://weblooter.ru/?utm_source=robofeed.ru&utm_medium=make_robofeed" target="_blank"><img src="/local/templates/.default/assets/img/weblooter.svg" height="38"> Weblooter Inc.</a> помогут Вам с этой задачей. Скажите, что хотите сделать Robofeed XML, и получите скидку 20%.
+                Тем не менее наши партнеры из <a href="https://weblooter.ru/?utm_source=robofeed.ru&utm_medium=make_robofeed" target="_blank"><img src="/local/templates/.default/assets/img/weblooter.svg" height="38"> Weblooter Inc.</a> помогут Вам с этой задачей.
             </p>
         </div>
     </div>
