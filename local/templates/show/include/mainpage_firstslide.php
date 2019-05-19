@@ -1,7 +1,7 @@
 <section class="firstslide gradient">
     <div class="container">
         <h1>
-            Быстрая и простая интеграция<br/> с торговыми площадками
+            Быстрая и простая интеграция<br/> с торговыми площадками<br/> для интернет магазинов
         </h1>
         <a href="/personal/" class="btn white">Начать работу</a>
         <div class="row triple">
