@@ -31,9 +31,15 @@ class Worker extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+
         $jobID = $input->getArgument('jobID');
         $executorID = $input->getArgument('executorID');
-        cli_set_process_title('kd_queue_job_worker_'.$jobID);
+
+
+
+        $strJobPrefix = end(array_diff(explode('/', $_SERVER['DOCUMENT_ROOT']), ['']));
+
+        cli_set_process_title($strJobPrefix.'_queue_job_worker_'.$jobID);
 
         $arJob = JobQueueTable::getList([
             'filter' => [

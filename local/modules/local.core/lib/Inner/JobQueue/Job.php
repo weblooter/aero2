@@ -70,6 +70,7 @@ class Job
         $input = $worker->getInputData();
         $hash = JobQueueTable::hash($class, $input);
 
+
         /** @var $rows \Bitrix\Main\ORM\Query\Result */
         $rows = JobQueueTable::getList([
             'select' => [
@@ -80,9 +81,17 @@ class Job
                 'ATTEMPTS_LEFT',
             ],
             'filter' => [
-                'HASH' => $hash,
-                '>ATTEMPTS_LEFT' => 0,
-                'STATUS' => ['N', 'E']
+                'LOGIC' => 'OR',
+                [
+                    'HASH' => $hash,
+                    '>ATTEMPTS_LEFT' => 0,
+                    'STATUS' => ['N', 'E']
+                ],
+                [
+                    '=WORKER_CLASS_NAME' => $class,
+                    'INPUT_DATA' => serialize($input),
+                    'IS_EXECUTE_NOW' => 'Y'
+                ]
             ],
             'limit' => 1,
         ]);

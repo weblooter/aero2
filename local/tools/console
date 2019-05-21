@@ -51,10 +51,10 @@ $application->add(new StepCounter);
 $application->add(new Runner('runner'));
 $application->add(new Worker('worker'));
 
-
-
 try {
+
     $application->run();
+
 } catch (\Throwable $t) {
     \Bitrix\Main\Application::getInstance()->getExceptionHandler()->handleException($t);
 }

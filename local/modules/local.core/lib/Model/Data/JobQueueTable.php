@@ -10,11 +10,11 @@ use Local\Core\Inner\Client\Dadata\Exception\ArgumentException;
 /**
  * <ul><li>ID - ID | Fields\IntegerField</li><li>DATE_CREATE - Дата создания [2019-05-09 20:24:02] | Fields\DatetimeField</li><li>DATE_MODIFIED - Дата последнего изменения [2019-05-09 20:24:02] | Fields\DatetimeField</li><li>EXECUTE_BY - EXECUTE_BY [RUNNER] | Fields\StringField</li><li>WORKER_CLASS_NAME - WORKER_CLASS_NAME | Fields\StringField</li><li>INPUT_DATA - INPUT_DATA | Fields\TextField</li><li>HASH - HASH | Fields\StringField</li><li>ATTEMPTS_LEFT - ATTEMPTS_LEFT [10] | Fields\IntegerField</li><li>STATUS - STATUS [N] | Fields\EnumField<br/>&emsp;N<br/>&emsp;S<br/>&emsp;E<br/>&emsp;F<br/></li><li>EXECUTE_AT - EXECUTE_AT | Fields\DatetimeField</li><li>IS_EXECUTE_NOW - IS_EXECUTE_NOW [N] | Fields\EnumField<br/>&emsp;Y<br/>&emsp;N<br/></li><li>LAST_EXECUTE_START - LAST_EXECUTE_START | Fields\DatetimeField</li></ul>
  *
- * @package Local\Core\Model\Data
  * @see     JobQueueTable::STATUS_ENUM_NEW
  * @see     JobQueueTable::STATUS_ENUM_SUCCESS
  * @see     JobQueueTable::STATUS_ENUM_ERROR
  * @see     JobQueueTable::STATUS_ENUM_FAIL
+ * @package Local\Core\Model\Data
  */
 class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManager
 {
@@ -40,7 +40,7 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
      */
     const STATUS_ENUM_FAIL = 'F';
 
-    const EXECUTE_BY_DEFAULT = 'RUNNER';
+    const EXECUTE_BY_DEFAULT = 'NONE';
 
     /**
      * @inheritdoc
@@ -75,10 +75,10 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
                     }
             ]),
             new Orm\Fields\StringField('EXECUTE_BY', [
-                'primary' => true,
                 'default_value' => self::EXECUTE_BY_DEFAULT,
+                'primary' => true,
             ]),
-            new Orm\Fields\StringField('WORKER_CLASS_NAME', ['required' => true]),
+            new Orm\Fields\TextField('WORKER_CLASS_NAME', ['required' => true]),
             new Orm\Fields\TextField('INPUT_DATA', [
                 'required' => true,
                 'serialized' => true,
@@ -112,7 +112,7 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
     {
         $data = $event->getParameter("fields");
 
-        $result = new \Bitrix\Main\Entity\EventResult();
+        $result = new \Bitrix\Main\ORM\EventResult();
 
         $arModifiedFields = [
             'HASH' => self::hash($data['WORKER_CLASS_NAME'], $data['INPUT_DATA']),
@@ -130,7 +130,7 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
         $data = $event->getParameter("fields");
         $arModifiedFields = [];
 
-        $result = new \Bitrix\Main\Entity\EventResult();
+        $result = new \Bitrix\Main\ORM\EventResult();
         $result->unsetFields(['ADDED_BY']);
 
         $class = key_exists('WORKER_CLASS_NAME', $data);

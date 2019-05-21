@@ -21,7 +21,7 @@ class StoreRobofeedImport extends Inner\JobQueue\Abstracts\Worker implements Inn
         $result = new Main\Result();
         $arInputData = $this->getInputData();
 
-        \Local\Core\Inner\Robofeed\ImportData::execute($arInputData['STORE_ID']);
+        $rs = \Local\Core\Inner\Robofeed\ImportData::execute($arInputData['STORE_ID']);
 
         return $result;
     }

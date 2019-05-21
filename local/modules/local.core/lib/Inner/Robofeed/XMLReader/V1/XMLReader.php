@@ -180,7 +180,7 @@ class XMLReader extends \Local\Core\Inner\Robofeed\XMLReader\AbstractXMLReader
 
                 if ($obOfferValidateResult->isSuccess()) {
 
-                    dump($arOfferFields);
+//                    dump($arOfferFields);
 
                     if (
                     $this->getImporter()
