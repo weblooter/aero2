@@ -346,7 +346,7 @@ DOCHERE
 
         $arFields['#header_y5'] = (new Field\Header())->setValue('Дополнительные поля товара');
 
-        $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('URL-ссылка на картинку товара')
+        $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('URL-ссылка на картинки товара')
             ->setDescription(<<<HEREDOC
 <b>* Ссылка на изображение обязательна для категорий:</b><br/>
 "Мягкая мебель", 
@@ -533,7 +533,6 @@ DOCHERE
         $arFields = [];
         $arFields['shop__offers__offer__@attr__id'] = (new Field\Resource())->setTitle('Идентификатор предложения')
             ->setStoreId($this->getTradingPlatformStoreId())
-            ->setDescription('Полное название предложения, в которое входит: тип товара, производитель, модель и название товара, важные характеристики.')
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][id]')
             ->setIsRequired()
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['id'])

@@ -97,8 +97,9 @@ class MainpageCalcComponent extends \Local\Core\Inner\BxModified\CBitrixComponen
                 $arNewResult['VALUES'][] = '> '.$arNewResult['VALUES'][sizeof($arNewResult['VALUES']) - 1];
                 $arNewResult['VALUES'] = implode(',', $arNewResult['VALUES']);
                 $arNewResult['ITEMS'] = array_values($arNewResult['ITEMS']);
-                $arNewResult['START_ELEM'] = $arNewResult['ITEMS'][1];
-                $arNewResult['START_ELEM']['ITERATOR'] = 1;
+                $arNewResult['START_ELEM'] = $arNewResult['ITEMS'][0];
+                $arNewResult['START_ELEM']['ITERATOR'] = 0;
+
 
                 $obCache->endDataCache($arNewResult);
             } catch (\Exception $e) {

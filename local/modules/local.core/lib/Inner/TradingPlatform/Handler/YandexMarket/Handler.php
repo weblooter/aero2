@@ -111,7 +111,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
         if( ( $this->getHandlerRules()['shop']['@delivery'] ?? 'Y' ) == 'Y' )
         {
             $arShopFields['#header_y1.1_info'] = (new Field\Infoblock())->setValue(<<<DOCHERE
-Яндекс.Маркет требует указывать условия доставки магазина по умолчанию вне зависимости, указаны ли условия у каждого товара или нет. Эти условия распространяются на все предложения магазина, кроме предложений с индивидуальными условиями доставки.<br/>
+<i class="font-weight-bold">Яндекс.Маркет</i> требует указывать условия доставки магазина по умолчанию вне зависимости, указаны ли условия у каждого товара или нет. Эти условия распространяются на все предложения магазина, кроме предложений с индивидуальными условиями доставки.<br/>
 Этот блок работает отдельно от блока <b>"Условия доставки товара"</b>.
 DOCHERE
 );
@@ -142,7 +142,7 @@ DOCHERE
 
             $arShopFields['shop__delivery-options__option__@attr__order-before'] = (new Field\Resource())->setTitle('Время, до которого нужно сделать заказ, чтобы получить его в этот срок, по умолчанию')
                 ->setDescription('В качестве значения используйте только целое число от 0 до 24.<br/>
-Если значение не указано или проигнорировано, ЯндекМаркет использует значение по умолчанию — 13.')
+Если значение не указано или проигнорировано, <i class="font-weight-bold">Яндекс.Маркет</i> использует значение по умолчанию — 13.')
                 ->setName('HANDLER_RULES[shop][delivery-options][option][@attr][order-before]')
                 ->setStoreId($this->getTradingPlatformStoreId())
                 ->setAllowTypeList([
@@ -237,7 +237,7 @@ DOCHERE
 
                 $arDeliveryFields['shop__offers__offer__delivery-options__option__@attr__order-before'] = (new Field\Resource())->setTitle('Время, до которого нужно сделать заказ, чтобы получить его в этот срок')
                     ->setDescription('В качестве значения используйте только целое число от 0 до 24.<br/>
-Если значение не указано или проигнорировано, ЯндекМаркет использует значение по умолчанию — 13.')
+Если значение не указано или проигнорировано, <i class="font-weight-bold">Яндекс.Маркет</i> использует значение по умолчанию — 13.')
                     ->setName('HANDLER_RULES[shop][offers][offer][delivery-options][option][@attr][order-before]')
                     ->setStoreId($this->getTradingPlatformStoreId())
                     ->setAllowTypeList([
@@ -364,7 +364,7 @@ DOCHERE
 
         $arFields['#header_y5'] = (new Field\Header())->setValue('Дополнительные поля товара');
 
-        $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('URL-ссылка на картинку товара')
+        $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('URL-ссылка на картинки товара')
             ->setDescription(<<<HEREDOC
 <b>* Ссылка на изображение обязательна для категорий:</b><br/>
 "Мягкая мебель", 
@@ -393,7 +393,7 @@ HEREDOC
                 ]);
 
         $arFields['shop__offers__offer__store'] = (new Field\Resource())->setTitle('Возможность купить товар без предварительного заказа')
-            ->setDescription('При выбранном значении <b>"Игнорировать поле"</b> значение не будет передано. Если в личном кабинете ЯндексМаркета указана соответствующая точка продаж (торговый зал, пункт выдачи), то он автоматически воспримет покупку как возможную.')
+            ->setDescription('При выбранном значении <b>"Игнорировать поле"</b> значение не будет передано. Если в личном кабинете <i class="font-weight-bold">Яндекс.Маркета</i> указана соответствующая точка продаж (торговый зал, пункт выдачи), то он автоматически воспримет покупку как возможную.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][store]')
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['store'])
@@ -486,7 +486,7 @@ HEREDOC
         }
 
         $arFields['shop__offers__offer__param'] = (new Field\Select())->setTitle('Характеристики товара')
-            ->setDescription('Выберите характеристики, которые необходимо передавать в ЯндексМаркет.')
+            ->setDescription('Выберите характеристики, которые необходимо передавать в <i class="font-weight-bold">Яндекс.Маркет</i>.')
             ->setName('HANDLER_RULES[shop][offers][offer][param]')
             ->setIsMultiple()
             ->setOptions(['#ALL' => 'Передавать все характеристики'] + self::$arParamsListCache[$this->getTradingPlatformStoreId()])
@@ -501,7 +501,6 @@ HEREDOC
         $arFields = [];
         $arFields['shop__offers__offer__@attr__id'] = (new Field\Resource())->setTitle('Идентификатор предложения')
             ->setStoreId($this->getTradingPlatformStoreId())
-            ->setDescription('Полное название предложения, в которое входит: тип товара, производитель, модель и название товара, важные характеристики.')
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][id]')
             ->setIsRequired()
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['id'])
