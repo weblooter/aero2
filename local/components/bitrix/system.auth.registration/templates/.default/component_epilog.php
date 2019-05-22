@@ -1,3 +1,3 @@
 <?php
-$GLOBALS['APPLICATION']->SetTitle('Robofeed.ru - Регистрация');
-$GLOBALS['APPLICATION']->SetPageProperty('title', 'Robofeed.ru - Регистрация');
+$GLOBALS['APPLICATION']->SetTitle('Робофид.ру - Регистрация');
+$GLOBALS['APPLICATION']->SetPageProperty('title', 'Робофид.ру - Регистрация');

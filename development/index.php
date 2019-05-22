@@ -1,7 +1,8 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetPageProperty("TITLE", "Разработчикам");
-$APPLICATION->SetTitle("Разработчикам");
+$APPLICATION->SetTitle("Робофид.ру - Разработчикам");
+$APPLICATION->SetPageProperty("TITLE", "Робофид.ру - Разработчикам");
+$APPLICATION->SetPageProperty("description", "Робофид.ру - информация по интеграции для разработчиков");
 ?>
 
 <h1>Разработчкам</h1>

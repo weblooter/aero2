@@ -1,7 +1,8 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Robofeed XML v1");
-$APPLICATION->SetPageProperty('title', "Robofeed XML v1");
+$APPLICATION->SetTitle("Робофид.ру - Robofeed XML v1");
+$APPLICATION->SetPageProperty('title', "Робофид.ру - Robofeed XML v1");
+$APPLICATION->SetPageProperty('description', "Робофид.ру - Описание создания Робофид XML, его требований и пример.");
 ?>
 <?
 $obAssets = \Bitrix\Main\Page\Asset::getInstance();

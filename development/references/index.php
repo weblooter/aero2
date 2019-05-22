@@ -1,7 +1,8 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetPageProperty("TITLE", "Справочники");
-$APPLICATION->SetTitle("Справочники");
+$APPLICATION->SetTitle("Робофид.ру - Справочники");
+$APPLICATION->SetPageProperty("TITLE", "Робофид.ру - Справочники");
+$APPLICATION->SetPageProperty("description", "Робофид.ру - справочники по валютам, странами и единицам измерений для Робофид XML");
 ?>
     <h1>Справочники</h1>
     <ul>
