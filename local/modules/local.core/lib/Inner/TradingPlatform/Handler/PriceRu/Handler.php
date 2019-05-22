@@ -138,7 +138,6 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
         $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('Ссылка на картинки данного товарного предложения')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][picture]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['picture'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -175,7 +174,6 @@ DOCHERE
             ->setDescription('Допустимые форматы: EAN-13, EAN-8, UPC-A, UPC-E.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][barcode]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['barcode'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -189,7 +187,6 @@ DOCHERE
             ->setDescription('Допускаются только целые числа больше 0. В случае игноририрования поля будут применяться ставки, указанные в личном кабинете <i class="font-weight-bold">Price.ru</i>')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][vert]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['vert'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SIMPLE,
                 Field\Resource::TYPE_SOURCE,
@@ -235,7 +232,6 @@ DOCHERE
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][id]')
             ->setIsRequired()
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['id'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -246,7 +242,6 @@ DOCHERE
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][available]')
             ->setIsRequired()
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['available'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_SELECT,
@@ -266,7 +261,6 @@ DOCHERE
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][name]')
             ->setIsRequired()
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['name'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_BUILDER,
@@ -282,7 +276,6 @@ DOCHERE
 существенные признаки, описывающие товар. Не указывайте здесь условия акций, доставки, гарантии и т.п.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][description]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['description'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_BUILDER,
@@ -298,7 +291,6 @@ DOCHERE
             ->setIsRequired()
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][url]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['url'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -312,7 +304,6 @@ DOCHERE
             ->setIsRequired()
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][price]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['price'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -326,7 +317,6 @@ DOCHERE
             ->setDescription(' Старая цена должна быть выше текущей.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][oldprice]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['oldprice'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -372,7 +362,6 @@ DOCHERE
             ->setIsRequired()
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][currencyId]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['currencyId'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -381,13 +370,12 @@ DOCHERE
                     'TYPE' => Field\Resource::TYPE_SOURCE,
                     Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#CURRENCY_CODE'
                 ])
-            ->setEpilog((new Field\Infoblock())->setValue('Должен быть передан <b>код валюты из справочника валют</b>.<br/>Справочник - <a href="'.$strRouteReferenceCurrency
+            ->setEpilog((new Field\Infoblock())->setValue('Должен быть передан <b>символьный код валюты из справочника валют</b>.<br/>Справочник - <a href="'.$strRouteReferenceCurrency
                                                           .'" target="_blank">https://robofeed.ru'.$strRouteReferenceCurrency.'</a>'));
 
         $arFields['shop__offers__offer__vendor'] = (new Field\Resource())->setTitle('Производитель товара')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][vendor]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['vendor'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SIMPLE,
                 Field\Resource::TYPE_BUILDER,
@@ -404,7 +392,6 @@ DOCHERE
         $arFields['shop__offers__offer__model'] = (new Field\Resource())->setTitle('Модель товара')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][model]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['model'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_BUILDER,
@@ -419,7 +406,6 @@ DOCHERE
         $arFields['shop__offers__offer__vendorCode'] = (new Field\Resource())->setTitle('Партнамбер (артикул) товара')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][vendorCode]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['vendorCode'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,

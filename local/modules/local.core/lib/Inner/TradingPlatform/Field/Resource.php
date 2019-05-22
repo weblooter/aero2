@@ -296,7 +296,7 @@ class Resource extends AbstractField
             'DELIVERY_FIELD#PRICE_FROM#MAX' => 'Стоимость доставки "от" (максимальная)',
             'DELIVERY_FIELD#PRICE_TO#MIN' => 'Стоимость доставки "до" (минимальная)',
             'DELIVERY_FIELD#PRICE_TO#MAX' => 'Стоимость доставки "до" (максимальная)',
-            'DELIVERY_FIELD#CURRENCY_CODE#CODE' => 'Валюта стоимости (код)',
+            'DELIVERY_FIELD#CURRENCY_CODE#CODE' => 'Валюта стоимости (символьный код)',
             'DELIVERY_FIELD#CURRENCY_CODE#NAME' => 'Валюта стоимости (название)',
             'DELIVERY_FIELD#DAYS_FROM#MIN' => 'Сроки доставки "от" в днях (минимальные)',
             'DELIVERY_FIELD#DAYS_FROM#MAX' => 'Сроки доставки "от" в днях (максимальные)',
@@ -330,7 +330,7 @@ class Resource extends AbstractField
                         break;
 
                     case 'simpleName':
-                        $arBaseOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Простое название товара (к примеру "iPhone 8S")';
+                        $arBaseOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Простое название товара (к примеру "iPhone 8S 64GB")';
                         break;
 
                     case 'manufacturer':

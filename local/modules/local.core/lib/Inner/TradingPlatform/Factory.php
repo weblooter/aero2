@@ -39,6 +39,14 @@ class Factory
                 return new Handler\PriceRu\Handler();
                 break;
 
+            case 'ekatalog':
+                return new Handler\Ekatalog\Handler();
+                break;
+
+            case 'magazilla':
+                return new Handler\MagaZilla\Handler();
+                break;
+
             default:
                 throw new \Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException();
                 break;
@@ -58,6 +66,8 @@ class Factory
             Handler\AutoruParts\Handler::getCode() => Handler\AutoruParts\Handler::getTitle(),
             Handler\Beru\Handler::getCode() => Handler\Beru\Handler::getTitle(),
             Handler\PriceRu\Handler::getCode() => Handler\PriceRu\Handler::getTitle(),
+            Handler\Ekatalog\Handler::getCode() => Handler\Ekatalog\Handler::getTitle(),
+            Handler\MagaZilla\Handler::getCode() => Handler\MagaZilla\Handler::getTitle(),
         ];
     }
 }

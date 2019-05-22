@@ -413,21 +413,6 @@ DOCHERE
 
         $arRet['#header_3'] = (new Field\Header())->setValue('Формирование марки и модели');
 
-        /*
-        $arRet['#header_3.info'] = (new Field\Infoblock())->setValue(
-            <<<DOCHERE
-<i>Авто.ру</i> требует, что бы название марки и модели автомобилей передавались строго в их формате. Для этого Вам необходимо проставить соответствия между Вашими марками и моделями и <i>Авто.ру</i>.
-<br/>
-<br/>
-Вам необходимо указать параметры, в которых Вы передаете марку, модель и года производства транспорта. На основании этих данных будет построена таблица соответствий для заполнения.
-<br/>
-<br/>
-Товары, у которых не будут проставлены соответвия марки и модели, будут передавать данные в том виде, в котором получаем их мы. Отображение товаров на сайте, в таком случае, не гарантируется.
-DOCHERE
-
-        );
-        */
-
         $arRet['part__compatibility__@buildType'] = (new Field\Select())->setTitle('Способ передачи марки, модели и года производства')
             ->setName('HANDLER_RULES[part][compatibility][@buildType]')
             ->setIsRequired()
@@ -449,7 +434,6 @@ DOCHERE
             $arRet['#header_3.successImportError'] = (new Field\Infoblock())
                 ->setType(Field\Infoblock::TYPE_ERROR)
                 ->setValue('Построить марки и модели невозможно - у магазина не было ни одного успешного импорта!');
-                //->setValue('Построить соответствие невозможно - у магазина не было ни одного успешного импорта!');
         }
         else
         {
@@ -469,22 +453,6 @@ DOCHERE
                                 'PersonalTradingplatformFormComponent.refreshForm()'
                             ]
                         ]);
-
-                    /*
-                    if( empty($this->getHandlerRules()['part']['compatibility']['@paramSource']) )
-                    {
-                        $strAttention = 'Для построение списка соответствий заполните поля:<br/>&middot; '
-                                        .$arRet['part__compatibility__@paramSource']->getTitle();
-
-                        $arRet['#markModelBuilderAttention'] = (new Field\Infoblock())
-                            ->setType(Field\Infoblock::TYPE_ERROR)
-                            ->setValue($strAttention);
-                    }
-                    else
-                    {
-                        $arLeftColumnData = $this->getStoreMarkModelOneParamsTaxonomy($this->getHandlerRules()['part']['compatibility']['@paramSource']);
-                    }
-                    */
 
                     break;
 
@@ -525,56 +493,8 @@ DOCHERE
                             ]
                         ]);
 
-
-                    /*
-                    if(
-                        empty($this->getHandlerRules()['part']['compatibility']['@markSource'])
-                        || empty($this->getHandlerRules()['part']['compatibility']['@modelSource'])
-                    )
-                    {
-                        $strAttention = 'Для построение списка соответствий заполните поля:';
-                        if( empty($this->getHandlerRules()['part']['compatibility']['@markSource']) )
-                        {
-                            $strAttention .= '<br/>&middot; '.$arRet['part__compatibility__@markSource']->getTitle();
-                        }
-                        if( empty($this->getHandlerRules()['part']['compatibility']['@modelSource']) )
-                        {
-                            $strAttention .= '<br/>&middot; '.$arRet['part__compatibility__@modelSource']->getTitle();
-                        }
-                        $arRet['#markModelBuilderAttention'] = (new Field\Infoblock())
-                            ->setType(Field\Infoblock::TYPE_ERROR)
-                            ->setValue($strAttention);
-                    }
-
-                    if(
-                        !empty( $this->getHandlerRules()['part']['compatibility']['@markSource'] )
-                        && !empty( $this->getHandlerRules()['part']['compatibility']['@modelSource'] )
-                    )
-                    {
-                        $arLeftColumnData = $this->getStoreMarkModelMoreThanOneParamsTaxonomy(
-                            $this->getHandlerRules()['part']['compatibility']['@markSource'],
-                            $this->getHandlerRules()['part']['compatibility']['@modelSource'],
-                            $this->getHandlerRules()['part']['compatibility']['@yearSource']
-                        );
-                    }
-                    */
-
                     break;
             }
-
-            /*
-            if( is_array($arLeftColumnData) )
-            {
-                $arRet['part__compatibility__@taxonomyData'] = (new Field\Taxonomy())->setTitle('Соответствия марок и моделей')
-                    ->setName('HANDLER_RULES[part][compatibility][@taxonomyData]')
-                    ->setIsRequired()
-                    ->setLeftColumn($arLeftColumnData)
-                    ->setRightColumn( \Local\Core\Inner\TaxonomyData\Base::getData('AutoruMarkModel') )
-                    ->setAction('AutoruMarkModel')
-                    ->setValue($this->getHandlerRules()['part']['compatibility']['@taxonomyData'])
-                    ->setIsMultiple();
-            }
-            */
         }
 
         return $arRet;
@@ -952,20 +872,6 @@ DOCHERE
 
                     break;
             }
-
-            /*
-            if(
-                !is_null($strLeftColumnValue)
-                && !is_null($this->extractFilledValueFromRule($this->getFields()['part__compatibility__@taxonomyData'], mb_strtoupper($strLeftColumnValue)))
-            )
-            {
-                $arOfferXml['compatibility']['car'] = $this->extractFilledValueFromRule($this->getFields()['part__compatibility__@taxonomyData'], mb_strtoupper($strLeftColumnValue));
-            }
-            else
-            {
-                $arOfferXml['compatibility']['car'] = $strLeftColumnValue;
-            }
-            */
 
 
 

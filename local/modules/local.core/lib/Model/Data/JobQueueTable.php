@@ -42,6 +42,8 @@ class JobQueueTable extends \Local\Core\Inner\BxModified\Main\ORM\Data\DataManag
 
     const EXECUTE_BY_DEFAULT = 'NONE';
 
+    const EXECUTE_BY_SUCCESS = 'RUNNER';
+
     /**
      * @inheritdoc
      */

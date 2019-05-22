@@ -1024,4 +1024,4 @@ ul.breadcrumbs li span {
 }
 
 .shoprow .shop .tp-icon {position: relative; overflow: hidden;}
-.shoprow .shop .tp-icon.tp-coming-soon::before {content: 'Скоро'; position: absolute; right: -63px; bottom: 44px; background-color: var(--blue2); color: #fff; display: block; width: 100%; text-align: center; transform: rotate(45deg); font-size: 14px; height: 26px; line-height: 26px;}
+.shoprow .shop .tp-icon.tp-coming-soon {opacity: 0.4; background-color: #ddd;}

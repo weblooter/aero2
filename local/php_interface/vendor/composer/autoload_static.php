@@ -424,6 +424,8 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\TradingPlatform\\Handler\\AbstractHandler' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/AbstractHandler.php',
         'Local\\Core\\Inner\\TradingPlatform\\Handler\\AutoruParts\\Handler' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/AutoruParts/Handler.php',
         'Local\\Core\\Inner\\TradingPlatform\\Handler\\Beru\\Handler' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/Beru/Handler.php',
+        'Local\\Core\\Inner\\TradingPlatform\\Handler\\Ekatalog\\Handler' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/Ekatalog/Handler.php',
+        'Local\\Core\\Inner\\TradingPlatform\\Handler\\MagaZilla\\Handler' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/MagaZilla/Handler.php',
         'Local\\Core\\Inner\\TradingPlatform\\Handler\\PriceRu\\Handler' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/PriceRu/Handler.php',
         'Local\\Core\\Inner\\TradingPlatform\\Handler\\YandexMarket\\Handler' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/YandexMarket/Handler.php',
         'Local\\Core\\Inner\\TradingPlatform\\MonthlyPayment' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/MonthlyPayment.php',

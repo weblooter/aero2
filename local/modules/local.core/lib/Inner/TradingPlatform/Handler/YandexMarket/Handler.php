@@ -382,7 +382,6 @@ HEREDOC
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][picture]')
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['picture'])
-            ->setSize(7)
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -396,7 +395,6 @@ HEREDOC
             ->setDescription('При выбранном значении <b>"Игнорировать поле"</b> значение не будет передано. Если в личном кабинете <i class="font-weight-bold">Яндекс.Маркета</i> указана соответствующая точка продаж (торговый зал, пункт выдачи), то он автоматически воспримет покупку как возможную.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][store]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['store'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SELECT,
                 Field\Resource::TYPE_LOGIC,
@@ -415,7 +413,6 @@ HEREDOC
             ->setDescription('Допустимые форматы: EAN-13, EAN-8, UPC-A, UPC-E.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][barcode]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['barcode'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -428,7 +425,6 @@ HEREDOC
         $arFields['shop__offers__offer__downloadable'] = (new Field\Resource())->setTitle('Продукт можно скачать')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][downloadable]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['downloadable'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SELECT,
                 Field\Resource::TYPE_SOURCE,
@@ -448,7 +444,6 @@ HEREDOC
             ->setDescription('Допустимые значения: 0, 6, 12, 16, 18')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][age][@attr][year]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['age']['@attr']['year'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SELECT,
                 Field\Resource::TYPE_SOURCE,
@@ -503,7 +498,6 @@ HEREDOC
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][id]')
             ->setIsRequired()
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['id'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -514,7 +508,6 @@ HEREDOC
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setDescription('Элемент объединяет все предложения, которые являются вариациями одной модели и должен иметь одинаковое значение.')
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][group_id]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['group_id'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -560,7 +553,6 @@ HEREDOC
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setDescription('Указывайте размер ставки в условных центах: например, значение 80 соответствует ставке 0,8 у.е. Значения должны быть целыми и положительными числами.')
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][bid]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['bid'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SIMPLE,
                 Field\Resource::TYPE_SOURCE,
@@ -574,7 +566,6 @@ HEREDOC
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][@attr][available]')
             ->setIsRequired()
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['@attr']['available'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_SELECT,
@@ -594,7 +585,6 @@ HEREDOC
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][name]')
             ->setIsRequired()
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['name'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_BUILDER,
@@ -608,7 +598,6 @@ HEREDOC
         $arFields['shop__offers__offer__vendor'] = (new Field\Resource())->setTitle('Название производителя')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][vendor]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['vendor'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SIMPLE,
                 Field\Resource::TYPE_BUILDER,
@@ -625,7 +614,6 @@ HEREDOC
         $arFields['shop__offers__offer__vendorCode'] = (new Field\Resource())->setTitle('Код производителя для данного товара')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][vendorCode]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['vendorCode'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -641,7 +629,6 @@ HEREDOC
             ->setIsRequired()
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][url]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['url'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -656,7 +643,6 @@ HEREDOC
             ->setIsRequired()
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][price]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['price'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -671,7 +657,6 @@ HEREDOC
             ->setIsRequired()
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][currencyId]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['currencyId'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -680,14 +665,13 @@ HEREDOC
                     'TYPE' => Field\Resource::TYPE_SOURCE,
                     Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#CURRENCY_CODE'
                 ])
-            ->setEpilog((new Field\Infoblock())->setValue('Должен быть передан <b>код валюты из справочника валют</b>.<br/>Справочник - <a href="'.$strRouteReferenceCurrency
+            ->setEpilog((new Field\Infoblock())->setValue('Должен быть передан <b>символьный код валюты из справочника валют</b>.<br/>Справочник - <a href="'.$strRouteReferenceCurrency
                                                           .'" target="_blank">https://robofeed.ru'.$strRouteReferenceCurrency.'</a>'));
 
         $arFields['shop__offers__offer__oldprice'] = (new Field\Resource())->setTitle('Старая цена товара')
             ->setDescription('Должна быть выше текущей.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][oldprice]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['oldprice'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
@@ -732,7 +716,6 @@ HEREDOC
             ->setDescription('Длина текста не более 3000 символов (включая знаки препинания).')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][description]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['description'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_BUILDER,
@@ -748,7 +731,6 @@ HEREDOC
             ->setDescription('Обязателен, если у вас есть ограничения при заказе товара (например минимальная сумма заказа, минимальное количество товаров или необходимость предоплаты).<br/>Допустимая длина текста — 50 символов.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][sales_notes]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['sales_notes'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_BUILDER,
@@ -764,7 +746,6 @@ HEREDOC
             ->setDescription('Для случаев, когда покупка возможна только комплектом, а не поштучно. Используется только в категориях "Автошины", "Грузовые шины", "Мотошины", "Диски".')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][min-quantity]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['min-quantity'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_BUILDER,
@@ -779,7 +760,6 @@ HEREDOC
         $arFields['shop__offers__offer__manufacturer_warranty'] = (new Field\Resource())->setTitle('Официальная гарантия производителя')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][manufacturer_warranty]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['manufacturer_warranty'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SELECT,
                 Field\Resource::TYPE_SOURCE,
@@ -800,7 +780,6 @@ HEREDOC
         $arFields['shop__offers__offer__country_of_origin'] = (new Field\Resource())->setTitle('Страна производства товара')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][country_of_origin]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['country_of_origin'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SELECT,
                 Field\Resource::TYPE_SOURCE,
@@ -822,7 +801,6 @@ DOCHERE
         $arFields['shop__offers__offer__adult'] = (new Field\Resource())->setTitle('Товар имеет отношение к удовлетворению сексуальных потребностей, либо иным образом эксплуатирует интерес к сексу')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][adult]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['adult'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SELECT,
                 Field\Resource::TYPE_SOURCE,
@@ -842,7 +820,6 @@ DOCHERE
             ->setDescription('При выборе поля <b>"Вес товара"</b> из <b>Robofeed XML</b> мы автоматически сконвертируем вес.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][weight]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['weight'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SIMPLE,
                 Field\Resource::TYPE_SOURCE,
@@ -859,7 +836,6 @@ DOCHERE
             ->setDescription('Указывается в сантиметрах. Числа должны быть разделены символом «/» без пробелов.')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][dimensions]')
-            ->setValue($this->getHandlerRules()['shop']['offers']['offer']['dimensions'])
             ->setAllowTypeList([
                 Field\Resource::TYPE_SIMPLE,
                 Field\Resource::TYPE_SOURCE,

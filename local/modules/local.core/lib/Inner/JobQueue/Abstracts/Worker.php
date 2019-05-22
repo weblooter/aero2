@@ -213,7 +213,7 @@ abstract class Worker
             ],
             [
                 'STATUS' => JobQueueTable::STATUS_ENUM_SUCCESS,
-                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_DEFAULT,
+                'EXECUTE_BY' => JobQueueTable::EXECUTE_BY_SUCCESS,
                 'IS_EXECUTE_NOW' => 'N',
             ]
         ];
