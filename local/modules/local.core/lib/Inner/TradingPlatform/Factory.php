@@ -47,6 +47,10 @@ class Factory
                 return new Handler\MagaZilla\Handler();
                 break;
 
+            case 'dromru':
+                return new Handler\Dromru\Handler();
+                break;
+
             default:
                 throw new \Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException();
                 break;
@@ -68,6 +72,7 @@ class Factory
             Handler\PriceRu\Handler::getCode() => Handler\PriceRu\Handler::getTitle(),
             Handler\Ekatalog\Handler::getCode() => Handler\Ekatalog\Handler::getTitle(),
             Handler\MagaZilla\Handler::getCode() => Handler\MagaZilla\Handler::getTitle(),
+            Handler\Dromru\Handler::getCode() => Handler\Dromru\Handler::getTitle(),
         ];
     }
 }

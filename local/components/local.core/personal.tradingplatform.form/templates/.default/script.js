@@ -52,11 +52,19 @@ class PersonalTradingplatformFormComponent {
      *
      * @param idRow Хэш блока
      */
-    static refreshRow(idRow) {
+    static refreshRow(idRow, additionalObject) {
         var classObj = this,
             formdata = this.getFormData();
 
         formdata.LOCAL_CORE_REFRESH_ROW = idRow;
+
+        if( typeof additionalObject == 'object')
+        {
+            for(var k in additionalObject)
+            {
+                formdata[k] = additionalObject[k];
+            }
+        }
 
         classObj.showLoading();
 

@@ -328,6 +328,7 @@ return array(
     'Local\\Core\\Inner\\TradingPlatform\\Handler\\AbstractHandler' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/AbstractHandler.php',
     'Local\\Core\\Inner\\TradingPlatform\\Handler\\AutoruParts\\Handler' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/AutoruParts/Handler.php',
     'Local\\Core\\Inner\\TradingPlatform\\Handler\\Beru\\Handler' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/Beru/Handler.php',
+    'Local\\Core\\Inner\\TradingPlatform\\Handler\\Dromru\\Handler' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/Dromru/Handler.php',
     'Local\\Core\\Inner\\TradingPlatform\\Handler\\Ekatalog\\Handler' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/Ekatalog/Handler.php',
     'Local\\Core\\Inner\\TradingPlatform\\Handler\\MagaZilla\\Handler' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/MagaZilla/Handler.php',
     'Local\\Core\\Inner\\TradingPlatform\\Handler\\PriceRu\\Handler' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Handler/PriceRu/Handler.php',

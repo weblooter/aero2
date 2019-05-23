@@ -307,7 +307,7 @@ class Resource extends AbstractField
             'BASE_FIELD#PICKUP_AVAILABLE' => 'Признак наличия самовывоза',
             'PICKUP_FIELD#PRICE#MIN' => 'Стоимость самовывоза (минимальная)',
             'PICKUP_FIELD#PRICE#MAX' => 'Стоимость самовывоза (максимальная)',
-            'PICKUP_FIELD#CURRENCY_CODE#CODE' => 'Валюта стоимости (код)',
+            'PICKUP_FIELD#CURRENCY_CODE#CODE' => 'Валюта стоимости (символьный код)',
             'PICKUP_FIELD#CURRENCY_CODE#NAME' => 'Валюта стоимости (название)',
             'PICKUP_FIELD#SUPPLY_FROM#MIN' => 'Сроки поступления товара в магазин/на склад "от" в днях (минимальные)',
             'PICKUP_FIELD#SUPPLY_FROM#MAX' => 'Сроки поступления товара в магазин/на склад "от" в днях (максимальные)',
@@ -359,7 +359,7 @@ class Resource extends AbstractField
                         break;
 
                     case 'currencyCode':
-                        $arPriceOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Валюта (код)';
+                        $arPriceOptions['BASE_FIELD#'.$strColumnNameInTable] = 'Валюта (символьный код)';
                         $arPriceOptions['REFERENCE_FIELD#'.$strColumnNameInTable.'#NAME'] = 'Валюта (название)';
                         break;
 
@@ -583,8 +583,53 @@ class Resource extends AbstractField
 
         if (\Local\Core\Inner\Store\Base::hasSuccessImport($this->getStoreId())) {
 
+            $intMaxRows = 1;
+            if( !empty( $this->getValue() ) )
+            {
+                $arValue = $this->getValue();
+                unset($arValue[static::TYPE_LOGIC.'_VALUE']['IF']);
+                foreach ($this->getValue()[static::TYPE_LOGIC.'_VALUE']['IF'] as $k => $v)
+                {
+                    if(
+                        (
+                            sizeof($v['RULE']) == 1
+                            && empty($v['VALUE']['TYPE'])
+                        )
+                        || $this->getValue()['REMOVE_LOGIC_ROW'] == $this->getRowHash().md5($k)
+                    )
+                    {
+                        continue;
+                    }
 
-            $this->addLogicIfRow(0);
+                    $arValue[static::TYPE_LOGIC.'_VALUE']['IF'][] = $v;
+                }
+                $this->setValue( $arValue );
+                unset($arValue);
+
+                if( !empty($this->getValue()[static::TYPE_LOGIC.'_VALUE']['IF']) )
+                {
+                    $intMaxRows = sizeof($this->getValue()[static::TYPE_LOGIC.'_VALUE']['IF']);
+                }
+                else
+                {
+                    $intMaxRows = 1;
+                }
+            }
+
+            if( $this->getValue()['ADD_LOGIC_ROW'] == 'Y' )
+            {
+                $intMaxRows++;
+            }
+
+
+            //$this->addToRender('<pre  style="font-size: 14px; background: #fff; color: #000; font-family: monospace;">'.print_r($this->getValue(), true).'</pre>');
+
+            for($i = 0; $i < $intMaxRows; $i++)
+            {
+                $this->addLogicIfRow($i);
+            }
+
+            $this->addToRender('<a href="javascript:void(0)" class="btn btn-secondary mb-3" onclick="PersonalTradingplatformFormComponent.refreshRow(\''.$this->getRowHash().'\', {\''.$this->getName().'[ADD_LOGIC_ROW]\': \'Y\'})">Добавить блок условия</a>');
             $this->addLogicElseRow();
         }
 
@@ -592,24 +637,36 @@ class Resource extends AbstractField
 
     private function addLogicIfRow($key)
     {
+        $this->addToRender('<div class="alert alert-light">');
+        if( $key > 0 )
+        {
+            $this->addToRender('<a href="javascript:void(0)" class="btn btn-danger mb-3" onclick="PersonalTradingplatformFormComponent.refreshRow(\''.$this->getRowHash().'\', {\''.$this->getName().'[REMOVE_LOGIC_ROW]\': \''.( $this->getRowHash().md5($key) ).'\'})" ><i class="zmdi zmdi-delete"></i> Удалить блок</a>');
+        }
         $this->addToRender('<h4>Если:</h4>');
 
-        $this->addToRender((new Condition())->setStoreId($this->getStoreId())
-            ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][RULE]')
-            ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['RULE'])
-            ->getRender());
+        $this->addToRender(
+            (new Condition())
+                ->setStoreId($this->getStoreId())
+                ->setName($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][RULE]')
+                ->setValue($this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['RULE'])
+                ->setRowHash($this->getRowHash().md5($key))
+                ->getRender()
+        );
 
         $this->addToRender('<h4>То:</h4>');
 
         $this->addToRender($this->getLogicResourceField($this->getName().'['.self::TYPE_LOGIC.'_VALUE][IF]['.$key.'][VALUE]', $this->getValue()[self::TYPE_LOGIC.'_VALUE']['IF'][$key]['VALUE'])
             ->getRender());
+        $this->addToRender('</div>');
     }
 
     private function addLogicElseRow()
     {
+        $this->addToRender('<div class="alert alert-light">');
         $this->addToRender('<h4>Иначе:</h4>');
         $this->addToRender($this->getLogicResourceField($this->getName().'['.self::TYPE_LOGIC.'_VALUE][ELSE][VALUE]', $this->getValue()[self::TYPE_LOGIC.'_VALUE']['ELSE']['VALUE'])
             ->getRender());
+        $this->addToRender('</div>');
     }
 
     /**
@@ -783,6 +840,10 @@ class Resource extends AbstractField
                         }
                         unset($v);
                         $mixReturn = str_replace($matches[0], $matches[1], str_replace(["\r\n", "\n"], '', $builderVal));
+                    }
+                    else
+                    {
+                        $mixReturn = $builderVal;
                     }
                     break;
 
