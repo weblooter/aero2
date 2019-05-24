@@ -10,6 +10,7 @@ namespace Local\Core\Inner\TradingPlatform\Field;
 abstract class AbstractField
 {
     use Traits\IsReadOnly;
+    use Traits\SmallText;
 
     /* ************* */
     /* FIELD METHODS */
@@ -213,11 +214,11 @@ abstract class AbstractField
     /**
      * Задать объект поля для эпилога
      *
-     * @param AbstractField $obField
+     * @param AbstractField|array $obField
      *
      * @return $this
      */
-    public function setEpilog(AbstractField $obField)
+    public function setEpilog($obField)
     {
         $this->_fieldEpilog = $obField;
         return $this;
@@ -324,10 +325,30 @@ abstract class AbstractField
     public function getRender()
     {
         $this->execute();
-        if (!is_null($this->getEpilog()) && $this->getEpilog() instanceof AbstractField) {
-            $this->addToRender($this->getEpilog()
-                ->getRender());
+        if (!is_null($this->getEpilog())) {
+
+            $arEpilog = $this->getEpilog();
+
+            if( !is_array($this->getEpilog()) )
+            {
+                $arEpilog = [$this->getEpilog()];
+            }
+
+            foreach ($arEpilog as $obEpilog)
+            {
+                if( $obEpilog instanceof AbstractField )
+                {
+                    $this->addToRender($obEpilog->getRender());
+                }
+            }
+
         }
+
+        if( !is_null($this->getSmallText()) )
+        {
+            $this->addToRender('<small class="form-text text-muted mt-0 mb-3">'.$this->getSmallText().'</small>');
+        }
+
         $this->makeReadOnlyValue();
         return $this->_renderHtml;
     }

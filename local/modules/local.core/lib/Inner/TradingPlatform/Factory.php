@@ -51,6 +51,10 @@ class Factory
                 return new Handler\Dromru\Handler();
                 break;
 
+            case 'google_merchant':
+                return new Handler\GoogleMerchant\Handler();
+                break;
+
             default:
                 throw new \Local\Core\Inner\TradingPlatform\Exceptions\HandlerNotFoundException();
                 break;
@@ -73,6 +77,7 @@ class Factory
             Handler\Ekatalog\Handler::getCode() => Handler\Ekatalog\Handler::getTitle(),
             Handler\MagaZilla\Handler::getCode() => Handler\MagaZilla\Handler::getTitle(),
             Handler\Dromru\Handler::getCode() => Handler\Dromru\Handler::getTitle(),
+            Handler\GoogleMerchant\Handler::getCode() => Handler\GoogleMerchant\Handler::getTitle(),
         ];
     }
 }

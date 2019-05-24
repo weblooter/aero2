@@ -334,20 +334,6 @@ DOCHERE
         $arFields['#header_y5'] = (new Field\Header())->setValue('Дополнительные поля товара');
 
         $arFields['shop__items__item__image'] = (new Field\Resource())->setTitle('Ссылки на картинки товара')
-            ->setDescription(<<<HEREDOC
-<b>* Ссылка на изображение обязательна для категорий:</b><br/>
-"Мягкая мебель", 
-"Чехлы для мобильных телефонов", 
-"Компьютерные столы", 
-"Защитные пленки и наклейки для телефонов", 
-"Массажные столы", 
-"Зарядные устройства для телефонов", 
-"Одежда, обувь и аксессуары", 
-"Переходники для мобильных телефонов", 
-"Косметика и парфюмерия", 
-"Сумки и чехлы для планшетов"
-HEREDOC
-            )
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][items][item][image]')
             ->setAllowTypeList([

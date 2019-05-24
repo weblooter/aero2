@@ -30,6 +30,10 @@ class Base
                 return AutoruMarkModel::getData();
                 break;
 
+            case 'GoogleMerchantCategory':
+                return GoogleMerchantCategory::getData();
+                break;
+
             default:
                 return null;
                 break;

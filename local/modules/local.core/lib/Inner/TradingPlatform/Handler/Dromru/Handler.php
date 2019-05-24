@@ -95,21 +95,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
 
         $arFields['#header_y5'] = (new Field\Header())->setValue('Дополнительные поля товара');
 
-        $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('URL-ссылка на картинки товара')
-            ->setDescription(<<<HEREDOC
-<b>* Ссылка на изображение обязательна для категорий:</b><br/>
-"Мягкая мебель", 
-"Чехлы для мобильных телефонов", 
-"Компьютерные столы", 
-"Защитные пленки и наклейки для телефонов", 
-"Массажные столы", 
-"Зарядные устройства для телефонов", 
-"Одежда, обувь и аксессуары", 
-"Переходники для мобильных телефонов", 
-"Косметика и парфюмерия", 
-"Сумки и чехлы для планшетов"
-HEREDOC
-            )
+        $arFields['shop__offers__offer__picture'] = (new Field\Resource())->setTitle('Ссылки на картинки товара')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setName('HANDLER_RULES[shop][offers][offer][picture]')
             ->setValue($this->getHandlerRules()['shop']['offers']['offer']['picture'])

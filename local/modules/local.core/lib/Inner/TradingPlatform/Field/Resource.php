@@ -285,7 +285,7 @@ class Resource extends AbstractField
 
         $arBaseOptions = [
             'BASE_FIELD#PRODUCT_ID' => 'Идентификатор товара',
-            'BASE_FIELD#PRODUCT_GROUP_ID' => 'Идентификатор группы товара, которые повторяются',
+            'BASE_FIELD#PRODUCT_GROUP_ID' => 'Идентификатор группы товара',
         ];
         $arPriceOptions = [];
         $arSizeAndDimensionsOptions = [];
@@ -620,9 +620,6 @@ class Resource extends AbstractField
             {
                 $intMaxRows++;
             }
-
-
-            //$this->addToRender('<pre  style="font-size: 14px; background: #fff; color: #000; font-family: monospace;">'.print_r($this->getValue(), true).'</pre>');
 
             for($i = 0; $i < $intMaxRows; $i++)
             {

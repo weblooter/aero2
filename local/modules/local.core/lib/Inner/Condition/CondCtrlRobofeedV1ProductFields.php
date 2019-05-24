@@ -314,8 +314,8 @@ class CondCtrlRobofeedV1ProductFields extends CondCtrlComplex
                 'FIELD' => 'PRODUCT_GROUP_ID',
                 'FIELD_TYPE' => 'text',
                 'FIELD_LENGTH' => 255,
-                'LABEL' => 'Идентификатор группы товара, которые повторяются',
-                'PREFIX' => 'Идентификатор группы товара, которые повторяются',
+                'LABEL' => 'Идентификатор группы товара',
+                'PREFIX' => 'Идентификатор группы товара',
                 'LOGIC' => static::GetLogic(array(
                     self::LOCAL_CORE_CONDITION_LOGIC_EQ,
                     self::LOCAL_CORE_CONDITION_LOGIC_NOT_EQ,
