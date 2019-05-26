@@ -10,7 +10,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '0613b16865066d20c6d5b23c747d63cb' => __DIR__ . '/../..' . '/debug_helper.php',
+        '655cda9d9d581ead37acdc1da2474418' => __DIR__ . '/../..' . '/debug_helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -399,6 +399,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Inner\\TaxonomyData\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TaxonomyData/Base.php',
         'Local\\Core\\Inner\\TaxonomyData\\GoogleMerchantCategory' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TaxonomyData/GoogleMerchantCategory.php',
         'Local\\Core\\Inner\\TradingPlatform\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Base.php',
+        'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\ContinueException' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/ContinueException.php',
         'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\HandlerNotFoundException' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/HandlerNotFoundException.php',
         'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\StoreIdNotDefined' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/StoreIdNotDefined.php',
         'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\TradingPlatformNotFoundException' => __DIR__ . '/../..' . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/TradingPlatformNotFoundException.php',

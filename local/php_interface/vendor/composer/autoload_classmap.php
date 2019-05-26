@@ -303,6 +303,7 @@ return array(
     'Local\\Core\\Inner\\TaxonomyData\\Base' => $baseDir . '/../modules/local.core/lib/Inner/TaxonomyData/Base.php',
     'Local\\Core\\Inner\\TaxonomyData\\GoogleMerchantCategory' => $baseDir . '/../modules/local.core/lib/Inner/TaxonomyData/GoogleMerchantCategory.php',
     'Local\\Core\\Inner\\TradingPlatform\\Base' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Base.php',
+    'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\ContinueException' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/ContinueException.php',
     'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\HandlerNotFoundException' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/HandlerNotFoundException.php',
     'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\StoreIdNotDefined' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/StoreIdNotDefined.php',
     'Local\\Core\\Inner\\TradingPlatform\\Exceptions\\TradingPlatformNotFoundException' => $baseDir . '/../modules/local.core/lib/Inner/TradingPlatform/Exceptions/TradingPlatformNotFoundException.php',

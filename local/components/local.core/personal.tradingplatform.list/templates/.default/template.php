@@ -222,7 +222,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th>
-                                                        Товаров в магазине на момент формирования файла:
+                                                        Товаров найдено по фильтру:
                                                     </th>
                                                     <td>
                                                         <?=number_format($arLastLog['PRODUCTS_TOTAL'], 0, '.', ' ')?>
@@ -264,7 +264,7 @@
                                                 <?if( $arLastLog['PRODUCTS_TOTAL'] > 0 ):?>
                                                     <tr>
                                                         <th>
-                                                            Всего товаров в магазине было:
+                                                            Товаров найдено по фильтру:
                                                         </th>
                                                         <td>
                                                             <?=number_format($arLastLog['PRODUCTS_TOTAL'], 0, '.', ' ')?>

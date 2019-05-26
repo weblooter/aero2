@@ -48,13 +48,13 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     protected function getChannelBaseFields()
     {
         $arShopFields = [
-            '#header_y1' => (new Field\Header())->setValue('Настройки магазина'),
+            '#header_g1' => (new Field\Header())->setValue('Настройки магазина'),
 
             'channel__title' => (new Field\InputText())->setTitle('Короткое название магазина')
-                ->setName('HANDLER_RULES[channel][name]')
+                ->setName('HANDLER_RULES[channel][title]')
                 ->setIsRequired()
                 ->setPlaceholder('Рога и копыта')
-                ->setValue($this->getHandlerRules()['channel']['name']),
+                ->setValue($this->getHandlerRules()['channel']['title']),
 
             'channel__link' => (new Field\InputText())->setTitle('Ссылка на сайт')
                 ->setName('HANDLER_RULES[channel][link]')
@@ -78,17 +78,17 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
     {
         $arFields = [];
 
-        $arFields = $this->getOfferBaseFields() + $this->getOfferPriceFields() + $this->getOfferCategoryFields() + $this->getOfferIdFields() + $this->getOfferDescriptionFields() + $this->getOfferParamsFields();
+        $arFields = $this->getChannelItemBaseFields() + $this->getChannelItemPriceFields() + $this->getChannelItemCategoryFields() + $this->getChannelItemIdFields() + $this->getChannelItemDescriptionFields() + $this->getChannelItemParamsFields() + $this->getChannelItemTradingCampaignsFields();
 
         return $arFields;
     }
 
-    protected function getOfferBaseFields()
+    protected function getChannelItemBaseFields()
     {
         $arFields = [];
 
         $arFields = [
-            '#header_y2' => (new Field\Header())->setValue('Основные сведения о товарах')
+            '#header_g2' => (new Field\Header())->setValue('Основные сведения о товарах')
         ];
 
         $arFields['channel__item__g:id'] = (new Field\Resource())->setTitle('Уникальный идентификатор товара')
@@ -101,7 +101,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
             ])
             ->setValue($this->getHandlerRules()['channel']['item']['g:id'] ?? ['TYPE' => Field\Resource::TYPE_SOURCE, Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#PRODUCT_ID']);
 
-        $arFields['channel__item__g:item_group_id '] = (new Field\Resource())->setTitle('Идентификатор группы товара')
+        $arFields['channel__item__g:item_group_id'] = (new Field\Resource())->setTitle('Идентификатор группы товара')
             ->setStoreId($this->getTradingPlatformStoreId())
             ->setDescription('Используется, чтобы группировать варианты товара. Варианты – это позиции, которые в целом похожи, но различаются некоторыми атрибутами, такими как размер, цвет, материал, узор, возрастная группа, тип размера, система размеров и т.п.')
             ->setName('HANDLER_RULES[channel][item][g:item_group_id]')
@@ -111,39 +111,39 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                 Field\Resource::TYPE_IGNORE,
             ])
             ->setValue($this->getHandlerRules()['channel']['item']['g:item_group_id'] ?? [
-                    'TYPE' => Field\Resource::TYPE_LOGIC,
-                    Field\Resource::TYPE_LOGIC.'_VALUE' => [
-                        'IF' => [
-                            [
-                                'RULE' => [
-                                    'CLASS_ID' => 'CondGroup',
-                                    'DATA' => [
-                                        'All' => 'AND',
-                                        'True' => 'True',
-                                    ],
-                                    'CHILDREN' => [
-                                        0 => [
-                                            'CLASS_ID' => 'CondProdProductGroupId',
-                                            'DATA' => [
-                                                'logic' => 'Great',
-                                                'value' => '0',
-                                            ],
+                'TYPE' => Field\Resource::TYPE_LOGIC,
+                Field\Resource::TYPE_LOGIC.'_VALUE' => [
+                    'IF' => [
+                        [
+                            'RULE' => [
+                                'CLASS_ID' => 'CondGroup',
+                                'DATA' => [
+                                    'All' => 'AND',
+                                    'True' => 'True',
+                                ],
+                                'CHILDREN' => [
+                                    0 => [
+                                        'CLASS_ID' => 'CondProdProductGroupId',
+                                        'DATA' => [
+                                            'logic' => 'Great',
+                                            'value' => '0',
                                         ],
                                     ],
                                 ],
-                                'VALUE' => [
-                                    'TYPE' => Field\Resource::TYPE_SOURCE,
-                                    Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#PRODUCT_GROUP_ID'
-                                ]
-                            ]
-                        ],
-                        'ELSE' => [
+                            ],
                             'VALUE' => [
-                                'TYPE' => Field\Resource::TYPE_IGNORE
+                                'TYPE' => Field\Resource::TYPE_SOURCE,
+                                Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#PRODUCT_GROUP_ID'
                             ]
                         ]
+                    ],
+                    'ELSE' => [
+                        'VALUE' => [
+                            'TYPE' => Field\Resource::TYPE_IGNORE
+                        ]
                     ]
-                ]);
+                ]
+            ]);
 
 
         $arFields['channel__item__g:title'] = (new Field\Resource())->setTitle('Название товара')
@@ -236,11 +236,11 @@ DOCHERE
         return $arFields;
     }
 
-    protected function getOfferPriceFields()
+    protected function getChannelItemPriceFields()
     {
         $arFields = [];
 
-        $arFields['#header_y3'] = (new Field\Header())->setValue('Цена и наличие');
+        $arFields['#header_g3'] = (new Field\Header())->setValue('Цена и наличие');
 
         $arFields['channel__item__g:availability'] = (new Field\Resource())->setTitle('Наличие товара в магазине')
             ->setStoreId($this->getTradingPlatformStoreId())
@@ -340,21 +340,38 @@ DOCHERE
         return $arFields;
     }
 
-    protected function getOfferCategoryFields()
+    protected function getChannelItemCategoryFields()
     {
         $arFields = [];
 
-        $arFields['#header_g3'] = (new Field\Header())->setValue('Категории товаров');
+        $arFields['#header_g4'] = (new Field\Header())->setValue('Категории товаров');
 
+        $arFields['channel__item__@setCategoryTaxonomy'] = (new Field\Select())
+            ->setTitle('Желаете дополнить категории классификациями Google?')
+            ->setName('HANDLER_RULES[channel][item][@setCategoryTaxonomy]')
+            ->setOptions([
+                'Y' => 'Да',
+                'N' => 'Нет',
+            ])
+            ->setDefaultOption('-- Выберите вариант --')
+            ->setValue($this->getHandlerRules()['channel']['item']['@setCategoryTaxonomy'] ?? 'N')
+            ->setEvent([
+                'onchange' => [
+                    'PersonalTradingplatformFormComponent.refreshForm()'
+                ]
+            ]);
 
-        $arFields['channel__item__g:google_product_category'] = (new Field\Taxonomy())->setTitle('Категория товара по классификации Google')
-            ->setName('HANDLER_RULES[channel][item][g:google_product_category]')
-            ->setLeftColumn($this->getStoreCategoriesTaxonomy())
-            ->setRightColumn(\Local\Core\Inner\TaxonomyData\Base::getData('GoogleMerchantCategory'))
-            ->setAction('GoogleMerchantCategory')
-            ->setValue($this->getHandlerRules()['channel']['item']['g:google_product_category']);
+        if( $this->getHandlerRules()['channel']['item']['@setCategoryTaxonomy'] == 'Y' )
+        {
+            $arFields['channel__item__g:google_product_category'] = (new Field\Taxonomy())->setTitle('Категория товара по классификации Google')
+                ->setName('HANDLER_RULES[channel][item][g:google_product_category]')
+                ->setLeftColumn($this->getStoreCategoriesTaxonomy())
+                ->setRightColumn(\Local\Core\Inner\TaxonomyData\Base::getData('GoogleMerchantCategory'))
+                ->setAction('GoogleMerchantCategory')
+                ->setValue($this->getHandlerRules()['channel']['item']['g:google_product_category']);
+        }
 
-        $arFields['#header_g3.info'] = (new Field\Infoblock())
+        $arFields['#header_g4.info'] = (new Field\Infoblock())
             ->setValue(<<<DOCHERE
 Проставление соответствий между Вашими категориями и классификацией Google необязательно — мы в любом случае также передаем Вашу цепочку категорий.<br/>
 Однако стоит понимать, что чем точнее Вы заполните и передадите данные о товаре — тем эффективней будет реклама. Мы рекомендуем потратить время и проставить соответствия.<br/>
@@ -431,11 +448,11 @@ DOCHERE
     }
 
 
-    protected function getOfferIdFields()
+    protected function getChannelItemIdFields()
     {
         $arFields = [];
 
-        $arFields['#header_y4'] = (new Field\Header())->setValue('Идентификаторы товара');
+        $arFields['#header_g5'] = (new Field\Header())->setValue('Идентификаторы товара');
 
         $strFolderPath = str_replace(\Bitrix\Main\Application::getDocumentRoot(), '', dirname(__FILE__)).'/assets';
         $arFields['#info4'] = (new Field\Infoblock())->setValue(<<<DOCHERE
@@ -477,7 +494,7 @@ DOCHERE
                 </tr>
                 <tr>
                     <th>Код производителя:</th>
-                    <td>-</td>
+                    <td></td>
                 </tr>
             </table>
         </div>
@@ -495,7 +512,7 @@ DOCHERE
                 </tr>
                 <tr>
                     <th>Код производителя:</th>
-                    <td>-</td>
+                    <td></td>
                 </tr>
             </table>
         </div>
@@ -505,7 +522,7 @@ DOCHERE
             <table class="table table-striped">
                 <tr>
                     <th>Марка:</th>
-                    <td>-</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th>GTIN:</th>
@@ -513,7 +530,7 @@ DOCHERE
                 </tr>
                 <tr>
                     <th>Код производителя:</th>
-                    <td>-</td>
+                    <td></td>
                 </tr>
             </table>
         </div>
@@ -601,15 +618,15 @@ DOCHERE
             <table class="table table-striped">
                 <tr>
                     <th>Марка:</th>
-                    <td>-</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th>GTIN:</th>
-                    <td>-</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th>Код производителя:</th>
-                    <td>-</td>
+                    <td></td>
                 </tr>
             </table>
         </div>
@@ -617,7 +634,7 @@ DOCHERE
 </div>
 <br/>
 <br/>
-Если при создании экспортного файла мы обнаружим товар, у которого нет марки и кода GTIN или кода производителя (к примеру индивидуальные товары под заказ) - такой товар получит отметку "Идентификатор не имеется" в автоматическом режиме. Если же у товара не будет марки, но будет GTIN или код производителя (к примеру Книги) - он будет обработан в обычном режиме.
+Если при создании экспортного файла мы обнаружим товар, у которого нет марки и кода GTIN И марки и кода производителя (к примеру индивидуальные товары под заказ) - такой товар получит отметку "Идентификатор не имеется" в автоматическом режиме. Если же у товара не будет марки, но будет GTIN или код производителя (к примеру Книги) - он будет обработан в обычном режиме.
 DOCHERE
         );
 
@@ -677,11 +694,11 @@ DOCHERE
         return $arFields;
     }
 
-    protected function getOfferDescriptionFields()
+    protected function getChannelItemDescriptionFields()
     {
         $arFields = [];
 
-        $arFields['#header_g5'] = (new Field\Header())->setValue('Подробное описание товара');
+        $arFields['#header_g6'] = (new Field\Header())->setValue('Подробное описание товара');
 
         $arFields['channel__item__g:condition'] = (new Field\Resource())->setTitle('Состояние товара в момент продажи')
             ->setIsRequired()
@@ -767,11 +784,11 @@ DOCHERE
         return $arFields;
     }
 
-    protected function getOfferParamsFields()
+    protected function getChannelItemParamsFields()
     {
         $arFields = [];
 
-        $arFields['#header_g6'] = (new Field\Header())->setValue('Характеристики товара');
+        $arFields['#header_g7'] = (new Field\Header())->setValue('Характеристики товара');
 
         $arFields['channel__item__g:age_group'] = (new Field\Resource())->setTitle('Возрастная группа')
             ->setDescription('Рекомендуется заполнить в случае, если товар предназначени для детей и подростков.')
@@ -809,9 +826,10 @@ DOCHERE
                 ])
             ->setEpilog(
                 [
-                    (new Field\InputText())
+                    'channel__item__@colorDelimiter' => (new Field\InputText())
                         ->setPlaceholder('Укажите Ваш разделитель')
                         ->setSmallText('Если Ваш разделитель отличается от "/" - укажите и мы заменим его.')
+                        ->setPlaceholder('К пример ,')
                         ->setName('HANDLER_RULES[channel][item][@colorDelimiter]')
                         ->setValue(trim($this->getHandlerRules()['channel']['item']['@colorDelimiter']))
                     ,
@@ -906,9 +924,10 @@ DOCHERE
                 ])
             ->setEpilog(
                 [
-                    (new Field\InputText())
+                    'channel__item__@materialDelimiter' => (new Field\InputText())
                         ->setPlaceholder('Укажите Ваш разделитель')
                         ->setSmallText('Если Ваш разделитель отличается от "/" - укажите и мы заменим его.')
+                        ->setPlaceholder('К пример ,')
                         ->setName('HANDLER_RULES[channel][item][@materialDelimiter]')
                         ->setValue(trim($this->getHandlerRules()['channel']['item']['@materialDelimiter']))
                     ,
@@ -966,10 +985,11 @@ DOCHERE
                     'TYPE' => Field\Resource::TYPE_SOURCE
                 ])
             ->setEpilog([
-                (new Field\InputText())
+                'channel__item__@sizeDelimiter' => (new Field\InputText())
                     ->setPlaceholder('Укажите Ваш разделитель')
                     ->setSmallText('Если Ваш разделитель отличается от "/" - укажите и мы заменим его.')
-                    ->setName('HANDLER_RULES[channel][item][@materialDelimiter]')
+                    ->setPlaceholder('К пример ,')
+                    ->setName('HANDLER_RULES[channel][item][@sizeDelimiter]')
                     ->setValue(trim($this->getHandlerRules()['channel']['item']['@sizeDelimiter']))
                 ,
                 (new Field\Infoblock())->setValue(<<<DOCHERE
@@ -1027,6 +1047,7 @@ DOCHERE
             ->setName('HANDLER_RULES[channel][item][g:size_system]')
             ->setAllowTypeList([
                 Field\Resource::TYPE_SELECT,
+                Field\Resource::TYPE_SOURCE,
                 Field\Resource::TYPE_LOGIC,
                 Field\Resource::TYPE_IGNORE,
             ])
@@ -1066,6 +1087,37 @@ DOCHERE
         return $arFields;
     }
 
+    protected function getChannelItemTradingCampaignsFields()
+    {
+        $arFields = [];
+
+        $arFields['#header_g8'] = (new Field\Header())->setValue('Торговые кампании и целевые сервисы');
+
+        $arFields['channel__item__g:custom_label'] = (new Field\Resource())->setTitle('Ярлык, по которому можно группировать товары в рамках кампании')
+            ->setDescription('С помощью особых ярлыков в торговых кампаниях можно выделять различные группы товаров: например, сезонные, акционные или самые продаваемые. Это удобно для создания отчетов и назначения ставок. Информация, связанная с этими атрибутами, не будет видна пользователям. К одному товару можно добавить до пяти меток продавца.')
+            ->setStoreId($this->getTradingPlatformStoreId())
+            ->setName('HANDLER_RULES[channel][item][g:custom_label]')
+            ->setAllowTypeList([
+                Field\Resource::TYPE_SIMPLE,
+                Field\Resource::TYPE_SOURCE,
+                Field\Resource::TYPE_LOGIC,
+                Field\Resource::TYPE_IGNORE,
+            ])
+            ->setSimpleField( (new Field\InputText()) )
+            ->setValue($this->getHandlerRules()['channel']['item']['g:custom_label'] ?? [
+                    'TYPE' => Field\Resource::TYPE_IGNORE
+                ])
+            ->setEpilog([
+                'channel__item__@customLabelDelimiter' => (new Field\InputText())
+                    ->setSmallText('Если в указанном вашем значении перечислены ярлыки - укажите символ-разделитель, что бы мы могли разделить значения.')
+                    ->setPlaceholder('К пример ,')
+                    ->setName('HANDLER_RULES[channel][item][@customLabelDelimiter]')
+                    ->setValue(trim($this->getHandlerRules()['channel']['item']['@customLabelDelimiter']))
+            ]);
+
+        return $arFields;
+    }
+
 
     /** *****
      * EXPORT
@@ -1081,32 +1133,17 @@ DOCHERE
     protected function executeMakeExportFile(\Bitrix\Main\Result $obResult)
     {
         try {
-            $this->addToTmpExportFile('<?xml version="1.0" encoding="UTF-8"?><yml_catalog date="'.date('Y-m-d H:i').'"><shop>');
+            $this->addToTmpExportFile('<?xml version="1.0" encoding="UTF-8"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel>');
 
             $this->fillShopHeader($obResult);
-            $this->fillCurrencies($obResult);
 
             if (!$obResult->isSuccess()) {
                 throw new \Exception();
             }
 
-            $this->fillCategories($obResult);
-
-            if (!$obResult->isSuccess()) {
-                throw new \Exception();
-            }
-
-            $this->fillShopDeliveryDefault($obResult);
-
-            if (!$obResult->isSuccess()) {
-                throw new \Exception();
-            }
-
-            $this->addToTmpExportFile('<offers>');
             $this->beginFilterProduct($obResult);
-            $this->addToTmpExportFile('</offers>');
 
-            $this->addToTmpExportFile('</shop></yml_catalog>');
+            $this->addToTmpExportFile('</channel></rss>');
 
         } catch (\Throwable $e) {
             if (!empty($e->getMessage())) {
@@ -1117,105 +1154,25 @@ DOCHERE
 
     protected function fillShopHeader(\Bitrix\Main\Result $obResult)
     {
-        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__name']))) {
-            $this->addToTmpExportFile('<name>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__name'])).'</name>');
-        }
-        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__company']))) {
-            $this->addToTmpExportFile('<company>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__company'])).'</company>');
-        }
-        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__url']))) {
-            $this->addToTmpExportFile('<url>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__url'])).'</url>');
-        }
-        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__platform']))) {
-            $this->addToTmpExportFile('<platform>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__platform'])).'</platform>');
-        }
-        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__version']))) {
-            $this->addToTmpExportFile('<version>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__version'])).'</version>');
-        }
-        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__agency']))) {
-            $this->addToTmpExportFile('<agency>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__agency'])).'</agency>');
-        }
-        if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__email']))) {
-            $this->addToTmpExportFile('<email>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__email'])).'</email>');
-        }
-    }
-
-    protected function fillShopDeliveryDefault(\Bitrix\Main\Result $obResult)
-    {
-        if ($this->getHandlerRules()['shop']['@delivery'] == 'Y') {
-            $this->addToTmpExportFile('<delivery-options>');
-
-            $strDeliveryOption = '<option cost="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__cost'])).'"';
-            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__days']))) {
-                $strDeliveryOption .= ' days="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__days'])).'"';
+        try
+        {
+            if ( empty($this->extractFilledValueFromRule($this->getFields()['channel__title']))){
+                throw new \Local\Core\Inner\TradingPlatform\Exceptions\ContinueException('Обязательное поле "'.$this->getFields()['channel__title']->getTitle().'" должно быть заполнено.');
             }
-            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__order-before']))) {
-                $strDeliveryOption .= ' order-before="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['shop__delivery-options__option__@attr__order-before'])).'"';
+            if ( empty($this->extractFilledValueFromRule($this->getFields()['channel__link']))){
+                throw new \Local\Core\Inner\TradingPlatform\Exceptions\ContinueException('Обязательное поле "'.$this->getFields()['channel__link']->getTitle().'" должно быть заполнено.');
             }
-            $strDeliveryOption .= ' />';
-            $this->addToTmpExportFile($strDeliveryOption);
+            if ( empty($this->extractFilledValueFromRule($this->getFields()['channel__description']))){
+                throw new \Local\Core\Inner\TradingPlatform\Exceptions\ContinueException('Обязательное поле "'.$this->getFields()['channel__description']->getTitle().'" должно быть заполнено.');
+            }
 
-            $this->addToTmpExportFile('</delivery-options>');
+            $this->addToTmpExportFile('<title>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['channel__title'])).'</title>');
+            $this->addToTmpExportFile('<link>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['channel__link'])).'</link>');
+            $this->addToTmpExportFile('<description>'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['channel__description'])).'</description>');
         }
-    }
-
-    protected function fillCurrencies(\Bitrix\Main\Result $obResult)
-    {
-        $this->addToTmpExportFile('<currencies>');
-        if ($this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']) == 'NOT_CONVERT') {
-            $rsCurrencies = \Local\Core\Model\Robofeed\StoreProductFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
-                ->setStoreId($this->getTradingPlatformStoreId())::getList([
-                    'select' => ['CURRENCY_CODE'],
-                    'group' => ['CURRENCY_CODE']
-                ]);
-            if ($rsCurrencies->getSelectedRowsCount() < 1) {
-                $obResult->addError(new \Bitrix\Main\Error('Не обнаружен ни один код валюты среди товаров.'));
-            } else {
-
-                $arUsedCurrencies = [];
-                while ($ar = $rsCurrencies->fetch()) {
-
-                    $strCurrencyCode = $ar['CURRENCY_CODE'];
-
-                    if (!in_array($strCurrencyCode, static::getSupportedCurrency())) {
-                        $strCurrencyCode = static::getMainCurrency();
-                    }
-
-                    if ($strCurrencyCode == 'RUB') {
-                        $strCurrencyCode = 'RUR';
-                    }
-
-                    if (!in_array($strCurrencyCode, $arUsedCurrencies)) {
-                        $this->addToTmpExportFile('<currency id="'.htmlspecialchars($strCurrencyCode).'" rate="'.(round(\Local\Core\Inner\Currency::getRate($strCurrencyCode, static::getMainCurrency()), 3)).'"/>');
-                        $arUsedCurrencies[] = $strCurrencyCode;
-                    }
-                }
-
-                if (!in_array(((static::getMainCurrency() == 'RUB') ? 'RUR' : static::getMainCurrency()), $arUsedCurrencies)) {
-                    $this->addToTmpExportFile('<currency id="'.htmlspecialchars(((static::getMainCurrency() == 'RUB') ? 'RUR' : static::getMainCurrency())).'" rate="1"/>');
-                }
-            }
-        } else {
-            $this->addToTmpExportFile('<currency id="'.htmlspecialchars($this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO'])).'" rate="1"/>');
-        }
-        $this->addToTmpExportFile('</currencies>');
-    }
-
-    protected function fillCategories(\Bitrix\Main\Result $obResult)
-    {
-        $rsSections = \Local\Core\Model\Robofeed\StoreCategoryFactory::factory(\Local\Core\Inner\Store\Base::getLastSuccessImportVersion($this->getTradingPlatformStoreId()))
-            ->setStoreId($this->getTradingPlatformStoreId())::getList([]);
-        if ($rsSections->getSelectedRowsCount() < 1) {
-            $obResult->addError(new \Bitrix\Main\Error('Не обнаружена ни одна категория товаров.'));
-        } else {
-            $this->addToTmpExportFile('<categories>');
-            while ($ar = $rsSections->fetch()) {
-                $str = '<category id="'.htmlspecialchars(trim($ar['CATEGORY_ID'])).'"';
-                $str .= (!empty(trim($ar['CATEGORY_PARENT_ID']))) ? ' parentId="'.htmlspecialchars(trim($ar['CATEGORY_PARENT_ID'])).'"' : '';
-                $str .= '>'.htmlspecialchars(trim($ar['CATEGORY_NAME'])).'</category>';
-                $this->addToTmpExportFile($str);
-            }
-            $this->addToTmpExportFile('</categories>');
+        catch (\Local\Core\Inner\TradingPlatform\Exceptions\ContinueException $e)
+        {
+            $obResult->addError( new \Bitrix\Main\Error($e->getMessage()) );
         }
     }
 
@@ -1225,928 +1182,227 @@ DOCHERE
         $arLog = $obResult->getData();
         $arLog['PRODUCTS_TOTAL']++;
 
-        $funGetDefaultValue = function (\Local\Core\Inner\TradingPlatform\Field\AbstractField $obField) use ($arExportProductData)
-            {
-                return $obField->extractValue($obField->getValue(), $arExportProductData);
-            };
-
         $arOfferXml = [];
 
+        try
+        {
+            if (
+                empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:id'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:title'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:description'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:link'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:images'], $arExportProductData))
+                || (
+                    !is_array($this->extractFilledValueFromRule($this->getFields()['channel__item__g:images'], $arExportProductData))
+                    && !is_string($this->extractFilledValueFromRule($this->getFields()['channel__item__g:images'], $arExportProductData))
+                )
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:availability'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__@price'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__@currencyId'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:condition'], $arExportProductData))
+                || empty($this->extractFilledValueFromRule($this->getFields()['channel__item__g:adult'], $arExportProductData))
+            )
+            {
+                throw new \Local\Core\Inner\TradingPlatform\Exceptions\ContinueException();
+            }
 
-        /** ****
-         * OFFER
-         * *** */
-        switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@offer_data_source'])) {
-            case 'CUSTOM':
+            $arOfferXml['g:id'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:id'], $arExportProductData);
 
-                $arOfferXml['_attributes']['id'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__id'], $arExportProductData);
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__group_id'], $arExportProductData))) {
-                    $arOfferXml['_attributes']['group_id'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__group_id'], $arExportProductData);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__bid'], $arExportProductData))) {
-                    $arOfferXml['_attributes']['bid'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__bid'], $arExportProductData);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__available'], $arExportProductData))) {
-                    $arOfferXml['_attributes']['available'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@attr__available'], $arExportProductData)
-                                                               == 'Y') ? 'true' : 'false';
-                }
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:item_group_id'], $arExportProductData) ) )
+            {
+                $arOfferXml['g:item_group_id'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:item_group_id'], $arExportProductData);
+            }
+            $arOfferXml['g:title'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:title'], $arExportProductData);
+            $arOfferXml['g:description']['_cdata'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:description'], $arExportProductData);
+            $arOfferXml['g:link'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:link'], $arExportProductData);
 
-                $arOfferXml['name'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__name'], $arExportProductData);
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendor'], $arExportProductData))) {
-                    $arOfferXml['vendor'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendor'], $arExportProductData);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendorCode'], $arExportProductData))) {
-                    $arOfferXml['vendorCode'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__vendorCode'], $arExportProductData);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__url'], $arExportProductData))) {
-                    $arOfferXml['url'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__url'], $arExportProductData);
-                }
-
-                $this->fillPriceAndCurrency($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__price'], $arExportProductData),
-                    $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__currencyId'], $arExportProductData),
-                    $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__oldprice'], $arExportProductData), $arOfferXml);
-
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__description'], $arExportProductData))) {
-                    $arOfferXml['description']['_cdata'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__description'], $arExportProductData);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__sales_notes'], $arExportProductData))) {
-                    $arOfferXml['sales_notes'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__sales_notes'], $arExportProductData);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__min-quantity'], $arExportProductData))) {
-                    $arOfferXml['min-quantity'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__min-quantity'], $arExportProductData);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__manufacturer_warranty'], $arExportProductData))) {
-                    $arOfferXml['manufacturer_warranty'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__manufacturer_warranty'], $arExportProductData)
-                                                            == 'Y') ? 'true' : 'false';
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__country_of_origin'], $arExportProductData))) {
-
-                    $arOfferXml['country_of_origin'] = $this->extractYandexCountry($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__country_of_origin'], $arExportProductData));
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__adult'], $arExportProductData))) {
-                    $arOfferXml['adult'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__adult'], $arExportProductData) == 'Y') ? 'true' : 'false';
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__weight'], $arExportProductData)) && !empty($arExportProductData['WEIGHT_UNIT_CODE'])) {
-                    $arOfferXml['weight'] = \Local\Core\Inner\Measure::convert($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__weight'], $arExportProductData),
-                        $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM', 3);
-                }
-                if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__dimensions'], $arExportProductData))) {
-
-                    try {
-                        if (!($this->getFields()['shop__offers__offer__dimensions'] instanceof Field\Resource)) {
-                            throw new \Exception();
+            $mixImages = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:images'], $arExportProductData);
+            if( is_array( $mixImages ) )
+            {
+                $mixImages = array_values($mixImages);
+                $arOfferXml['g:image_link'] = $mixImages[0];
+                if( sizeof($mixImages) > 1 )
+                {
+                    for($i = 1; $i < sizeof($mixImages) && $i < 11; $i++)
+                    {
+                        if( !empty( $mixImages[$i] ) )
+                        {
+                            $arOfferXml['g:additional_image_link'][] = $mixImages[$i];
                         }
-
-                        $arSearchBuilderValue = null;
-
-                        if ($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName())['TYPE'] == Field\Resource::TYPE_LOGIC) {
-
-                            $arSuccessLogicValue = $this->getFields()['shop__offers__offer__dimensions']->extractLogicValidValue($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName()),
-                                $arExportProductData);
-                            if ($arSuccessLogicValue['TYPE'] == Field\Resource::TYPE_BUILDER) {
-                                $arSearchBuilderValue = $arSuccessLogicValue;
-                                unset($arSuccessLogicValue);
-                            } else {
-                                throw new \Exception();
-                            }
-
-                        } elseif ($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName())['TYPE'] == Field\Resource::TYPE_BUILDER) {
-                            $arSearchBuilderValue = $this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__dimensions']->getName());
-                        }
-
-                        if (is_null($arSearchBuilderValue)) {
-                            throw new \Exception();
-                        }
-
-
-                        $arBuilderParts = explode('/', $arSearchBuilderValue[Field\Resource::TYPE_BUILDER.'_VALUE']);
-                        $arBuilderParts = array_map('trim', $arBuilderParts);
-                        if (sizeof($arBuilderParts) != 3) {
-                            throw new \Exception();
-                        }
-
-                        if (
-                            !in_array('{{BASE_FIELD#LENGTH}}', $arBuilderParts)
-                            || !in_array('{{BASE_FIELD#WIDTH}}', $arBuilderParts)
-                            || !in_array('{{BASE_FIELD#HEIGHT}}', $arBuilderParts)
-                        ) {
-                            throw new \Exception();
-                        }
-
-                        $lenK = array_search('{{BASE_FIELD#LENGTH}}', $arBuilderParts);
-                        $widK = array_search('{{BASE_FIELD#WIDTH}}', $arBuilderParts);
-                        $heiK = array_search('{{BASE_FIELD#HEIGHT}}', $arBuilderParts);
-
-                        $arOfferXml['dimensions'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__dimensions'], $arExportProductData);
-                        $ar = explode('/', $arOfferXml['dimensions']);
-                        $ar = array_map('trim', $ar);
-
-                        $intLength = $ar[$lenK];
-                        $intWidth = $ar[$widK];
-                        $intHeight = $ar[$heiK];
-
-                        if ($intLength > 0 && $intWidth > 0 && $intHeight > 0) {
-                            $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT', 3).'/'
-                                                        .\Local\Core\Inner\Measure::convert($intWidth, $arExportProductData['WIDTH_UNIT_CODE'], 'CMT', 3).'/'
-                                                        .\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT', 3);
-                        } else {
-                            $arOfferXml['dimensions'] = null;
-                        }
-
-
-                    } catch (\Exception $e) {
-                        $arOfferXml['dimensions'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__dimensions'], $arExportProductData);
                     }
                 }
-                break;
 
-            case 'ROBOFEED':
-
-                $arOfferXml['_attributes']['id'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__@attr__id']);
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__@attr__group_id']))) {
-                    $arOfferXml['_attributes']['group_id'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__@attr__group_id']);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__@attr__bid']))) {
-                    $arOfferXml['_attributes']['bid'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__@attr__bid']);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__@attr__available']))) {
-                    $arOfferXml['_attributes']['available'] = ($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__@attr__available']) == 'Y') ? 'true' : 'false';
-                }
-
-                $arOfferXml['name'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__name']);
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__vendor']))) {
-                    $arOfferXml['vendor'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__vendor']);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__vendorCode']))) {
-                    $arOfferXml['vendorCode'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__vendorCode']);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__url']))) {
-                    $arOfferXml['url'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__url']);
-                }
-
-                $this->fillPriceAndCurrency($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__price']),
-                    $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__currencyId']), $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__oldprice']),
-                    $arOfferXml);
-
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__description']))) {
-                    $arOfferXml['description']['_cdata'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__description']);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__sales_notes']))) {
-                    $arOfferXml['sales_notes'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__sales_notes']);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__min-quantity']))) {
-                    $arOfferXml['min-quantity'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__min-quantity']);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__manufacturer_warranty']))) {
-                    $arOfferXml['manufacturer_warranty'] = ($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__manufacturer_warranty']) == 'Y') ? 'true' : 'false';
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__country_of_origin']))) {
-
-                    $arOfferXml['country_of_origin'] = $this->extractYandexCountry($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__country_of_origin']));
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__adult']))) {
-                    $arOfferXml['adult'] = ($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__adult']) == 'Y') ? 'true' : 'false';
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__weight'])) && !empty($arExportProductData['WEIGHT_UNIT_CODE'])) {
-                    $arOfferXml['weight'] = \Local\Core\Inner\Measure::convert($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__weight']),
-                        $arExportProductData['WEIGHT_UNIT_CODE'], 'KGM', 3);
-                }
-                if (!is_null($funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__dimensions']))) {
-                    $arOfferXml['dimensions'] = $funGetDefaultValue($this->getOfferDefaultFields()['shop__offers__offer__dimensions']);
-                    list($intLength, $intWidth, $intHeight) = explode('/', $arOfferXml['dimensions']);
-                    if ($intLength > 0 && $intWidth > 0 && $intHeight > 0) {
-                        $arOfferXml['dimensions'] = \Local\Core\Inner\Measure::convert($intLength, $arExportProductData['LENGTH_UNIT_CODE'], 'CMT', 3).'/'.\Local\Core\Inner\Measure::convert($intWidth,
-                                $arExportProductData['WIDTH_UNIT_CODE'], 'CMT', 3).'/'.\Local\Core\Inner\Measure::convert($intHeight, $arExportProductData['HEIGHT_UNIT_CODE'], 'CMT', 3);
-                    } else {
-                        $arOfferXml['dimensions'] = null;
-                    }
-                }
-                break;
-
-            default:
-                $arOfferXml = null;
-                break;
-        }
-
-        if (!is_null($arOfferXml)) {
-
-            /** ***************
-             * OFFER ADDITIONAL
-             * ************** */
-            $arOfferXml['categoryId'] = $arExportProductData['CATEGORY_ID'];
-
-            if (!empty($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__picture'], $arExportProductData))) {
-                $arOfferXml['picture'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__picture'], $arExportProductData);
+            }
+            else
+            {
+                $arOfferXml['g:image_link'] = $mixImages;
             }
 
-            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__store'], $arExportProductData))) {
-                $arOfferXml['store'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__store'], $arExportProductData) == 'Y') ? 'true' : 'false';
-            }
 
-            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__barcode'], $arExportProductData))) {
-                $arOfferXml['barcode'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__barcode'], $arExportProductData);
-            }
-
-            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__downloadable'], $arExportProductData))) {
-                $arOfferXml['downloadable'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__downloadable'], $arExportProductData) == 'Y') ? 'true' : 'false';
-            }
-
-            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__age__@attr__year'], $arExportProductData))) {
-                $arOfferXml['age'] = [
-                    '_attributes' => [
-                        'unit' => 'year'
-                    ],
-                    '_value' => $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__age__@attr__year'], $arExportProductData)
-                ];
-            }
-
-            /** *******
-             * DELIVERY
-             ******** */
-
-            if ($this->getHandlerRules()['shop']['@delivery'] == 'Y') {
-                switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@delivery_data_source'], $arExportProductData)) {
-                    case 'CUSTOM':
-
-                        $arOfferXml['delivery'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery'], $arExportProductData) == 'Y') ? 'true' : 'false';
-
-                        if ($arOfferXml['delivery'] == 'true') {
-                            $arOption = [];
-                            $arOption['cost'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__cost'], $arExportProductData);
-                            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData))) {
-                                $arOption['days'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__days'], $arExportProductData);
-                            }
-                            if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'], $arExportProductData))) {
-                                $arOption['order-before'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__delivery-options__option__@attr__order-before'],
-                                    $arExportProductData);
-                            }
-
-                            $arOfferXml['delivery-options']['option'] = [
-                                '_attributes' => $arOption
-                            ];
-                        }
-
-                        break;
-
-                    case 'ROBOFEED':
-
-                        $arOfferXml['delivery'] = ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y') ? 'true' : 'false';
-                        if ($arExportProductData['DELIVERY_AVAILABLE'] == 'Y' && !empty($arExportProductData['DELIVERY_OPTIONS'])) {
-                            foreach ($arExportProductData['DELIVERY_OPTIONS'] as $arOptionData) {
-                                $arOption = [];
-                                $arOption['cost'] = (!empty($arOptionData['PRICE_TO'])
-                                                     && $arOptionData['PRICE_TO'] > $arOptionData['PRICE_FROM']) ? $arOptionData['PRICE_TO'] : $arOptionData['PRICE_FROM'];
-
-                                if (!empty($arOptionData['DAYS_FROM']) && !empty($arOptionData['DAYS_TO']) && ($arOptionData['DAYS_TO'] - $arOptionData['DAYS_FROM']) <= 2) {
-                                    $arOption['days'] = $arOptionData['DAYS_FROM'].'-'.$arOptionData['DAYS_TO'];
-                                } elseif (!empty($arOptionData['DAYS_TO'])) {
-                                    $arOption['days'] = $arOptionData['DAYS_TO'];
-                                } elseif (!empty($arOptionData['DAYS_FROM'])) {
-                                    $arOption['days'] = $arOptionData['DAYS_FROM'];
-                                }
-
-                                if ($arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23) {
-                                    $arOption['order-before'] = $arOptionData['ORDER_BEFORE'];
-                                }
-
-                                $arOfferXml['delivery-options']['option'][] = [
-                                    '_attributes' => $arOption
-                                ];
-
-                            }
-                        }
-
-                        break;
-                }
-            } else {
-                $arOfferXml['delivery'] = 'false';
-            }
-
-            /** *****
-             * PICKUP
-             ****** */
-
-            switch ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__@pickup_data_source'], $arExportProductData)) {
-                case 'CUSTOM':
-
-                    $arOfferXml['pickup'] = ($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup'], $arExportProductData) == 'Y') ? 'true' : 'false';
-
-                    if ($arOfferXml['pickup'] == 'true') {
-                        $arOption = [];
-                        $arOption['cost'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__cost'], $arExportProductData);
-                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__days'], $arExportProductData))) {
-                            $arOption['days'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__days'], $arExportProductData);
-                        }
-                        if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__order-before'], $arExportProductData))) {
-                            $arOption['order-before'] = $this->extractFilledValueFromRule($this->getFields()['shop__offers__offer__pickup-options__option__@attr__order-before'], $arExportProductData);
-                        }
-
-                        $arOfferXml['pickup-options']['option'] = [
-                            '_attributes' => $arOption
-                        ];
-                    }
-
+            switch ($this->extractFilledValueFromRule($this->getFields()['channel__item__g:availability'], $arExportProductData))
+            {
+                case 'Y':
+                    $arOfferXml['g:availability'] = 'in stock';
                     break;
-
-                case 'ROBOFEED':
-
-                    $arOfferXml['pickup'] = ($arExportProductData['PICKUP_AVAILABLE'] == 'Y') ? 'true' : 'false';
-                    if ($arExportProductData['PICKUP_AVAILABLE'] == 'Y' && !empty($arExportProductData['PICKUP_OPTIONS'])) {
-                        if (!empty($arExportProductData['PICKUP_OPTIONS'])) {
-                            $arOptionData = $arExportProductData['PICKUP_OPTIONS'][0];
-
-                            $arOption = [];
-                            $arOption['cost'] = $arOptionData['PRICE'];
-
-                            if (!empty($arOptionData['SUPPLY_FROM']) && !empty($arOptionData['SUPPLY_TO'])) {
-                                $arOption['days'] = $arOptionData['SUPPLY_FROM'].'-'.$arOptionData['SUPPLY_TO'];
-                            } elseif (!empty($arOptionData['SUPPLY_TO'])) {
-                                $arOption['days'] = $arOptionData['SUPPLY_TO'];
-                            } elseif (!empty($arOptionData['SUPPLY_FROM'])) {
-                                $arOption['days'] = $arOptionData['SUPPLY_FROM'];
-                            }
-
-                            if ($arOptionData['ORDER_BEFORE'] >= 0 && $arOptionData['ORDER_BEFORE'] <= 23) {
-                                $arOption['order-before'] = $arOptionData['ORDER_BEFORE'];
-                            }
-
-                            $arOfferXml['pickup-options']['option'][] = [
-                                '_attributes' => $arOption
-                            ];
-                        }
-                    }
-
+                case 'N':
+                    $arOfferXml['g:availability'] = 'out of stock';
+                    break;
+                case 'P':
+                    $arOfferXml['g:availability'] = 'preorder';
                     break;
             }
 
-            /** **
-             * END
-             *** */
-            $arOfferXml = array_diff($arOfferXml, [''], [null]);
+            $this->fillPriceAndCurrency(
+                $this->extractFilledValueFromRule($this->getFields()['channel__item__@price'], $arExportProductData),
+                $this->extractFilledValueFromRule($this->getFields()['channel__item__@currencyId'], $arExportProductData),
+                $this->extractFilledValueFromRule($this->getFields()['channel__item__@oldprice'], $arExportProductData),
+                $arOfferXml
+            );
 
-            /** ****
-             * PARAM
-             ***** */
-            $arSelectedParams = $this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__param']->getName());
-            if (is_array($this->getTPFieldDataByFieldName($this->getFields()['shop__offers__offer__param']->getName()))) {
-                if (in_array('#ALL', $arSelectedParams)) {
-                    foreach ($arExportProductData['PARAMS'] as $arParam) {
-                        $arOfferXml['param'][] = [
-                            '_attributes' => [
-                                'name' => trim($arParam['NAME'])
-                            ],
-                            '_value' => trim($arParam['VALUE'])
-                        ];
-                    }
-                } else {
-                    foreach ($arSelectedParams as $strParam) {
-                        if (!empty($arExportProductData['PARAMS'][$strParam])) {
-                            $arOfferXml['param'][] = [
-                                '_attributes' => [
-                                    'name' => trim($arExportProductData['PARAMS'][$strParam]['NAME'])
-                                ],
-                                '_value' => trim($arExportProductData['PARAMS'][$strParam]['VALUE'])
-                            ];
-                        }
+            if( $this->extractFilledValueFromRule($this->getFields()['channel__item__@setCategoryTaxonomy']) == 'Y' )
+            {
+                $arGoogleCategoryTaxonomy = $this->getHandlerRules()['channel']['item']['g:google_product_category'];
+                if( !empty( $arGoogleCategoryTaxonomy[ $arExportProductData['CATEGORY_ID'] ] ) )
+                {
+                    $arOfferXml['g:google_product_category'] = $arGoogleCategoryTaxonomy[ $arExportProductData['CATEGORY_ID'] ];
+                }
+            }
+
+            $arOfferXml['g:product_type'] = str_replace(' / ', ' > ', $this->getStoreCategoriesTaxonomy()[ $arExportProductData['CATEGORY_ID'] ]);
+            $arOfferXml['g:condition'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:condition'], $arExportProductData);
+            if( mb_strtoupper($arOfferXml['g:condition']) == 'NEW' )
+            {
+                if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:brand'], $arExportProductData) ) )
+                {
+                    $arOfferXml['g:brand'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:brand'], $arExportProductData);
+                }
+                if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:gtin'], $arExportProductData) ) )
+                {
+                    $arOfferXml['g:gtin'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:gtin'], $arExportProductData);
+                }
+                if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:mpn'], $arExportProductData) ) )
+                {
+                    $arOfferXml['g:mpn'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:mpn'], $arExportProductData);
+                }
+
+                if(
+                    (empty( $arOfferXml['g:brand'] ) && empty($arOfferXml['g:gtin']))
+                    && (empty( $arOfferXml['g:brand'] ) && empty($arOfferXml['g:mpn']))
+                )
+                {
+                    $arOfferXml['g:identifier_exists'] = 'no';
+                }
+            }
+
+            $arOfferXml['g:adult'] = ( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:adult'], $arExportProductData) == 'Y' ) ? 'true' : 'false';
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:age_group'], $arExportProductData) ) )
+            {
+                $arOfferXml['g:age_group'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:age_group'], $arExportProductData);
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:color'], $arExportProductData) ) )
+            {
+                $strTmpDelimiter = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:color']->getEpilog()['channel__item__@colorDelimiter']);
+                if( !empty( $strTmpDelimiter ) )
+                {
+                    $arOfferXml['g:color'] = str_replace($strTmpDelimiter, '/', $this->extractFilledValueFromRule($this->getFields()['channel__item__g:color'], $arExportProductData) );
+                }
+                else
+                {
+                    $arOfferXml['g:color'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:color'], $arExportProductData);
+                }
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:gender'], $arExportProductData) ) )
+            {
+                $arOfferXml['g:gender'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:gender'], $arExportProductData);
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:material'], $arExportProductData) ) )
+            {
+                $strTmpDelimiter = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:material']->getEpilog()['channel__item__@materialDelimiter']);
+                if( !empty( $strTmpDelimiter ) )
+                {
+                    $arOfferXml['g:material'] = str_replace($strTmpDelimiter, '/', $this->extractFilledValueFromRule($this->getFields()['channel__item__g:material'], $arExportProductData) );
+                }
+                else
+                {
+                    $arOfferXml['g:material'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:material'], $arExportProductData);
+                }
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:pattern'], $arExportProductData) ) )
+            {
+                $arOfferXml['g:pattern'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:pattern'], $arExportProductData);
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size'], $arExportProductData) ) )
+            {
+                $strTmpDelimiter = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size']->getEpilog()['channel__item__@sizeDelimiter']);
+                if( !empty( $strTmpDelimiter ) )
+                {
+                    $arOfferXml['g:size'] = str_replace($strTmpDelimiter, '/', $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size'], $arExportProductData) );
+                }
+                else
+                {
+                    $arOfferXml['g:size'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size'], $arExportProductData);
+                }
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size_type'], $arExportProductData) ) )
+            {
+                $arOfferXml['g:size_type'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size_type'], $arExportProductData);
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size_system'], $arExportProductData) ) )
+            {
+                $arOfferXml['g:size_system'] = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:size_system'], $arExportProductData);
+            }
+
+            if( !empty( $this->extractFilledValueFromRule($this->getFields()['channel__item__g:custom_label'], $arExportProductData) ) )
+            {
+                $tmpVal = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:custom_label'], $arExportProductData);
+
+                $strTmpDelimiter = $this->extractFilledValueFromRule($this->getFields()['channel__item__g:custom_label']->getEpilog()['channel__item__@customLabelDelimiter']);
+                if( !empty( $strTmpDelimiter ) && is_string($tmpVal) )
+                {
+                    $tmpVal = explode($strTmpDelimiter, $tmpVal );
+                }
+
+                if( is_string($tmpVal) )
+                {
+                    $tmpVal = [$tmpVal];
+                }
+                $tmpVal = array_map(function ($v)
+                    {
+                        return trim($v);
+                    }, $tmpVal);
+                $tmpVal = array_diff($tmpVal, [''], [null]);
+                $tmpVal = array_values($tmpVal);
+
+
+                for($i = 0; $i < 5 && $i < sizeof($tmpVal); $i++)
+                {
+                    if( !empty( $tmpVal[$i] ) )
+                    {
+                        $arOfferXml['g:custom_label_'.$i] = $tmpVal[$i];
                     }
                 }
             }
 
             if (!empty($arOfferXml)) {
-                $this->addToTmpExportFile($this->convertArrayToString($arOfferXml, 'offer'));
+                $this->addToTmpExportFile($this->convertArrayToString($arOfferXml, 'item'));
 
                 $arLog['PRODUCTS_EXPORTED']++;
             }
+
+        }
+        catch (\Local\Core\Inner\TradingPlatform\Exceptions\ContinueException $e)
+        {
         }
 
         $obResult->setData($arLog);
-    }
-
-    /**
-     * Получает название старны в формате Яндекса
-     *
-     * @param string $strCountry Символьный код страны из справочника
-     *
-     * @return string|null
-     */
-    protected function extractYandexCountry($strCountry)
-    {
-        $strReturn = null;
-        switch ($strCountry) {
-            case 'AUS':
-                $strReturn = 'АВСТРАЛИЯ';
-                break;
-            case 'AUT':
-                $strReturn = 'АВСТРИЯ';
-                break;
-            case 'AZE':
-                $strReturn = 'АЗЕРБАЙДЖАН';
-                break;
-            case 'ALB':
-                $strReturn = 'АЛБАНИЯ';
-                break;
-            case 'DZA':
-                $strReturn = 'АЛЖИР';
-                break;
-            case 'VIR':
-                $strReturn = 'АМЕРИКАНСКИЕ ВИРГИНСКИЕ ОСТРОВА';
-                break;
-            case 'AIA':
-                $strReturn = 'АНГИЛЬЯ';
-                break;
-            case 'AGO':
-                $strReturn = 'АНГОЛА';
-                break;
-            case 'AND':
-                $strReturn = 'АНДОРРА';
-                break;
-            case 'ATG':
-                $strReturn = 'АНТИГУА И БАРБУ';
-                break;
-            case 'DEU':
-                $strReturn = 'ГЕРМАНИЯ';
-                break;
-            case 'GIB':
-                $strReturn = 'ГИБРАЛТАР';
-                break;
-            case 'HND':
-                $strReturn = 'ГОНДУРАС';
-                break;
-            case 'HKG':
-                $strReturn = 'ГОНКОНГ';
-                break;
-            case 'GRD':
-                $strReturn = 'ГРЕНАДА';
-                break;
-            case 'GRL':
-                $strReturn = 'ГРЕНЛАНДИЯ';
-                break;
-            case 'GRC':
-                $strReturn = 'ГРЕЦИЯ';
-                break;
-            case 'GEO':
-                $strReturn = 'ГРУЗИЯ';
-                break;
-            case 'DNK':
-                $strReturn = 'ДАНИЯ';
-                break;
-            case 'COD':
-                $strReturn = 'ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА КОНГО';
-                break;
-            case 'DJI':
-                $strReturn = 'ДЖИБУТИ';
-                break;
-            case 'DMA':
-                $strReturn = 'ДОМИНИКА';
-                break;
-            case 'DOM':
-                $strReturn = 'ДОМИНИКАНСКАЯ РЕСПУБЛИКА';
-                break;
-            case 'EGY':
-                $strReturn = 'ЕГИПЕТ';
-                break;
-            case 'ZMB':
-                $strReturn = 'ЗАМБИЯ';
-                break;
-            case 'ZWE':
-                $strReturn = 'ЗИМБАБВЕ';
-                break;
-            case 'YEM':
-                $strReturn = 'ЙЕМЕН';
-                break;
-            case 'ISR':
-                $strReturn = 'ИЗРАИЛЬ';
-                break;
-            case 'IND':
-                $strReturn = 'ИНДИЯ';
-                break;
-            case 'IDN':
-                $strReturn = 'ИНДОНЕЗИЯ';
-                break;
-            case 'JOR':
-                $strReturn = 'ИОРДАНИЯ';
-                break;
-            case 'IRQ':
-                $strReturn = 'ИРАК';
-                break;
-            case 'IRN':
-                $strReturn = 'ИРАН';
-                break;
-            case 'IRL':
-                $strReturn = 'ИРЛАНДИЯ';
-                break;
-            case 'ISL':
-                $strReturn = 'ИСЛАНДИЯ';
-                break;
-            case 'ESP':
-                $strReturn = 'ИСПАНИЯ';
-                break;
-            case 'ITA':
-                $strReturn = 'ИТАЛИЯ';
-                break;
-            case 'CPV':
-                $strReturn = 'КАБО-ВЕРДЕ';
-                break;
-            case 'KAZ':
-                $strReturn = 'КАЗАХСТАН';
-                break;
-            case 'CYM':
-                $strReturn = 'КАЙМАНОВЫ ОСТРОВА';
-                break;
-            case 'KHM':
-                $strReturn = 'КАМБОДЖА';
-                break;
-            case 'CMR':
-                $strReturn = 'КАМЕРУН';
-                break;
-            case 'CAN':
-                $strReturn = 'КАНАДА';
-                break;
-            case 'QAT':
-                $strReturn = 'КАТАР';
-                break;
-            case 'KEN':
-                $strReturn = 'КЕНИЯ';
-                break;
-            case 'CYP':
-                $strReturn = 'КИПР';
-                break;
-            case 'KGZ':
-                $strReturn = 'КИРГИЗИЯ';
-                break;
-            case 'KIR':
-                $strReturn = 'КИРИБАТИ';
-                break;
-            case 'CHN':
-                $strReturn = 'КИТАЙ';
-                break;
-            case 'COL':
-                $strReturn = 'КОЛУМБИЯ';
-                break;
-            case 'COM':
-                $strReturn = 'КОМОРСКИЕ ОСТРОВА';
-                break;
-            case 'CRI':
-                $strReturn = 'КОСТА-РИКА';
-                break;
-            case 'CIV':
-                $strReturn = 'КОТ-Д’ИВУАР';
-                break;
-            case 'CUB':
-                $strReturn = 'КУБА';
-                break;
-            case 'KWT':
-                $strReturn = 'КУВЕЙТ';
-                break;
-            case 'LAO':
-                $strReturn = 'ЛАОС';
-                break;
-            case 'LVA':
-                $strReturn = 'ЛАТВИЯ';
-                break;
-            case 'LSO':
-                $strReturn = 'ЛЕСОТО';
-                break;
-            case 'LBR':
-                $strReturn = 'ЛИБЕРИЯ';
-                break;
-            case 'LBN':
-                $strReturn = 'ЛИВАН';
-                break;
-            case 'LBY':
-                $strReturn = 'ЛИВИЯ';
-                break;
-            case 'LTU':
-                $strReturn = 'ЛИТВА';
-                break;
-            case 'LIE':
-                $strReturn = 'ЛИХТЕНШТЕЙН';
-                break;
-            case 'LUX':
-                $strReturn = 'ЛЮКСЕМБУРГ';
-                break;
-            case 'MUS':
-                $strReturn = 'МАВРИКИЙ';
-                break;
-            case 'MRT':
-                $strReturn = 'МАВРИТАНИЯ';
-                break;
-            case 'MDG':
-                $strReturn = 'МАДАГАСКАР';
-                break;
-            case 'MYT':
-                $strReturn = 'МАЙОТТА';
-                break;
-            case 'MAC':
-                $strReturn = 'МАКАО';
-                break;
-            case 'MKD':
-                $strReturn = 'МАКЕДОНИЯ';
-                break;
-            case 'MWI':
-                $strReturn = 'МАЛАВИ';
-                break;
-            case 'MYS':
-                $strReturn = 'МАЛАЙЗИЯ';
-                break;
-            case 'MLI':
-                $strReturn = 'МАЛИ';
-                break;
-            case 'MDV':
-                $strReturn = 'МАЛЬДИВЫ';
-                break;
-            case 'MLT':
-                $strReturn = 'МАЛЬТА';
-                break;
-            case 'MAR':
-                $strReturn = 'МАРОККО';
-                break;
-            case 'MHL':
-                $strReturn = 'МАРШАЛЛОВЫ ОСТРОВА';
-                break;
-            case 'MEX':
-                $strReturn = 'МЕКСИКА';
-                break;
-            case 'MOZ':
-                $strReturn = 'МОЗАМБИК';
-                break;
-            case 'MDA':
-                $strReturn = 'МОЛДОВА';
-                break;
-            case 'MCO':
-                $strReturn = 'МОНАКО';
-                break;
-            case 'MNG':
-                $strReturn = 'МОНГОЛИЯ';
-                break;
-            case 'MMR':
-                $strReturn = 'МЬЯНМА';
-                break;
-            case 'NAM':
-                $strReturn = 'НАМИБИЯ';
-                break;
-            case 'NRU':
-                $strReturn = 'НАУРУ';
-                break;
-            case 'NPL':
-                $strReturn = 'НЕПАЛ';
-                break;
-            case 'NER':
-                $strReturn = 'НИГЕР';
-                break;
-            case 'NGA':
-                $strReturn = 'НИГЕРИЯ';
-                break;
-            case 'NLD':
-                $strReturn = 'НИДЕРЛАНДЫ';
-                break;
-            case 'NIC':
-                $strReturn = 'НИКАРАГУА';
-                break;
-            case 'NZL':
-                $strReturn = 'НОВАЯ ЗЕЛАНДИЯ';
-                break;
-            case 'NCL':
-                $strReturn = 'НОВАЯ КАЛЕДОНИЯ';
-                break;
-            case 'NOR':
-                $strReturn = 'НОРВЕГИЯ';
-                break;
-            case 'ARE':
-                $strReturn = 'ОБЪЕДИНЁННЫЕ АРАБСКИЕ ЭМИРАТЫ';
-                break;
-            case 'OMN':
-                $strReturn = 'ОМАН';
-                break;
-            case 'COK':
-                $strReturn = 'ОСТРОВА КУКА';
-                break;
-            case 'PAK':
-                $strReturn = 'ПАКИСТАН';
-                break;
-            case 'PLW':
-                $strReturn = 'ПАЛАУ';
-                break;
-            case 'PAN':
-                $strReturn = 'ПАНАМА';
-                break;
-            case 'PNG':
-                $strReturn = 'ПАПУА - НОВАЯ ГВИНЕЯ';
-                break;
-            case 'PRY':
-                $strReturn = 'ПАРАГВАЙ';
-                break;
-            case 'PER':
-                $strReturn = 'ПЕРУ';
-                break;
-            case 'POL':
-                $strReturn = 'ПОЛЬША';
-                break;
-            case 'PRT':
-                $strReturn = 'ПОРТУГАЛИЯ';
-                break;
-            case 'COG':
-                $strReturn = 'РЕСПУБЛИКА КОНГО';
-                break;
-            case 'REU':
-                $strReturn = 'РЕЮНЬОН';
-                break;
-            case 'RUS':
-                $strReturn = 'РОССИЯ';
-                break;
-            case 'RWA':
-                $strReturn = 'РУАНДА';
-                break;
-            case 'ROU':
-                $strReturn = 'РУМЫНИЯ';
-                break;
-            case 'WSM':
-                $strReturn = 'САМОА';
-                break;
-            case 'SMR':
-                $strReturn = 'САН-МАРИНО';
-                break;
-            case 'STP':
-                $strReturn = 'САН-ТОМЕ И ПРИНСИПИ';
-                break;
-            case 'SAU':
-                $strReturn = 'САУДОВСКАЯ АРАВИЯ';
-                break;
-            case 'SWZ':
-                $strReturn = 'СВАЗИЛЕНД';
-                break;
-            case 'PRK':
-                $strReturn = 'СЕВЕРНАЯ КОРЕЯ';
-                break;
-            case 'SYC':
-                $strReturn = 'СЕЙШЕЛЬСКИЕ ОСТРОВА';
-                break;
-            case 'SEN':
-                $strReturn = 'СЕНЕГАЛ';
-                break;
-            case 'VCT':
-                $strReturn = 'СЕНТ-ВИНСЕНТ И ГРЕНАДИНЫ';
-                break;
-            case 'KNA':
-                $strReturn = 'СЕНТ-КИТС И НЕВИС';
-                break;
-            case 'LCA':
-                $strReturn = 'СЕНТ-ЛЮСИЯ';
-                break;
-            case 'SRB':
-                $strReturn = 'СЕРБИЯ';
-                break;
-            case 'SGP':
-                $strReturn = 'СИНГАПУР';
-                break;
-            case 'SYR':
-                $strReturn = 'СИРИЯ';
-                break;
-            case 'SVK':
-                $strReturn = 'СЛОВАКИЯ';
-                break;
-            case 'SVN':
-                $strReturn = 'СЛОВЕНИЯ';
-                break;
-            case 'SOM':
-                $strReturn = 'СОМАЛИ';
-                break;
-            case 'SDN':
-                $strReturn = 'СУДАН';
-                break;
-            case 'SUR':
-                $strReturn = 'СУРИНАМ';
-                break;
-            case 'USA':
-                $strReturn = 'США';
-                break;
-            case 'SLE':
-                $strReturn = 'СЬЕРРА-ЛЕОНЕ';
-                break;
-            case 'TJK':
-                $strReturn = 'ТАДЖИКИСТАН';
-                break;
-            case 'THA':
-                $strReturn = 'ТАИЛАНД';
-                break;
-            case 'TZA':
-                $strReturn = 'ТАНЗАНИЯ';
-                break;
-            case 'TCA':
-                $strReturn = 'ТЁРКС И КАЙКОС';
-                break;
-            case 'TGO':
-                $strReturn = 'ТОГО';
-                break;
-            case 'TON':
-                $strReturn = 'ТОНГА';
-                break;
-            case 'TTO':
-                $strReturn = 'ТРИНИДАД И ТОБАГО';
-                break;
-            case 'TUV':
-                $strReturn = 'ТУВАЛУ';
-                break;
-            case 'TUN':
-                $strReturn = 'ТУНИС';
-                break;
-            case 'TKM':
-                $strReturn = 'ТУРКМЕНИСТАН';
-                break;
-            case 'TUR':
-                $strReturn = 'ТУРЦИЯ';
-                break;
-            case 'UGA':
-                $strReturn = 'УГАНДА';
-                break;
-            case 'UZB':
-                $strReturn = 'УЗБЕКИСТАН';
-                break;
-            case 'UKR':
-                $strReturn = 'УКРАИНА';
-                break;
-            case 'URY':
-                $strReturn = 'УРУГВАЙ';
-                break;
-            case 'FSM':
-                $strReturn = 'ФЕДЕРАТИВНЫЕ ШТАТЫ МИКРОНЕЗИИ';
-                break;
-            case 'FJI':
-                $strReturn = 'ФИДЖИ';
-                break;
-            case 'PHL':
-                $strReturn = 'ФИЛИППИНЫ';
-                break;
-            case 'FIN':
-                $strReturn = 'ФИНЛЯНДИЯ';
-                break;
-            case 'FRA':
-                $strReturn = 'ФРАНЦИЯ';
-                break;
-            case 'GUF':
-                $strReturn = 'ФРАНЦУЗСКАЯ ГВИАНА';
-                break;
-            case 'PYF':
-                $strReturn = 'ФРАНЦУЗСКАЯ ПОЛИНЕЗИЯ';
-                break;
-            case 'HRV':
-                $strReturn = 'ХОРВАТИЯ';
-                break;
-            case 'TCD':
-                $strReturn = 'ЧАД';
-                break;
-            case 'MNE':
-                $strReturn = 'ЧЕРНОГОРИЯ';
-                break;
-            case 'CZE':
-                $strReturn = 'ЧЕХИЯ';
-                break;
-            case 'CHL':
-                $strReturn = 'ЧИЛИ';
-                break;
-            case 'CHE':
-                $strReturn = 'ШВЕЙЦАРИЯ';
-                break;
-            case 'SWE':
-                $strReturn = 'ШВЕЦИЯ';
-                break;
-            case 'LKA':
-                $strReturn = 'ШРИ-ЛАНКА';
-                break;
-            case 'ECU':
-                $strReturn = 'ЭКВАДОР';
-                break;
-            case 'GNQ':
-                $strReturn = 'ЭКВАТОРИАЛЬНАЯ ГВИНЕЯ';
-                break;
-            case 'ERI':
-                $strReturn = 'ЭРИТРЕЯ';
-                break;
-            case 'EST':
-                $strReturn = 'ЭСТОНИЯ';
-                break;
-            case 'ETH':
-                $strReturn = 'ЭФИОПИЯ';
-                break;
-            case 'ZAF':
-                $strReturn = 'ЮАР';
-                break;
-            case 'KOR':
-                $strReturn = 'ЮЖНАЯ КОРЕЯ';
-                break;
-            case 'JAM':
-                $strReturn = 'ЯМАЙКА';
-                break;
-            case 'JPN':
-                $strReturn = 'ЯПОНИЯ';
-                break;
-        }
-
-        if (!is_null($strReturn)) {
-            $strReturn = htmlspecialchars(trim($strReturn));
-        }
-
-        return $strReturn;
     }
 
     /**
@@ -2165,17 +1421,30 @@ DOCHERE
     protected function fillPriceAndCurrency($intPrice, $strCurrencyCode, $intOldPrice, &$arOfferXml)
     {
 
+        $arPrice = [];
+
         $intNewPrice = \Local\Core\Inner\Currency::convert($intPrice, $strCurrencyCode, $this->getFinalCurrency($strCurrencyCode));
         if (!is_null($intNewPrice)) {
-            $arOfferXml['price'] = $intNewPrice;
-            $arOfferXml['oldprice'] = \Local\Core\Inner\Currency::convert($intOldPrice, $strCurrencyCode, $this->getFinalCurrency($strCurrencyCode));
-            $arOfferXml['currencyId'] = ($this->getFinalCurrency($strCurrencyCode) == 'RUB') ? 'RUR' : $this->getFinalCurrency($strCurrencyCode);
+            $arPrice['PRICE'] = $intNewPrice;
+            $arPrice['OLD_PRICE'] = \Local\Core\Inner\Currency::convert($intOldPrice, $strCurrencyCode, $this->getFinalCurrency($strCurrencyCode));
+            $arPrice['CURRENCY'] = $this->getFinalCurrency($strCurrencyCode);
         }
 
         if (
-            $arOfferXml['price'] >= $arOfferXml['oldprice']
+            $arPrice['PRICE'] >= $arPrice['OLD_PRICE']
         ) {
-            unset($arOfferXml['oldprice']);
+            unset($arPrice['OLD_PRICE']);
+        }
+
+
+        if( $arPrice['OLD_PRICE'] > 0 )
+        {
+            $arOfferXml['g:price'] = $arPrice['OLD_PRICE'].' '.$arPrice['CURRENCY'];
+            $arOfferXml['g:sale_price'] = $arPrice['PRICE'].' '.$arPrice['CURRENCY'];
+        }
+        else
+        {
+            $arOfferXml['g:price'] = $arPrice['PRICE'].' '.$arPrice['CURRENCY'];
         }
     }
 }

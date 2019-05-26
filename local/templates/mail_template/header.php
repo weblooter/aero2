@@ -215,7 +215,7 @@
             <p style="text-align: center; font-size: 45px; font-weight: bold; margin: 0 0 40px 0; line-height: 1;">
                 <a href="https://robofeed.ru" style="text-decoration: none !important; color: #fff;"><img src="https://robofeed.ru/local/mail-template/assets/robot-face.png"  style="display: inline-block; margin: 0 0 -7px 0; height: 55px;"/> ROBOFEED</a>
             </p>
-            <table border="0" cellpadding="0" cellspacing="0" style="margin: auto; color: #fff; background: rgb(0, 0, 0, 0.3); font-size: 14px; box-shadow: 0 1px 5px rgb(0, 0, 0, 0.1); border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; overflow: hidden; width: 100%; margin-bottom: 30px;">
+            <table border="0" cellpadding="0" cellspacing="0" style="margin: auto; color: #fff; background-image: url(https://robofeed.ru/local/mail-template/assets/mail-bg.png); font-size: 14px; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; overflow: hidden; width: 100%; margin-bottom: 30px;">
                 <tr>
                     <td style="padding: 20px;">
                          

@@ -23,13 +23,6 @@ class ArrayToXml
     protected $replaceSpacesByUnderScoresInKeyNames = true;
 
     /**
-     * Prefix for the tags with numeric names.
-     *
-     * @var string
-     */
-    protected $numericTagNamePrefix = 'numeric_';
-
-    /**
      * Construct a new instance.
      *
      * @param string[] $array
@@ -56,25 +49,20 @@ class ArrayToXml
         $this->convertElement($root, $array);
     }
 
-    public function setNumericTagNamePrefix(string $prefix)
-    {
-        $this->numericTagNamePrefix = $prefix;
-    }
-
     /**
      * Convert the given array to an xml string.
      *
      * @param string[] $array
-     * @param string|array $rootElement
+     * @param string $rootElementName
      * @param bool $replaceSpacesByUnderScoresInKeyNames
      * @param string $xmlEncoding
      * @param string $xmlVersion
      *
      * @return string
      */
-    public static function convert(array $array, $rootElement = '', $replaceSpacesByUnderScoresInKeyNames = true, $xmlEncoding = null, $xmlVersion = '1.0')
+    public static function convert(array $array, $rootElementName = '', $replaceSpacesByUnderScoresInKeyNames = true, $xmlEncoding = null, $xmlVersion = '1.0')
     {
-        $converter = new static($array, $rootElement, $replaceSpacesByUnderScoresInKeyNames, $xmlEncoding, $xmlVersion);
+        $converter = new static($array, $rootElementName, $replaceSpacesByUnderScoresInKeyNames, $xmlEncoding, $xmlVersion);
 
         return $converter->toXml();
     }
@@ -110,11 +98,7 @@ class ArrayToXml
         $sequential = $this->isArrayAllKeySequential($value);
 
         if (! is_array($value)) {
-            $value = htmlspecialchars($value);
-
-            $value = $this->removeControlCharacters($value);
-
-            $element->nodeValue = $value;
+            $element->nodeValue = htmlspecialchars($value);
 
             return;
         }
@@ -127,12 +111,6 @@ class ArrayToXml
                     $element->nodeValue = htmlspecialchars($data);
                 } elseif ((($key === '_cdata') || ($key === '@cdata')) && is_string($data)) {
                     $element->appendChild($this->document->createCDATASection($data));
-                } elseif ((($key === '_mixed') || ($key === '@mixed')) && is_string($data)) {
-                    $fragment = $this->document->createDocumentFragment();
-                    $fragment->appendXML($data);
-                    $element->appendChild($fragment);
-                } elseif ($key === '__numeric') {
-                    $this->addNumericNode($element, $data);
                 } else {
                     $this->addNode($element, $key, $data);
                 }
@@ -141,19 +119,6 @@ class ArrayToXml
             } else {
                 $this->addSequentialNode($element, $data);
             }
-        }
-    }
-
-    /**
-     * Add node with numeric keys.
-     *
-     * @param DOMElement $element
-     * @param string|string[] $value
-     */
-    protected function addNumericNode(DOMElement $element, $value)
-    {
-        foreach ($value as $key => $item) {
-            $this->convertElement($element, [$this->numericTagNamePrefix.$key => $value]);
         }
     }
 
@@ -191,7 +156,7 @@ class ArrayToXml
             return;
         }
 
-        $child = $this->document->createElement($element->tagName);
+        $child = $element->cloneNode();
         $element->parentNode->appendChild($child);
         $this->convertElement($child, $value);
     }
@@ -212,7 +177,7 @@ class ArrayToXml
             return;
         }
 
-        $child = new DOMElement($element->tagName);
+        $child = $element->cloneNode();
         $child->nodeValue = htmlspecialchars($value);
         $element->parentNode->appendChild($child);
     }
@@ -232,10 +197,6 @@ class ArrayToXml
 
         if (count($value) <= 0) {
             return true;
-        }
-
-        if (\key($value) === '__numeric') {
-            return false;
         }
 
         return array_unique(array_map('is_int', array_keys($value))) === [true];
@@ -281,14 +242,5 @@ class ArrayToXml
         }
 
         return $element;
-    }
-
-    /**
-     * @param $valuet
-     * @return string
-     */
-    protected function removeControlCharacters($value)
-    {
-        return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $value);
     }
 }

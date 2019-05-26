@@ -134,7 +134,7 @@ class Handler extends \Local\Core\Inner\TradingPlatform\Handler\AbstractHandler
                     'TYPE' => Field\Resource::TYPE_SOURCE,
                     Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#SIMPLE_NAME'
                 ])
-            ->setEpilog((new Field\Infoblock())->setValue( <<<DOCHERE
+            ->setEpilog((new Field\Infoblock())->setValue(<<<DOCHERE
 <i class="font-weight-bold">e-katalog</i> в качестве названия использует комбинированию из производителя и модели.
 <div class="blockquote border-warning mt-3">
 Очень важно указывать название модели, как ее указывает производитель товара.
@@ -214,7 +214,7 @@ DOCHERE
                     'TYPE' => Field\Resource::TYPE_SOURCE,
                     Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#CURRENCY_CODE'
                 ])
-            ->setEpilog((new Field\Infoblock())->setValue( <<<DOCHERE
+            ->setEpilog((new Field\Infoblock())->setValue(<<<DOCHERE
 Должен быть передан <b>символьный код валюты из справочника валют</b>.<br/>Справочник - <a href="$strRouteReferenceCurrency" target="_blank">https://robofeed.ru$strRouteReferenceCurrency</a> .<br/>
 <br/>
 <b>Внимание!</b><br/>
@@ -232,39 +232,39 @@ DOCHERE
                 Field\Resource::TYPE_IGNORE,
             ])
             ->setValue($this->getHandlerRules()['shop']['items']['item']['oldprice'] ?? [
-                    'TYPE' => Field\Resource::TYPE_LOGIC,
-                    Field\Resource::TYPE_LOGIC.'_VALUE' => [
-                        'IF' => [
-                            [
-                                'RULE' => [
-                                    'CLASS_ID' => 'CondGroup',
-                                    'DATA' => [
-                                        'All' => 'AND',
-                                        'True' => 'True',
-                                    ],
-                                    'CHILDREN' => [
-                                        1 => [
-                                            'CLASS_ID' => 'CondProdOldPrice',
-                                            'DATA' => [
-                                                'logic' => 'Great',
-                                                'value' => 0,
-                                            ],
+                'TYPE' => Field\Resource::TYPE_LOGIC,
+                Field\Resource::TYPE_LOGIC.'_VALUE' => [
+                    'IF' => [
+                        [
+                            'RULE' => [
+                                'CLASS_ID' => 'CondGroup',
+                                'DATA' => [
+                                    'All' => 'AND',
+                                    'True' => 'True',
+                                ],
+                                'CHILDREN' => [
+                                    1 => [
+                                        'CLASS_ID' => 'CondProdOldPrice',
+                                        'DATA' => [
+                                            'logic' => 'Great',
+                                            'value' => 0,
                                         ],
                                     ],
                                 ],
-                                'VALUE' => [
-                                    'TYPE' => Field\Resource::TYPE_SOURCE,
-                                    Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#OLD_PRICE'
-                                ]
-                            ]
-                        ],
-                        'ELSE' => [
+                            ],
                             'VALUE' => [
-                                'TYPE' => Field\Resource::TYPE_IGNORE
+                                'TYPE' => Field\Resource::TYPE_SOURCE,
+                                Field\Resource::TYPE_SOURCE.'_VALUE' => 'BASE_FIELD#OLD_PRICE'
                             ]
                         ]
+                    ],
+                    'ELSE' => [
+                        'VALUE' => [
+                            'TYPE' => Field\Resource::TYPE_IGNORE
+                        ]
                     ]
-                ]);
+                ]
+            ]);
 
         $arFields['shop__items__item__description'] = (new Field\Resource())->setTitle('Описание товара')
             ->setDescription('Длина текста не более 3000 символов (включая знаки препинания).')
@@ -321,14 +321,11 @@ DOCHERE
                     'group' => ['CODE'],
                     'order' => ['NAME' => 'ASC']
                 ]);
-            if( $rsProductProps->getSelectedRowsCount() > 0 )
-            {
+            if ($rsProductProps->getSelectedRowsCount() > 0) {
                 while ($ar = $rsProductProps->fetch()) {
                     self::$arParamsListCache[$this->getTradingPlatformStoreId()][$ar['CODE']] = $ar['NAME'].' ['.$ar['CODE'].']';
                 }
-            }
-            else
-            {
+            } else {
                 self::$arParamsListCache[$this->getTradingPlatformStoreId()] = [];
             }
         }
@@ -395,10 +392,9 @@ DOCHERE
 
     protected function fillCurrencies(\Bitrix\Main\Result $obResult)
     {
-        $strFinalCurrency = ( $this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']) == 'NOT_CONVERT' ) ? self::getMainCurrency() : $this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']);
+        $strFinalCurrency = ($this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']) == 'NOT_CONVERT') ? self::getMainCurrency() : $this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']);
 
-        if( !in_array($strFinalCurrency, static::getSupportedCurrency()) )
-        {
+        if (!in_array($strFinalCurrency, static::getSupportedCurrency())) {
             $strFinalCurrency = static::getMainCurrency();
         }
 
@@ -436,15 +432,14 @@ DOCHERE
          * OFFER
          * *** */
 
-        if(
+        if (
             !empty($this->extractFilledValueFromRule($this->getFields()['shop__items__item__@attr__id'], $arExportProductData))
             && !empty($this->extractFilledValueFromRule($this->getFields()['shop__items__item__@attr__available'], $arExportProductData))
             && !empty($this->extractFilledValueFromRule($this->getFields()['shop__items__item__vendor'], $arExportProductData))
             && !empty($this->extractFilledValueFromRule($this->getFields()['shop__items__item__name'], $arExportProductData))
             && !empty($this->extractFilledValueFromRule($this->getFields()['shop__items__item__url'], $arExportProductData))
             && !empty($this->extractFilledValueFromRule($this->getFields()['shop__items__item__price'], $arExportProductData))
-        )
-        {
+        ) {
             $arOfferXml['_attributes']['id'] = $this->extractFilledValueFromRule($this->getFields()['shop__items__item__@attr__id'], $arExportProductData);
             $arOfferXml['_attributes']['available'] = ($this->extractFilledValueFromRule($this->getFields()['shop__items__item__@attr__available'], $arExportProductData) == 'Y') ? 'true' : 'false';
             $arOfferXml['vendor'] = $this->extractFilledValueFromRule($this->getFields()['shop__items__item__vendor'], $arExportProductData);
@@ -465,7 +460,7 @@ DOCHERE
                 $this->extractFilledValueFromRule($this->getFields()['shop__items__item__oldprice'], $arExportProductData), $arOfferXml);
 
             if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__items__item__description'], $arExportProductData))) {
-                $arOfferXml['description'] = trim( strip_tags($this->extractFilledValueFromRule($this->getFields()['shop__items__item__description'], $arExportProductData)) );
+                $arOfferXml['description'] = trim(strip_tags($this->extractFilledValueFromRule($this->getFields()['shop__items__item__description'], $arExportProductData)));
             }
             if (!is_null($this->extractFilledValueFromRule($this->getFields()['shop__items__item__manufacturer_warranty'], $arExportProductData))) {
                 $arOfferXml['manufacturer_warranty'] = ($this->extractFilledValueFromRule($this->getFields()['shop__items__item__manufacturer_warranty'], $arExportProductData) == 'Y') ? 'true' : 'false';
@@ -539,10 +534,9 @@ DOCHERE
      */
     protected function fillPriceAndCurrency($intPrice, $strCurrencyCode, $intOldPrice, &$arOfferXml)
     {
-        $strFinalCurrency = ( $this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']) == 'NOT_CONVERT' ) ? self::getMainCurrency() : $this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']);
+        $strFinalCurrency = ($this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']) == 'NOT_CONVERT') ? self::getMainCurrency() : $this->extractFilledValueFromRule($this->getFields()['@handler_settings__CONVERT_CURRENCY_TO']);
 
-        if( !in_array($strFinalCurrency, static::getSupportedCurrency()) )
-        {
+        if (!in_array($strFinalCurrency, static::getSupportedCurrency())) {
             $strFinalCurrency = static::getMainCurrency();
         }
 
@@ -553,10 +547,9 @@ DOCHERE
             $arOfferXml['currencyId'] = ($strFinalCurrency == 'RUB') ? 'RUR' : $strFinalCurrency;
         }
 
-        if(
+        if (
             $arOfferXml['price'] >= $arOfferXml['oldprice']
-        )
-        {
+        ) {
             unset($arOfferXml['oldprice']);
         }
     }

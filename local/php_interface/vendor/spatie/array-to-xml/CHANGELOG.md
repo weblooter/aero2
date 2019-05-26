@@ -2,28 +2,6 @@
 
 All notable changes to `array-to-xml` will be documented in this file
 
-## 2.9.0 - 2019-05-06
-
-- add support for numeric keys
-
-## 2.8.1 - 2019-03-15
-
-- fix tests
-- drop support for PHP 7.0
-
-## 2.8.0 - 2018-11-29
-
-- added support for mixed content 
-
-## 2.7.3 - 2018-10-30
-- fix for `DomExeception`s being thrown
-
-## 2.7.2 - 2018-09-17
-- remove control characters
-
-## 2.7.1 - 2018-02-02
-- fix setting attributes
-
 ## 2.7.0 - 2017-09-07
 - allow wrapping data in a CDATA section
 

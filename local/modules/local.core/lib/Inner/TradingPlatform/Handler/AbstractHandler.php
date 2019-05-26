@@ -86,7 +86,7 @@ abstract class AbstractHandler
         }
 
         return [
-            '#header_g1' => (new Field\Header())->setValue('Общие настройки обработки'),
+            '#header_generel1' => (new Field\Header())->setValue('Общие настройки обработки'),
 
             '@handler_settings__CONVERT_CURRENCY_TO' => (new Field\Select())->setTitle('Конвертация цен')
                 ->setName('HANDLER_RULES[@handler_settings][CONVERT_CURRENCY_TO]')

@@ -76,6 +76,26 @@ class Export
                     $arLog['ERROR_TEXT'] = implode('<br/>', $obResult->getErrorMessages());
                 }
 
+                if( $obResult->isSuccess() && empty($arFilledCheckErrors) && (\Local\Core\Model\Data\TradingPlatformExportLogTable::getList(['filter' => ['TP_ID' => $intId, 'RESULT' => 'SU']]))->getSelectedRowsCount() < 1 )
+                {
+                    $arFilledCheckErrors = array_merge($arFilledCheckErrors, $obResult->getErrorMessages());
+                    $intStoreID = \Local\Core\Inner\TradingPlatform\Base::getStoreId($intId);
+                    $arUser = \Bitrix\Main\UserTable::getByPrimary(\Local\Core\Inner\Store\Base::getOwnUserId($intStoreID), ['select' => ['EMAIL']])->fetch();
+
+                    if( !empty( $arUser['EMAIL'] ) )
+                    {
+                        \Local\Core\Inner\TriggerMail\TradingPlatform\Export::firstTimeSuccessExport([
+                            'EMAIL' => $arUser['EMAIL'],
+                            'STORE_NAME' => \Local\Core\Inner\Store\Base::getStoreName($intStoreID),
+                            'TP_NAME' => \Local\Core\Inner\TradingPlatform\Base::getName($intId),
+                            'PRODUCTS_TOTAL' => number_format($arLog['PRODUCTS_TOTAL'], 0, '.', ' '),
+                            'PRODUCTS_EXPORTED' => number_format($arLog['PRODUCTS_EXPORTED'], 0, '.', ' '),
+                            'EXPORT_LINK' => \Local\Core\Inner\TradingPlatform\Base::getExportFileLink($intId),
+                            'STORE_LINK' => Route::getRouteTo('store', 'detail', ['#COMPANY_ID#' => \Local\Core\Inner\Store\Base::getCompanyId($intStoreID), '#STORE_ID#' => $intStoreID]),
+                        ]);
+                    }
+                }
+
                 \Local\Core\Model\Data\TradingPlatformExportLogTable::add($arLog);
 
                 if( ( !$obResult->isSuccess() || !empty( $arFilledCheckErrors ) )  && $boolSendMailIfError )
