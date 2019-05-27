@@ -8,7 +8,7 @@ if( !empty( $arResult['ID'] ) && !empty( $arResult['IBLOCK_ID'] ) )
         $ar = $rsElem->fetch();
         if( $ar['PREVIEW_PICTURE'] > 0 )
         {
-            $arResult['PREVIEW_PICTURE'] = \CFile::ResizeImageGet($ar['PREVIEW_PICTURE'], ['width' => 1900, 'height' => 400], BX_RESIZE_IMAGE_PROPORTIONAL, false, false, false, 75);
+            $arResult['PREVIEW_PICTURE'] = \CFile::ResizeImageGet($ar['PREVIEW_PICTURE'], ['width' => 1900, 'height' => 400], BX_RESIZE_IMAGE_PROPORTIONAL, false, false, false, 95);
             $arResult['PREVIEW_PICTURE'] = $arResult['PREVIEW_PICTURE']['src'];
         }
     }
