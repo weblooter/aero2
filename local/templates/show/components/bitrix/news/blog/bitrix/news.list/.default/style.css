@@ -1,0 +1,4 @@
+.robofeed-news__item {margin-bottom: 35px;}
+.robofeed-news__item .img {height: 200px; width: 100%; margin-bottom: 20px; background-size: cover; background-repeat: no-repeat; display: block;}
+.robofeed-news__item .date {color: #777;}
+.content .robofeed-news__page ul:not([class]) li:before{content: none; display: none;}

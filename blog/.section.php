@@ -1,0 +1,4 @@
+<?
+$sSectionName = "Блог";
+$arDirProperties = Array();
+?>
