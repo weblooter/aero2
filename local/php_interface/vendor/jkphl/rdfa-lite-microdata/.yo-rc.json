@@ -1,0 +1,27 @@
+{
+  "generator-clearphp": {
+    "run": 59,
+    "github": {
+      "ssh": "git@github.com:jkphl/rdfa-lite-microdata.git",
+      "https": "https://github.com/jkphl/rdfa-lite-microdata"
+    },
+    "codeclimate": "2d5e5fac0aa4265c5d7e6599cc2ab7efef970b49663981c68d2efa146f746bd3",
+    "scrutinizer": true,
+    "coverage": true,
+    "docs": true,
+    "apidocs": false,
+    "year": 2017,
+    "vendor": "jkphl",
+    "project": "rdfa-lite-microdata",
+    "description": "Simple and lightweight RDFa Lite 1.1 parser for web documents (HTML, SVG, XML)",
+    "website": "https://github.com/jkphl/rdfa-lite-microdata",
+    "license": "MIT",
+    "stability": "stable",
+    "namespace": "Jkphl",
+    "module": "Rdfalite",
+    "php": ">=5.5",
+    "authorName": "Joschi Kuphal",
+    "authorEmail": "joschi@tollwerk.de",
+    "authorWebsite": "https://jkphl.is"
+  }
+}
