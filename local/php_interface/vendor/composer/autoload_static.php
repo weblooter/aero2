@@ -43,6 +43,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Container\\' => 14,
+            'Psr\\Cache\\' => 10,
         ),
         'M' => 
         array (
@@ -142,6 +143,10 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
         'Monolog\\' => 
         array (
@@ -302,7 +307,6 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Local\\Core\\Console\\Command\\Worker' => __DIR__ . '/../..' . '/../modules/local.core/lib/Console/Command/Worker.php',
         'Local\\Core\\EventHandlers\\Base' => __DIR__ . '/../..' . '/../modules/local.core/lib/EventHandlers/Base.php',
         'Local\\Core\\EventHandlers\\Iblock\\OnIBlockPropertyBuildList' => __DIR__ . '/../..' . '/../modules/local.core/lib/EventHandlers/Iblock/OnIBlockPropertyBuildList.php',
-        'Local\\Core\\EventHandlers\\Main\\OnAfterUserAdd' => __DIR__ . '/../..' . '/../modules/local.core/lib/EventHandlers/Main/OnAfterUserAdd.php',
         'Local\\Core\\EventHandlers\\Main\\OnBeforeEventSend' => __DIR__ . '/../..' . '/../modules/local.core/lib/EventHandlers/Main/OnBeforeEventSend.php',
         'Local\\Core\\EventHandlers\\Main\\OnBuildGlobalMenu' => __DIR__ . '/../..' . '/../modules/local.core/lib/EventHandlers/Main/OnBuildGlobalMenu.php',
         'Local\\Core\\EventHandlers\\Main\\OnUserDelete' => __DIR__ . '/../..' . '/../modules/local.core/lib/EventHandlers/Main/OnUserDelete.php',
@@ -628,6 +632,10 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'PHPMailer\\PHPMailer\\PHPMailer' => __DIR__ . '/../..' . '/externalLibs/PHPMailer/PHPMailer.php',
         'PHPMailer\\PHPMailer\\POP3' => __DIR__ . '/../..' . '/externalLibs/PHPMailer/POP3.php',
         'PHPMailer\\PHPMailer\\SMTP' => __DIR__ . '/../..' . '/externalLibs/PHPMailer/SMTP.php',
+        'Psr\\Cache\\CacheException' => __DIR__ . '/..' . '/psr/cache/src/CacheException.php',
+        'Psr\\Cache\\CacheItemInterface' => __DIR__ . '/..' . '/psr/cache/src/CacheItemInterface.php',
+        'Psr\\Cache\\CacheItemPoolInterface' => __DIR__ . '/..' . '/psr/cache/src/CacheItemPoolInterface.php',
+        'Psr\\Cache\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/cache/src/InvalidArgumentException.php',
         'Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
         'Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
@@ -1472,6 +1480,7 @@ class ComposerStaticInitac667c7cd2e3401afe6c584cb5d27fb2
         'Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface' => __DIR__ . '/..' . '/symfony/contracts/EventDispatcher/EventDispatcherInterface.php',
         'Symfony\\Contracts\\HttpClient\\ChunkInterface' => __DIR__ . '/..' . '/symfony/contracts/HttpClient/ChunkInterface.php',
         'Symfony\\Contracts\\HttpClient\\Exception\\ClientExceptionInterface' => __DIR__ . '/..' . '/symfony/contracts/HttpClient/Exception/ClientExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\DecodingExceptionInterface' => __DIR__ . '/..' . '/symfony/contracts/HttpClient/Exception/DecodingExceptionInterface.php',
         'Symfony\\Contracts\\HttpClient\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/symfony/contracts/HttpClient/Exception/ExceptionInterface.php',
         'Symfony\\Contracts\\HttpClient\\Exception\\HttpExceptionInterface' => __DIR__ . '/..' . '/symfony/contracts/HttpClient/Exception/HttpExceptionInterface.php',
         'Symfony\\Contracts\\HttpClient\\Exception\\RedirectionExceptionInterface' => __DIR__ . '/..' . '/symfony/contracts/HttpClient/Exception/RedirectionExceptionInterface.php',

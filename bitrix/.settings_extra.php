@@ -108,14 +108,14 @@ $conf = [
                 /**
                  * Мануал по настройке формы https://tech.yandex.ru/money/doc/payment-buttons/reference/forms-docpage/
                  */
-                'receiver_id' => '410015955409068',
+                'receiver_id' => '410012393333506',
                 'successURL' => 'https://robofeed.ru/personal/balance/top-up/?handler=yandex-money&result=success',
                 /**
                  * Секретный ключ, а так же настройка пути - https://money.yandex.ru/myservices/online.xml
                  * Если ссылка не работает - читаем мануал https://tech.yandex.ru/money/doc/payment-buttons/reference/notifications-docpage/
                  * Сейчас путь бьет на https://robofeed.ru/personal/balance/top-up/?handler=yandex-money&result=success
                  */
-                'secret_key' => 'outu5ODl0FnBL1a1OmVNxf7C'
+                'secret_key' => 'YF/hsae7lMvXnARmvzooSxlL'
             ],
             'bill' => [
                 'inn' => '505078003987',

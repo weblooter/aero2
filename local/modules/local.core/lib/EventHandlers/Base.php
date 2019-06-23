@@ -29,9 +29,6 @@ class Base
         /** @see \Local\Core\EventHandlers\Main\OnBeforeEventSend::executeCondition() */
         $eventManager->addEventHandler('main', 'OnBeforeEventSend', [Main\OnBeforeEventSend::class, 'executeCondition']);
 
-        /** @see \Local\Core\EventHandlers\Main\OnAfterUserAdd::payToAccount() */
-        $eventManager->addEventHandler('main', 'OnAfterUserAdd', [Main\OnAfterUserAdd::class, 'payToAccount']);
-
         /** @see \Local\Core\EventHandlers\Main\OnUserDelete::deleteCompanies() */
         $eventManager->addEventHandler('main', 'OnUserDelete', [Main\OnUserDelete::class, 'deleteCompanies']);
 

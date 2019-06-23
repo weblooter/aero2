@@ -41,169 +41,78 @@ class Bill implements PaymentInterface
                     <?=bitrix_sessid_post()?>
 
                     <?
-                    if (empty($obRequest->getPost('type'))):?>
-                        <div class="form-group">
-                            <label>Выставить счет</label>
-                            <select class="select2" name="type" onchange="this.form.submit()" data-minimum-results-for-search="Infinity" data-placeholder="-- Выберите лицо --">
-                                <option value="">-- Выберите лицо --</option>
-                                <option value="FIZ" <?=$obRequest->getPost('type') == 'FIZ' ? 'selected' : ''?>>Физическому лицу</option>
-                                <option value="UR" <?=$obRequest->getPost('type') == 'UR' ? 'selected' : ''?>>Юридическому лицу</option>
-                            </select>
-                        </div>
-                    <? else: ?>
-                        <input type="hidden" name="type" value="<?=$obRequest->getPost('type')?>" />
-                    <? endif; ?>
+                    $arRequest = $obRequest->getPost('UR');
 
-                    <?
-                    switch ($obRequest->getPost('type')) {
-                        case 'FIZ':
-                            $arRequest = $obRequest->getPost('FIZ');
-                            ?>
-                            <input type="hidden" name="make_bill" value="Y" />
-                            <div class="row">
-                                <div class="form-group col-4">
-                                    <label>Фамилия *</label>
-                                    <input type="text" class="form-control" name="FIZ[LAST_NAME]" required value="<?=$arRequest['LAST_NAME']?>" />
-                                </div>
-                                <div class="form-group col-4">
-                                    <label>Имя *</label>
-                                    <input type="text" class="form-control" name="FIZ[NAME]" required value="<?=$arRequest['NAME']?>" />
-                                </div>
-                                <div class="form-group col-4">
-                                    <label>Отчество</label>
-                                    <input type="text" class="form-control" name="FIZ[SECOND_NAME]" value="<?=$arRequest['SECOND_NAME']?>" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-4">
-                                    <label>Почтовый индекс *</label>
-                                    <input type="text" class="form-control" name="FIZ[ZIP]" required value="<?=$arRequest['ZIP']?>" placeholder="100100" />
-                                </div>
-                                <div class="form-group col-8">
-                                    <label>Полный адрес проживания *</label>
-                                    <input type="text" class="form-control" name="FIZ[ADDRESS]" required value="<?=$arRequest['ADDRESS']?>" placeholder="Россия, г. Москва, ул. Пушкина, д. 1, офис 1" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-4">
-                                    <label>Сумма пополнения в рублях *</label>
-                                    <input type="text" class="form-control" name="FIZ[TOP_UP_SUMM]" required value="<?=$arRequest['TOP_UP_SUMM'] ?? 500?>" />
-                                </div>
-                                <div class="col-4">
-                                    <label>&nbsp;</label><br />
-                                    <button class="btn btn-secondary">Выставить счет</button>
-                                </div>
-                            </div>
-                            <a href="<?=Route::getRouteTo('payment', 'top-up', ['#HANDLER#' => 'bill']);?>" class="btn btn-dark">
-                                <i class="zmdi zmdi-rotate-left"></i>
-                                Выбрать другое лицо
-                            </a>
-                            <?
-                            if ($obRequest->getPost('make_bill') == 'Y') {
-                                $obPdf = (new \Local\Core\Inner\Payment\Bill())->makeBillPdf([
-                                    [
-                                        'NAME' => 'Пополнение счета пользователя Robofeed.ru',
-                                        'COUNT' => '1',
-                                        'UNIT' => 'шт.',
-                                        'PRICE' => $arRequest['TOP_UP_SUMM'] // TODO проверить на число более 0
-                                    ]
-                                ], $arRequest['LAST_NAME'].' '.$arRequest['NAME'].' '.$arRequest['SECOND_NAME'].', '.$arRequest['ZIP'].', '.$arRequest['ADDRESS']);
-                                \Local\Core\Model\Data\AttemptsTopUpBalanceLogTable::add([
-                                    'USER_ID' => $GLOBALS['USER']->GetId(),
-                                    'HANDLER' => self::getCode(),
-                                    'QUERY_DATA' => json_encode($obRequest->getPostList()
-                                        ->toArray()),
-                                    'ADDITIONAL_DATA' => $obPdf->getBase64(),
-                                    'QUERY_CHECK_RESULT' => 'SU',
-                                    'TRY_TOP_UP_BALANCE_RESULT' => 'SU'
-                                ]);
-                                $obPdf->stream();
-                            }
-                            ?>
-
-                            <?
-                            break;
-                        case 'UR':
-                            $arRequest = $obRequest->getPost('UR');
-
-                            if ($obRequest->getPost('make_bill') == 'Y') {
-                                $obPdf = (new \Local\Core\Inner\Payment\Bill())->makeBillPdf([
-                                    [
-                                        'NAME' => 'Пополнение счета пользователя Robofeed.ru',
-                                        'COUNT' => '1',
-                                        'UNIT' => 'шт.',
-                                        'PRICE' => $arRequest['TOP_UP_SUMM'] // TODO проверить на число более 0
-                                    ]
-                                ], $arRequest['ORG_NAME'].', ИНН '.$arRequest['INN'].', '.$arRequest['ZIP'].', '.$arRequest['ADDRESS'].', '.$arRequest['LAST_NAME'].' '.$arRequest['NAME'].' '
-                                   .$arRequest['SECOND_NAME']);
-                                \Local\Core\Model\Data\AttemptsTopUpBalanceLogTable::add([
-                                    'USER_ID' => $GLOBALS['USER']->GetId(),
-                                    'HANDLER' => self::getCode(),
-                                    'QUERY_DATA' => json_encode($obRequest->getPostList()
-                                        ->toArray()),
-                                    'ADDITIONAL_DATA' => $obPdf->getBase64(),
-                                    'QUERY_CHECK_RESULT' => 'SU',
-                                    'TRY_TOP_UP_BALANCE_RESULT' => 'SU'
-                                ]);
-                                $obPdf->stream();
-                            }
-                            ?>
-                            <input type="hidden" name="make_bill" value="Y" />
-                            <h4 class="card-title">Ответственное лицо</h4>
-                            <div class="row">
-                                <div class="form-group col-4">
-                                    <label>Фамилия *</label>
-                                    <input type="text" class="form-control" name="UR[LAST_NAME]" required value="<?=$arRequest['LAST_NAME']?>" />
-                                </div>
-                                <div class="form-group col-4">
-                                    <label>Имя *</label>
-                                    <input type="text" class="form-control" name="UR[NAME]" required value="<?=$arRequest['NAME']?>" />
-                                </div>
-                                <div class="form-group col-4">
-                                    <label>Отчество</label>
-                                    <input type="text" class="form-control" name="UR[SECOND_NAME]" value="<?=$arRequest['SECOND_NAME']?>" />
-                                </div>
-                            </div>
-                            <h4 class="card-title">Данные организации</h4>
-                            <div class="row">
-                                <div class="form-group col-4">
-                                    <label>Название организации *</label>
-                                    <input type="text" class="form-control" name="UR[ORG_NAME]" required value="<?=$arRequest['ORG_NAME']?>" placeholder="ООО Рога и копыт" />
-                                </div>
-                                <div class="form-group col-4">
-                                    <label>ИНН *</label>
-                                    <input type="text" class="form-control" name="UR[INN]" required value="<?=$arRequest['INN']?>" />
-                                </div>
-                            </div>
-                            <h4 class="card-title">Фактический адрес организации</h4>
-                            <div class="row">
-                                <div class="form-group col-4">
-                                    <label>Почтовый индекс *</label>
-                                    <input type="text" class="form-control" name="UR[ZIP]" required value="<?=$arRequest['ZIP']?>" placeholder="100100" />
-                                </div>
-                                <div class="form-group col-8">
-                                    <label>Полный адрес *</label>
-                                    <input type="text" class="form-control" name="UR[ADDRESS]" required value="<?=$arRequest['ADDRESS']?>" placeholder="Россия, г. Москва, ул. Пушкина, д. 1, офис 1" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-4">
-                                    <label>Сумма пополнения в рублях *</label>
-                                    <input type="text" class="form-control" name="UR[TOP_UP_SUMM]" required value="<?=$arRequest['TOP_UP_SUMM'] ?? 500?>" />
-                                </div>
-                                <div class="col-4">
-                                    <label>&nbsp;</label><br />
-                                    <button class="btn btn-secondary">Выставить счет</button>
-                                </div>
-                            </div>
-                            <a href="<?=Route::getRouteTo('payment', 'top-up', ['#HANDLER#' => 'bill']);?>" class="btn btn-dark">
-                                <i class="zmdi zmdi-rotate-left"></i>
-                                Выбрать другое лицо
-                            </a>
-                            <?
-                            break;
+                    if ($obRequest->getPost('make_bill') == 'Y') {
+                        $obPdf = (new \Local\Core\Inner\Payment\Bill())->makeBillPdf([
+                            [
+                                'NAME' => 'Пополнение счета пользователя Robofeed.ru',
+                                'COUNT' => '1',
+                                'UNIT' => 'шт.',
+                                'PRICE' => $arRequest['TOP_UP_SUMM'] // TODO проверить на число более 0
+                            ]
+                        ], $arRequest['ORG_NAME'].', ИНН '.$arRequest['INN'].', '.$arRequest['ZIP'].', '.$arRequest['ADDRESS'].', '.$arRequest['LAST_NAME'].' '.$arRequest['NAME'].' '
+                           .$arRequest['SECOND_NAME']);
+                        \Local\Core\Model\Data\AttemptsTopUpBalanceLogTable::add([
+                            'USER_ID' => $GLOBALS['USER']->GetId(),
+                            'HANDLER' => self::getCode(),
+                            'QUERY_DATA' => json_encode($obRequest->getPostList()
+                                ->toArray()),
+                            'ADDITIONAL_DATA' => $obPdf->getBase64(),
+                            'QUERY_CHECK_RESULT' => 'SU',
+                            'TRY_TOP_UP_BALANCE_RESULT' => 'SU'
+                        ]);
+                        $obPdf->stream();
                     }
                     ?>
+                    <input type="hidden" name="make_bill" value="Y" />
+                    <h4 class="card-title">Ответственное лицо</h4>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label>Фамилия *</label>
+                            <input type="text" class="form-control" name="UR[LAST_NAME]" required value="<?=$arRequest['LAST_NAME']?>" />
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Имя *</label>
+                            <input type="text" class="form-control" name="UR[NAME]" required value="<?=$arRequest['NAME']?>" />
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Отчество</label>
+                            <input type="text" class="form-control" name="UR[SECOND_NAME]" value="<?=$arRequest['SECOND_NAME']?>" />
+                        </div>
+                    </div>
+                    <h4 class="card-title">Данные организации</h4>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label>Название организации *</label>
+                            <input type="text" class="form-control" name="UR[ORG_NAME]" required value="<?=$arRequest['ORG_NAME']?>" placeholder="ООО Рога и копыт" />
+                        </div>
+                        <div class="form-group col-4">
+                            <label>ИНН *</label>
+                            <input type="text" class="form-control" name="UR[INN]" required value="<?=$arRequest['INN']?>" />
+                        </div>
+                    </div>
+                    <h4 class="card-title">Фактический адрес организации</h4>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label>Почтовый индекс *</label>
+                            <input type="text" class="form-control" name="UR[ZIP]" required value="<?=$arRequest['ZIP']?>" placeholder="100100" />
+                        </div>
+                        <div class="form-group col-8">
+                            <label>Полный адрес *</label>
+                            <input type="text" class="form-control" name="UR[ADDRESS]" required value="<?=$arRequest['ADDRESS']?>" placeholder="Россия, г. Москва, ул. Пушкина, д. 1, офис 1" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label>Сумма пополнения в рублях *</label>
+                            <input type="text" class="form-control" name="UR[TOP_UP_SUMM]" required value="<?=$arRequest['TOP_UP_SUMM'] ?? 500?>" />
+                        </div>
+                        <div class="col-4">
+                            <label>&nbsp;</label><br />
+                            <button class="btn btn-secondary">Выставить счет</button>
+                        </div>
+                    </div>
 
                 </form>
 

@@ -59,6 +59,10 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
         var qs;
         document.addEventListener('DOMContentLoaded', function () {
             axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
+            axios.defaults.transformRequest = function (data, headers) {
+                data += '&sessid=<?=bitrix_sessid()?>';
+                return data;
+            };
             axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
             axios.defaults.headers.common['Content-Type'] = 'application/json';
             qs = Qs;

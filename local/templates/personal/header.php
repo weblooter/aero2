@@ -92,6 +92,10 @@ global $USER;
     <script type="text/javascript">
         LocalCore.setRecaptchaSiteKey('<?=\Bitrix\Main\Config\Configuration::getInstance()->get('recaptcha')['site_key']?>');
         axios.defaults.data = {sessid: '<?=bitrix_sessid()?>'};
+        axios.defaults.transformRequest = function (data, headers) {
+            data += '&sessid=<?=bitrix_sessid()?>';
+            return data;
+        };
         axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
         axios.defaults.headers.common['Content-Type'] = 'application/json';
         var qs = Qs;

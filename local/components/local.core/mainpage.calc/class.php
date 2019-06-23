@@ -37,10 +37,8 @@ class MainpageCalcComponent extends \Local\Core\Inner\BxModified\CBitrixComponen
                 $rs = \Local\Core\Model\Data\TariffTable::getList([
                     'filter' => [
                         'CODE' => $this->arParams['SHOW_TARIFFS'],
-                        'IS_DEFAULT' => 'N',
                         'ACTIVE' => 'Y',
                         'TYPE' => 'PUB',
-                        '>PRICE_PER_TRADING_PLATFORM' => 0,
                         [
                             'LOGIC' => 'OR',
                             ['DATE_ACTIVE_TO' => false],

@@ -24,6 +24,7 @@ if (!empty($arResult['HANDLER'])) {
                 <div class="quick-stats__info text-center">
                     <img src="<?=SITE_TEMPLATE_PATH?>/assets/img/payment-icons/payment-card-icon.svg" class="d-block m-auto mb-3 tradingplatform__img" />
                     <h5 class="mt-3 mb-0 text-dark tradingplatform__title">Оплата картой (комиссия 3%)</h5>
+                    <p class="text-dark mb-0">Только для физ лиц</p>
                 </div>
             </a>
         </div>
@@ -32,6 +33,7 @@ if (!empty($arResult['HANDLER'])) {
                 <div class="quick-stats__info text-center">
                     <img src="<?=SITE_TEMPLATE_PATH?>/assets/img/payment-icons/payment-bill-icon.svg" class="d-block m-auto mb-3 tradingplatform__img" />
                     <h5 class="mt-3 mb-0 text-dark tradingplatform__title">Оплата по счету</h5>
+                    <p class="text-dark mb-0">Только для юр лиц</p>
                 </div>
             </a>
         </div>

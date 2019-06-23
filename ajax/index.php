@@ -36,10 +36,10 @@ $response = new \Local\Core\Inner\BxModified\HttpResponse($context);
 
 try
 {
-//    if( !check_bitrix_sessid() )
-//    {
-//        throw new \Exception('Доступ запрещен');
-//    }
+    if( !check_bitrix_sessid() )
+    {
+        throw new \Exception('Доступ запрещен');
+    }
 
     // Роуты
     $rules = include __DIR__.'/routes/include.php';

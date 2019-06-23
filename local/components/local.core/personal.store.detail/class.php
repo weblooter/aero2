@@ -154,7 +154,6 @@ class PersonalStoreDetailComponent extends \Local\Core\Inner\BxModified\CBitrixC
         $rs = \Local\Core\Model\Data\TariffTable::getList([
             'filter' => [
                 'ACTIVE' => 'Y',
-                'IS_DEFAULT' => 'N',
                 [
                     'LOGIC' => 'OR',
                     ['TYPE' => 'PUB'],

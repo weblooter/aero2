@@ -109,8 +109,8 @@ class Base
         $obResult = new \Bitrix\Main\Result();
 
         try {
-            if (floor($intBalance) < 1) {
-                throw new \Exception('Сумма списания должна быть больше нуля.');
+            if (floor($intBalance) < 0) {
+                throw new \Exception('Сумма списания должна быть положительным числом.');
             }
 
             $rr = \Local\Core\Model\Data\BalanceLogTable::add([

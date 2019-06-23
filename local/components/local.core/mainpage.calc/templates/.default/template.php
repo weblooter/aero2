@@ -38,7 +38,13 @@
                                         <p class="price old" data-price="<?=$arResult["START_ELEM"]["PRICE_OLD"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE_OLD"], 0, '.', ' ')?></span>
                                             руб. / месяц</p>
                                     <? } ?>
-                                    <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE"], 0, '.', ' ')?></span> руб. / месяц</p>
+                                    <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>">
+                                        <?if( $arResult["START_ELEM"]["PRICE"] > 0 ):?>
+                                            <span><?=number_format($arResult["START_ELEM"]["PRICE"], 0, '.', ' ')?></span> руб. / месяц
+                                        <?else:?>
+                                            Бесплатно
+                                        <?endif;?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +77,13 @@
                                     <p class="price old" data-price="<?=$arResult["START_ELEM"]["PRICE_OLD"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE_OLD"], 0, '.', ' ')?></span> руб.
                                         / месяц</p>
                                 <? } ?>
-                                <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>"><span><?=number_format($arResult["START_ELEM"]["PRICE"], 0, '.', ' ')?></span> руб. / месяц</p>
+                                <p class="price" data-price="<?=$arResult["START_ELEM"]["PRICE"]?>">
+                                    <?if( $arResult["START_ELEM"]["PRICE"] > 0 ):?>
+                                        <span><?=number_format($arResult["START_ELEM"]["PRICE"], 0, '.', ' ')?></span> руб. / месяц
+                                    <?else:?>
+                                        Бесплатно
+                                    <?endif;?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -91,7 +103,7 @@
                             ?>
                             <p class="price old" data-price="<?=$arItem["PRICE_OLD"]?>"><span>0</span> руб. / месяц</p>
                         <? } ?>
-                        <p class="price" data-price="<?=$arItem["PRICE"]?>"><span>0</span> руб. / месяц</p>
+                        <p class="price" data-price="<?=$arItem["PRICE"]?>"><?=( $arItem["PRICE"] > 0 ? '<span>0</span> руб. / месяц' : 'Бесплатно' )?></p>
                     </div>
                 </div>
             <? } ?>
