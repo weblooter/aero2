@@ -45,6 +45,12 @@ $strRecaptchaSiteKey = \Bitrix\Main\Config\Configuration::getInstance()->get('re
                     <input type="text" class="form-control" data-reg-form-last-name />
                 </div>
 
+                <div class="form-group text-center">
+                    <p>
+                        Регистрируясь на сервисе Вы осуществляете полный и безоговорочный акцепт <a href="/dogovor-oferta/" target="_blank">договора оферты</a>.
+                    </p>
+                </div>
+
                 <div class="text-center">
                     <button type="submit" href="javascript:void(0)" class="btn btn-dark">Зарегистрировать</button>
                 </div>
