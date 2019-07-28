@@ -12,8 +12,11 @@
             <p class="answer">После регистрации на нашем сервисе Вам будет необходимо создать компанию и магазин в личном кабинете, загрузить в магазин <a href="<?=\Local\Core\Inner\Route::getRouteTo('development', 'robofeed')?>" target="_blank">Robofeed XML</a>. Создать Robofeed XML Вам поможет Ваш программист из отдела web-разработок. Достаточно будет передать ему ссылку с описанием структуры <a href="<?=\Local\Core\Inner\Route::getRouteTo('development', 'robofeed')?>" target="_blank">Robofeed XML</a>. После загрузки Robofeed XML в магазин останется подождать пока мы проиндексируем полученный фид и все. Дальше Вы можете занять настройкой генерации экспортных файлов для выбранных Вами торговых площадок.</p>
             <p class="question"><b>У меня нет программиста, может ли Вы помочь мне в создании Robofeed XML?</b></p>
             <p class="answer">
-                Мы заняты расширением функционала сервиса, списком поддерживаемых торговых площадок и технической поддержкой. По этой причине, к сожалению, у нас не остается времени на помощь в создании Robofeed XML.<br/>
-                Тем не менее наши партнеры из <a href="https://weblooter.ru/?utm_source=robofeed.ru&utm_medium=make_robofeed" target="_blank"><img src="/local/templates/.default/assets/img/weblooter.svg" height="38"> Weblooter Inc.</a> помогут Вам с этой задачей.
+                Да, конечно. <a href="https://weblooter.bitrix24.ru/pub/form/2_svyazhites_so_mnoy/8e42sk/" target="_blank">Отправьте нам заявку</a> и свяжемся с Вами.<br/>
+            </p>
+            <p class="question"><b>Вы можете поможете мне заключить договора с торговыми площадками?</b></p>
+            <p class="answer">
+                Если Вы предоставите нам все необходимые документы, то мы заключим договора с торговыми площадками за Вас. <a href="https://weblooter.bitrix24.ru/pub/form/2_svyazhites_so_mnoy/8e42sk/" target="_blank">Отправьте нам заявку</a> и свяжемся с Вами.<br/>
             </p>
         </div>
     </div>

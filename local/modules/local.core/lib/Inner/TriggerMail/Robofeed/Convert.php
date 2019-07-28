@@ -16,7 +16,6 @@ class Convert
                 'HEADER_MAIL' => $arFields['HEADER_MAIL'],
                 'ERROR_MESSAGE' => $arFields['ERROR_MESSAGE'],
                 'HOW_MADE_ROBOFEED_ROUTE' => $arFields['HOW_MADE_ROBOFEED_ROUTE'],
-                'STORE_ROUTE' => $arFields['STORE_ROUTE'],
                 'CONVERT_ROUTE' => $arFields['CONVERT_ROUTE'],
             )
         ));

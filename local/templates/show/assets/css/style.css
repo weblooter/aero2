@@ -773,7 +773,7 @@ section.tarifsblock .tarif .block p.subtitle:after {
 
 footer {
     background: var(--darkgray);
-    height: 165px;
+    /*height: 165px;*/
 }
 
 footer .logo {
@@ -825,7 +825,7 @@ footer p.copyright {
     display: inline-block;
     width: 100%;
     text-align: center;
-    color: #585858;
+    color: #757575;
     margin-top: 0px;
     margin-bottom: 20px;
     padding-top: 20px;

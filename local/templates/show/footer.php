@@ -26,7 +26,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
                 "USE_EXT" => "N"
             )
         );?>
-        <p class="copyright">© ROBOFEED <?=date('Y')?></p>
+        <p class="copyright">© ROBOFEED <?=date('Y')?>, <br class="visible-xs-block hidden-sm hidden-md hidden-lg">Разработано <a href="https://weblooter.ru/?utm_source=robofeed.ru" target="_blank" style="color: #fff !important;">Weblooter Inc. <img src="/local/templates/.default/assets/img/weblooter.svg" height="38"></a></p>
     </div>
 </footer>
 

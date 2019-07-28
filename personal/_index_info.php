@@ -14,7 +14,8 @@
             <span class="lead font-weight-bold text-warning">Шаг 1. Подготовить Robofeed XML</span><br/>
             Первым делом Вам необходимо подготовить Robofeed XML для Вашего магазина.<br/>
             Скопируйте ссылку с описанием правил создания Robofeed XML <a href="<?=\Local\Core\Inner\Route::getRouteTo('development', 'robofeed')?>" target="_blank">https://robofeed.ru<?=\Local\Core\Inner\Route::getRouteTo('development', 'robofeed')?></a> и перешлите ее в Ваш отдел web-разработки.<br/>
-            Если у Вас нет своего отдела web-разработок, наши партнеры из <a href="https://weblooter.ru/?utm_source=robofeed.ru&utm_medium=make_robofeed" target="_blank"><img src="/local/templates/.default/assets/img/weblooter.svg" height="38"> Weblooter Inc.</a> могут помочь Вам с этой задачей.<br/>
+            Если у Вас нет своего отдела web-разработок - мы можем помочь Вам в формировании Robofeed XML. <a href="https://weblooter.bitrix24.ru/pub/form/2_svyazhites_so_mnoy/8e42sk/" target="_blank">Отправьте нам заявку</a> и свяжемся с Вами.
+
             Также, если у Вас имеется файл YML формата, то Вы можете воспользоваться нашим <a href="<?=\Local\Core\Inner\Route::getRouteTo('tools', 'converter')?>" target="_blank">конвертером</a>.
         </p>
         <p>
