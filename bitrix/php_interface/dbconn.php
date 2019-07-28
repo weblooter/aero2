@@ -7,14 +7,11 @@ if(!(defined("CHK_EVENT") && CHK_EVENT===true))
 define("SHORT_INSTALL_CHECK", true);
 define("DBPersistent", false);
 
-$arConnection = require($_SERVER['DOCUMENT_ROOT'].'/local/php_interface/connection_data.php');
-$arConnection = $arConnection[ ( !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : end(array_diff(explode('/', $_SERVER['DOCUMENT_ROOT']), [''])) ) ];
-
 $DBType = "mysql";
-$DBHost = $arConnection['host'];
-$DBLogin = $arConnection['username'];
-$DBPassword = $arConnection['password'];
-$DBName = $arConnection['dbname'];
+$DBHost = '127.0.0.1';
+$DBLogin = 'userrobofeed';
+$DBPassword = '54seI3wu?!oxN&1';
+$DBName = 'dbrobofeed';
 $DBDebug = false;
 $DBDebugToFile = false;
 
